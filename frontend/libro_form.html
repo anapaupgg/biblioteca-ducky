@@ -1,0 +1,86 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Registrar / modificar ficha bibliográfica         */
+/*              with its copies.                                  */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Ficha bibliográfica</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1><span id="titulo-pagina">Registrar ficha bibliográfica</span></h1><p>Captura manualmente los datos del libro adquirido.</p></div>
+                
+            </div>
+            <div id="mensaje"></div>
+            <form id="form-libro" novalidate>
+                <div class="card">
+                    <h2>Datos obligatorios</h2>
+                    <div class="grid-2">
+                        <div class="field"><label for="titulo">Título</label><input id="titulo" placeholder="Ej. Ingeniería de software"></div>
+                        <div class="field"><label for="isbn">ISBN</label><input id="isbn" maxlength="17" placeholder="Ej. 9786071502978"></div>
+                        <div class="field"><label for="autores">Autor(es)</label><input id="autores" list="lista-autores" placeholder="Ej. Ian Sommerville"><span class="hint">Separa varios autores con comas; el primero es el principal.</span></div>
+                        <div class="field"><label for="editorial">Editorial</label><input id="editorial" list="lista-editoriales" placeholder="Ej. Pearson"></div>
+                        <div class="field"><label for="tema">Tema</label><input id="tema" list="lista-temas" placeholder="Ej. Ingeniería de software"></div>
+                        <div class="field"><label for="formato">Formato</label><select id="formato"><option>Físico</option><option>Digital</option></select></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h2>Datos complementarios</h2>
+                    <div class="grid-3">
+                        <div class="field"><label for="edicion">Edición</label><input id="edicion" placeholder="Ej. 9a"></div>
+                        <div class="field"><label for="anio_publicacion">Año de publicación</label><input id="anio_publicacion" type="number" min="1450" max="2100"></div>
+                        <div class="field"><label for="paginas">Páginas</label><input id="paginas" type="number" min="1"></div>
+                        <div class="field"><label for="precio_ultima_compra_usd">Precio última compra (USD)</label><input id="precio_ultima_compra_usd" type="number" min="0" step="0.01"></div>
+                        <div class="field span-2" id="campo-enlace"><label for="enlace_digital">Enlace digital</label><input id="enlace_digital" type="url" placeholder="https://biblioteca.ducky.edu.mx/digital/..."></div>
+                        <div class="field" style="grid-column:1/-1"><label for="sinopsis">Sinopsis</label><textarea id="sinopsis" maxlength="500" placeholder="Resumen del contenido del libro adquirido."></textarea></div>
+                    </div>
+                </div>
+                <div class="card" id="card-copias">
+                    <h2>Ejemplares a etiquetar</h2>
+                    <div class="grid-3">
+                        <div class="field"><span class="label">Número de copias</span>
+                            <div class="stepper"><button type="button" id="menos" aria-label="Quitar copia">−</button><output id="copias">1</output><button type="button" id="mas" aria-label="Agregar copia">+</button></div></div>
+                        <div class="field" id="campo-ubicacion"><label for="id_ubicacion">Ubicación (sección · estante / fila)</label><select id="id_ubicacion"></select></div>
+                        <div class="field" id="campo-uso"><label for="tipo_uso">Tipo de uso</label><select id="tipo_uso"><option>Préstamo externo</option><option>Préstamo en sala</option><option>Reservado</option></select></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-primary" type="submit" id="btn-guardar">Guardar ficha</button>
+                    <a class="btn" href="libros.html" id="btn-cancelar">Cancelar</a>
+                </div>
+                <datalist id="lista-autores"></datalist><datalist id="lista-editoriales"></datalist><datalist id="lista-temas"></datalist>
+            </form>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/LibroModel.js"></script>
+<script src="js/views/LibroFormView.js"></script>
+<script src="js/controllers/LibroFormController.js"></script>
+<script>LibroFormController.iniciar();</script>
+
+</body>
+</html>

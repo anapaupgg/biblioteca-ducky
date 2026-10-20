@@ -1,0 +1,57 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Solicitar libros a Tesorería                      */
+/*              and reception of acquired books.                  */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Solicitudes a Tesorería</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Solicitar libros a Tesorería</h1><p>Consolida las peticiones de usuarios dentro del presupuesto mensual.</p></div>
+                
+            </div>
+            <div class="stats" id="stats"></div>
+            <div id="mensaje"></div>
+            <div class="tabs" role="tablist">
+                <button class="tab active" data-tab="nueva">Nueva solicitud</button>
+                <button class="tab" data-tab="historial">Solicitudes enviadas</button>
+                <button class="tab" data-tab="recepcion" id="tab-recepcion">Recepción de libros</button>
+            </div>
+            <div id="panel"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/PedidoModel.js"></script>
+<script src="js/models/BusquedaModel.js"></script>
+<script src="js/models/LibroModel.js"></script>
+<script src="js/views/PedidosView.js"></script>
+<script src="js/controllers/PedidosController.js"></script>
+<script>PedidosController.iniciar();</script>
+
+</body>
+</html>

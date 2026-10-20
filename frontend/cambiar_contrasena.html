@@ -1,0 +1,58 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Temporary password change.                        */
+/*              Required before using the system.                 */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Cambiar contraseña</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Cambia tu contraseña temporal</h1><p>Debes cambiar tu contraseña temporal para continuar.</p></div>
+                
+            </div>
+            <div class="card" style="max-width:760px">
+                <div id="mensaje"></div>
+                <form id="form-contrasena" novalidate>
+                    <div class="grid-2">
+                        <div class="field span-2"><label for="actual">Contraseña actual (temporal)</label><input id="actual" type="password" autocomplete="current-password"></div>
+                        <div class="field"><label for="nueva">Nueva contraseña</label><input id="nueva" type="password" autocomplete="new-password"><span class="hint">Mínimo 8 caracteres.</span></div>
+                        <div class="field"><label for="confirmacion">Confirmar contraseña</label><input id="confirmacion" type="password" autocomplete="new-password"></div>
+                    </div>
+                    <div class="actions" style="margin-top:24px"><button class="btn btn-primary" type="submit">Guardar contraseña</button></div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/AuthModel.js"></script>
+<script src="js/views/ContrasenaView.js"></script>
+<script src="js/controllers/ContrasenaController.js"></script>
+<script>ContrasenaController.iniciar();</script>
+
+</body>
+</html>

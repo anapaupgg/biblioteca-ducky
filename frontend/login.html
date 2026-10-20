@@ -1,0 +1,97 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Login screen (Iniciar sesión).                    */
+/*              Also hosts "Restablecer contraseña" when it is    */
+/*              opened from the recovery link (?token=...).       */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Iniciar sesión</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="login">
+
+    <!-- Brand panel -->
+    <section class="login-brand">
+        <div class="logo-card"><img src="img/logo_ducky.png" alt="Universidad Ducky"></div>
+        <h1>Biblioteca universitaria</h1>
+        <p>El conocimiento, al alcance de tu comunidad.</p>
+        <p>Consulta el catálogo y accede a los servicios autorizados para tu perfil.</p>
+    </section>
+
+    <!-- Login form -->
+    <section class="login-form">
+        <img class="flowbit" src="img/logo_flowbit.png" alt="FlowBit">
+
+        <div id="panel-login">
+            <h2>Bienvenido a Biblioteca Ducky</h2>
+            <p class="muted">Ingresa con tu matrícula o nómina y contraseña.</p>
+            <div id="mensaje"></div>
+
+            <form id="form-login" novalidate>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="clave">Usuario / Clave</label>
+                        <input id="clave" type="text" placeholder="Matrícula o nómina" autocomplete="username" maxlength="6" inputmode="text">
+                    </div>
+                    <div class="field">
+                        <label for="contrasena">Contraseña</label>
+                        <input id="contrasena" type="password" placeholder="Contraseña" autocomplete="current-password">
+                    </div>
+                </div>
+                <div class="actions" style="margin-top:24px">
+                    <button class="btn btn-primary" type="submit" id="btn-login">Iniciar sesión</button>
+                </div>
+            </form>
+
+            <p><button class="link-btn" id="btn-olvide" type="button">¿Olvidaste tu contraseña?</button></p>
+            <p class="small muted">Cuentas de prueba (contraseña 1234): 100001 sistema · 100002 biblioteca · 100003 catálogo · 621234 alumno · 700123 profesor</p>
+        </div>
+
+        <!-- Restablecer contraseña (opened from the e-mailed link) -->
+        <div id="panel-restablecer" class="hidden">
+            <h2>Restablecer contraseña</h2>
+            <p class="muted">Escribe tu nueva contraseña (mínimo 8 caracteres).</p>
+            <div id="mensaje-restablecer"></div>
+            <form id="form-restablecer" novalidate>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="nueva">Nueva contraseña</label>
+                        <input id="nueva" type="password" autocomplete="new-password">
+                    </div>
+                    <div class="field">
+                        <label for="confirmacion">Confirmar contraseña</label>
+                        <input id="confirmacion" type="password" autocomplete="new-password">
+                    </div>
+                </div>
+                <div class="actions" style="margin-top:24px">
+                    <button class="btn btn-primary" type="submit">Guardar contraseña</button>
+                    <a class="btn" href="login.html">Volver a iniciar sesión</a>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+
+<!-- MVC layer -->
+<script src="js/models/AuthModel.js"></script>
+<script src="js/views/LoginView.js"></script>
+<script src="js/controllers/LoginController.js"></script>
+<script>LoginController.iniciar();</script>
+
+</body>
+</html>

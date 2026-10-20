@@ -1,0 +1,56 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Gestionar libros: fichas, catalog status and      */
+/*              shortcuts to reception and orders.                */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Gestionar libros</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Gestionar libros</h1><p>Fichas bibliográficas, catálogo, solicitudes y listas.</p></div>
+                <div class="actions" style="margin:0"><a class="btn" href="pedidos.html#recepcion">Recibir libros adquiridos</a><a class="btn btn-primary" href="libro_form.html">Crear ficha bibliográfica</a></div>
+            </div>
+            <div class="stats" id="stats"></div>
+            <div class="card">
+                <div class="filters">
+                    <div class="field"><label for="q">Buscar por Clave, Título o ISBN</label><input id="q" type="search" placeholder="Ej. L000128 o Ingeniería"></div>
+                    <div class="field" style="max-width:260px"><label for="estatus">Estatus</label>
+                        <select id="estatus"><option value="">Todos</option><option>Ficha creada</option><option>Activo en catálogo</option><option>Retirado</option></select></div>
+                </div>
+                <div id="tabla"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/LibroModel.js"></script>
+<script src="js/views/LibrosView.js"></script>
+<script src="js/controllers/LibrosController.js"></script>
+<script>LibrosController.iniciar();</script>
+
+</body>
+</html>

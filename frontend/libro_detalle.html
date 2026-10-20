@@ -1,0 +1,49 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Consultar libro: ficha, copies,                   */
+/*              alta, condition, baja and retirement.             */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Consultar libro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Consultar libro</h1><p>Ficha y estado vigente de cada ejemplar.</p></div>
+                
+            </div>
+            <div id="mensaje"></div>
+            <div id="detalle"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/LibroModel.js"></script>
+<script src="js/views/LibroDetalleView.js"></script>
+<script src="js/controllers/LibroDetalleController.js"></script>
+<script>LibroDetalleController.iniciar();</script>
+
+</body>
+</html>

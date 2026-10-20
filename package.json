@@ -1,0 +1,19 @@
+{
+  "name": "biblioteca-ducky",
+  "version": "1.0.0",
+  "description": "Biblioteca Universidad Ducky - Prototipo construido (MVC) con Node.js + Express + PostgreSQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "db:init": "node database/init.js"
+  },
+  "keywords": ["mvc", "express", "postgresql", "biblioteca"],
+  "author": "Equipo FlowBit",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  }
+}

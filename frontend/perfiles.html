@@ -1,0 +1,50 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Perfiles y permisos: profiles and their           */
+/*              authorized functions (N:M).                       */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Perfiles y permisos</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Perfiles y permisos</h1><p>Asigna funciones a cada perfil y controla su disponibilidad.</p></div>
+                <button class="btn btn-primary" id="btn-nuevo">Crear perfil</button>
+            </div>
+            <div id="mensaje"></div>
+            <div id="formulario" class="hidden"></div>
+            <div id="tabla"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/PerfilModel.js"></script>
+<script src="js/views/PerfilesView.js"></script>
+<script src="js/controllers/PerfilesController.js"></script>
+<script>PerfilesController.iniciar();</script>
+
+</body>
+</html>

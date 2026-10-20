@@ -1,0 +1,66 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Buscar libros: one or                             */
+/*              several filters, ficha, loan request, queue.      */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Buscar libros</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Buscar libros</h1><p>Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.</p></div>
+                <a class="btn" href="lista_libros.html">Listado de libros</a>
+            </div>
+            <div class="card">
+                <h2>Filtros del catálogo activo</h2>
+                <form id="form-buscar" novalidate>
+                    <div class="grid-3">
+                        <div class="field"><label for="titulo">Título</label><input id="titulo" type="search"></div>
+                        <div class="field"><label for="autor">Autor</label><input id="autor" type="search"></div>
+                        <div class="field"><label for="tema">Tema</label><input id="tema" type="search"></div>
+                        <div class="field"><label for="clave">Clave</label><input id="clave" type="search" placeholder="Ej. L000128"></div>
+                        <div class="field"><label for="isbn">ISBN</label><input id="isbn" type="search" inputmode="numeric"></div>
+                        <div class="field"><label for="editorial">Editorial</label><input id="editorial" type="search"></div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                        <button class="btn" type="button" id="btn-limpiar">Limpiar filtros</button>
+                    </div>
+                </form>
+            </div>
+            <div id="mensaje"></div>
+            <div id="resultados"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+<script src="js/models/BusquedaModel.js"></script>
+<script src="js/views/BuscarView.js"></script>
+<script src="js/controllers/BuscarController.js"></script>
+<script>BuscarController.iniciar();</script>
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-20                                               */
+/* Description: Home "Bienvenido a tu biblioteca". The services   */
+/*              listed depend on the functions of the profile.    */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Biblioteca Ducky · Inicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="app">
+    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+    <aside id="sidebar" class="sidebar"></aside>
+    <main class="main">
+        <header id="topbar" class="topbar"></header>
+        <div id="contenido">
+            <div class="page-header">
+                <div><h1>Bienvenido a tu biblioteca</h1><p>Selecciona un servicio de tu perfil.</p></div>
+                
+            </div>
+            <div class="page-user" id="nombre-usuario"></div>
+            <div id="servicios"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Utilities -->
+<script src="js/utils/api.js"></script>
+<script src="js/utils/session.js"></script>
+<script src="js/utils/ui.js"></script>
+<script src="js/utils/layout.js"></script>
+
+<!-- MVC layer of this page -->
+
+<script src="js/views/InicioView.js"></script>
+<script src="js/controllers/InicioController.js"></script>
+<script>InicioController.iniciar();</script>
+
+</body>
+</html>
