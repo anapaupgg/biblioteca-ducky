@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for "Buscar libros" (all profiles): search  */
-/*              on the active catalog (view v_catalogo), public   */
-/*              ficha with locations, loan requests, waiting list */
-/*              and the reader's own movements.                   */
+/* Description: Consultas de búsqueda de libros.                  */
 /******************************************************************/
 
 /******************************************************************/

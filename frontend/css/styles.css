@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Global stylesheet. The tokens are the variables   */
-/*              of the design system "Ducky" (Primitives,         */
-/*              Semantic and Dimensions collections and the text  */
-/*              styles Ducky/Display...Small). Changing a token   */
-/*              here changes the whole application, the same way  */
-/*              it does in the design system.                     */
+/* Description: Estilos generales de la aplicación.               */
 /******************************************************************/
 
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
@@ -68,7 +63,7 @@ a  { color: var(--color-navy); }
 .nowrap { white-space: nowrap; }
 
 /******************************************************************/
-/* LAYOUT · Ducky/Frame estándar (sidebar + content)              */
+/* LAYOUT (sidebar + content)                                     */
 /******************************************************************/
 .app { display: flex; min-height: 100vh; }
 
@@ -104,7 +99,7 @@ a  { color: var(--color-navy); }
 .page-user { font: 700 18px/26px var(--font); margin: calc(-1 * var(--space-8)) 0 var(--space-16); }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/Button                                      */
+/* COMPONENTS · Button                                            */
 /******************************************************************/
 .btn
 {
@@ -147,7 +142,7 @@ a  { color: var(--color-navy); }
 .stat strong { font: 700 26px/34px var(--font); }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/Field                                       */
+/* COMPONENTS · Field                                             */
 /******************************************************************/
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-16) var(--space-24); }
 .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-16) var(--space-24); }
@@ -179,7 +174,7 @@ a  { color: var(--color-navy); }
 .filters .field { min-width: 220px; flex: 1; }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/TableRow (rows of the lists)                */
+/* COMPONENTS · Table rows                                        */
 /******************************************************************/
 .table-wrap { overflow-x: auto; }
 table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
@@ -193,7 +188,7 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
 .empty { text-align: center; color: var(--color-muted); padding: var(--space-32); background: var(--color-white); border: 1px dashed var(--color-line); border-radius: var(--radius-12); }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/Badge                                       */
+/* COMPONENTS · Badge                                             */
 /******************************************************************/
 .badge { display: inline-block; font: 700 12px/18px var(--font); padding: 2px 10px; border-radius: 999px; background: var(--color-blue-soft); color: var(--color-navy); white-space: nowrap; }
 .badge-ok      { background: var(--color-green-soft); color: var(--color-green); }
@@ -202,7 +197,7 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
 .badge-muted   { background: #eef1f5; color: var(--color-muted); }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/Alert                                       */
+/* COMPONENTS · Alert                                             */
 /******************************************************************/
 .alert { border-radius: var(--radius-12); padding: var(--space-16) var(--space-24); margin: var(--space-16) 0; background: var(--color-blue-soft); }
 .alert strong { display: block; font: 700 15px/22px var(--font); margin-bottom: 2px; }
@@ -212,7 +207,7 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
 .alert-warning { background: var(--color-amber-soft); color: var(--color-amber); }
 
 /******************************************************************/
-/* COMPONENTS · Ducky/Dialog                                      */
+/* COMPONENTS · Dialog                                            */
 /******************************************************************/
 .overlay { position: fixed; inset: 0; background: rgba(20, 43, 69, .45); display: flex; align-items: center; justify-content: center; z-index: 50; padding: var(--space-16); }
 .dialog { background: var(--color-white); border-radius: var(--radius-16); box-shadow: var(--shadow-dialog); width: 100%; max-width: 520px; padding: var(--space-32); max-height: 90vh; overflow-y: auto; }

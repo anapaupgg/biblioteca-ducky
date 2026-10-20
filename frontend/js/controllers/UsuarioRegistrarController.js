@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of usuario_registrar.html. Looks up    */
-/*              the clave in the institution and registers the    */
-/*              user with the chosen profile.                     */
+/* Description: Controlador de usuario_registrar.html.            */
 /******************************************************************/
 
 /******************************************************************/

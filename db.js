@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Database connection module. Creates the shared    */
-/*              PostgreSQL pool used by every model and exposes   */
-/*              a transaction helper that tells the database who  */
-/*              is operating (app.usuario) so the BITACORA        */
-/*              triggers can register the responsible user.       */
+/* Description: Conexión a PostgreSQL.                            */
 /******************************************************************/
 
 /******************************************************************/

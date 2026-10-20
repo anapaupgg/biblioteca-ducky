@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Login controller. Orchestrates LoginView,         */
-/*              AuthModel and Session: login validations          */
-/*              (empty data, invalid user, wrong                  */
-/*              credentials, locked, inactive, no functions,      */
-/*              temporary password, expired session) and password */
-/*              recovery by matrícula, nómina or e-mail.          */
+/* Description: Controlador de login.html.                        */
 /******************************************************************/
 
 /******************************************************************/

@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for USUARIOS, BAJAS_USUARIO and the         */
-/*              catalogs they use (TIPOS_USUARIO, MOTIVOS_BAJA).  */
-/*              Write operations receive the transaction client   */
-/*              from db.con_usuario so the BITACORA records who   */
-/*              made the change.                                  */
+/* Description: Consultas de usuarios.                            */
 /******************************************************************/
 
 /******************************************************************/

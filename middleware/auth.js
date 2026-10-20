@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Session and role middleware. Every protected      */
-/*              route first checks the signed session token       */
-/*              (Authorization: Bearer <token>) and then that the */
-/*              user's profile has the function the route needs.  */
-/*              This is what makes the menu "by role" real: the   */
-/*              backend refuses what the profile does not allow.  */
+/* Description: Valida la sesión y los permisos del perfil.       */
 /******************************************************************/
 
 /******************************************************************/

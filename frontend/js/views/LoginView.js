@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Login view. Owns the DOM of login.html: reads the */
-/*              inputs, shows messages, marks fields and switches */
-/*              to the "Restablecer contraseña" panel. No network */
-/*              calls and no business logic.                      */
+/* Description: Vista de login.html.                              */
 /******************************************************************/
 
 /******************************************************************/

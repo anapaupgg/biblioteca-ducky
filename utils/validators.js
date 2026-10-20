@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Pure validation helpers used by controllers to    */
-/*              check request payloads before calling the models. */
-/*              They never touch the database.                    */
+/* Description: Funciones de validación.                          */
 /******************************************************************/
 
 /******************************************************************/

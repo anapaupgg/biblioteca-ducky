@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of buscar.html. Validates the filters  */
-/*              and searches, opens the public                    */
-/*              ficha and requests loans.                         */
+/* Description: Controlador de buscar.html.                       */
 /******************************************************************/
 
 /******************************************************************/

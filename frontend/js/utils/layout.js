@@ -2,16 +2,12 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Shared layout (Ducky/Frame estándar): sidebar     */
-/*              whose menu changes according to the functions of  */
-/*              the user's profile, topbar with breadcrumb,       */
-/*              profile and "Cerrar sesión" and access control    */
-/*              of the page.                                      */
+/* Description: Menú lateral y barra superior.                    */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents:                                              */
-/*   ICONOS                         - Ducky/Icon/* as inline SVG  */
+/*   ICONOS                         - Inline SVG icons             */
 /*   MENU                           - Entries and required funcs  */
 /*   Layout.montar(opciones)        - Validate session and draw   */
 /*   Layout.cerrar_sesion()         - Logout                      */

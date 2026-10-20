@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of libro_detalle.html: ficha,                */
-/*              copies with status and the dialogs to label       */
-/*              copies, change condition and give baja.           */
+/* Description: Vista de libro_detalle.html.                      */
 /******************************************************************/
 
 /******************************************************************/

@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of cambiar_contrasena.html. A user     */
-/*              with a temporary password must change it before   */
-/*              using any other screen (Layout redirects here).   */
+/* Description: Controlador de cambiar_contrasena.html.           */
 /******************************************************************/
 
 /******************************************************************/

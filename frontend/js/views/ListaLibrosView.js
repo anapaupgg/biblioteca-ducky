@@ -2,8 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of lista_libros.html (PDF and                */
-/*              print preview use the browser print dialog).      */
+/* Description: Vista de lista_libros.html.                       */
 /******************************************************************/
 
 const ListaLibrosView =

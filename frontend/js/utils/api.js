@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: HTTP client used by every frontend Model to talk  */
-/*              to the REST API. Adds the session token, parses   */
-/*              JSON and normalizes errors. Views and controllers */
-/*              never call fetch() directly.                      */
+/* Description: Llamadas a la API.                                */
 /******************************************************************/
 
 /******************************************************************/

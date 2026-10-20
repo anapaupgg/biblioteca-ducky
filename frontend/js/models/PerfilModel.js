@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model of "Perfiles y permisos" (/api/perfiles).   */
-/*              Profiles and their authorized functions (N:M).    */
-/*              Views and controllers never call fetch directly:  */
-/*              they go through this object, which uses Api.      */
+/* Description: Llamadas a /api/perfiles.                         */
 /******************************************************************/
 
 /******************************************************************/

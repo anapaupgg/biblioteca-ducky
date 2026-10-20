@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Client-side session storage. Keeps the signed     */
-/*              token and the user (with the functions of the     */
-/*              profile) in sessionStorage. The backend is the    */
-/*              authority: every request is validated there.      */
+/* Description: Datos de la sesión.                               */
 /******************************************************************/
 
 /******************************************************************/

@@ -1,7 +1,6 @@
 -- =====================================================================
---  Biblioteca Universidad Ducky · Base de datos (PostgreSQL 15+)
---  02_reglas.sql · Reglas de negocio: funciones, triggers y vistas
---  Ejecutar después de 01_esquema.sql
+--  Biblioteca Ducky
+--  02_reglas.sql · Funciones, triggers y vistas
 -- =====================================================================
 SET search_path TO biblioteca, public;
 
@@ -9,7 +8,7 @@ SET search_path TO biblioteca, public;
 --  FUNCIONES DE APOYO
 -- =====================================================================
 
--- Suma N días hábiles (sin sábados ni domingos) a una fecha. Reglas 5 y 6.
+-- Suma N días hábiles (sin sábados ni domingos) a una fecha
 CREATE OR REPLACE FUNCTION sumar_dias_habiles(p_fecha DATE, p_dias INTEGER)
 RETURNS DATE LANGUAGE plpgsql IMMUTABLE AS $$
 DECLARE
@@ -25,13 +24,13 @@ BEGIN
     RETURN v_fecha;
 END $$;
 
--- Texto en minúsculas y sin acentos, para buscar "ingenieria" y encontrar "Ingeniería"
+-- Minúsculas y sin acentos, para que la búsqueda ignore acentos
 CREATE OR REPLACE FUNCTION unaccent_lower(p_texto TEXT)
 RETURNS TEXT LANGUAGE sql IMMUTABLE AS $$
     SELECT translate(lower(p_texto), 'áéíóúüñ', 'aeiouun');
 $$;
 
--- ¿El perfil del usuario tiene autorizada la función? (control de acceso por rol)
+-- ¿El perfil del usuario tiene la función?
 CREATE OR REPLACE FUNCTION tiene_funcion(p_clave VARCHAR, p_funcion VARCHAR)
 RETURNS BOOLEAN LANGUAGE sql STABLE AS $$
     SELECT EXISTS (
@@ -45,7 +44,7 @@ RETURNS BOOLEAN LANGUAGE sql STABLE AS $$
           AND f.nombre = p_funcion);
 $$;
 
--- Usuario que opera la aplicación (la capa de modelo hace: SET app.usuario = '100001')
+-- Usuario que está operando (app.usuario)
 CREATE OR REPLACE FUNCTION usuario_actual()
 RETURNS VARCHAR LANGUAGE sql STABLE AS $$
     SELECT u.clave_usuario FROM usuarios u
@@ -104,8 +103,7 @@ BEGIN
     END IF;
 END $$;
 
--- Baja de usuario: valida motivo, impide la baja con préstamos activos y desactiva al usuario.
--- Reactivación: al llenar Fecha_Reactivacion el usuario vuelve a estar Activo.
+-- Baja y reactivación de usuario
 CREATE OR REPLACE FUNCTION fn_bajas_usuario() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
     IF TG_OP = 'INSERT' THEN
@@ -172,7 +170,7 @@ RETURNS VOID LANGUAGE sql AS $$
     UPDATE sesiones SET fecha_fin = now() WHERE id_sesion = p_sesion AND fecha_fin IS NULL;
 $$;
 
--- Guarda una contraseña (siempre como hash bcrypt, nunca en texto plano)
+-- Guarda la contraseña como hash bcrypt
 CREATE OR REPLACE FUNCTION asignar_contrasena(p_clave VARCHAR, p_contrasena VARCHAR, p_temporal BOOLEAN DEFAULT TRUE)
 RETURNS VOID LANGUAGE sql AS $$
     INSERT INTO credenciales (clave_usuario, contrasena_hash, es_temporal)
@@ -182,8 +180,7 @@ RETURNS VOID LANGUAGE sql AS $$
             intentos_fallidos = 0, bloqueado_hasta = NULL;
 $$;
 
--- Recuperación de acceso: genera un token de un solo uso válido por 30 minutos.
--- Devuelve el token en claro para enviarlo por correo; en la tabla solo queda su hash.
+-- Recuperación de contraseña: token de un solo uso, válido 30 minutos
 CREATE OR REPLACE FUNCTION solicitar_recuperacion(p_clave_o_correo VARCHAR)
 RETURNS VARCHAR LANGUAGE plpgsql AS $$
 DECLARE
@@ -247,7 +244,7 @@ CREATE TRIGGER trg_ejemplares_validar
     BEFORE INSERT OR UPDATE ON ejemplares
     FOR EACH ROW EXECUTE FUNCTION fn_ejemplares_validar();
 
--- Baja definitiva de ejemplar: valida motivo, que no esté prestado y lo marca como "Baja"
+-- Baja de ejemplar
 CREATE OR REPLACE FUNCTION fn_bajas_ejemplar() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
     PERFORM validar_motivo(NEW.id_motivo, 'Ejemplar', NEW.descripcion);
@@ -261,7 +258,7 @@ CREATE TRIGGER trg_bajas_ejemplar
     BEFORE INSERT ON bajas_ejemplar
     FOR EACH ROW EXECUTE FUNCTION fn_bajas_ejemplar();
 
--- Presupuesto: las líneas del pedido no pueden rebasar el monto autorizado del mes
+-- El pedido no puede rebasar el presupuesto del mes
 CREATE OR REPLACE FUNCTION fn_detalle_pedido_presupuesto() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
     v_presupuesto INTEGER;
@@ -285,7 +282,7 @@ CREATE TRIGGER trg_detalle_pedido_presupuesto
     BEFORE INSERT OR UPDATE ON detalle_pedido
     FOR EACH ROW EXECUTE FUNCTION fn_detalle_pedido_presupuesto();
 
--- El pedido enviado debe contener al menos una línea (se revisa al terminar la transacción)
+-- Un pedido necesita al menos una línea
 CREATE OR REPLACE FUNCTION fn_pedido_con_lineas() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM detalle_pedido WHERE id_pedido = NEW.id_pedido) THEN
@@ -302,7 +299,7 @@ CREATE CONSTRAINT TRIGGER trg_pedido_con_lineas
 --  3 y 4. SOLICITUDES, PRÉSTAMOS Y RENOVACIONES
 -- =====================================================================
 
--- Regla 1 (autorización de préstamo) + Reglas 5 y 6 (vigencia en días hábiles)
+-- Validación del préstamo y fecha de vencimiento
 CREATE OR REPLACE FUNCTION fn_prestamos_autorizar() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
     v_usr     usuarios%ROWTYPE;
@@ -360,7 +357,7 @@ CREATE TRIGGER trg_prestamos_autorizar
     BEFORE INSERT ON prestamos
     FOR EACH ROW EXECUTE FUNCTION fn_prestamos_autorizar();
 
--- Efectos del préstamo: ejemplar prestado, solicitud y lista de espera atendidas
+-- Al prestar: ejemplar prestado, solicitud y lista de espera atendidas
 CREATE OR REPLACE FUNCTION fn_prestamos_efectos() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
     v_libro VARCHAR(7);
@@ -378,7 +375,7 @@ CREATE TRIGGER trg_prestamos_efectos
     AFTER INSERT ON prestamos
     FOR EACH ROW EXECUTE FUNCTION fn_prestamos_efectos();
 
--- Multa por retraso (Regla 3): días naturales de atraso × tarifa del tipo de usuario
+-- Multa por retraso
 CREATE OR REPLACE FUNCTION generar_multa_retraso(p_prestamo INTEGER, p_vencimiento DATE, p_fecha DATE)
 RETURNS INTEGER LANGUAGE plpgsql AS $$
 DECLARE
@@ -397,8 +394,7 @@ BEGIN
     RETURN v_multa;
 END $$;
 
--- Regla 2 (renovación): préstamo activo y sin rebasar el máximo de renovaciones del tipo.
--- Si el préstamo ya estaba vencido se genera la multa de atraso correspondiente.
+-- Renovación de préstamo
 CREATE OR REPLACE FUNCTION fn_renovaciones_autorizar() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
     v_pre   prestamos%ROWTYPE;
@@ -445,8 +441,7 @@ CREATE TRIGGER trg_renovaciones_efectos
 --  5. DEVOLUCIONES, MULTAS, PAGOS Y AVISOS
 -- =====================================================================
 
--- Devolución: cierra el préstamo, libera el ejemplar, genera multa si hay atraso
--- y notifica al primero de la lista de espera de ese libro.
+-- Devolución de libro
 CREATE OR REPLACE FUNCTION fn_devoluciones() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
     v_pre   prestamos%ROWTYPE;
@@ -476,7 +471,7 @@ CREATE TRIGGER trg_devoluciones
     AFTER INSERT ON devoluciones
     FOR EACH ROW EXECUTE FUNCTION fn_devoluciones();
 
--- Pago de multa reportado por el alumno: solo multas pendientes; la marca como Pagada
+-- Pago de multa
 CREATE OR REPLACE FUNCTION fn_pagos_multa() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM multas WHERE id_multa = NEW.id_multa AND estatus = 'Pendiente') THEN
@@ -490,9 +485,7 @@ CREATE TRIGGER trg_pagos_multa
     BEFORE INSERT ON pagos_multa
     FOR EACH ROW EXECUTE FUNCTION fn_pagos_multa();
 
--- Reporte de libro perdido (Regla 4): multa de reposición = precio USD × tipo de cambio,
--- préstamo y ejemplar "Perdido", avisos a Servicios Escolares y Tesorería, y
--- notificación del adeudo a Tesorería.
+-- Libro perdido
 CREATE OR REPLACE FUNCTION reportar_perdida(p_prestamo INTEGER, p_tipo_cambio DECIMAL, p_admin VARCHAR)
 RETURNS INTEGER LANGUAGE plpgsql AS $$
 DECLARE
@@ -523,8 +516,7 @@ BEGIN
     RETURN v_multa;
 END $$;
 
--- Época de exámenes: lista de deudores (libros vencidos o multas pendientes) y
--- aviso de suspensión a Servicios Escolares. Devuelve cuántos avisos se generaron.
+-- Lista de suspendidos para época de exámenes
 CREATE OR REPLACE FUNCTION generar_avisos_suspension(p_bibliotecario VARCHAR)
 RETURNS INTEGER LANGUAGE plpgsql AS $$
 DECLARE
@@ -543,9 +535,7 @@ BEGIN
 END $$;
 
 -- =====================================================================
---  BITÁCORA AUTOMÁTICA (auditoría ISO 9001)
---  El argumento del trigger es la columna llave que se guarda en Detalle.
---  No se audita CREDENCIALES para no guardar hashes de contraseña.
+--  BITÁCORA
 -- =====================================================================
 CREATE OR REPLACE FUNCTION fn_bitacora() RETURNS TRIGGER LANGUAGE plpgsql AS $$
 DECLARE
@@ -569,7 +559,7 @@ CREATE TRIGGER trg_bit_pedidos   AFTER INSERT OR UPDATE ON pedidos_tesoreria
     FOR EACH ROW EXECUTE FUNCTION fn_bitacora('ID_Pedido');
 
 -- =====================================================================
---  VISTAS (consultas que usa la aplicación)
+--  VISTAS
 -- =====================================================================
 
 -- Menú por rol: funciones que puede usar cada usuario
@@ -581,7 +571,7 @@ SELECT u.clave_usuario, u.nombre AS usuario, p.nombre AS perfil, f.nombre AS fun
   JOIN funciones f       ON f.id_funcion = pf.id_funcion
  WHERE u.estatus = 'Activo' AND p.estatus = 'Activo';
 
--- Búsqueda de libros: por título, autor, tema, clave o editorial, con disponibilidad
+-- Catálogo para la búsqueda
 CREATE OR REPLACE VIEW v_catalogo AS
 SELECT l.id_libro, l.titulo, l.isbn, l.formato,
        (SELECT string_agg(a.nombre, ', ' ORDER BY la.es_principal DESC, a.nombre)
@@ -620,7 +610,7 @@ SELECT m.id_multa, p.clave_usuario, u.nombre AS usuario, m.tipo, m.monto, m.fech
   JOIN usuarios u  ON u.clave_usuario = p.clave_usuario
  WHERE m.estatus = 'Pendiente';
 
--- Deudores de libros o de multas (lista de suspendidos en época de exámenes)
+-- Deudores
 CREATE OR REPLACE VIEW v_deudores AS
 SELECT u.clave_usuario, u.nombre, t.nombre AS tipo_usuario,
        (SELECT count(*) FROM prestamos p WHERE p.clave_usuario = u.clave_usuario
@@ -635,7 +625,7 @@ SELECT u.clave_usuario, u.nombre, t.nombre AS tipo_usuario,
                   AND p.estatus = 'Activo' AND p.fecha_vencimiento < CURRENT_DATE)
     OR EXISTS (SELECT 1 FROM v_multas_pendientes m WHERE m.clave_usuario = u.clave_usuario);
 
--- Saldo del presupuesto mensual (autorizado − comprometido en pedidos no rechazados)
+-- Saldo del presupuesto mensual
 CREATE OR REPLACE VIEW v_presupuesto_saldo AS
 SELECT pm.id_presupuesto, pm.periodo, pm.monto_autorizado,
        coalesce(sum(d.cantidad * d.costo_unitario_mxn) FILTER (WHERE p.estatus <> 'Rechazado'), 0) AS comprometido,

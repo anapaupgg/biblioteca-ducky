@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of usuario_editar.html (modify and           */
-/*              reactivate): read-only institutional data,        */
-/*              current debts and the profile selector.           */
+/* Description: Vista de usuario_editar.html.                     */
 /******************************************************************/
 
 /******************************************************************/

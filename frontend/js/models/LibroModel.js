@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model of "Gestionar libros" (/api/libros).        */
-/*              Fichas, copies, catalog status and locations.     */
-/*              Views and controllers never call fetch directly:  */
-/*              they go through this object, which uses Api.      */
+/* Description: Llamadas a /api/libros.                           */
 /******************************************************************/
 
 /******************************************************************/

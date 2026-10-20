@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of usuarios.html. Lists users with     */
-/*              live filters and runs "Dar de baja" and           */
-/*              "Reactivar" (rules are validated by the backend). */
+/* Description: Controlador de usuarios.html.                     */
 /******************************************************************/
 
 /******************************************************************/

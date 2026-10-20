@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Home view ("Bienvenido a tu biblioteca"). Draws   */
-/*              one service row per authorized service, like the  */
-/*              home screen of every profile.                     */
+/* Description: Vista de inicio.html.                             */
 /******************************************************************/
 
 /******************************************************************/

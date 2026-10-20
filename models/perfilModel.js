@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for PERFILES, FUNCIONES and PERFIL_FUNCION  */
-/*              (N:M). A profile is "administrative" when it has  */
-/*              management or circulation functions; that is      */
-/*              used to apply the profile hierarchy               */
-/*              (no assigning a higher profile).                  */
+/* Description: Consultas de perfiles y funciones.                */
 /******************************************************************/
 
 /******************************************************************/

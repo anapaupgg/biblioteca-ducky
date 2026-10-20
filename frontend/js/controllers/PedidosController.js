@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of pedidos.html. The librarian builds  */
-/*              the order line by line (kept in memory until it   */
-/*              is sent), records Tesorería's answer; the catalog */
-/*              administrator confirms the reception.             */
+/* Description: Controlador de pedidos.html.                      */
 /******************************************************************/
 
 /******************************************************************/

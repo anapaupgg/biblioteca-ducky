@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of lista_libros.html.                  */
+/* Description: Controlador de lista_libros.html.                 */
 /******************************************************************/
 
 const ListaLibrosController =

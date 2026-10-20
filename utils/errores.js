@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Translates PostgreSQL errors into HTTP responses  */
-/*              with messages a library user can understand.      */
-/*              Business-rule violations raised by the database   */
-/*              triggers (RAISE EXCEPTION) are passed through.    */
+/* Description: Manejo de errores de la API.                      */
 /******************************************************************/
 
 /******************************************************************/

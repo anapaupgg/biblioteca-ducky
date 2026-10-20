@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of cambiar_contrasena.html                   */
+/* Description: Vista de cambiar_contrasena.html.                 */
 /******************************************************************/
 
 const ContrasenaView =

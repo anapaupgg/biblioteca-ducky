@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Shared view helpers (the components of the Ducky  */
-/*              design system rendered in HTML): escaping, date   */
-/*              and money formats, alerts, toast, dialogs, badges,*/
-/*              tables and form validation marks. Views use these */
-/*              helpers; they contain no business logic.          */
+/* Description: Funciones de apoyo para las vistas.               */
 /******************************************************************/
 
 /******************************************************************/
@@ -15,10 +11,10 @@
 /*   Ui.fecha(iso) / Ui.fecha_hora(iso)  - 27 oct 2026            */
 /*   Ui.dinero(n)                        - $40.00 MXN             */
 /*   Ui.badge(texto)                     - Status badge           */
-/*   Ui.alerta(destino, tipo, titulo, t) - Ducky/Alert            */
+/*   Ui.alerta(destino, tipo, titulo, t) - Alerta                 */
 /*   Ui.toast(tipo, titulo, texto)       - Floating alert         */
-/*   Ui.dialogo(opciones)                - Ducky/Dialog (Promise) */
-/*   Ui.tabla(destino, columnas, filas)  - Ducky/TableRow list    */
+/*   Ui.dialogo(opciones)                - Diálogo (Promise)      */
+/*   Ui.tabla(destino, columnas, filas)  - Tabla                  */
 /*   Ui.leer(ids)                        - Read form values       */
 /*   Ui.marcar(campos) / Ui.limpiar()    - Field error marks      */
 /*   Ui.mostrar_error(error, destino)    - Show an ApiError       */
@@ -81,7 +77,7 @@ const Ui =
     /**************************************************************/
     /* Reuse Instructions                                         */
     /* Ui.alerta(destino, tipo, titulo, texto)                    */
-    /* Purpose: Render a Ducky/Alert inside an element.           */
+    /* Purpose: Render an alert inside an element.                */
     /*   tipo: 'ok' | 'error' | 'warning' | 'info'                */
     /*   destino: element or id. Empty titulo clears the alert.   */
     /**************************************************************/
@@ -163,7 +159,7 @@ const Ui =
     /**************************************************************/
     /* Reuse Instructions                                         */
     /* Ui.tabla(destino, columnas, filas, opciones)               */
-    /* Purpose: Render rows as Ducky/TableRow.                    */
+    /* Purpose: Render rows as a table.                           */
     /*   columnas: [{ titulo, valor: (fila) => html }]            */
     /*   opciones: { vacio, al_click(fila) }                      */
     /**************************************************************/

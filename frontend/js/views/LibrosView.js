@@ -2,8 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of libros.html (catalog): counters and the   */
-/*              list of fichas with their copies.                 */
+/* Description: Vista de libros.html.                             */
 /******************************************************************/
 
 const LibrosView =

@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Application entry point. Configures Express,      */
-/*              mounts the REST API (/api/...) and serves the     */
-/*              frontend (HTML/CSS/JS) as static files from the   */
-/*              same origin, so no CORS is needed.                */
+/* Description: Servidor principal.                               */
 /******************************************************************/
 
 /******************************************************************/

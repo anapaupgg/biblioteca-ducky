@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of usuario_editar.html: consult a user */
-/*              by clave, change its profile or reactivate it.    */
-/*              Hierarchy, self-modification and type rules are   */
-/*              enforced by the backend and shown here.           */
+/* Description: Controlador de usuario_editar.html.               */
 /******************************************************************/
 
 /******************************************************************/

@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller for "Gestionar libros" (Administrador  */
-/*              del catálogo). Ficha bibliográfica, labeling of   */
-/*              copies, alta en catálogo, modification, change of */
-/*              condition/use, baja of copies and retirement of   */
-/*              the ficha.                                        */
+/* Description: Altas, cambios y bajas de libros y ejemplares.    */
 /******************************************************************/
 
 /******************************************************************/

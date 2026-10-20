@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for the bibliographic catalog: LIBROS,      */
-/*              LIBRO_AUTOR (N:M), AUTORES, EDITORIALES, TEMAS,   */
-/*              UBICACIONES, EJEMPLARES and BAJAS_EJEMPLAR.       */
+/* Description: Consultas de libros y ejemplares.                 */
 /******************************************************************/
 
 /******************************************************************/

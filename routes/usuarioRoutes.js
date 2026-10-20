@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Routes of /api/usuarios (Gestión de usuarios)     */
+/* Description: Rutas de /api/usuarios.                           */
 /******************************************************************/
 
 /******************************************************************/

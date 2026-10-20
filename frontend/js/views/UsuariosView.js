@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of usuarios.html (Gestión de usuarios):      */
-/*              users table and the dialogs "Dar de baja a un     */
-/*              usuario" and "Reactivar usuario".                 */
+/* Description: Vista de usuarios.html.                           */
 /******************************************************************/
 
 /******************************************************************/

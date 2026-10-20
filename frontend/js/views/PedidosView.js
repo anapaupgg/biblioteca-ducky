@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of pedidos.html: new order (lines),          */
-/*              order review, order status, book reception        */
-/*              (the monthly budget is shown as reference).       */
+/* Description: Vista de pedidos.html.                            */
 /******************************************************************/
 
 /******************************************************************/

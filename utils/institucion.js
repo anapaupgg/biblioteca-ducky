@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Institutional directory (Servicios                */
-/*              Escolares / Recursos Humanos). The library does   */
-/*              not capture personal data: when a user is         */
-/*              registered, name, e-mail and type are read from   */
-/*              the institution. In production this module would  */
-/*              call the university web service.                  */
+/* Description: Directorio de alumnos y empleados (simulado).     */
 /******************************************************************/
 
 /******************************************************************/

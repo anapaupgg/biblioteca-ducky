@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for authentication: CREDENCIALES, SESIONES  */
-/*              and RECUPERACIONES_ACCESO. Password checks, the   */
-/*              15-minute lock and token hashing are done by the  */
-/*              database functions defined in 02_reglas.sql.      */
+/* Description: Consultas de sesiones y contraseñas.              */
 /******************************************************************/
 
 /******************************************************************/

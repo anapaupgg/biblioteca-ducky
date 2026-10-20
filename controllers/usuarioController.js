@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller for "Gestión de usuarios": register,   */
-/*              consult/modify profile, give baja and reactivate. */
-/*              Validations:                                      */
-/*              duplicate key, key not current, missing e-mail,   */
-/*              higher profile, type mismatch, self-modification, */
-/*              last administrator, pending loans and debts.      */
+/* Description: Registro, baja y reactivación de usuarios.        */
 /******************************************************************/
 
 /******************************************************************/

@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller for "Buscar libros" and "Lista de      */
-/*              libros". Search with                              */
-/*              one or several filters, public ficha and loan     */
-/*              request.                                          */
+/* Description: Búsqueda de libros y solicitud de préstamo.        */
 /******************************************************************/
 
 /******************************************************************/

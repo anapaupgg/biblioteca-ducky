@@ -1,19 +1,16 @@
 -- =====================================================================
---  Biblioteca Universidad Ducky · Base de datos (PostgreSQL 15+)
---  03_datos.sql · Catálogos base y datos de prueba
---  Ejecutar después de 02_reglas.sql
---  Contraseña de todos los usuarios de prueba: 1234
+--  Biblioteca Ducky
+--  03_datos.sql · Datos iniciales y de prueba (contraseña: 1234)
 -- =====================================================================
 SET search_path TO biblioteca, public;
 
 -- ---------------------------------------------------------------------
---  Arranque: primer perfil + primer administrador (ciclo PERFILES <-> USUARIOS).
---  Las FK de PERFILES hacia USUARIOS son DEFERRABLE, así que se validan al COMMIT.
+--  Perfiles y usuarios
 -- ---------------------------------------------------------------------
 BEGIN;
 INSERT INTO tipos_usuario (id_tipo_usuario, nombre, dias_prestamo, max_renovaciones, max_ejemplares, multa_diaria) VALUES
-    (1, 'Alumno',      5, 2, 2, 10.00),   -- Reglas 1, 2, 3 y 5
-    (2, 'Profesor',   10, 3, 3, 10.00),   -- Regla 6
+    (1, 'Alumno',      5, 2, 2, 10.00),
+    (2, 'Profesor',   10, 3, 3, 10.00),
     (3, 'Colaborador',10, 3, 3, 10.00);   -- Se adopta la misma política que Profesor
 
 INSERT INTO perfiles (id_perfil, nombre, descripcion, clave_admin_alta) VALUES
@@ -132,7 +129,7 @@ VALUES ('L000130-02', (SELECT id_motivo FROM motivos_baja WHERE descripcion='Da�
         'Hojas arrancadas en el capítulo 4', '100003');
 
 -- ---------------------------------------------------------------------
---  Adquisiciones (pedido a Tesorería dentro del presupuesto mensual)
+--  Pedidos a Tesorería
 -- ---------------------------------------------------------------------
 SET app.usuario = '100002';
 
@@ -150,19 +147,19 @@ COMMIT;
 SELECT setval(pg_get_serial_sequence('pedidos_tesoreria', 'id_pedido'), 1);
 
 -- ---------------------------------------------------------------------
---  Circulación (fechas relativas a hoy para que los ejemplos sigan vigentes)
+--  Préstamos
 -- ---------------------------------------------------------------------
 
--- 1) Ana Paula solicita y recibe "Fundamentos de bases de datos" (préstamo vigente)
+-- Préstamo vigente
 INSERT INTO solicitudes_prestamo (clave_usuario, id_libro) VALUES ('621234', 'L000128');
 INSERT INTO prestamos (clave_usuario, id_ejemplar, clave_bibliotecario, id_solicitud_prestamo, fecha_prestamo)
 VALUES ('621234', 'L000128-01', '100002', 1, CURRENT_DATE - 1);
 
--- 2) Elías tiene un préstamo vencido (será deudor en la lista de suspendidos)
+-- Préstamo vencido
 INSERT INTO prestamos (clave_usuario, id_ejemplar, clave_bibliotecario, fecha_prestamo)
 VALUES ('612345', 'L000130-01', '100002', CURRENT_DATE - 20);
 
--- 3) El profesor Roberto renovó y devolvió con 3 días de atraso; pagó su multa en Tesorería
+-- Préstamo renovado y devuelto con atraso
 INSERT INTO prestamos (clave_usuario, id_ejemplar, clave_bibliotecario, fecha_prestamo)
 VALUES ('700123', 'L000129-01', '100002', CURRENT_DATE - 40);
 INSERT INTO renovaciones (id_prestamo, fecha_renovacion, vencimiento_anterior, clave_autoriza)
@@ -172,7 +169,7 @@ SELECT 3, fecha_vencimiento + 3, 'Bueno', '100002' FROM prestamos WHERE id_prest
 INSERT INTO pagos_multa (id_multa, folio_tesoreria, fecha_pago, clave_bibliotecario)
 SELECT id_multa, 'TES-2026-00871', fecha_generacion + 1, '100002' FROM multas WHERE id_prestamo = 3;
 
--- 4) Sofía espera "Fundamentos de bases de datos" (no hay ejemplares de préstamo externo libres)
+-- Lista de espera
 INSERT INTO prestamos (clave_usuario, id_ejemplar, clave_bibliotecario, fecha_prestamo)
 VALUES ('700123', 'L000128-02', '100002', CURRENT_DATE);
 INSERT INTO lista_espera (clave_usuario, id_libro) VALUES ('800456', 'L000128');

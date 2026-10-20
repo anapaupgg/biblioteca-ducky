@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of buscar.html: filters, results as cards    */
-/*              as cards, public ficha dialog                     */
-/*              and the request confirmation.                     */
+/* Description: Vista de buscar.html.                             */
 /******************************************************************/
 
 /******************************************************************/

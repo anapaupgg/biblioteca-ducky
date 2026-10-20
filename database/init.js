@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Database installer. Runs the SQL scripts of the   */
-/*              "database" folder in order (schema, business      */
-/*              rules and seed data) against DATABASE_URL.        */
-/*              Usage: npm run db:init                            */
+/* Description: Crea la base de datos con los scripts SQL.        */
 /******************************************************************/
 
 require('dotenv').config();

@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of perfiles.html. Create profiles with */
-/*              their functions, edit functions, delete (blocked  */
-/*              while users are assigned) and reactivate.         */
+/* Description: Controlador de perfiles.html.                     */
 /******************************************************************/
 
 /******************************************************************/

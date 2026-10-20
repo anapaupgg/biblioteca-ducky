@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of libro_form.html. Creates a ficha    */
-/*              (optionally labeling copies) or edits one when    */
-/*              opened with ?id=. Prefills from an order line     */
-/*              with ?titulo=&isbn= (reception of new titles).    */
+/* Description: Controlador de libro_form.html.                   */
 /******************************************************************/
 
 /******************************************************************/

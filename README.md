@@ -1,6 +1,6 @@
-# Biblioteca Ducky · Prototipo construido (Sprint 0)
+# Biblioteca Ducky
 
-Aplicación web de la Biblioteca de la Universidad Ducky, construida a partir del prototipo de Figma **"Prototipo AES"** con el patrón **MVC**. Este Sprint 0 incluye las tres funciones del Diagrama General de Funciones:
+Aplicación web de la Biblioteca de la Universidad Ducky, hecha con el patrón **MVC**. Incluye:
 
 | Función | Pantallas |
 |---|---|
@@ -12,7 +12,6 @@ Aplicación web de la Biblioteca de la Universidad Ducky, construida a partir de
 
 - **Backend:** Node.js + Express + PostgreSQL (`pg`).
 - **Frontend:** HTML5 + CSS3 + JavaScript, sin frameworks, con su propio MVC (`js/models`, `js/views`, `js/controllers`, `js/utils`).
-- **Diseño:** tokens del design system "Ducky" de Figma (colores, Manrope, espacios y radios) en `frontend/css/styles.css`.
 
 ## Estructura (MVC)
 
@@ -21,14 +20,14 @@ biblioteca-ducky/
 ├── server.js            # Punto de entrada: API /api/... y frontend estático
 ├── db.js                # Pool de PostgreSQL + transacción con usuario (bitácora)
 ├── routes/              # Rutas Express → controlador (y permiso requerido)
-├── controllers/         # Reglas del caso de uso y respuestas HTTP
+├── controllers/         # Lógica de cada pantalla y respuestas HTTP
 ├── models/              # Consultas SQL (únicas que tocan la base de datos)
 ├── middleware/auth.js   # Sesión firmada + permiso por función del perfil
 ├── utils/               # Validadores, errores y directorio institucional simulado
 ├── database/            # Scripts SQL (esquema, reglas, datos) e instalador
 └── frontend/
     ├── *.html           # Pantallas
-    ├── css/styles.css   # Design system Ducky
+    ├── css/styles.css   # Estilos
     ├── img/             # Logos Universidad Ducky y FlowBit
     └── js/
         ├── models/      # Llamadas a la API (nunca tocan el DOM)
@@ -87,8 +86,7 @@ Claves de la institución simulada para registrar usuarios nuevos:
 - **No vigente:** 600999.
 - **Sin correo institucional:** 655000.
 
-## Notas del prototipo
+## Notas
 
 - **Correo:** no hay servidor de correo. La contraseña temporal se muestra al administrador al registrar al usuario, y el enlace de recuperación aparece en pantalla después de solicitarlo.
 - **Directorio institucional:** los datos personales al registrar un usuario se leen de un directorio simulado en `utils/institucion.js`. En producción, ese módulo llamaría al servicio de la universidad.
-- **Reglas en la base de datos:** las reglas de negocio también las valida PostgreSQL con triggers. Por ejemplo: un perfil con usuarios no se puede eliminar, el motivo "Otro" exige comentario, el ISBN no puede repetirse y los pedidos no pueden rebasar el presupuesto.

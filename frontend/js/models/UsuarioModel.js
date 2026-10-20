@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model of "Gestión de usuarios" (/api/usuarios).   */
-/*              Register, modify profile, baja and reactivation.  */
-/*              Views and controllers never call fetch directly:  */
-/*              they go through this object, which uses Api.      */
+/* Description: Llamadas a /api/usuarios.                         */
 /******************************************************************/
 
 /******************************************************************/

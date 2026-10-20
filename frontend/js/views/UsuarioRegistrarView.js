@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of usuario_registrar.html.                   */
+/* Description: Vista de usuario_registrar.html.                  */
 /******************************************************************/
 
 /******************************************************************/

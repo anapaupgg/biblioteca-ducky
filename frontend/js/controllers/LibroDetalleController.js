@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller of libro_detalle.html: alta en         */
-/*              catálogo, labeling copies, condition change, copy */
-/*              baja and retirement of the book.                  */
+/* Description: Controlador de libro_detalle.html.                */
 /******************************************************************/
 
 /******************************************************************/

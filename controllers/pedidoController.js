@@ -2,12 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller for "Solicitudes a Tesorería" and      */
-/*              "Recepción de libros adquiridos". The library     */
-/*              does not buy: it consolidates users' petitions    */
-/*              into an order within the monthly budget, records  */
-/*              Tesorería's answer and the catalog receives the   */
-/*              copies.                                           */
+/* Description: Solicitudes a Tesorería y recepción de libros.    */
 /******************************************************************/
 
 /******************************************************************/

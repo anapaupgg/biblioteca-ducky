@@ -2,8 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Home controller. Picks the services authorized    */
-/*              to the profile.                                   */
+/* Description: Controlador de inicio.html.                       */
 /******************************************************************/
 
 /******************************************************************/

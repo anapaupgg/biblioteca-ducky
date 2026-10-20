@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of libro_form.html (create / edit).          */
+/* Description: Vista de libro_form.html.                         */
 /******************************************************************/
 
 /******************************************************************/

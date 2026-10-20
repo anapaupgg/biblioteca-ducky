@@ -2,11 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Controller for "Perfiles y permisos". Creates     */
-/*              profiles with their authorized functions, edits   */
-/*              them, and gives baja/reactivates them. Scenarios: */
-/*              name required, duplicate name, at least one       */
-/*              function, profile with assigned users.            */
+/* Description: Perfiles y sus funciones.                         */
 /******************************************************************/
 
 /******************************************************************/

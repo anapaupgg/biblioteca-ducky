@@ -2,10 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Model for purchases: PRESUPUESTOS_MENSUALES,      */
-/*              PEDIDOS_TESORERIA, DETALLE_PEDIDO and             */
-/*              DETALLE_PEDIDO_AUTOR. The budget limit and "at    */
-/*              least one line" are enforced by the database.     */
+/* Description: Consultas de pedidos y presupuestos.              */
 /******************************************************************/
 
 /******************************************************************/

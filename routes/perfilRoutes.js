@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: Routes of /api/perfiles (Perfiles y permisos)     */
+/* Description: Rutas de /api/perfiles.                           */
 /******************************************************************/
 
 /******************************************************************/

@@ -2,9 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-20                                               */
-/* Description: View of perfiles.html:                            */
-/*              profiles table and the create/edit form with one  */
-/*              checkbox per function.                            */
+/* Description: Vista de perfiles.html.                           */
 /******************************************************************/
 
 /******************************************************************/
