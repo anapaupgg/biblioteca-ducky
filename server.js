@@ -16,6 +16,9 @@
 /******************************************************************/
 
 require('dotenv').config();
+const { validar_servidor, diagnostico_base } = require('./utils/config');
+try { validar_servidor(); }
+catch (error) { console.error('Configuración incompleta: ' + error.message); process.exit(1); }
 const path    = require('path');
 const express = require('express');
 const { pool } = require('./db');
@@ -62,10 +65,26 @@ app.use((err, req, res, next) =>
 /******************************************************************/
 /* Server startup and database connectivity verification          */
 /******************************************************************/
-app.listen(PORT_NUMBER, () => console.log('Biblioteca Ducky en http://localhost:' + PORT_NUMBER));
-
-pool.query("SELECT count(*) AS usuarios FROM usuarios", (db_error, db_result) =>
+async function iniciar()
 {
-    if (db_error) console.log('Error al conectar a la BD (¿corriste npm run db:init?):', db_error.message);
-    else          console.log('Conectado a la BD · usuarios registrados:', db_result.rows[0].usuarios);
-});
+    try
+    {
+        await pool.query('SELECT 1 FROM usuarios LIMIT 1');
+        const server = app.listen(PORT_NUMBER, () =>
+            console.log('Biblioteca Ducky en http://localhost:' + PORT_NUMBER + ' · BD conectada'));
+        server.on('error', async (error) =>
+        {
+            console.error(error.code === 'EADDRINUSE' ? 'El puerto está ocupado. Cambia PORT o detén el servidor anterior.' : 'No se pudo abrir el puerto del servidor.');
+            await pool.end();
+            process.exitCode = 1;
+        });
+    }
+    catch (error)
+    {
+        console.error(diagnostico_base(error));
+        await pool.end();
+        process.exitCode = 1;
+    }
+}
+
+iniciar();

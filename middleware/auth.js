@@ -15,7 +15,7 @@
 const crypto        = require('crypto');
 const sesion_model  = require('../models/sesionModel');
 
-const SECRETO          = process.env.SESSION_SECRET || 'biblioteca-ducky-dev';
+const SECRETO          = process.env.SESSION_SECRET;
 const HORAS_INACTIVIDAD = 8;
 
 /******************************************************************/
@@ -42,17 +42,19 @@ const requiere_sesion = async (req, res, next) =>
     {
         const encabezado = req.headers.authorization || '';
         const token = encabezado.startsWith('Bearer ') ? encabezado.slice(7) : '';
-        const [id_sesion, firma] = token.split('.');
+        const [id_sesion, firma, extra] = token.split('.');
 
-        if (!id_sesion || !firma || firmar(id_sesion) !== firma)
+        if (!/^[1-9][0-9]*$/.test(id_sesion || '') || !Number.isSafeInteger(Number(id_sesion)) ||
+            !/^[a-f0-9]{32}$/.test(firma || '') || extra !== undefined ||
+            !crypto.timingSafeEqual(Buffer.from(firmar(id_sesion)), Buffer.from(firma)))
         {
-            return res.status(401).json({ error: 'Sesión expirada: inicia sesión nuevamente' });
+            return res.status(401).json({ codigo: 'SESION_EXPIRADA', error: 'Sesión expirada: inicia sesión nuevamente' });
         }
 
         const sesion = await sesion_model.obtener_activa(Number(id_sesion), HORAS_INACTIVIDAD);
         if (!sesion)
         {
-            return res.status(401).json({ error: 'Sesión expirada: inicia sesión nuevamente' });
+            return res.status(401).json({ codigo: 'SESION_EXPIRADA', error: 'Sesión expirada: inicia sesión nuevamente' });
         }
 
         req.usuario = sesion;
@@ -74,6 +76,10 @@ const requiere_sesion = async (req, res, next) =>
 /******************************************************************/
 const requiere_funcion = (...nombres) => (req, res, next) =>
 {
+    if (req.usuario.es_temporal)
+    {
+        return res.status(403).json({ codigo: 'CAMBIO_CONTRASENA_REQUERIDO', error: 'Debes cambiar tu contraseña temporal antes de continuar.' });
+    }
     const permitido = nombres.some((nombre) => req.usuario.funciones.includes(nombre));
     if (!permitido)
     {

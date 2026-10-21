@@ -5,9 +5,16 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "db:init": "node database/init.js"
+    "db:init": "node database/init.js",
+    "db:check": "node database/check.js",
+    "test": "node --test"
   },
-  "keywords": ["mvc", "express", "postgresql", "biblioteca"],
+  "keywords": [
+    "mvc",
+    "express",
+    "postgresql",
+    "biblioteca"
+  ],
   "author": "Equipo FlowBit",
   "license": "ISC",
   "type": "commonjs",

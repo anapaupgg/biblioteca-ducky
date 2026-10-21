@@ -60,7 +60,7 @@ const Api =
         let datos = null;
         try { datos = texto ? JSON.parse(texto) : null; } catch (e) { datos = { error: texto }; }
 
-        if (respuesta.status === 401 && token && !path.startsWith('/auth/login'))
+        if (respuesta.status === 401 && token && datos && datos.codigo === 'SESION_EXPIRADA')
         {
             Session.clear();
             window.location.href = 'login.html?expirada=1';

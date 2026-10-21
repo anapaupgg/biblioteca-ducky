@@ -58,6 +58,12 @@ DB_SSL=false
 ```
 Si usas Neon, pega su cadena de conexión y pon `DB_SSL=true`.
 
+Configura también `SESSION_SECRET` con una clave aleatoria propia de al menos 32 caracteres. Puedes generar una con:
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+Guárdala en `.env`, que está excluido de Git. No compartas credenciales en el repositorio.
+
 ### 4. Crear la base de datos
 Crea una base vacía llamada `ducky` (en pgAdmin: clic derecho en Databases → Create → Database). Después:
 ```bash
@@ -65,11 +71,25 @@ npm run db:init
 ```
 Este comando ejecuta `database/01_esquema.sql`, `02_reglas.sql` y `03_datos.sql`. Si lo vuelves a correr, la base se reinicia con los datos de prueba.
 
+Antes de arrancar, comprueba la conexión sin modificar datos:
+```bash
+npm run db:check
+```
+El comando comprueba acceso a la tabla de usuarios y existencia de la función de login. Si ya hay datos, no ejecutes `db:init` para resolver un fallo de conexión: revisa primero las credenciales y el esquema.
+
 ### 5. Levantar la aplicación
 ```bash
 npm start
 ```
+El servidor valida `DATABASE_URL`, `SESSION_SECRET` y el acceso a la tabla de usuarios antes de abrir el puerto. Si falta configuración o PostgreSQL no responde, muestra un diagnóstico y termina.
+
 Abre **http://localhost:3000**.
+
+### Pruebas de regresión
+```bash
+npm test
+```
+Estas pruebas verifican configuración, tokens, permisos con contraseña temporal y manejo de sesión en el cliente usando datos simulados. No sustituyen una prueba de integración con PostgreSQL.
 
 ## Cuentas de prueba (contraseña `1234`)
 

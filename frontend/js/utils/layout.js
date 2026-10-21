@@ -68,6 +68,10 @@ const Layout =
         }
 
         let usuario = Session.get();
+        // La estructura no debe esperar a la red en cada navegación.
+        // Los permisos y los datos siguen validándose en el servidor.
+        const usuario_dibujado = usuario ? JSON.stringify(usuario) : null;
+        if (usuario) this.dibujar(usuario, opciones);
         try
         {
             const respuesta = await Api.get('/auth/sesion');
@@ -76,7 +80,8 @@ const Layout =
         }
         catch (error)
         {
-            if (error.status !== 401) Ui.toast('error', 'Sin conexión', error.message);
+            if (error.status === 401) return null;
+            Ui.toast('error', 'Sin conexión', error.message);
             if (!usuario) return null;
         }
 
@@ -86,7 +91,7 @@ const Layout =
             return null;
         }
 
-        this.dibujar(usuario, opciones);
+        if (JSON.stringify(usuario) !== usuario_dibujado) this.dibujar(usuario, opciones);
 
         const requeridas = opciones.funciones || [];
         const permitido = requeridas.length === 0 || requeridas.some((f) => usuario.funciones.includes(f));

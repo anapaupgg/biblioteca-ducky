@@ -28,6 +28,7 @@ types.setTypeParser(1700, (valor) => (valor === null ? null : Number(valor)));
 const pool = new Pool(
 {
     connectionString: process.env.DATABASE_URL,
+    connectionTimeoutMillis: 5000,
     ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
     options: '-c search_path=biblioteca,public'
 });

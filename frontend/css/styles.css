@@ -5,7 +5,12 @@
 /* Description: Estilos generales de la aplicación.               */
 /******************************************************************/
 
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+/* Tipografía local: sin solicitudes externas durante la navegación. */
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 400; font-display: optional; src: url('../fonts/manrope-400.ttf') format('truetype'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 500; font-display: optional; src: url('../fonts/manrope-500.ttf') format('truetype'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 600; font-display: optional; src: url('../fonts/manrope-600.ttf') format('truetype'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 700; font-display: optional; src: url('../fonts/manrope-700.ttf') format('truetype'); }
+@font-face { font-family: 'Manrope'; font-style: normal; font-weight: 800; font-display: optional; src: url('../fonts/manrope-800.ttf') format('truetype'); }
 
 /******************************************************************/
 /* DESIGN TOKENS · Ducky / Primitives + Semantic                  */
@@ -51,6 +56,7 @@
 /******************************************************************/
 *, *::before, *::after { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { background: var(--color-paper); scrollbar-gutter: stable; }
 body { font: var(--text-body); color: var(--color-ink); background: var(--color-paper); min-height: 100vh; }
 h1 { font: var(--text-title); margin: 0; }
 h2 { font: var(--text-heading); margin: 0 0 var(--space-16); }
@@ -89,7 +95,7 @@ a  { color: var(--color-navy); }
 .sidebar-footer span { font: var(--text-small); opacity: .85; }
 
 .main { flex: 1; min-width: 0; padding: var(--space-32) var(--space-48) var(--space-48); }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); margin-bottom: var(--space-32); }
+.topbar { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-16); margin-bottom: var(--space-32); }
 .breadcrumb { font: var(--text-small); color: var(--color-muted); }
 .topbar-right { display: flex; align-items: center; gap: var(--space-24); font: 500 13px/20px var(--font); }
 .btn.menu-toggle { display: none; }
@@ -309,4 +315,10 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
     .page-header { flex-direction: column; }
     .page-header .actions { width: 100%; }
     h1 { font-size: 24px; line-height: 32px; }
+}
+
+/* Sin animaciones entre documentos: evitar capturas vacías al navegar. */
+@media (prefers-reduced-motion: reduce)
+{
+    .sidebar { transition: none; }
 }

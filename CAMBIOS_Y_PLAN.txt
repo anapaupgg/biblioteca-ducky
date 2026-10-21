@@ -1,0 +1,210 @@
+REGISTRO DE ENTREGA EN GIT
+- Por solicitud de Diego, se preparan estas mejoras para un commit local con
+  el mensaje: Diego: mejora conexión a BD, sesiones y carga de navegación.
+- Revisión remota previa: no hay commits nuevos.
+- Se incluyen código, pruebas, fuentes con licencia, documentación y este reporte.
+- .env queda excluido; no se incluyen credenciales ni datos de PostgreSQL.
+- Se excluye el cambio preexistente de package-lock.json, ajeno a estas mejoras.
+- Los apartados que dicen "sin commit" describen el estado de revisiones anteriores.
+- No se realiza push. Los pendientes funcionales se retoman después.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — CORRECCIÓN DE PANTALLAS EN BLANCO
+- git fetch origin terminó correctamente; no hay commits nuevos.
+- Retiré por completo las View Transitions añadidas en la intervención anterior,
+  después de que el usuario reportara que empeoraban la navegación.
+- Eliminé el @import bloqueante de Google Fonts en styles.css.
+- Descargué las cinco variantes oficiales de Manrope (400, 500, 600, 700, 800)
+  a frontend/fonts junto con su licencia OFL.txt. El CSS usa archivos locales
+  con font-display: optional; no depende de Google al cambiar de pantalla.
+- La carga de Google Fonts agotó el tiempo de espera en una comprobación;
+  fuera del sandbox respondió. No se atribuye todo el fallo a esa medición.
+- Se conserva el dibujo inmediato del menú y la validación de sesión.
+- Los HTML no tienen cambios finales respecto a la intervención anterior.
+- Nueve pruebas aprobadas y git diff --check sin errores.
+- Firmas de los cinco archivos TTF verificadas.
+- La verificación visual completa sigue pendiente: la captura volvió a salir
+  gris y luego el usuario cambió a otra pestaña. No se interfirió con su uso.
+- Sin commit ni push; servidor en http://localhost:3001.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — NAVEGACIÓN ENTRE PANTALLAS
+- Revisé origin al comenzar: sin commits nuevos respecto de 0e1213f.
+- AGENTS.md registra la preferencia de comprobar commits en cada solicitud.
+- frontend/js/utils/layout.js: dibuja menú y barra superior con la sesión
+  guardada antes de esperar la consulta de red. Revalida sesión y permisos;
+  reconstruye la estructura solo si el usuario actualizado cambió.
+- Si la sesión devuelve 401, ya no continúa inicializando el controlador.
+- frontend/css/styles.css: reserva altura para la barra superior y espacio
+  para el scrollbar; añade transición nativa breve de 140 ms entre documentos
+  con menú y barra identificados por separado. Respeta movimiento reducido;
+  navegadores sin soporte conservan los enlaces normales.
+- Referencia técnica: https://developer.mozilla.org/en-US/docs/Web/CSS/@view-transition
+- tests/layout.test.js: verifica dibujo inmediato con consulta pendiente,
+  actualización al cambiar usuario y bloqueo de inicialización ante 401.
+- npm test: 9 pruebas aprobadas. Sintaxis de layout.js y git diff --check OK.
+- GET/HEAD de libros.html confirmado con HTTP 200.
+- Intenté verificar visualmente en Brave. La herramienta pudo navegar, pero
+  después no expuso el contenido de la página y devolvió una captura gris;
+  no pude confirmar visualmente la fluidez de la transición con esa herramienta.
+- Cambios locales, sin commit ni push. La aplicación sigue en localhost:3001.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — CONEXIÓN LOCAL COMPLETADA
+Esta actualización sustituye el diagnóstico de BD desconectada del registro
+histórico que aparece más abajo.
+
+- Encontré PostgreSQL 16 de Homebrew activo en localhost:5433.
+- La instancia de 5432 solicitaba contraseña; es una instalación distinta.
+- Consulté las bases de la instancia 5433: postgres y vacunatrack.
+- Creé una base nueva y dedicada llamada ducky, sin modificar vacunatrack.
+- Creé .env (ignorado por Git, permisos 0600) con conexión local al puerto
+  5433, DB_SSL=false, PORT=3001 y un SESSION_SECRET aleatorio de 32 bytes.
+- Esta instancia ya permite autenticación trust en localhost; no cambié
+  pg_hba.conf ni contraseñas. Esa configuración es solo para desarrollo local.
+- Ejecuté db:init únicamente sobre la base ducky recién creada y vacía.
+  Los tres scripts SQL terminaron correctamente.
+- npm run db:check confirmó conexión, tabla usuarios y función de login.
+- El puerto 3000 tenía procesos de Ducky anterior y de otro proyecto.
+  Inicié la versión actual en http://localhost:3001 sin detener esos procesos.
+
+VERIFICACIÓN REAL POR HTTP Y POSTGRESQL
+- Pantalla login: HTTP 200.
+- API de usuarios sin sesión: HTTP 401.
+- Login, sesión y búsqueda con filtro para las cinco cuentas: correctos.
+- Administrador 100001: usuarios, libros, perfiles y pedidos respondieron 200.
+- Lector 621234: acceso administrativo a usuarios rechazado con 403.
+- Contraseña actual incorrecta en cambio de contraseña: 401 sin marcar
+  sesión expirada; la misma sesión siguió funcionando.
+- Logout y rechazo posterior de cada token: correctos.
+- Cerré todas las sesiones creadas por las pruebas. No cambié contraseñas.
+- La primera prueba de búsqueda sin filtros devolvió 400, como exige la API;
+  corregí la prueba para enviar titulo=bases y la verificación completa pasó.
+- Script de comprobación utilizado: /private/tmp/ducky-verificar-api.cjs.
+- Cuentas de demostración: 100001, 100002, 100003, 621234 y 700123;
+  contraseña 1234 para todas.
+
+PENDIENTES ACTUALES
+- Revisión visual en navegador y prueba completa de operaciones de escritura
+  (préstamos, altas, compras). No se afirman verificadas con estas pruebas.
+- Recuperación por correo, concurrencia de presupuestos y optimización de
+  consulta de pedidos siguen pendientes, como se detalla en el registro.
+- No hay commit ni push de las mejoras locales.
+
+---------------- REGISTRO HISTÓRICO DE LA REVISIÓN ANTERIOR ----------------
+
+BIBLIOTECA DUCKY — CAMBIOS, ESTADO Y PLAN
+Fecha de revisión: 20 de octubre de 2026
+
+1. TRABAJO ANTERIOR EN ESTA CONVERSACIÓN
+- Revisé estructura MVC, autenticación, modelos, SQL y frontend.
+- Comprobé la sintaxis de los 61 archivos JavaScript que había entonces.
+- Inicié el servidor y confirmé HTTP 200 en la pantalla de login.
+- Detecté que el login fallaba al conectar a PostgreSQL sin contraseña.
+- En esas intervenciones no modifiqué código ni configuré una base de datos.
+  El código original pertenece al repositorio; no lo atribuyo a mi trabajo.
+
+2. CAMBIOS REMOTOS INTEGRADOS AHORA
+- Consulté origin: https://github.com/anapaupgg/biblioteca-ducky.git
+- Había un commit nuevo: 0e1213f, de Ana Paula Priego,
+  "Ajustes a esquemas sql".
+- Integré origin/main por fast-forward, de b7152de a 0e1213f.
+- El commit toca 79 archivos; en los SQL revisados los ajustes son de
+  comentarios y documentación. Traerlos no configura ni instala PostgreSQL.
+- Conservé la modificación previa de package-lock.json: eliminación de
+  la propiedad "peer": true en pg. Ya existía al comenzar esta revisión.
+- No creé commits ni hice push de mis mejoras.
+
+3. MEJORAS REALIZADAS EN ESTA REVISIÓN
+utils/config.js (nuevo)
+- Valida la presencia y formato de DATABASE_URL.
+- Exige SESSION_SECRET propio de al menos 32 caracteres.
+- Traduce errores de conexión habituales a diagnósticos sin mostrar secretos.
+
+server.js
+- Valida configuración antes de cargar e iniciar la aplicación.
+- Comprueba acceso a usuarios antes de abrir el puerto HTTP.
+- Ante fallo de BD termina con código de error; no anuncia arranque exitoso.
+- Maneja el puerto ocupado con un mensaje comprensible y cierra el pool.
+
+db.js
+- Limita a cinco segundos la espera para establecer una conexión.
+
+middleware/auth.js
+- Elimina el secreto fijo de respaldo.
+- Rechaza identificadores inválidos y tokens con segmentos adicionales.
+- Compara firmas con timingSafeEqual.
+- Añade SESION_EXPIRADA a respuestas por sesión inválida o cerrada.
+- Impide operaciones protegidas por permisos cuando la contraseña es temporal.
+  Conserva el acceso autenticado a consultar sesión, cambiar contraseña y salir.
+
+frontend/js/utils/api.js
+- Borra la sesión y redirige solo si el servidor identifica SESION_EXPIRADA.
+- Una contraseña actual incorrecta al cambiarla ya no provoca cierre de sesión.
+
+database/check.js (nuevo)
+- Comprueba conexión, acceso a usuarios y existencia de iniciar_sesion.
+- Solo realiza consultas de lectura; no instala ni reinicia datos.
+
+package.json
+- Añade npm run db:check y npm test, sin dependencias adicionales.
+
+.env.example
+- Reemplaza la contraseña de ejemplo postgres por TU_CONTRASENA.
+- Aclara el requisito del secreto de sesión.
+
+README.md
+- Explica cómo generar el secreto, comprobar la BD y ejecutar pruebas.
+- Documenta el nuevo comportamiento al arrancar y el riesgo de db:init.
+
+tests/auth.test.js, tests/api.test.js, tests/config.test.js (nuevos)
+- Añaden seis pruebas de regresión de configuración y autenticación.
+
+CAMBIOS_Y_PLAN.txt
+- Este registro de trabajo realizado, evidencia y pendientes.
+
+4. ESTADO REAL DE LA BASE DE DATOS
+- No existe .env en esta copia del proyecto.
+- PostgreSQL responde en el socket local /tmp/.s.PGSQL.5432.
+- La consulta de lectura fue rechazada: fe_sendauth: no password supplied.
+- No pude confirmar el nombre de la base, tablas, usuarios ni datos existentes.
+- La aplicación NO tiene una conexión funcional confirmada.
+- No creé ni borré bases, no cambié contraseñas y no ejecuté db:init.
+- La contraseña 1234 corresponde a usuarios de prueba de la aplicación,
+  no a la cuenta PostgreSQL.
+
+5. VALIDACIONES REALIZADAS
+- npm test: seis pruebas aprobadas, cero fallos; usan datos simulados.
+- node --check: sintaxis correcta en los 66 archivos JavaScript.
+- git diff --check: sin errores de espacios en el diff.
+- npm run db:check: termina correctamente con diagnóstico de DATABASE_URL
+  faltante y código de salida 1, esperado en el estado actual.
+- npm start: rechaza la configuración incompleta con mensaje claro y
+  código de salida 1, en lugar de arrancar y fallar en cada intento de login.
+- No se validó login real, interfaz en navegador ni operaciones de negocio
+  contra PostgreSQL después de estos cambios.
+
+6. SIGUIENTE TRABAJO PROPUESTO
+Prioridad inmediata: conectar PostgreSQL local, ya instalado.
+1) Identificar usuario y base; el propietario configura la contraseña en .env.
+2) Copiar .env.example a .env, completar DATABASE_URL y generar SESSION_SECRET.
+3) Ejecutar npm run db:check para comprobar conexión y esquema.
+4) Si falta la base, crear una base dedicada. Si falta el esquema, inspeccionar
+   antes de instalar. db:init elimina biblioteca CASCADE: no ejecutarlo sobre
+   datos que deban conservarse.
+5) Arrancar y comprobar login, cambio de contraseña, permisos por rol,
+   búsquedas y operaciones principales con datos de prueba.
+
+Mejoras posteriores, aún NO implementadas:
+- Separar recuperación de contraseña de demostración del funcionamiento real:
+  actualmente se devuelve enlace_demo. Integrar envío de correo antes de publicar.
+- Revisar concurrencia de pedidos y presupuestos con pruebas contra PostgreSQL.
+- Consultar un pedido por ID directamente en SQL en vez de cargar todos.
+- Añadir pruebas de integración para préstamos, recuperación y presupuestos.
+- Revisar y configurar validación de certificados SSL antes de conectar en nube.
+
+Recomendación actual: usar PostgreSQL local para desarrollo. Considerar una base
+compartida en la nube cuando el equipo necesite trabajar sobre los mismos datos.
