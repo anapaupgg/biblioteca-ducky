@@ -6,6 +6,10 @@ Alcance: aplicación funcional y PostgreSQL. Figma y documentos se usan como ref
 
 La exposición pública del token se mitigó deshabilitando emisión y canje de enlaces (503), incluidos enlaces demo previos. No es recuperación por correo terminada: falta configurar entrega verificada y revocar tokens históricos antes de reabrirla. Cambio autenticado conservado.
 
+## Actualización de bajas y reactivaciones
+
+Corregido el ciclo en la aplicación: baja elimina credenciales y revoca sesiones/tokens; reactivación genera credencial temporal, valida jerarquía y tipo incluso al conservar perfil, conserva historial y registra la acción. Probado contra PostgreSQL con rollback. No se migraron datos históricos ni se modificó el esquema. La entrega de credenciales es manual al administrador autorizado; correo y fuente institucional real siguen pendientes. Las observaciones originales de la tabla siguiente describen la revisión inicial.
+
 ## Base y verificación
 
 - `git fetch origin` completado; `main` y `origin/main` coinciden en `78d6967`, sin commits nuevos. Conservados los cambios previos en `package-lock.json` y `CAMBIOS_Y_PLAN.txt`.

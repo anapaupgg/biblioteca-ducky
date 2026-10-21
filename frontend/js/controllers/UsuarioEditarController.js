@@ -92,7 +92,12 @@ const UsuarioEditarController =
         {
             const r = await UsuarioModel.reactivar(this.usuario.clave, UsuarioEditarView.perfil_elegido());
             UsuarioEditarView.mensaje('ok', r.mensaje, r.usuario.nombre + ' vuelve a estar Activo.');
-            this.consultar_silencioso();
+            await this.consultar_silencioso();
+            await Ui.dialogo({
+                titulo: 'Nueva contraseña temporal',
+                texto: 'Contraseña temporal: ' + r.contrasena_temporal + '. Entrégala al usuario por un medio privado. Deberá cambiarla al iniciar sesión. El envío por correo aún no está configurado.',
+                confirmar: 'Entendido', cancelar: false
+            });
         }
         catch (error) { UsuarioEditarView.mensaje('error', error.message); }
     },

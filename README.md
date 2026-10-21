@@ -110,3 +110,9 @@ Claves de la institución simulada para registrar usuarios nuevos:
 
 - **Correo:** no hay servidor de correo. La contraseña temporal se muestra al administrador al registrar al usuario. La recuperación y el restablecimiento públicos están deshabilitados (HTTP 503): no generan tokens, revelan cuentas ni aceptan enlaces antiguos de demostración. El cambio de contraseña autenticado sigue disponible. Para habilitar recuperación se requiere entrega por correo verificado, revocar tokens antiguos y probar expiración, uso único y límites de solicitudes.
 - **Directorio institucional:** los datos personales al registrar un usuario se leen de un directorio simulado en `utils/institucion.js`. En producción, ese módulo llamaría al servicio de la universidad.
+
+## Baja y reactivación de usuarios
+
+La baja conserva el usuario y su historial, elimina su credencial y revoca sesiones y enlaces de recuperación. La reactivación exige vigencia institucional y un perfil activo autorizado; genera una contraseña temporal nueva que debe cambiarse al entrar. En este prototipo, el administrador autorizado recibe la contraseña en un diálogo para entregarla por un medio privado; todavía no se envía por correo. Las operaciones se ejecutan en una transacción y registran la acción sin guardar la contraseña en bitácora. No requieren cambios de esquema ni `db:init`.
+
+Prueba de integración opcional: `DUCKY_TEST_DB=1 node --test tests/usuarios-ciclo.test.js`. Usa la conexión de `.env`, crea un usuario temporal y revierte la transacción al finalizar; las secuencias pueden avanzar aunque los registros se reviertan.

@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — BAJA Y REACTIVACIÓN SEGURAS (21 DE OCTUBRE DE 2026)
+- Fetch previo sin commits nuevos desde 30a6e17; sin diferencias remotas.
+- Baja elimina credencial, cierra sesiones e invalida tokens, conservando
+  usuario e historial. Reactivación genera nueva credencial temporal.
+- Validación de jerarquía del usuario y perfil final y tipo institucional;
+  bloqueo de fila y comprobación de estado evitan reactivación repetida.
+- Bitácora explícita sin secretos; respuestas con contraseña usan no-store.
+- Diálogo de entrega manual al administrador, sin afirmar envío de correo.
+- 13 pruebas unitarias aprobadas; integración opcional de ciclo completo
+  también aprobada contra PostgreSQL con usuario temporal y ROLLBACK.
+  No se alteraron usuarios existentes; las secuencias pueden avanzar.
+- No se requiere migración de esquema; no se ejecutó db:init.
+- Pendientes: correo, institución real, compras concurrentes y validación
+  visual completa. No se afirma cumplimiento total de las historias.
+- Conservado package-lock.json fuera de la entrega; se prepara commit/push.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BLOQUEO DE RECUPERACIÓN INSEGURA (21 DE OCTUBRE DE 2026)
 - Fetch previo: sin commits remotos nuevos desde 371282c ni diferencias
   pendientes de integrar. Se conserva package-lock.json fuera del commit.

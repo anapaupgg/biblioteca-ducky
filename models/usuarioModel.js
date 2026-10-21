@@ -19,6 +19,20 @@
 /******************************************************************/
 
 const { pool } = require('../db');
+const { ErrorNegocio } = require('../utils/errores');
+
+const bloquear_estado = async (client, clave, esperado) =>
+{
+    const r = await client.query('SELECT estatus FROM usuarios WHERE clave_usuario = $1 FOR UPDATE', [clave]);
+    if (!r.rows[0] || r.rows[0].estatus !== esperado)
+        throw new ErrorNegocio(409, 'El estado del usuario cambió. Actualiza la consulta.');
+};
+
+const revocar_acceso = async (client, clave) =>
+{
+    await client.query('UPDATE sesiones SET fecha_fin = now() WHERE clave_usuario = $1 AND fecha_fin IS NULL', [clave]);
+    await client.query('UPDATE recuperaciones_acceso SET usado = TRUE WHERE clave_usuario = $1 AND NOT usado', [clave]);
+};
 
 /* Columns returned for every user                                */
 const SELECT_USUARIO =
@@ -91,30 +105,43 @@ const cambiar_perfil = (client, clave, id_perfil) =>
 /* dar_baja(client, { clave, id_motivo, comentario, admin })      */
 /* Purpose: Insert the baja. The trigger validates the reason,    */
 /*          refuses users with active loans and sets the user to  */
-/*          Inactivo. Open sessions of that user are closed.      */
+/*          Inactivo. Revoke sessions/tokens and delete credentials. */
 /******************************************************************/
 const dar_baja = async (client, datos) =>
 {
+    await bloquear_estado(client, datos.clave, 'Activo');
     await client.query(
         `INSERT INTO bajas_usuario (clave_usuario, id_motivo, comentario, clave_administrador)
          VALUES ($1, $2, nullif(btrim($3), ''), $4)`,
         [datos.clave, datos.id_motivo, datos.comentario || '', datos.admin]);
-    await client.query('UPDATE sesiones SET fecha_fin = now() WHERE clave_usuario = $1 AND fecha_fin IS NULL', [datos.clave]);
+    await revocar_acceso(client, datos.clave);
+    await client.query('DELETE FROM credenciales WHERE clave_usuario = $1', [datos.clave]);
+    await client.query("SELECT registrar_bitacora('Baja de usuario', $1)",
+        ['Usuario ' + datos.clave + ' · motivo ' + datos.id_motivo]);
 };
 
 /******************************************************************/
 /* Reuse Instructions                                             */
-/* reactivar(client, { clave, admin })                            */
+/* reactivar(client, { clave, admin, id_perfil, contrasena })      */
 /* Purpose: Fill Fecha_Reactivacion of the open baja; the trigger */
-/*          sets the user back to Activo.                         */
-/* Returns: number of bajas closed (0 = there was no open baja)   */
+/*          sets Activo; replace credentials in the same transaction. */
+/* Returns: 1; rejects missing/duplicate baja or stale status.     */
 /******************************************************************/
 const reactivar = async (client, datos) =>
 {
+    await bloquear_estado(client, datos.clave, 'Inactivo');
+    if (!datos.contrasena || datos.contrasena.length < 8)
+        throw new ErrorNegocio(400, 'Se requiere una nueva contraseña temporal');
+    if (datos.id_perfil) await cambiar_perfil(client, datos.clave, datos.id_perfil);
     const r = await client.query(
         `UPDATE bajas_usuario SET fecha_reactivacion = CURRENT_DATE, clave_admin_reactivacion = $2
           WHERE clave_usuario = $1 AND fecha_reactivacion IS NULL`,
         [datos.clave, datos.admin]);
+    if (r.rowCount !== 1) throw new ErrorNegocio(409, 'No existe una única baja pendiente para reactivar');
+    await revocar_acceso(client, datos.clave);
+    await client.query('SELECT asignar_contrasena($1, $2, TRUE)', [datos.clave, datos.contrasena]);
+    await client.query("SELECT registrar_bitacora('Reactivación de usuario', $1)",
+        ['Usuario ' + datos.clave + ' · nueva credencial temporal']);
     return r.rowCount;
 };
 

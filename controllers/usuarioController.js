@@ -70,9 +70,9 @@ const validar_tipo = (tipo, perfil) =>
     }
 };
 
-/* Temporary password: 10 readable characters                     */
+/* Temporary password: fixed length, cryptographically random      */
 const contrasena_temporal = () =>
-    'Dk-' + crypto.randomBytes(6).toString('base64').replace(/[^A-Za-z0-9]/g, '').slice(0, 7);
+    'Dk-' + crypto.randomBytes(12).toString('base64url');
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -185,6 +185,7 @@ const crear = async (req, res) =>
             id_perfil: perfil.id, admin: req.usuario.clave, contrasena: temporal
         }));
 
+        res.set('Cache-Control', 'no-store');
         res.status(201).json({ usuario: await obtener_usuario(clave), contrasena_temporal: temporal });
     }
     catch (error) { responder_error(res, error, 'usuarios.crear'); }
@@ -295,29 +296,22 @@ const reactivar = async (req, res) =>
             throw new ErrorNegocio(422, 'No fue posible reactivar: la Clave no está vigente en la institución');
         }
 
-        let perfil = null;
-        if (req.body.id_perfil && Number(req.body.id_perfil) !== usuario.id_perfil)
-        {
-            perfil = await obtener_perfil_activo(req.body.id_perfil);
-            validar_jerarquia(req.usuario, perfil.funciones, 'No puede asignar un perfil superior al suyo');
-            validar_tipo(usuario.tipo, perfil);
-        }
-        else
-        {
-            const actual = await perfil_model.buscar(usuario.id_perfil);
-            if (actual.rows[0].estatus !== 'Activo')
-            {
-                throw new ErrorNegocio(422, 'Reactivación no realizada: el perfil del usuario ya no está disponible, elige otro', ['id_perfil']);
-            }
-        }
+        if (usuario.clave === req.usuario.clave) throw new ErrorNegocio(403, 'No puede reactivarse a sí mismo');
+        validar_jerarquia(req.usuario, usuario.funciones, 'No puede reactivar a un usuario con un perfil superior');
+        const perfil = await obtener_perfil_activo(req.body.id_perfil || usuario.id_perfil);
+        validar_jerarquia(req.usuario, perfil.funciones, 'No puede asignar un perfil superior al suyo');
+        validar_tipo(persona.tipo, perfil);
+        const temporal = contrasena_temporal();
 
-        await con_usuario(req.usuario.clave, async (client) =>
+        await con_usuario(req.usuario.clave, (client) => usuario_model.reactivar(client,
         {
-            if (perfil) await usuario_model.cambiar_perfil(client, usuario.clave, perfil.id);
-            await usuario_model.reactivar(client, { clave: usuario.clave, admin: req.usuario.clave });
-        });
+            clave: usuario.clave, admin: req.usuario.clave,
+            id_perfil: perfil.id, contrasena: temporal
+        }));
 
-        res.status(200).json({ mensaje: 'Usuario reactivado exitosamente', usuario: await obtener_usuario(usuario.clave) });
+        res.set('Cache-Control', 'no-store');
+        res.status(200).json({ mensaje: 'Usuario reactivado exitosamente',
+            usuario: await obtener_usuario(usuario.clave), contrasena_temporal: temporal });
     }
     catch (error) { responder_error(res, error, 'usuarios.reactivar'); }
 };
