@@ -1,3 +1,53 @@
+ACTUALIZACIÓN — ENTREGA DEL DIAGNÓSTICO A GITHUB (21 DE OCTUBRE DE 2026)
+- Diego solicita crear commits y subir los avances a GitHub; preferencia
+  persistida en AGENTS.md.
+- Fetch previo correcto: main y origin/main coinciden en 78d6967; sin commits
+  remotos nuevos que integrar.
+- Se prepara commit de AGENTS.md, REVISION_FUNCIONAL_Y_BD.md y este registro.
+- package-lock.json conserva su cambio preexistente y queda fuera del commit.
+- Verificación documental: git diff --check. Sin cambios de aplicación ni BD.
+- Se realizará push a origin/main y se comprobará la sincronización.
+- Los estados "sin commit ni push" siguientes son registros históricos.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — REVISIÓN FUNCIONAL Y BD (21 DE OCTUBRE DE 2026)
+- Alcance ajustado por Diego: aplicación funcional y BD; se excluyen por ahora
+  presentación, videos, cartas y otros entregables académicos.
+- Fetch completado; main y origin/main coinciden en 78d6967. Sin avances remotos.
+- Conservados cambios previos en package-lock.json y este registro.
+- Revisados requerimientos, backlog, historias, rúbrica y estructura de Figma;
+  captura del login inspeccionada. Navegación visual completa sigue pendiente.
+- Trabajo local nuevo: REVISION_FUNCIONAL_Y_BD.md con matriz de historias,
+  evidencia y prioridades. Sin modificar código, esquema ni datos de negocio.
+- npm test: 9 aprobadas. db:check correcto; login.html en 3001 responde HTTP 200.
+- Prioridad: recuperación pública devuelve token de restablecimiento de demo;
+  después credenciales de baja/reactivación, institución simulada, auditoría,
+  concurrencia de compras y listado sin ISBN. Detalle en el informe.
+- No se ejecutó db:init. Sin commit ni push.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — RETOMA Y PREPARACIÓN DE REVISIÓN (21 DE OCTUBRE DE 2026)
+- Leídos AGENTS.md y este registro antes de modificar archivos.
+- git fetch origin completado; main y origin/main coinciden en 78d6967
+  (0 commits por delante y 0 por detrás). El commit ya está en GitHub.
+- No hay avances remotos nuevos que integrar en esta solicitud.
+- Conservado el cambio local preexistente de package-lock.json.
+- Trabajo local de esta solicitud: actualización de este registro; sin cambios
+  de código, sin commit ni push y sin operaciones sobre la base de datos.
+- Contexto local confirmado por el usuario: PostgreSQL 5433 y aplicación 3001.
+  No ejecutar db:init: elimina datos. No se verificaron servicios en esta retoma.
+- La validación visual de navegación sigue pendiente.
+- Siguiente paso: recibir y contrastar historias de usuario, Sprint Backlog
+  y Figma con la implementación y las evidencias de verificación.
+- Rúbrica: MVC 2 puntos; funcionalidad 4; experiencia y desempeño 2;
+  seguridad y datos 2. No se asignan puntuaciones sin revisar los materiales.
+- Entregable previsto: faltantes por historia/criterio, evidencia, prioridad
+  y pruebas pendientes, distinguiendo implementación de validación.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 REGISTRO DE ENTREGA EN GIT
 - Por solicitud de Diego, se preparan estas mejoras para un commit local con
   el mensaje: Diego: mejora conexión a BD, sesiones y carga de navegación.
