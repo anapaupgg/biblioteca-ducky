@@ -198,6 +198,7 @@ const cambiar_estatus = (client, id, estatus) =>
 /******************************************************************/
 const agregar_ejemplares = async (client, datos) =>
 {
+    await client.query('SELECT id_libro FROM libros WHERE id_libro = $1 FOR UPDATE', [datos.id_libro]);
     const prefijo = datos.id_libro + (datos.digital ? '-D' : '-');
     const r = await client.query(
         `SELECT coalesce(max(substr(id_ejemplar, $2)::int), 0) AS ultimo FROM ejemplares

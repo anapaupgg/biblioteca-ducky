@@ -1,3 +1,23 @@
+ACTUALIZACIÓN — COMPRAS CONCURRENTES (21 DE OCTUBRE DE 2026)
+- Fetch previo sin commits nuevos desde 9094fea ni diferencias remotas.
+- Creación bloquea presupuesto dentro de la transacción antes de insertar.
+- Autorización/rechazo/recepción bloquean pedido y validan estado dentro
+  de la transacción; una segunda recepción se rechaza con 409.
+- Recepción usa el mismo cliente de BD para lecturas y escrituras; bloquea
+  libros en orden para numeración de ejemplares. Consulta de pedido por ID.
+- Pruebas concurrentes aisladas: presupuesto 100 con dos pedidos de 80,
+  recepción única, rollback de ejemplares/estado y respuestas incompatibles.
+- Primera prueba aislada detectó pgcrypto fuera de public; ajustada para
+  referenciar su ubicación existente sin mover ni alterar la extensión.
+- Sin migraciones ni db:init. Garantías de bloqueo en flujos de la app;
+  SQL externo debe respetar el mismo protocolo. Datos existentes conservados.
+- Suite completa con BD: 15 pruebas aprobadas, ninguna omitida. Sintaxis y
+  git diff --check correctos. App reiniciada en 3001, BD conectada; login
+  HTTP 200 y recepción sin sesión HTTP 401.
+- package-lock.json queda fuera del commit; se prepara entrega a GitHub.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BAJA Y REACTIVACIÓN SEGURAS (21 DE OCTUBRE DE 2026)
 - Fetch previo sin commits nuevos desde 30a6e17; sin diferencias remotas.
 - Baja elimina credencial, cierra sesiones e invalida tokens, conservando

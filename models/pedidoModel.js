@@ -17,6 +17,7 @@
 
 const { pool } = require('../db');
 const libro_model = require('./libroModel');
+const { ErrorNegocio } = require('../utils/errores');
 
 const presupuestos = () => pool.query('SELECT * FROM v_presupuesto_saldo ORDER BY periodo DESC');
 
@@ -31,8 +32,8 @@ const presupuesto_del_mes = async (periodo) =>
 /* listar()                                                       */
 /* Purpose: Orders with folio OCT-2026-014 style, total and lines */
 /******************************************************************/
-const listar = () =>
-    pool.query(
+const listar = (client = pool, id = null) =>
+    client.query(
         `SELECT p.id_pedido,
                 upper(to_char(p.fecha_envio, 'TMMon')) || '-' || to_char(p.fecha_envio, 'YYYY') || '-' || lpad(p.id_pedido::text, 3, '0') AS folio,
                 p.fecha_envio, p.estatus, p.fecha_recepcion, pm.periodo, s.nombre AS solicitante,
@@ -42,19 +43,20 @@ const listar = () =>
            JOIN presupuestos_mensuales pm USING (id_presupuesto)
            JOIN usuarios s ON s.clave_usuario = p.clave_solicitante
            LEFT JOIN detalle_pedido d USING (id_pedido)
+          WHERE ($1::integer IS NULL OR p.id_pedido = $1)
           GROUP BY p.id_pedido, pm.periodo, s.nombre
-          ORDER BY p.fecha_envio DESC`);
+          ORDER BY p.fecha_envio DESC`, [id]);
 
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* buscar(id)                                                     */
 /* Returns: { pedido, lineas[] } or null                          */
 /******************************************************************/
-const buscar = async (id) =>
+const buscar = async (id, client = pool) =>
 {
-    const pedido = (await listar()).rows.find((p) => p.id_pedido === Number(id));
+    const pedido = (await listar(client, id)).rows[0];
     if (!pedido) return null;
-    const lineas = await pool.query(
+    const lineas = await client.query(
         `SELECT d.numero_linea, d.id_libro, d.isbn_solicitado, d.titulo_solicitado, e.nombre AS editorial,
                 d.cantidad, d.costo_unitario_mxn, d.cantidad * d.costo_unitario_mxn AS subtotal,
                 d.clave_peticionario, u.nombre AS peticionario,
@@ -77,6 +79,10 @@ const buscar = async (id) =>
 /******************************************************************/
 const crear = async (client, d) =>
 {
+    // Separate statement: after waiting, subsequent queries see committed lines.
+    const presupuesto = await client.query(
+        'SELECT id_presupuesto FROM presupuestos_mensuales WHERE id_presupuesto = $1 FOR UPDATE', [d.id_presupuesto]);
+    if (!presupuesto.rowCount) throw new ErrorNegocio(422, 'Presupuesto no disponible');
     const r = await client.query(
         'INSERT INTO pedidos_tesoreria (id_presupuesto, clave_solicitante) VALUES ($1, $2) RETURNING id_pedido',
         [d.id_presupuesto, d.clave]);
@@ -103,10 +109,56 @@ const crear = async (client, d) =>
     return id_pedido;
 };
 
-const cambiar_estatus = (client, id, estatus) =>
-    client.query(
+const bloquear_pedido = async (client, id, esperado) =>
+{
+    const r = await client.query('SELECT estatus FROM pedidos_tesoreria WHERE id_pedido = $1 FOR UPDATE', [id]);
+    if (!r.rowCount) throw new ErrorNegocio(404, 'Solicitud no encontrada');
+    if (r.rows[0].estatus !== esperado)
+        throw new ErrorNegocio(409, 'La solicitud ya cambió de estado. Actualiza la lista.');
+};
+
+const cambiar_estatus = async (client, id, estatus) =>
+{
+    const esperado = estatus === 'Recibido' ? 'Autorizado' : 'Enviado';
+    if (!['Recibido', 'Autorizado', 'Rechazado'].includes(estatus))
+        throw new ErrorNegocio(400, 'Estatus no válido');
+    await bloquear_pedido(client, id, esperado);
+    await client.query(
         `UPDATE pedidos_tesoreria SET estatus = $2::varchar,
                 fecha_recepcion = CASE WHEN $2::varchar = 'Recibido' THEN CURRENT_DATE ELSE NULL END
           WHERE id_pedido = $1`, [id, estatus]);
+};
 
-module.exports = { presupuestos, presupuesto_del_mes, listar, buscar, crear, cambiar_estatus };
+// Caller owns the transaction: a failed copy insert rolls back the whole receipt.
+const recibir = async (client, id, id_ubicacion) =>
+{
+    await bloquear_pedido(client, id, 'Autorizado');
+    const actual = await buscar(id, client);
+    const con_ficha = actual.lineas.filter(l => l.id_libro);
+    if (con_ficha.length && !id_ubicacion)
+        throw new ErrorNegocio(400, 'Elige la ubicación de los ejemplares', ['id_ubicacion']);
+    // Consistent book lock order prevents deadlocks between different orders.
+    const libros = [...new Set(con_ficha.map(l => l.id_libro))].sort();
+    const formatos = new Map();
+    for (const libro of libros)
+    {
+        const r = await client.query('SELECT formato FROM libros WHERE id_libro = $1 FOR UPDATE', [libro]);
+        if (!r.rowCount) throw new ErrorNegocio(422, 'La ficha del libro ya no está disponible');
+        formatos.set(libro, r.rows[0].formato);
+    }
+    const nuevos = [];
+    for (const linea of con_ficha)
+    {
+        const digital = formatos.get(linea.id_libro) === 'Digital';
+        nuevos.push(...await libro_model.agregar_ejemplares(client, {
+            id_libro: linea.id_libro, cantidad: linea.cantidad, id_ubicacion: Number(id_ubicacion),
+            digital, tipo_uso: digital ? 'Préstamo digital' : 'Préstamo externo'
+        }));
+    }
+    await cambiar_estatus(client, id, 'Recibido');
+    await client.query("SELECT registrar_bitacora('Recepción de pedido', $1)",
+        ['Pedido ' + id + ' · ' + nuevos.length + ' ejemplares']);
+    return { ejemplares: nuevos, sin_ficha: actual.lineas.filter(l => !l.id_libro) };
+};
+
+module.exports = { presupuestos, presupuesto_del_mes, listar, buscar, crear, cambiar_estatus, recibir };

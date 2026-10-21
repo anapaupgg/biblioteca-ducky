@@ -17,7 +17,6 @@
 
 const { con_usuario } = require('../db');
 const pedido_model    = require('../models/pedidoModel');
-const libro_model     = require('../models/libroModel');
 const { responder_error, ErrorNegocio } = require('../utils/errores');
 const { es_isbn, entero_positivo }      = require('../utils/validators');
 
@@ -109,11 +108,8 @@ const estatus = async (req, res) =>
     {
         const nuevo = req.body.estatus;
         if (!['Autorizado', 'Rechazado'].includes(nuevo)) throw new ErrorNegocio(400, 'Estatus no válido');
-        const actual = await pedido_model.buscar(Number(req.params.id));
-        if (!actual) throw new ErrorNegocio(404, 'Solicitud no encontrada');
-        if (actual.pedido.estatus !== 'Enviado') throw new ErrorNegocio(422, 'Solo se puede responder una solicitud en estatus Enviado');
-
-        await con_usuario(req.usuario.clave, (client) => pedido_model.cambiar_estatus(client, actual.pedido.id_pedido, nuevo));
+        await con_usuario(req.usuario.clave,
+            (client) => pedido_model.cambiar_estatus(client, Number(req.params.id), nuevo));
         res.status(200).json({ mensaje: 'Solicitud ' + (nuevo === 'Autorizado' ? 'autorizada' : 'rechazada') + ' por Tesorería' });
     }
     catch (error) { responder_error(res, error, 'pedidos.estatus'); }
@@ -131,39 +127,9 @@ const recibir = async (req, res) =>
 {
     try
     {
-        const actual = await pedido_model.buscar(Number(req.params.id));
-        if (!actual) throw new ErrorNegocio(404, 'Solicitud no encontrada');
-        if (actual.pedido.estatus !== 'Autorizado') throw new ErrorNegocio(422, 'Solo se reciben solicitudes autorizadas por Tesorería');
-
-        const con_ficha = actual.lineas.filter((l) => l.id_libro);
-        if (con_ficha.length > 0 && !req.body.id_ubicacion) throw new ErrorNegocio(400, 'Elige la ubicación de los ejemplares', ['id_ubicacion']);
-
-        const etiquetados = await con_usuario(req.usuario.clave, async (client) =>
-        {
-            const nuevos = [];
-            for (const linea of con_ficha)
-            {
-                const ficha = await libro_model.buscar(linea.id_libro);
-                const ids = await libro_model.agregar_ejemplares(client,
-                {
-                    id_libro: linea.id_libro, cantidad: linea.cantidad, id_ubicacion: Number(req.body.id_ubicacion),
-                    digital: ficha.libro.formato === 'Digital',
-                    tipo_uso: ficha.libro.formato === 'Digital' ? 'Préstamo digital' : 'Préstamo externo'
-                });
-                nuevos.push(...ids);
-            }
-            await pedido_model.cambiar_estatus(client, actual.pedido.id_pedido, 'Recibido');
-            await client.query("SELECT registrar_bitacora('Recepción de pedido', $1)",
-                ['Pedido ' + actual.pedido.id_pedido + ' · ' + nuevos.length + ' ejemplares']);
-            return nuevos;
-        });
-
-        res.status(200).json(
-        {
-            mensaje: 'Recepción confirmada',
-            ejemplares: etiquetados,
-            sin_ficha: actual.lineas.filter((l) => !l.id_libro)
-        });
+        const resultado = await con_usuario(req.usuario.clave,
+            (client) => pedido_model.recibir(client, Number(req.params.id), req.body.id_ubicacion));
+        res.status(200).json({ mensaje: 'Recepción confirmada', ...resultado });
     }
     catch (error) { responder_error(res, error, 'pedidos.recibir'); }
 };

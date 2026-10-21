@@ -116,3 +116,11 @@ Claves de la institución simulada para registrar usuarios nuevos:
 La baja conserva el usuario y su historial, elimina su credencial y revoca sesiones y enlaces de recuperación. La reactivación exige vigencia institucional y un perfil activo autorizado; genera una contraseña temporal nueva que debe cambiarse al entrar. En este prototipo, el administrador autorizado recibe la contraseña en un diálogo para entregarla por un medio privado; todavía no se envía por correo. Las operaciones se ejecutan en una transacción y registran la acción sin guardar la contraseña en bitácora. No requieren cambios de esquema ni `db:init`.
 
 Prueba de integración opcional: `DUCKY_TEST_DB=1 node --test tests/usuarios-ciclo.test.js`. Usa la conexión de `.env`, crea un usuario temporal y revierte la transacción al finalizar; las secuencias pueden avanzar aunque los registros se reviertan.
+
+## Compras concurrentes
+
+La aplicación bloquea el presupuesto durante la creación del pedido y comprueba el estado del pedido dentro de la transacción al autorizar, rechazar o recibir. La recepción y los ejemplares se confirman juntos; un error revierte la operación. La numeración de ejemplares se protege bloqueando la ficha del libro. La consulta de un pedido filtra directamente por ID.
+
+Prueba: `DUCKY_TEST_DB=1 node --test tests/pedidos-concurrencia.test.js`. Requiere permiso para crear un esquema temporal, utiliza la extensión pgcrypto ya instalada y elimina únicamente ese esquema al terminar. No ejecuta `db:init`, no cambia la configuración de la base ni modifica los datos de `biblioteca`.
+
+Estas garantías corresponden a las operaciones de la aplicación y su transacción. Las escrituras SQL externas deben respetar el mismo protocolo de bloqueo; no se ha migrado el trigger de presupuesto para proteger escrituras externas.
