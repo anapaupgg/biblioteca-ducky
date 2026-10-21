@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — BLOQUEO DE RECUPERACIÓN INSEGURA (21 DE OCTUBRE DE 2026)
+- Fetch previo: sin commits remotos nuevos desde 371282c ni diferencias
+  pendientes de integrar. Se conserva package-lock.json fuera del commit.
+- Emisión y canje públicos de tokens deshabilitados con 503; no se consulta
+  la cuenta ni se generan tokens. También se rechazan enlaces demo anteriores.
+- Interfaz informa indisponibilidad sin solicitar datos ni afirmar envío.
+- Cambio autenticado de contraseña conservado. No es recuperación por correo
+  completa: pendiente configurar entrega verificada y revocar tokens antiguos
+  antes de habilitar el flujo. README e informe actualizados.
+- 12 pruebas aprobadas (3 nuevas de seguridad/interfaz); diff --check correcto.
+- Reiniciado únicamente el servidor de este repositorio en 3001; BD conectada.
+- HTTP real: recuperar/restablecer devuelven 503; login.html devuelve 200.
+- Sin cambios de esquema, contraseñas ni datos; no se ejecutó db:init.
+- Se prepara commit y push de la mitigación y sus pruebas.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — REVISIÓN DE COMMITS EN CADA CAMBIO (21 DE OCTUBRE DE 2026)
 - Preferencia de Diego ampliada en AGENTS.md: revisar historial y diferencias
   de commits nuevos, explicar qué cambió y evaluar impacto antes de editar.

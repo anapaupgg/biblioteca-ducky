@@ -62,40 +62,15 @@ const LoginView =
 
     /**************************************************************/
     /* Reuse Instructions                                         */
-    /* LoginView.pedir_recuperacion(al_enviar)                    */
-    /* Purpose: Dialog "Restablecer contraseña" where the user    */
-    /*          types matrícula, nómina or institutional e-mail.  */
-    /*          al_enviar(texto) returns the server answer.       */
+    /* LoginView.pedir_recuperacion()                             */
+    /* Purpose: Explain that mail recovery is unavailable.       */
     /**************************************************************/
-    pedir_recuperacion: function(al_enviar)
+    pedir_recuperacion: function()
     {
-        let respuesta = null;
-        return Ui.dialogo(
-        {
-            titulo: 'Restablecer contraseña',
-            texto: 'Escribe tu matrícula, nómina o correo institucional. Te enviaremos un enlace válido por 30 minutos.',
-            cuerpo: '<div class="field"><label for="clave_o_correo">Matrícula, nómina o correo</label>' +
-                    '<input id="clave_o_correo" type="text" placeholder="621234 o nombre@ducky.edu.mx" autocomplete="email"></div>',
-            confirmar: 'Enviar enlace',
-            al_confirmar: async (dialogo) =>
-            {
-                respuesta = await al_enviar(dialogo.querySelector('#clave_o_correo').value.trim());
-            }
-        }).then((ok) => (ok ? respuesta : null));
-    },
-
-    /**************************************************************/
-    /* Reuse Instructions                                         */
-    /* LoginView.confirmar_envio(respuesta)                       */
-    /* Purpose: Dialog "Revisa tu correo". In this prototype the  */
-    /*          link that would be e-mailed is shown here.        */
-    /**************************************************************/
-    confirmar_envio: function(respuesta)
-    {
-        const demo = respuesta.enlace_demo
-            ? '<div class="alert"><strong>Enlace enviado a ' + Ui.esc(respuesta.correo_demo) + '</strong>' +
-              '<span><a href="' + Ui.esc(respuesta.enlace_demo) + '">Abrir enlace para restablecer la contraseña</a></span></div>'
-            : '';
-        return Ui.dialogo({ titulo: 'Revisa tu correo', texto: respuesta.mensaje, cuerpo: demo, confirmar: 'Entendido', cancelar: false });
+        return Ui.dialogo({
+            titulo: 'Recuperación no disponible',
+            texto: 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.',
+            confirmar: 'Entendido', cancelar: false
+        });
     }
 };

@@ -29,7 +29,7 @@ const LoginController =
 
         if (Ui.param('expirada')) LoginView.mensaje('warning', 'Sesión expirada: inicia sesión nuevamente');
         if (Ui.param('salida'))   LoginView.mensaje('ok', 'Sesión cerrada', 'Gracias por usar Biblioteca Ducky.');
-        if (Ui.param('token'))    LoginView.mostrar_restablecer();
+        if (Ui.param('token'))    LoginView.mensaje('warning', 'Enlace no disponible', 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.');
         else document.getElementById('clave').focus();
     },
 
@@ -81,8 +81,7 @@ const LoginController =
 
     recuperar: async function()
     {
-        const respuesta = await LoginView.pedir_recuperacion((texto) => AuthModel.recuperar(texto));
-        if (respuesta) LoginView.confirmar_envio(respuesta);
+        await LoginView.pedir_recuperacion();
     },
 
     restablecer: async function()

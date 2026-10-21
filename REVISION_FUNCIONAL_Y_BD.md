@@ -2,6 +2,10 @@
 
 Alcance: aplicación funcional y PostgreSQL. Figma y documentos se usan como referencia; presentación, videos, cartas y otros entregables académicos quedan fuera por indicación de Diego. Esta es una revisión de brechas, no una certificación de cumplimiento ni una calificación.
 
+## Actualización de recuperación
+
+La exposición pública del token se mitigó deshabilitando emisión y canje de enlaces (503), incluidos enlaces demo previos. No es recuperación por correo terminada: falta configurar entrega verificada y revocar tokens históricos antes de reabrirla. Cambio autenticado conservado.
+
 ## Base y verificación
 
 - `git fetch origin` completado; `main` y `origin/main` coinciden en `78d6967`, sin commits nuevos. Conservados los cambios previos en `package-lock.json` y `CAMBIOS_Y_PLAN.txt`.

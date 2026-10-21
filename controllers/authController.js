@@ -115,64 +115,26 @@ const logout = async (req, res) =>
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* recuperar(req, res)                                            */
-/* Purpose: Start password recovery with a clave or e-mail. The   */
-/*          answer is the same whether the user exists or not.    */
-/*          PROTOTYPE: since there is no mail server, the link    */
-/*          that would be e-mailed is returned in "enlace_demo".  */
+/* Recovery remains unavailable until a verified mail delivery   */
+/* channel exists. Never issue tokens through the public API.    */
 /******************************************************************/
-const recuperar = async (req, res) =>
+const recuperar = (req, res) => res.status(503).json(
 {
-    try
-    {
-        const dato = String(req.body.clave_o_correo || '').trim();
-        if (!dato)
-        {
-            throw new ErrorNegocio(400, 'Escribe tu matrícula, nómina o correo institucional', ['clave_o_correo']);
-        }
-
-        const solicitud = await sesion_model.solicitar_recuperacion(dato);
-        const respuesta =
-        {
-            mensaje: 'Si los datos corresponden a una cuenta activa, enviamos un enlace a tu correo institucional. El enlace vence en 30 minutos.'
-        };
-
-        if (solicitud)
-        {
-            respuesta.enlace_demo = '/login.html?token=' + solicitud.token;
-            respuesta.correo_demo = solicitud.correo;
-        }
-        res.status(200).json(respuesta);
-    }
-    catch (error)
-    {
-        responder_error(res, error, 'recuperar');
-    }
-};
+    codigo: 'RECUPERACION_NO_DISPONIBLE',
+    error: 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.'
+});
 
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* restablecer(req, res)                                          */
-/* Purpose: Set a new password with a recovery token              */
+/* Previously exposed demo tokens must not authorize a reset.    */
+/* Re-enable only with mail delivery and legacy token revocation. */
 /******************************************************************/
-const restablecer = async (req, res) =>
+const restablecer = (req, res) => res.status(503).json(
 {
-    try
-    {
-        const { token, nueva, confirmacion } = req.body;
-        validar_nueva(nueva, confirmacion);
-
-        const ok = await sesion_model.restablecer(String(token || ''), nueva);
-        if (!ok)
-        {
-            throw new ErrorNegocio(410, 'El enlace no es válido, ya se usó o venció. Solicita uno nuevo.');
-        }
-        res.status(200).json({ mensaje: 'Contraseña actualizada. Ya puedes iniciar sesión.' });
-    }
-    catch (error)
-    {
-        responder_error(res, error, 'restablecer');
-    }
-};
+    codigo: 'RECUPERACION_NO_DISPONIBLE',
+    error: 'El restablecimiento por enlace aún no está disponible. Contacta al administrador de la biblioteca.'
+});
 
 /******************************************************************/
 /* Reuse Instructions                                             */

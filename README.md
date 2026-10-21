@@ -4,7 +4,7 @@ Aplicación web de la Biblioteca de la Universidad Ducky, hecha con el patrón *
 
 | Función | Pantallas |
 |---|---|
-| **Gestión de usuarios** | Iniciar sesión (con sus escenarios de error), restablecer contraseña, cambio de contraseña temporal, menú por rol, gestión de usuarios (registrar, consultar y modificar perfil, dar de baja, reactivar) y perfiles y permisos |
+| **Gestión de usuarios** | Iniciar sesión (con sus escenarios de error), cambio de contraseña temporal, menú por rol, gestión de usuarios (registrar, consultar y modificar perfil, dar de baja, reactivar) y perfiles y permisos |
 | **Gestión de libros** | Catálogo, registrar o modificar ficha bibliográfica, consultar libro, dar de alta en catálogo, etiquetar ejemplares, cambiar condición, baja de ejemplar o de libro, solicitudes a Tesorería y recepción de libros adquiridos |
 | **Búsqueda de libros** | Búsqueda con uno o varios filtros, resultados, ficha bibliográfica pública, solicitud de préstamo y lista de libros (imprimible o PDF). Se adapta a la pantalla del celular |
 
@@ -108,5 +108,5 @@ Claves de la institución simulada para registrar usuarios nuevos:
 
 ## Notas
 
-- **Correo:** no hay servidor de correo. La contraseña temporal se muestra al administrador al registrar al usuario, y el enlace de recuperación aparece en pantalla después de solicitarlo.
+- **Correo:** no hay servidor de correo. La contraseña temporal se muestra al administrador al registrar al usuario. La recuperación y el restablecimiento públicos están deshabilitados (HTTP 503): no generan tokens, revelan cuentas ni aceptan enlaces antiguos de demostración. El cambio de contraseña autenticado sigue disponible. Para habilitar recuperación se requiere entrega por correo verificado, revocar tokens antiguos y probar expiración, uso único y límites de solicitudes.
 - **Directorio institucional:** los datos personales al registrar un usuario se leen de un directorio simulado en `utils/institucion.js`. En producción, ese módulo llamaría al servicio de la universidad.
