@@ -1,3 +1,16 @@
+ACTUALIZACIÓN — REVISIÓN DE COMMITS EN CADA CAMBIO (21 DE OCTUBRE DE 2026)
+- Preferencia de Diego ampliada en AGENTS.md: revisar historial y diferencias
+  de commits nuevos, explicar qué cambió y evaluar impacto antes de editar.
+- Fetch correcto: HEAD y origin/main en b1e0dbf, sin commits nuevos ni diff
+  remoto que integrar. El push de b1e0dbf de la entrega anterior fue exitoso.
+- Conservado package-lock.json fuera de esta entrega documental.
+- Próximo orden recomendado: recuperación segura y ciclo de credenciales;
+  integridad concurrente de compras; listado y navegación visual; pruebas
+  de aceptación por historia. Sin cambios de código ni operaciones sobre BD.
+- Verificación: git diff --check. Se prepara commit y push de esta preferencia.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ENTREGA DEL DIAGNÓSTICO A GITHUB (21 DE OCTUBRE DE 2026)
 - Diego solicita crear commits y subir los avances a GitHub; preferencia
   persistida en AGENTS.md.
