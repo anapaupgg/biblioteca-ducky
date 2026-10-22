@@ -58,7 +58,11 @@ const Api =
 
         const texto = await respuesta.text();
         let datos = null;
-        try { datos = texto ? JSON.parse(texto) : null; } catch (e) { datos = { error: texto }; }
+        try { datos = texto ? JSON.parse(texto) : null; }
+        catch (e)
+        {
+            throw new ApiError(respuesta.status, { error: 'El servidor devolvió una respuesta inesperada. Verifica que estés conectado a Biblioteca Ducky e intenta de nuevo.' });
+        }
 
         if (respuesta.status === 401 && token && datos && datos.codigo === 'SESION_EXPIRADA')
         {

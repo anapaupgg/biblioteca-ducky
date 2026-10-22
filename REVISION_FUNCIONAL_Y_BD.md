@@ -68,3 +68,18 @@ La regla de renovación del documento base exige vencimiento anterior a la fecha
 - Rúbrica pegada: aplicación = MVC 2, funcionalidad 4, experiencia/desempeño 2, seguridad/datos 2. No se asigna puntuación sin pruebas completas.
 
 Siguiente ejecución propuesta: corregir recuperación insegura; cerrar credenciales/permisos y listado; probar catálogo/compras en entorno aislado; validar navegación con Figma. Después abordar módulos del siguiente sprint según el alcance acordado.
+
+
+## Verificación visual del 22 de octubre de 2026
+
+Revisión autorizada en puerto temporal 3002 con cuenta de prueba 100001:
+acceso/cierre de sesión, navegación principal, listado con cinco ISBN y
+búsqueda por título comprobados. Usuarios y perfiles mostraron sus listas;
+catálogo y compras se revisaron solo en su carga inicial. En 390x844 se
+comprobó apertura del menú y búsqueda sin desborde global. Se corrigieron
+el icono del menú y el logo del acceso, además del mensaje ante respuestas
+HTML inesperadas. Suite: 15 aprobadas y 2 integraciones opcionales omitidas.
+
+La revisión no acredita todavía todos los roles, formularios ni estados.
+La vista previa de impresión no fue accesible en el navegador integrado:
+PDF sigue pendiente. Se cerró la sesión y se detuvo el servidor temporal.

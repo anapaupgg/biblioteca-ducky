@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — VALIDACIÓN VISUAL Y ERRORES DE CONEXIÓN (22 DE OCTUBRE DE 2026)
+- Fetch previo correcto: sin commits nuevos desde 3b9a916 ni diferencias
+  con upstream. Estos cambios corresponden al trabajo local de esta solicitud.
+- Con autorización explícita, app temporal en 3002 y acceso con cuenta
+  de prueba 100001. El puerto 3001 pertenece a otro proyecto y no se tocó.
+- Revisados acceso, inicio, listado con cinco ISBN, usuarios, perfiles,
+  carga inicial de catálogo/compras y búsqueda por título con resultado.
+- En móvil 390x844 se comprobó apertura del menú y búsqueda sin desborde
+  horizontal global. Corregidos icono invisible del menú y desborde del logo;
+  logo verificado mediante captura completa después del cambio.
+- Respuestas no JSON muestran error comprensible, sin imprimir HTML ajeno
+  ni aceptar HTML con estado 200 como respuesta válida. Regresión añadida.
+- npm test: 15 aprobadas, 2 integraciones opcionales omitidas;
+  git diff --check correcto. No se reinicializó ni migró la BD.
+- Sesión de prueba cerrada y servidor temporal 3002 detenido al terminar.
+- PDF real pendiente: la impresión no abrió una vista previa accesible en
+  el navegador integrado. Tampoco se da por completa la matriz visual
+  de todas las pantallas, roles, estados vacíos y formularios.
+- package-lock.json conserva su cambio previo fuera del commit.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — LISTADO CON ISBN E IMPRESIÓN (22 DE OCTUBRE DE 2026)
 - Fetch correcto: sin commits nuevos desde a4ccd3a ni diferencias remotas.
 - Retomados los cambios locales del listado de la solicitud interrumpida.
