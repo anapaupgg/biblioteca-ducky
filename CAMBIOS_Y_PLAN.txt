@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — LISTADO CON ISBN E IMPRESIÓN (22 DE OCTUBRE DE 2026)
+- Fetch correcto: sin commits nuevos desde a4ccd3a ni diferencias remotas.
+- Retomados los cambios locales del listado de la solicitud interrumpida.
+- API y tabla incluyen ISBN. Estilos de impresión adaptan ancho, permiten
+  ajustar texto y repetir cabecera; se mantiene Guardar PDF del navegador.
+- Impresión deshabilitada durante carga o error; actualización deshabilitada
+  mientras carga. Un fallo borra datos anteriores y no muestra éxito falso.
+- npm test: 14 aprobadas, 2 integraciones opcionales omitidas. Sintaxis y
+  git diff --check correctos. Nueva regresión prueba error y recuperación.
+- No se inició servidor ni se hicieron operaciones de BD. Se detectó un
+  proceso existente en 3001 y no se modificó.
+- Validación visual, responsividad y PDF real siguen pendientes. La revisión
+  automática anterior bloqueó login administrativo por falta de autorización
+  explícita; no se reintentó ni se evadió la restricción.
+- Conservado package-lock.json fuera del commit. Se prepara commit y push.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — COMPRAS CONCURRENTES (21 DE OCTUBRE DE 2026)
 - Fetch previo sin commits nuevos desde 9094fea ni diferencias remotas.
 - Creación bloquea presupuesto dentro de la transacción antes de insertar.

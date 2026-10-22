@@ -14,7 +14,7 @@
     <title>Biblioteca Ducky · Lista de libros</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
+<body class="listado-libros">
 
 <div class="app">
     <!-- Sidebar and topbar are drawn by Layout according to the profile -->
@@ -24,9 +24,10 @@
         <div id="contenido">
             <div class="page-header">
                 <div><h1>Lista de libros</h1><p>Libros activos del catálogo con formato y disponibilidad.</p></div>
-                <div class="actions no-print" style="margin:0"><button class="btn" id="btn-actualizar">Actualizar lista</button><button class="btn btn-primary" id="btn-imprimir">Imprimir / Guardar PDF</button></div>
+                <div class="actions no-print" style="margin:0"><button class="btn" id="btn-actualizar">Actualizar lista</button><button class="btn btn-primary" id="btn-imprimir" disabled>Imprimir / Guardar PDF</button></div>
             </div>
-            <div id="mensaje"></div>
+            <div id="mensaje" class="no-print"></div>
+            <p class="small muted no-print">Para descargar el PDF, elige Guardar como PDF en el diálogo de impresión.</p>
             <p class="small muted" id="generado"></p>
             <div id="tabla"></div>
         </div>

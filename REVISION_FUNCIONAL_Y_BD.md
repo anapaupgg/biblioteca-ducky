@@ -14,6 +14,10 @@ Corregido el ciclo en la aplicación: baja elimina credenciales y revoca sesione
 
 Corregida concurrencia en los flujos de la aplicación: presupuesto bloqueado antes de crear líneas; estado de pedido bloqueado y validado dentro de la transacción; recepción y ejemplares atómicos; numeración de ejemplares serializada por libro. Consulta por ID directa. Pruebas concurrentes en esquema temporal verifican saldo, recepción única y rollback. No hay migración de esquema; SQL externo debe seguir el protocolo de bloqueo de la aplicación. Las observaciones originales de compras de la revisión inicial quedan sustituidas por esta actualización para dichos flujos.
 
+## Actualización del listado — 22 de octubre de 2026
+
+ISBN incorporado en consulta y tabla. Impresión/PDF sigue usando el diálogo del navegador, con estilos para ajustar columnas y repetir cabeceras. Un fallo de actualización limpia datos anteriores, mantiene impresión deshabilitada y no anuncia éxito. Prueba de error y recuperación aprobada. No se ha validado visualmente el PDF resultante ni la navegación autenticada; no se afirma cerrado HUGL04 completo.
+
 ## Base y verificación
 
 - `git fetch origin` completado; `main` y `origin/main` coinciden en `78d6967`, sin commits nuevos. Conservados los cambios previos en `package-lock.json` y `CAMBIOS_Y_PLAN.txt`.

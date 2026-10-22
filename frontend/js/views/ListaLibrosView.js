@@ -13,6 +13,7 @@ const ListaLibrosView =
         Ui.tabla('tabla',
         [
             { titulo: 'Clave',       valor: (l) => Ui.esc(l.id_libro) },
+            { titulo: 'ISBN',        valor: (l) => Ui.esc(l.isbn || '—') },
             { titulo: 'Título',      valor: (l) => '<strong>' + Ui.esc(l.titulo) + '</strong>' },
             { titulo: 'Autor(es)',   valor: (l) => Ui.esc(l.autores || '—') },
             { titulo: 'Editorial',   valor: (l) => Ui.esc(l.editorial) },

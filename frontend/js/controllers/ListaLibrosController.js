@@ -14,15 +14,31 @@ const ListaLibrosController =
         document.getElementById('btn-imprimir').addEventListener('click', () => window.print());
         document.getElementById('btn-actualizar').addEventListener('click', async () =>
         {
-            await this.cargar();
-            ListaLibrosView.mensaje('ok', 'Lista de libros actualizada');
+            if (await this.cargar()) ListaLibrosView.mensaje('ok', 'Lista de libros actualizada');
         });
         this.cargar();
     },
 
     cargar: async function()
     {
-        try { ListaLibrosView.tabla(await BusquedaModel.listado()); }
-        catch (error) { ListaLibrosView.mensaje('error', error.message); }
+        const imprimir = document.getElementById('btn-imprimir');
+        const actualizar = document.getElementById('btn-actualizar');
+        imprimir.disabled = true;
+        actualizar.disabled = true;
+        ListaLibrosView.mensaje();
+        try
+        {
+            ListaLibrosView.tabla(await BusquedaModel.listado());
+            imprimir.disabled = false;
+            return true;
+        }
+        catch (error)
+        {
+            document.getElementById('tabla').textContent = '';
+            document.getElementById('generado').textContent = '';
+            ListaLibrosView.mensaje('error', error.message);
+            return false;
+        }
+        finally { actualizar.disabled = false; }
     }
 };
