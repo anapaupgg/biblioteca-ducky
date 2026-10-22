@@ -1,3 +1,23 @@
+ACTUALIZACIÓN — PDF VALIDADO EN BRAVE (22 DE OCTUBRE DE 2026)
+- Fetch inicial falló por conexión; reintento correcto, sin nuevos commits
+  ni diferencias remotas desde 35164ec antes de editar.
+- Inicio temporal autorizado en 3002, PostgreSQL existente en 5433.
+- Brave abrió Guardar como PDF. Primera vista partía ISBN y palabras.
+- Ajuste exclusivo de impresión: columnas automáticas, espacios menores
+  y claves/ISBN sin salto de línea. Vista final: cinco títulos, ocho columnas,
+  una página vertical, sin recortes visibles ni palabras partidas.
+- PDF guardado realmente desde el diálogo de Brave; firma PDF y archivo
+  no vacío comprobados. Evidencia local en /private/tmp/Biblioteca-Ducky-listado-validado.pdf
+  y captura /private/tmp/ducky-pdf-brave.png. No se versionan artefactos temporales.
+- Verificación visual antes/después y git diff --check; cambio CSS solamente,
+  sin modificaciones de lógica ni necesidad de repetir suite de backend.
+- Cuenta de prueba cerrada; servidor temporal detenido al terminar.
+- Conservado package-lock.json ajeno fuera del commit. Sin migraciones.
+- Pendiente: impresión multipágina con catálogo extenso, revisión completa
+  de roles/permisos y evidencias de desempeño y respaldo aislado.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — VALIDACIÓN VISUAL Y ERRORES DE CONEXIÓN (22 DE OCTUBRE DE 2026)
 - Fetch previo correcto: sin commits nuevos desde 3b9a916 ni diferencias
   con upstream. Estos cambios corresponden al trabajo local de esta solicitud.

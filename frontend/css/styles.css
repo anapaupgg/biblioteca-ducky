@@ -331,8 +331,10 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
     body.listado-libros .app { display: block; }
     body.listado-libros .main { margin: 0; padding: 0; width: 100%; min-width: 0; }
     body.listado-libros .table-wrap { overflow: visible; border: 0; }
-    body.listado-libros .table { width: 100%; min-width: 0; table-layout: fixed; font-size: 9pt; }
-    body.listado-libros .table th, body.listado-libros .table td { padding: 5pt; white-space: normal; overflow-wrap: anywhere; }
+    body.listado-libros .table { width: 100%; min-width: 0; table-layout: auto; font-size: 9pt; }
+    body.listado-libros .table th, body.listado-libros .table td { padding: 4pt; white-space: normal; overflow-wrap: normal; }
+    body.listado-libros .table th:nth-child(-n+2),
+    body.listado-libros .table td:nth-child(-n+2) { white-space: nowrap; }
     body.listado-libros thead { display: table-header-group; }
     body.listado-libros tr { break-inside: avoid; }
     body.listado-libros .page-header { display: block; }

@@ -83,3 +83,12 @@ HTML inesperadas. Suite: 15 aprobadas y 2 integraciones opcionales omitidas.
 La revisión no acredita todavía todos los roles, formularios ni estados.
 La vista previa de impresión no fue accesible en el navegador integrado:
 PDF sigue pendiente. Se cerró la sesión y se detuvo el servidor temporal.
+
+
+## PDF confirmado en Brave (22 de octubre de 2026)
+
+Se completó Guardar como PDF desde Brave con los cinco títulos actuales:
+una página vertical, ocho columnas e ISBN completos. Se corrigió el reparto
+de columnas de impresión para evitar cortes de palabras e identificadores.
+El archivo se guardó y se comprobó su firma PDF. Esto cierra la validación
+del catálogo actual; la paginación con un catálogo extenso sigue pendiente.
