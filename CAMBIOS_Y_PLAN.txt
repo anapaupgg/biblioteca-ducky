@@ -1,3 +1,27 @@
+ACTUALIZACIÓN — RECUPERACIÓN CON RESEND (22 DE OCTUBRE DE 2026)
+- Fetch previo correcto, sin commits nuevos ni diferencias desde 29896cb.
+- Servicio HTTP Resend sin dependencias nuevas: timeout de 10 segundos,
+  clave de idempotencia y enlace a URL HTTPS configurada (no toma Host).
+- Token aleatorio firmado con secreto dedicado; rechaza tokens demo antiguos.
+  Solo SHA-256 en BD, duración 30 minutos, bloqueo de usuario y consumo
+  transaccional, invalidación de otros tokens y cierre de sesiones.
+- Respuesta genérica para cuenta ausente/inactiva, límite o fallo de envío;
+  fallo invalida token sin registrar destinatario ni enlace. Límite por IP
+  de 10 peticiones/15 minutos por instancia y por cuenta de 2 minutos en BD.
+- UI permite solicitar enlace y restablecer; token en fragmento y eliminado
+  de barra/historial al cargar. Variables documentadas en .env.example.
+- DUCKY_TEST_DB=1 npm test: 20 aprobadas, 0 omitidas; pruebas locales con
+  rollback y esquema aislado. Sintaxis y git diff --check correctos.
+- No hubo envío real, migraciones ni db:init. No se inició la aplicación.
+- Pendiente configurar API key, remitente verificado, URL pública HTTPS y
+  secreto dedicado; probar recepción real y UI completa. Servicio permanece
+  deshabilitado si la configuración está incompleta. Límite IP en memoria
+  debe compartirse si se despliegan múltiples instancias; respuestas iguales
+  no garantizan tiempos constantes. No se afirma entrega por HTTP 200 de Resend.
+- package-lock.json ajeno conservado fuera del commit.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PDF VALIDADO EN BRAVE (22 DE OCTUBRE DE 2026)
 - Fetch inicial falló por conexión; reintento correcto, sin nuevos commits
   ni diferencias remotas desde 35164ec antes de editar.

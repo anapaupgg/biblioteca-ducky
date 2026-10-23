@@ -63,14 +63,16 @@ const LoginView =
     /**************************************************************/
     /* Reuse Instructions                                         */
     /* LoginView.pedir_recuperacion()                             */
-    /* Purpose: Explain that mail recovery is unavailable.       */
+    /* Purpose: Request recovery through the controller.       */
     /**************************************************************/
-    pedir_recuperacion: function()
+    pedir_recuperacion: function(enviar)
     {
         return Ui.dialogo({
-            titulo: 'Recuperación no disponible',
-            texto: 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.',
-            confirmar: 'Entendido', cancelar: false
+            titulo: 'Recuperar contraseña',
+            texto: 'Escribe tu matrícula, nómina o correo registrado.',
+            cuerpo: '<label for="recuperar-cuenta">Cuenta</label><input id="recuperar-cuenta" maxlength="254" autocomplete="username">',
+            confirmar: 'Enviar enlace',
+            al_confirmar: dialogo => enviar(dialogo.querySelector('#recuperar-cuenta').value.trim())
         });
     }
 };

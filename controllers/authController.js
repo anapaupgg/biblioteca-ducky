@@ -115,26 +115,44 @@ const logout = async (req, res) =>
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* recuperar(req, res)                                            */
-/* Recovery remains unavailable until a verified mail delivery   */
-/* channel exists. Never issue tokens through the public API.    */
+/* Recovery requires configured mail delivery. Tokens are sent   */
+/* only to the registered mailbox, never through the public API. */
 /******************************************************************/
-const recuperar = (req, res) => res.status(503).json(
-{
-    codigo: 'RECUPERACION_NO_DISPONIBLE',
-    error: 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.'
-});
-
-/******************************************************************/
-/* Reuse Instructions                                             */
-/* restablecer(req, res)                                          */
-/* Previously exposed demo tokens must not authorize a reset.    */
-/* Re-enable only with mail delivery and legacy token revocation. */
-/******************************************************************/
-const restablecer = (req, res) => res.status(503).json(
-{
-    codigo: 'RECUPERACION_NO_DISPONIBLE',
-    error: 'El restablecimiento por enlace aún no está disponible. Contacta al administrador de la biblioteca.'
-});
+const correo_service = require('../services/correoService');
+const recuperacion_model = require('../models/recuperacionModel');
+const no_disponible = res => res.status(503).json({ codigo: 'RECUPERACION_NO_DISPONIBLE', error: 'La recuperación por correo no está configurada. Contacta al administrador.' });
+const recuperar = async (req, res) => {
+    const config = correo_service.configuracion();
+    if (!config) return no_disponible(res);
+    const entrada = req.body?.clave_o_correo;
+    if (typeof entrada !== 'string' || !entrada.trim() || entrada.length > 254)
+        return res.status(400).json({ error: 'Ingresa tu matrícula, nómina o correo registrado.' });
+    try {
+        const token = correo_service.crear_token(config);
+        const correo = await recuperacion_model.emitir(entrada.trim(), token);
+        if (correo) {
+            try { await correo_service.enviar(config, correo, token); }
+            catch {
+                await recuperacion_model.invalidar(token);
+                console.error('Recuperación: envío fallido; token invalidado.');
+            }
+        }
+    } catch { console.error('Recuperación: operación no completada.'); }
+    // Misma respuesta para cuenta ausente, inactiva, limitada o fallo de envío.
+    return res.status(200).json({ mensaje: 'Si la cuenta está activa, recibirás un enlace en su correo registrado. Revisa también correo no deseado.' });
+};
+const restablecer = async (req, res) => {
+    const config = correo_service.configuracion();
+    if (!config) return no_disponible(res);
+    try {
+        const { token, nueva, confirmacion } = req.body || {};
+        if (!correo_service.token_valido(token, config)) throw new ErrorNegocio(400, 'Enlace inválido o vencido. Solicita uno nuevo.');
+        validar_nueva(nueva, confirmacion);
+        if (typeof nueva !== 'string' || Buffer.byteLength(nueva, 'utf8') > 72) throw new ErrorNegocio(400, 'La contraseña admite hasta 72 bytes.');
+        if (!await recuperacion_model.consumir(token, nueva)) throw new ErrorNegocio(400, 'Enlace inválido o vencido. Solicita uno nuevo.');
+        return res.status(200).json({ mensaje: 'Contraseña actualizada. Inicia sesión con tu nueva contraseña.' });
+    } catch (error) { responder_error(res, error, 'restablecer'); }
+};
 
 /******************************************************************/
 /* Reuse Instructions                                             */

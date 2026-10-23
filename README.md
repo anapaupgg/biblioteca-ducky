@@ -124,3 +124,24 @@ La aplicación bloquea el presupuesto durante la creación del pedido y comprueb
 Prueba: `DUCKY_TEST_DB=1 node --test tests/pedidos-concurrencia.test.js`. Requiere permiso para crear un esquema temporal, utiliza la extensión pgcrypto ya instalada y elimina únicamente ese esquema al terminar. No ejecuta `db:init`, no cambia la configuración de la base ni modifica los datos de `biblioteca`.
 
 Estas garantías corresponden a las operaciones de la aplicación y su transacción. Las escrituras SQL externas deben respetar el mismo protocolo de bloqueo; no se ha migrado el trigger de presupuesto para proteger escrituras externas.
+
+
+### Recuperación por correo con Resend
+
+Configurar solo en el servidor `RESEND_API_KEY` (permiso de envío),
+`RECOVERY_FROM` (correo de un dominio verificado en Resend),
+`APP_PUBLIC_URL` (origen HTTPS público, sin subruta) y `RECOVERY_SECRET`
+(secreto aleatorio independiente de al menos 32 caracteres).
+Generar este último con `openssl rand -hex 32` y guardarlo en `.env`, nunca
+versionarlo. Reiniciar la app tras configurar. Sin estas variables la API
+responde 503 y no genera tokens. Rotar RECOVERY_SECRET invalida enlaces previos.
+
+La recuperación envía únicamente al correo activo registrado en BD. El enlace
+vence en 30 minutos, es de un solo uso y cierra sesiones al restablecer.
+Las cuentas de ejemplo necesitan un correo real autorizado para la prueba;
+no cambiar destinatarios en producción para hacer demostraciones.
+La aceptación de Resend no garantiza entrega: comprobar el panel del proveedor.
+No se enviaron mensajes reales durante las pruebas automatizadas.
+El límite IP se mantiene en memoria por instancia; para varias réplicas usar
+un almacén compartido y configurar proxies confiables antes de desplegar.
+Documentación: https://resend.com/docs/api-reference/emails/send-email

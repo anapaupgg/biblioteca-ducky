@@ -17,7 +17,9 @@ const LoginController =
 {
     iniciar: function()
     {
-        if (Session.token() && !Ui.param('token'))
+        this.token = new URLSearchParams(window.location.hash.slice(1)).get('token') || Ui.param('token');
+        if (this.token) window.history.replaceState(null, '', 'login.html');
+        if (Session.token() && !this.token)
         {
             window.location.href = 'inicio.html';
             return;
@@ -29,7 +31,7 @@ const LoginController =
 
         if (Ui.param('expirada')) LoginView.mensaje('warning', 'Sesión expirada: inicia sesión nuevamente');
         if (Ui.param('salida'))   LoginView.mensaje('ok', 'Sesión cerrada', 'Gracias por usar Biblioteca Ducky.');
-        if (Ui.param('token'))    LoginView.mensaje('warning', 'Enlace no disponible', 'La recuperación por correo aún no está disponible. Contacta al administrador de la biblioteca.');
+        if (this.token) LoginView.mostrar_restablecer();
         else document.getElementById('clave').focus();
     },
 
@@ -81,7 +83,10 @@ const LoginController =
 
     recuperar: async function()
     {
-        await LoginView.pedir_recuperacion();
+        await LoginView.pedir_recuperacion(async cuenta => {
+            const r = await AuthModel.recuperar(cuenta);
+            LoginView.mensaje('ok', 'Solicitud recibida', r.mensaje);
+        });
     },
 
     restablecer: async function()
@@ -89,7 +94,7 @@ const LoginController =
         const datos = LoginView.nueva_contrasena();
         try
         {
-            const r = await AuthModel.restablecer(Ui.param('token'), datos.nueva, datos.confirmacion);
+            const r = await AuthModel.restablecer(this.token, datos.nueva, datos.confirmacion);
             LoginView.mensaje_restablecer('ok', r.mensaje);
             setTimeout(() => { window.location.href = 'login.html'; }, 1800);
         }

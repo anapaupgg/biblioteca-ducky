@@ -21,8 +21,10 @@ const auth_controller = require('../controllers/authController');
 const { requiere_sesion, requiere_funcion } = require('../middleware/auth');
 
 router.post('/login', auth_controller.login);
-router.post('/recuperar', auth_controller.recuperar);
-router.post('/restablecer', auth_controller.restablecer);
+const limite_recuperacion = require('../middleware/limiteRecuperacion');
+
+router.post('/recuperar', limite_recuperacion, auth_controller.recuperar);
+router.post('/restablecer', limite_recuperacion, auth_controller.restablecer);
 router.get('/sesion', requiere_sesion, auth_controller.sesion);
 router.post('/logout', requiere_sesion, auth_controller.logout);
 router.post('/contrasena', requiere_sesion, auth_controller.cambiar_contrasena);

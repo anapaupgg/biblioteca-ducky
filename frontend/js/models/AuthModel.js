@@ -21,7 +21,7 @@ const AuthModel =
         return Api.post('/auth/login', { clave: clave, contrasena: contrasena });
     },
 
-    /* POST /auth/recuperar -> { mensaje, enlace_demo } */
+    /* POST /auth/recuperar -> { mensaje } */
     recuperar: function(clave_o_correo)
     {
         return Api.post('/auth/recuperar', { clave_o_correo: clave_o_correo });
