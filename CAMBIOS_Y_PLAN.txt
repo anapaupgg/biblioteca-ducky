@@ -1,3 +1,18 @@
+ACTUALIZACIÓN — CREDENCIAL RESEND LOCAL (23 DE OCTUBRE DE 2026)
+- Fetch correcto: sin commits nuevos ni diferencias desde 20609ac.
+- Con autorización explícita se creó en Resend una API key llamada
+  Biblioteca Ducky - recuperacion con permiso Sending access.
+- Clave guardada directamente en .env ignorado por Git y con permisos 600;
+  remitente onboarding@resend.dev y secreto dedicado configurados localmente.
+- Ningún secreto se incorpora al repositorio. package-lock.json ajeno intacto.
+- Verificada presencia de variables sin imprimir valores. Falta APP_PUBLIC_URL;
+  recuperación sigue deshabilitada hasta configurar el origen HTTPS.
+- No se enviaron correos ni se modificó la BD ni se inició la app.
+- Pendiente definir URL para la demo y cuenta de prueba con correo autorizado;
+  después comprobar recepción real y restablecimiento con intervención del usuario.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RECUPERACIÓN CON RESEND (22 DE OCTUBRE DE 2026)
 - Fetch previo correcto, sin commits nuevos ni diferencias desde 29896cb.
 - Servicio HTTP Resend sin dependencias nuevas: timeout de 10 segundos,
