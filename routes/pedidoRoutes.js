@@ -23,8 +23,8 @@ const { requiere_sesion, requiere_funcion } = require('../middleware/auth');
 router.get('/presupuestos', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'), pedido_controller.presupuestos);
 router.get('/', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'), pedido_controller.listar);
 router.get('/:id', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'), pedido_controller.detalle);
-router.post('/', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar perfiles'), pedido_controller.crear);
-router.put('/:id/estatus', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar perfiles'), pedido_controller.estatus);
+router.post('/', requiere_sesion, requiere_funcion('Préstamos'), pedido_controller.crear);
+router.put('/:id/estatus', requiere_sesion, requiere_funcion('Préstamos'), pedido_controller.estatus);
 router.post('/:id/recepcion', requiere_sesion, requiere_funcion('Gestionar libros'), pedido_controller.recibir);
 
 module.exports = router;

@@ -1,3 +1,23 @@
+ACTUALIZACIÓN — PERMISOS POR ROL Y AUDITORÍA CHATBOT (24 DE OCTUBRE DE 2026)
+- Fetch correcto, sin commits nuevos ni diferencias desde 4a9008f.
+- Corregida autorización de compras: Gestionar perfiles solo no permite
+  crear pedidos/cambiar estado; API e interfaz requieren Préstamos.
+- Matriz HTTP de 35 rutas por seis perfiles (210 combinaciones), más
+  anónimos, temporales y revocación dinámica: routers/middleware reales,
+  sesiones/controladores simulados; no ejecuta escrituras administrativas.
+- DUCKY_TEST_DB=1 npm test: 24 aprobadas, ninguna omitida; git diff --check.
+- Chatbot auditado: tres preguntas activas con fuentes en BD y CSS, sin
+  integración API/UI. Alcance y pruebas pendientes en REVISION_FUNCIONAL_Y_BD.md.
+  Atención: vista permite preguntas sin fuentes activas por su LEFT JOIN.
+- Recuperación completa confirmada por el usuario (correo, cambio y login).
+- Sin migraciones ni db:init; cambios locales ajenos de package-lock intactos.
+- App reiniciada en 3001 para cargar corrección de permisos.
+- Siguiente: conectar chatbot de preguntas frecuentes; después respaldo
+  aislado, pruebas de negocio y desempeño. Compras necesita permiso propio
+  en evolución posterior y definición del rol de Tesorería.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RECUPERACIÓN LOCAL Y CUENTA DE PRUEBA (24 DE OCTUBRE DE 2026)
 - Fetch reintentado correctamente: sin nuevos commits ni diferencias desde
   53e3dbd. Conservados cambios locales pendientes de la solicitud anterior.

@@ -92,3 +92,39 @@ una página vertical, ocho columnas e ISBN completos. Se corrigió el reparto
 de columnas de impresión para evitar cortes de palabras e identificadores.
 El archivo se guardó y se comprobó su firma PDF. Esto cierra la validación
 del catálogo actual; la paginación con un catálogo extenso sigue pendiente.
+
+
+## Permisos y revisión del chatbot — 24 de octubre de 2026
+
+Se probó el cableado HTTP de 35 rutas de usuarios, perfiles, libros, búsqueda
+y pedidos con seis conjuntos de permisos (210 combinaciones), además de
+peticiones anónimas y credenciales temporales. Se usaron routers y middleware
+reales con sesiones y controladores simulados: acredita la protección antes
+del controlador, no sustituye pruebas completas de cada operación de negocio.
+El mismo token dejó de pasar cuando la sesión simulada perdió permisos o cerró.
+
+Corregido: `Gestionar perfiles` por sí solo ya no autoriza crear pedidos ni
+cambiar estados. Esas acciones exigen `Préstamos`, consistente con la entrada
+actual del módulo; recepción exige `Gestionar libros`. Los perfiles iniciales
+conservan sus capacidades. Sigue pendiente separar compras en un permiso propio
+mediante migración conservadora y definir quién autoriza por Tesorería.
+
+Chatbot: consulta real de `v_chatbot` devuelve tres preguntas activas (duración,
+multas, renovaciones), con fuentes. Existen `contenidos_chatbot`,
+`preguntas_chatbot`, `pregunta_contenido`, la vista y CSS. No existen modelo,
+controlador, rutas ni panel frontend conectados. El permiso Chatbot asignado
+al lector no implica que exista la función operativa.
+
+Próximo alcance concreto: asistente de preguntas frecuentes basado en BD,
+sin proveedor de IA ni costo adicional. API autenticada con permiso Chatbot;
+panel accesible con preguntas sugeridas, respuesta y fuente; búsqueda que
+normalice acentos, mensaje claro si no encuentra coincidencia y estados de
+carga/error. No inventará disponibilidad ni información de cuentas. Validar
+solo preguntas con fuentes activas: la vista actual usa LEFT JOIN y conserva
+preguntas aunque todas sus fuentes estén inactivas. Probar esa condición,
+contenido HTML como texto y revocación del permiso. La ambigüedad documental
+de renovación debe resolverse antes de ampliar respuestas sobre elegibilidad.
+
+Recuperación: el usuario confirmó recepción del enlace real, cambio de
+contraseña e inicio de sesión; se verificó credencial no temporal, bitácora de
+restablecimiento y ausencia de enlaces vigentes. No se conserva la contraseña.

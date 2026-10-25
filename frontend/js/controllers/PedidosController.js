@@ -27,7 +27,7 @@ const PedidosController =
     {
         const usuario = await Layout.montar({ activo: 'pedidos', migas: 'Solicitudes a Tesorería', funciones: ['Préstamos', 'Gestionar libros'] });
         if (!usuario) return;
-        this.puede_solicitar = usuario.funciones.includes('Préstamos') || usuario.funciones.includes('Gestionar perfiles');
+        this.puede_solicitar = usuario.funciones.includes('Préstamos');
         this.puede_recibir = usuario.funciones.includes('Gestionar libros');
         if (!this.puede_solicitar) PedidosView.ocultar_tabs(['nueva']);
 
