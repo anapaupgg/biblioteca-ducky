@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — CHATBOT FAQ FUNCIONAL (24 DE OCTUBRE DE 2026)
+- Fetch de origin correcto al iniciar: sin commits nuevos desde c4445fa;
+  rama y upstream coincidentes. Trabajo local de esta solicitud.
+- API /api/chatbot y pantalla Asistente conectadas con MVC y permiso Chatbot.
+- Sugiere FAQ de PostgreSQL, normaliza acentos/sinónimos y muestra fuentes
+  y versiones. No genera respuestas ni requiere servicios de IA de pago.
+- Solo publica preguntas activas con fuentes y todas ellas activas; evita
+  el problema de LEFT JOIN sin alterar vistas ni migrar datos.
+- Texto renderizado con textContent, consulta limitada a 300 caracteres,
+  estados de carga/error/reintento y conversación limitada a 40 mensajes.
+- DUCKY_TEST_DB=1 npm test: 26 aprobadas, cero omitidas; incluye matriz
+  de 36 rutas por seis perfiles (216 casos), anónimos y revocación.
+  Pruebas de fuentes/preguntas inactivas en PostgreSQL con rollback.
+- Navegador: menú Inicio -> Asistente, respuesta de renovación con dos
+  fuentes y pregunta desconocida verificados. Diseño revisado en viewport
+  de 689 px; falta comprobación específica en móvil estrecho.
+- App continúa en 3001, PostgreSQL 5433; no db:init ni cambios persistentes
+  en datos. package-lock.json previo se conserva fuera del commit.
+- Pendientes: ampliar contenido aprobado (actualmente tres FAQ), gestión
+  editorial de preguntas/fuentes, respaldo aislado y pruebas de desempeño.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PERMISOS POR ROL Y AUDITORÍA CHATBOT (24 DE OCTUBRE DE 2026)
 - Fetch correcto, sin commits nuevos ni diferencias desde 4a9008f.
 - Corregida autorización de compras: Gestionar perfiles solo no permite

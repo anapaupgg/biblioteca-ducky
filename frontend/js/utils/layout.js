@@ -38,6 +38,7 @@ const icono = (nombre) =>
 /* Menu entries. "funciones": the entry appears when the profile has ANY of them */
 const MENU =
 [
+    { id: 'chatbot', texto: 'Asistente', url: 'chatbot.html', icono: 'chat', funciones: ['Chatbot'] },
     { id: 'inicio',      texto: 'Inicio',                  url: 'inicio.html',      icono: 'inicio',   funciones: null },
     { id: 'usuarios',    texto: 'Gestión de usuarios',     url: 'usuarios.html',    icono: 'usuarios', funciones: ['Gestionar usuarios'] },
     { id: 'perfiles',    texto: 'Perfiles y permisos',     url: 'perfiles.html',    icono: 'lock',     funciones: ['Gestionar perfiles'] },

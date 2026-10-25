@@ -128,3 +128,19 @@ de renovación debe resolverse antes de ampliar respuestas sobre elegibilidad.
 Recuperación: el usuario confirmó recepción del enlace real, cambio de
 contraseña e inicio de sesión; se verificó credencial no temporal, bitácora de
 restablecimiento y ausencia de enlaces vigentes. No se conserva la contraseña.
+
+
+## Chatbot FAQ implementado — 24 de octubre de 2026
+
+La auditoría anterior de chatbot sin API/UI queda sustituida: existe pantalla
+Asistente accesible desde el menú y API protegida por sesión y permiso Chatbot.
+Consulta preguntas publicadas con fuentes activas y muestra sus versiones;
+excluye preguntas sin fuentes o con alguna fuente inactiva. No utiliza la vista
+anterior ni modifica el esquema. Reconoce acentos y sinónimos básicos y deriva
+preguntas desconocidas al personal. Es un buscador de FAQ, no IA generativa ni
+consulta de préstamos personales. Actualmente hay tres preguntas publicadas.
+
+26 pruebas aprobadas con PostgreSQL habilitado, incluidas exclusiones de fuentes
+con rollback y autorización de rutas. Navegación y respuesta con fuentes y
+pregunta desconocida verificadas visualmente a 689 px. Falta validación móvil
+estrecha, gestión editorial de contenidos y ampliar la cobertura de preguntas.

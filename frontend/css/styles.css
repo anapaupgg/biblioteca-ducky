@@ -339,3 +339,14 @@ table.table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
     body.listado-libros tr { break-inside: avoid; }
     body.listado-libros .page-header { display: block; }
 }
+
+/* Asistente FAQ: página accesible en escritorio y móvil. */
+.faq-chat { max-width: 920px; }
+.faq-chat .chatbot-messages { min-height: 180px; max-height: 50vh; overflow-y: auto; }
+.faq-chat .msg { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 95%; }
+.faq-chat .msg p { margin: 0; }
+.faq-chat .chatbot-form { flex-wrap: wrap; padding: 16px 0 0; }
+.faq-chat .chatbot-form label { flex-basis: 100%; }
+.faq-chat .chatbot-form input { min-width: 0; }
+.faq-chat .chatbot-suggestions { flex-wrap: wrap; padding: 16px 0; }
+.faq-chat .chatbot-suggestions button { white-space: normal; text-align: left; }

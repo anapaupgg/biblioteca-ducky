@@ -43,6 +43,7 @@ app.get('/', (req, res) => res.redirect('/login.html'));
 /******************************************************************/
 /* Route mounting                                                 */
 /******************************************************************/
+app.use('/api/chatbot', require('./routes/chatbotRoutes'));
 app.use('/api/auth',        auth_routes);
 app.use('/api/usuarios',    usuario_routes);
 app.use('/api/perfiles',    perfil_routes);

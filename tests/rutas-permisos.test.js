@@ -9,6 +9,7 @@ const sesiones=require('../models/sesionModel');
 const auth=require('../middleware/auth');
 // Controladores sustituidos: ninguna ruta ejecuta escrituras ni lee datos personales.
 const grupos=[
+ ['chatbot','Chatbot',[['get','/']]],
  ['usuarios','Gestionar usuarios',[['get','/catalogos'],['get','/institucion/123456'],['get','/'],['get','/123456'],['post','/'],['put','/123456/perfil'],['post','/123456/baja'],['post','/123456/reactivar']]],
  ['perfiles','Gestionar perfiles',[['get','/funciones'],['get','/'],['post','/'],['put','/4'],['post','/4/baja'],['post','/4/reactivar']]],
  ['libros','Gestionar libros',[['get','/catalogos'],['post','/ubicaciones'],['get','/'],['get','/L000128'],['post','/'],['put','/L000128'],['post','/L000128/alta'],['post','/L000128/retirar'],['post','/L000128/ejemplares'],['put','/ejemplares/1'],['post','/ejemplares/1/baja']]],
@@ -17,7 +18,7 @@ const grupos=[
  ['pedidos','Préstamos',[['post','/'],['put','/1/estatus']]],
  ['pedidos','Gestionar libros',[['post','/1/recepcion']]]
 ];
-const archivos={usuarios:'usuario',perfiles:'perfil',libros:'libro',busqueda:'busqueda',pedidos:'pedido'};
+const archivos={chatbot:'chatbot',usuarios:'usuario',perfiles:'perfil',libros:'libro',busqueda:'busqueda',pedidos:'pedido'};
 const roles={sistema:['Gestionar usuarios','Gestionar perfiles','Gestionar libros','Buscar libros','Préstamos','Devoluciones','Chatbot'],biblioteca:['Gestionar usuarios','Buscar libros','Préstamos','Devoluciones','Chatbot'],catalogo:['Gestionar libros','Buscar libros','Chatbot'],lector:['Buscar libros','Chatbot'],soloPerfiles:['Gestionar perfiles'],sinPermisos:[]};
 test('matriz HTTP: rutas reales rechazan anónimos, lector y permisos ajenos antes del controlador',async()=>{
  let usuario,ejecuciones=0;
@@ -60,6 +61,6 @@ test('matriz HTTP: rutas reales rechazan anónimos, lector y permisos ajenos ant
   assert.equal((await fetch(base+'/api/usuarios',{headers:{Authorization:'Bearer '+token}})).status,403);
   usuario=null;
   assert.equal((await fetch(base+'/api/usuarios',{headers:{Authorization:'Bearer '+token}})).status,401);
-  assert.equal(casos,210);
+  assert.equal(casos,216);
  }finally{sesiones.obtener_activa=original;await new Promise(resolve=>server.close(resolve));}
 });
