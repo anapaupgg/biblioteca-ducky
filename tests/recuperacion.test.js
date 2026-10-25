@@ -94,3 +94,17 @@ test('PostgreSQL: recuperación consume una vez, rechaza vencido y revoca sesion
         assert.equal(await model.consumir(token,'Otra12345'),false);
     } finally {await c.query('ROLLBACK');c.release();await pool.end();}
 });
+
+test('URL de recuperación exige HTTPS o loopback explícito solo en desarrollo', () => {
+    const env = {RESEND_API_KEY:'test',RECOVERY_FROM:'test@example.com',RECOVERY_SECRET:'a'.repeat(32),APP_PUBLIC_URL:'https://biblioteca.example.com'};
+    assert.equal(service.configuracion(env).base,env.APP_PUBLIC_URL);
+    for (const url of ['http://localhost:3001','http://127.0.0.1:3001','http://[::1]:3001']) {
+        assert.equal(service.configuracion({...env,APP_PUBLIC_URL:url}),null);
+        const local={...env,APP_PUBLIC_URL:url,NODE_ENV:'development',RECOVERY_ALLOW_LOCALHOST:'true'};
+        assert.ok(service.configuracion(local));
+        assert.equal(service.configuracion({...local,NODE_ENV:'production'}),null);
+    }
+    for (const url of ['http://example.com','http://localhost.evil.com','http://192.168.1.5','https://example.com/subruta','https://user:pass@example.com','https://example.com?token=1','https://example.com#token=1']) {
+        assert.equal(service.configuracion({...env,APP_PUBLIC_URL:url,NODE_ENV:'development',RECOVERY_ALLOW_LOCALHOST:'true'}),null);
+    }
+});

@@ -95,6 +95,8 @@ const LoginController =
         try
         {
             const r = await AuthModel.restablecer(this.token, datos.nueva, datos.confirmacion);
+            Session.clear();
+            this.token = null;
             LoginView.mensaje_restablecer('ok', r.mensaje);
             setTimeout(() => { window.location.href = 'login.html'; }, 1800);
         }

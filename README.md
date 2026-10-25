@@ -145,3 +145,14 @@ No se enviaron mensajes reales durante las pruebas automatizadas.
 El límite IP se mantiene en memoria por instancia; para varias réplicas usar
 un almacén compartido y configurar proxies confiables antes de desplegar.
 Documentación: https://resend.com/docs/api-reference/emails/send-email
+
+
+#### Prueba local sin alojamiento público
+
+En desarrollo se permite `APP_PUBLIC_URL=http://localhost:3001` solo con
+`NODE_ENV=development` y `RECOVERY_ALLOW_LOCALHOST=true`. También se admiten
+127.0.0.1 y ::1; no direcciones de red ni dominios HTTP externos. Producción
+sigue exigiendo HTTPS. La URL no admite subrutas, credenciales, consulta ni
+fragmentos. El enlace local debe abrirse en la computadora que ejecuta la app.
+Con el remitente de prueba de Resend, el destinatario debe ser el correo de
+la cuenta de Resend. No usar estas variables locales en producción.

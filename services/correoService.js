@@ -1,11 +1,13 @@
 // El proveedor recibe únicamente destinatario y enlace; nunca contraseñas.
 const crypto = require('node:crypto');
-function configuracion() {
-    const { RESEND_API_KEY: key, RECOVERY_FROM: from, APP_PUBLIC_URL: base, RECOVERY_SECRET: secret } = process.env;
+function configuracion(env = process.env) {
+    const { RESEND_API_KEY: key, RECOVERY_FROM: from, APP_PUBLIC_URL: base, RECOVERY_SECRET: secret } = env;
     if (!key || !from || !base || !secret || secret.length < 32) return null;
     try {
         const url = new URL(base);
-        if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash) return null;
+        const local = env.NODE_ENV === 'development' && env.RECOVERY_ALLOW_LOCALHOST === 'true'
+            && url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+        if ((url.protocol !== 'https:' && !local) || url.username || url.password || url.search || url.hash || url.pathname !== '/') return null;
         return { key, from, base: url.origin, secret };
     } catch { return null; }
 }

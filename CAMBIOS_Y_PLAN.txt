@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — RECUPERACIÓN LOCAL Y CUENTA DE PRUEBA (24 DE OCTUBRE DE 2026)
+- Fetch reintentado correctamente: sin nuevos commits ni diferencias desde
+  53e3dbd. Conservados cambios locales pendientes de la solicitud anterior.
+- URL HTTP de loopback admitida solo con NODE_ENV=development y
+  RECOVERY_ALLOW_LOCALHOST=true; producción conserva HTTPS obligatorio.
+  Rechazo de subrutas, credenciales, consultas y fragmentos en la base URL.
+- .env local configurado para localhost:3001 sin versionar secretos.
+- El usuario confirmó recepción del correo diagnóstico enviado anteriormente.
+- Con elección explícita del usuario se creó la cuenta 683876, nombre
+  Prueba recuperación Ducky, tipo Alumno, perfil Lector (Buscar libros y
+  Chatbot). Gmail autorizado asociado solo a esta nueva cuenta. Credencial
+  inicial aleatoria no mostrada; las cuentas anteriores no se modificaron.
+- Solicitado enlace real de recuperación por /api/auth/recuperar: HTTP 200.
+  Comprobado enlace vigente en BD. Falta confirmación de recepción de este
+  segundo correo y que el usuario elija contraseña y pruebe login.
+- Al restablecer con éxito el frontend limpia su sesión y token antes de
+  volver al login; en error conserva el estado. Nuevas regresiones de UI.
+- DUCKY_TEST_DB=1 npm test: 23 aprobadas, ninguna omitida. Pruebas BD con
+  rollback/esquema aislado; no db:init ni migraciones. git diff --check correcto.
+- App continúa en 3001; package-lock.json ajeno fuera del commit.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CREDENCIAL RESEND LOCAL (23 DE OCTUBRE DE 2026)
 - Fetch correcto: sin commits nuevos ni diferencias desde 20609ac.
 - Con autorización explícita se creó en Resend una API key llamada
