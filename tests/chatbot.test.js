@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const modelo=require('../models/chatbotModel');
 const {consultar}=require('../controllers/chatbotController');
 const filas=[{id_pregunta:1,pregunta:'¿Cuánto dura el préstamo?',respuesta:'5 días',fuentes:['Regla 5']},{id_pregunta:2,pregunta:'¿Cuánto se paga por atraso?',respuesta:'10 pesos',fuentes:['Regla 3']},{id_pregunta:3,pregunta:'¿Cuántas veces puedo renovar?',respuesta:'2 veces',fuentes:['Regla 6']}];
-async function pedir(q){const res={set(){},status(n){this.code=n;return this;},json(data){this.data=data;return this;}};await consultar({query:q===undefined?{}:{q}},res);return res;}
+async function pedir(q,funciones=['Chatbot','Buscar libros']){const res={set(){},status(n){this.code=n;return this;},json(data){this.data=data;return this;}};await consultar({query:q===undefined?{}:{q},usuario:{funciones}},res);return res;}
 test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desconocidas',async()=>{
  const original=modelo.listar;modelo.listar=async()=>filas;
  try {
@@ -14,10 +14,37 @@ test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desc
   for(const q of ['',{},['multa'],'x'.repeat(301)])assert.equal((await pedir(q)).code,400);
  }finally{modelo.listar=original;}
 });
+test('Catálogo: intención, permisos, límite y separación de préstamos personales',async()=>{
+ const {intencion}=require('../controllers/chatbotController');
+ assert.deepEqual(intencion('¿Qué libros hay?'),{tipo:'catalogo',terminos:[],disponibles:false});
+ assert.deepEqual(intencion('Libros disponibles de programación'),{tipo:'catalogo',terminos:['programacion'],disponibles:true});
+ assert.deepEqual(intencion('¿Tienen Cien años de soledad?').terminos,['cien','anos','soledad']);
+ assert.equal(intencion('¿Cuánto dura el préstamo?').tipo,'faq');
+ const original=modelo.buscarLibros;let llamadas=0;
+ modelo.buscarLibros=async()=>{llamadas++;return Array.from({length:6},(_,i)=>({id_libro:String(i)}));};
+ try {
+  assert.equal((await pedir('¿Qué libros hay?',['Chatbot'])).code,403);
+  assert.equal(llamadas,0);
+  for(const q of ['¿Qué libros tengo prestados?','Mis préstamos','¿Qué libros tengo?']) {
+   assert.match((await pedir(q)).data.mensaje,/préstamos personales/);
+  }
+  assert.equal(llamadas,0);
+  const respuesta=await pedir('¿Qué libros hay?');
+  assert.equal(respuesta.data.libros.length,5);assert.match(respuesta.data.mensaje,/primeros 5/);
+  modelo.buscarLibros=async()=>[];
+  assert.match((await pedir('Libros de inexistente')).data.mensaje,/No encontré libros/);
+ }finally{modelo.buscarLibros=original;}
+});
 test('PostgreSQL: FAQ desaparece con fuente inactiva, sin fuentes o pregunta inactiva; rollback', {skip:process.env.DUCKY_TEST_DB!=='1'},async()=>{
  const {pool}=require('../db');const c=await pool.connect();
  try{
   await c.query('BEGIN');
+  const catalogo=await modelo.buscarLibros([],false,c);assert.ok(catalogo.length);assert.ok(catalogo.length<=6);
+  const clave=catalogo[0].id_libro.toLowerCase();
+  assert.equal((await modelo.buscarLibros([clave],false,c))[0].id_libro,catalogo[0].id_libro);
+  assert.deepEqual(await modelo.buscarLibros(["%' OR 1=1 --"],false,c),[]);
+  assert.ok((await modelo.buscarLibros([],true,c)).every(l=>l.disponibles_prestamo>0));
+
   const lista=await modelo.listar(c);assert.ok(lista.length);
   const id=lista[0].id_pregunta;
   await c.query('SAVEPOINT antes');

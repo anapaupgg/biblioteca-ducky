@@ -22,6 +22,10 @@ const ChatbotController = {
             const r=await ChatbotModel.preguntar(q);
             ChatbotView.mensaje(r.mensaje,'bot');
             r.resultados.forEach(f=>ChatbotView.mensaje(f.pregunta+'\n'+f.respuesta,'bot',f.fuentes));
+            (r.libros || []).forEach(l=>ChatbotView.mensaje(
+                l.titulo+' — '+l.autores+'\nClave: '+l.id_libro+' · '+l.formato+
+                '\nEjemplares disponibles para préstamo: '+l.disponibles_prestamo+
+                '\nUbicación: '+(l.ubicaciones || 'Consulta la ficha en Buscar libros'), 'bot', ['Catálogo actual de la biblioteca']));
             document.getElementById('chat-pregunta').value='';ChatbotView.estado('Consulta terminada.');
         } catch(e) {ChatbotView.mensaje('No pude completar la consulta. '+e.message,'bot');ChatbotView.estado('Puedes reintentar tu pregunta.');}
         finally {this.ocupado=false;ChatbotView.ocupado(false);document.getElementById('chat-pregunta').focus();}

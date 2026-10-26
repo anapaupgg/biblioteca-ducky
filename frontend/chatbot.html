@@ -2,13 +2,13 @@
 <html lang="es">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Biblioteca Ducky · Asistente</title><link rel="stylesheet" href="css/styles.css"></head>
 <body><div class="app"><aside id="sidebar"></aside><main class="main"><header id="topbar" class="topbar"></header><div id="contenido">
-<div class="page-header"><div><h1>Asistente de biblioteca</h1><p>Preguntas frecuentes con respuestas y fuentes publicadas por la biblioteca.</p></div></div>
+<div class="page-header"><div><h1>Asistente de biblioteca</h1><p>Consulta el catálogo y las preguntas frecuentes de la biblioteca.</p></div></div>
 <section class="card faq-chat" aria-label="Conversación con el asistente">
-<p class="muted">Puedo orientarte sobre plazos, multas y renovaciones. Para consultar libros utiliza <a href="buscar.html">Buscar libros</a>. No escribas contraseñas ni datos personales.</p>
+<p class="muted">Escribe «¿Qué libros hay?», «Libros de programación» o «¿Tienen Cien años de soledad?». También puedo orientarte sobre plazos, multas y renovaciones. Para ver fichas y solicitar libros utiliza <a href="buscar.html">Buscar libros</a>. No escribas contraseñas ni datos personales.</p>
 <div id="chat-estado" role="status"></div><button id="chat-reintentar" class="btn hidden" type="button">Reintentar carga</button>
 <div id="chat-sugerencias" class="chatbot-suggestions" aria-label="Preguntas sugeridas"></div>
 <div id="chat-mensajes" class="chatbot-messages" role="log" aria-live="polite" aria-label="Mensajes"></div>
-<form id="chat-form" class="chatbot-form"><label for="chat-pregunta" class="small">Tu pregunta</label><input id="chat-pregunta" name="pregunta" minlength="3" maxlength="300" required autocomplete="off" placeholder="Ej. ¿Cuántas veces puedo renovar?"><button id="chat-enviar" class="btn btn-primary" type="submit">Enviar</button></form>
+<form id="chat-form" class="chatbot-form"><label for="chat-pregunta" class="small">Tu pregunta</label><input id="chat-pregunta" name="pregunta" minlength="3" maxlength="300" required autocomplete="off" placeholder="Ej. Libros de programación"><button id="chat-enviar" class="btn btn-primary" type="submit">Enviar</button></form>
 </section></div></main></div>
 <script src="js/utils/api.js"></script><script src="js/utils/session.js"></script><script src="js/utils/ui.js"></script><script src="js/utils/layout.js"></script>
 <script src="js/models/ChatbotModel.js"></script><script src="js/views/ChatbotView.js"></script><script src="js/controllers/ChatbotController.js"></script><script>ChatbotController.iniciar();</script>

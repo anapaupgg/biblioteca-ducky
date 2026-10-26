@@ -1,3 +1,32 @@
+CIERRE DEL AVANCE — 26 DE OCTUBRE DE 2026
+- Reanudado el trabajo de catálogo en chatbot. Fetch de origin correcto:
+  sin commits nuevos, HEAD/upstream coincidentes en 2670c7b.
+- Diff revisado y git diff --check correcto; se conservan las verificaciones
+  funcionales y las 27 pruebas aprobadas del avance descrito abajo.
+- Se prepara commit del alcance completo, excluyendo package-lock.json ajeno.
+
+ACTUALIZACIÓN — CATÁLOGO DESDE EL CHATBOT (24 DE OCTUBRE DE 2026)
+- Fetch correcto, HEAD/upstream coincidentes en 2670c7b, sin commits nuevos.
+  Cambios locales propios de esta solicitud; package-lock ajeno conservado.
+- Revisado Sprint Backlog anotado: Sprint 4 pide ChatBot para consultas
+  frecuentes e integración. No especifica préstamos personales por chat.
+- Ampliación autorizada: intenciones explícitas «Qué libros hay», «Tienen…»,
+  «Libros de…» y «Libros disponibles…». Busca por palabras en título, autor,
+  tema, clave, ISBN y editorial usando v_catalogo activa y SQL parametrizado.
+- Consulta acotada a seis filas, muestra cinco y avisa si hay más. Muestra
+  disponibilidad para préstamo y ubicaciones. Sin reservas ni escrituras.
+- Exige Chatbot y Buscar libros para catálogo. Las consultas de préstamos
+  personales indican que aún no están disponibles; no exponen cuentas.
+- 27 pruebas aprobadas con DUCKY_TEST_DB=1: intención, permisos, límite,
+  no coincidencias, parámetros literales y consultas reales PostgreSQL.
+- Navegador: catálogo de cinco títulos, Clean Code con un ejemplar y ubicación,
+  búsqueda sin coincidencias. Evidencia visual revisada a 689 px.
+- App reiniciada y funcionando en 3001, BD 5433; sin db:init ni migraciones.
+- Pendientes: lenguaje libre/recomendaciones, préstamos personales, gestión
+  editorial FAQ, móvil estrecho, respaldo/restauración y pruebas de carga.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CHATBOT FAQ FUNCIONAL (24 DE OCTUBRE DE 2026)
 - Fetch de origin correcto al iniciar: sin commits nuevos desde c4445fa;
   rama y upstream coincidentes. Trabajo local de esta solicitud.

@@ -144,3 +144,19 @@ consulta de préstamos personales. Actualmente hay tres preguntas publicadas.
 con rollback y autorización de rutas. Navegación y respuesta con fuentes y
 pregunta desconocida verificadas visualmente a 689 px. Falta validación móvil
 estrecha, gestión editorial de contenidos y ampliar la cobertura de preguntas.
+
+
+## Catálogo en el chatbot — 24 de octubre de 2026
+
+El Sprint Backlog anotado exige consultas frecuentes e integración en Sprint 4;
+no detalla consultas personales. Como ampliación autorizada, el asistente ahora
+busca en la vista activa del catálogo por palabras de título, autor, tema,
+clave, ISBN y editorial; muestra hasta cinco resultados con ubicación y número
+de ejemplares disponibles para préstamo. Admite frases explícitas como «Qué
+libros hay», «Tienen Clean Code» y «Libros disponibles de programación»; no es
+interpretación general de lenguaje natural ni recomendación personalizada.
+
+Exige Buscar libros además de Chatbot; no crea solicitudes ni modifica datos.
+Las preguntas identificadas como préstamos personales reciben una explicación
+de la función pendiente. 27 pruebas aprobadas con BD, incluida consulta literal,
+permisos y límite; catálogo, título conocido y ausencia verificados en navegador.
