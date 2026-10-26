@@ -1,102 +1,185 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Vista de buscar.html.                             */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   BuscarView.filtros()               - Filter values           */
-/*   BuscarView.limpiar_filtros()       - Clear filters           */
-/*   BuscarView.resultados(lista, acc)  - Result cards            */
-/*   BuscarView.ficha(f)                - Public ficha dialog     */
-/*   BuscarView.solicitud(r)            - Request confirmation    */
+/* Listing Contents: */
+/*   buscar_view.titulo(valor) */
+/*   buscar_view.enfocar() */
+/*   buscar_view.vaciar() */
+/*   buscar_view.enlazar(acciones) */
+/*   buscar_view.filtros() */
+/*   buscar_view.limpiar_filtros() */
+/*   buscar_view.resultados(lista, filtros, acciones) */
+/*   buscar_view.ficha(filtro) */
+/*   buscar_view.solicitud(resultado) */
+/*   buscar_view.mensaje(tipo, titulo, texto) */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de ui y antes del controlador de la página. */
+/* Acciones: objeto de callbacks; datos: objetos/arrays de los modelos. */
+/* No invocar API ni decidir permisos aquí. Mostrar texto con escape. */
 /******************************************************************/
 
 const FILTROS_BUSQUEDA = ['titulo', 'autor', 'tema', 'clave', 'isbn', 'editorial'];
 
-const BuscarView =
+const buscar_view =
 {
-    filtros: function() { return Ui.leer(FILTROS_BUSQUEDA); },
-
-    limpiar_filtros: function()
+    titulo: function (valor)
     {
-        FILTROS_BUSQUEDA.forEach((id) => { document.getElementById(id).value = ''; });
-        Ui.limpiar();
+        document.getElementById('titulo').value = valor;
+    },
+    enfocar: function ()
+    {
+        document.getElementById('titulo').focus();
+    },
+    vaciar: function ()
+    {
         document.getElementById('resultados').innerHTML = '';
-        Ui.alerta('mensaje');
+    },
+
+    /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
+    enlazar: function (acciones)
+    {
+        document.getElementById('form-buscar').addEventListener('submit', (elemento) =>
+        {
+            elemento.preventDefault();
+            acciones.buscar();
+        });
+        document.getElementById('btn-limpiar').addEventListener('click', () => buscar_view
+            .limpiar_filtros());
+    },
+
+    filtros: function ()
+    {
+        return ui.leer(FILTROS_BUSQUEDA);
+    },
+
+    limpiar_filtros: function ()
+    {
+        FILTROS_BUSQUEDA.forEach((id) =>
+        {
+            document.getElementById(id).value = '';
+        });
+        ui.limpiar();
+        document.getElementById('resultados').innerHTML = '';
+        ui.alerta('mensaje');
         document.getElementById('titulo').focus();
     },
 
-    resultados: function(lista, filtros, acciones)
+    resultados: function (lista, filtros, acciones)
     {
-        const resumen = Object.entries(filtros).filter(([, v]) => v).map(([k, v]) => k + ': ' + v).join(' · ');
+        const resumen = Object.entries(filtros).filter(([, valor_2]) => valor_2).map(([clave,
+            valor_3]) => clave + ': ' + valor_3).join(' · ');
         if (lista.length === 0)
         {
             document.getElementById('resultados').innerHTML = '';
-            Ui.alerta('mensaje', 'warning', 'No se encontraron coincidencias', 'Revisa los filtros (' + resumen + ') o intenta con menos datos.');
+            ui.alerta('mensaje', 'warning', 'No se encontraron coincidencias',
+                'Revisa los filtros (' + resumen + ') o intenta con menos datos.');
             return;
         }
-        Ui.alerta('mensaje', 'info', 'Resultados de búsqueda', resumen + ' · ' + lista.length + ' resultado(s) activos.');
+        ui.alerta('mensaje', 'info', 'Resultados de búsqueda', resumen + ' · ' + lista.length +
+            ' resultado(s) activos.');
 
-        const lectura = (t, v) => '<div class="field"><span class="label">' + t + '</span><div class="readonly">' + Ui.esc(v) + '</div></div>';
-        document.getElementById('resultados').innerHTML = lista.map((l, i) =>
+        const lectura = (elemento_2, valor_4) => '<div class="field"><span class="label">' +
+            elemento_2 + '</span><div class="readonly">' + ui.esc(valor_4) + '</div></div>';
+        document.getElementById('resultados').innerHTML = lista.map((libro, indice) =>
         {
-            const digital = l.formato === 'Digital';
-            let acciones_html = '<button class="btn" data-ficha="' + i + '">Ver ficha bibliográfica</button>';
-            if (digital) acciones_html = '<a class="btn btn-primary" href="' + Ui.esc(l.enlace_digital) + '" target="_blank" rel="noopener">Consultar en línea</a>' + acciones_html;
-            else if (l.disponibles_prestamo > 0) acciones_html = '<button class="btn btn-primary" data-solicitar="' + i + '">Solicitar préstamo</button>' + acciones_html;
+            const digital = libro.formato === 'Digital';
+            let acciones_html = '<button class="btn" data-ficha="' + indice +
+                '">Ver ficha bibliográfica</button>';
+            if (digital) acciones_html = '<a class="btn btn-primary" href="' + ui.esc(libro
+                    .enlace_digital) +
+                '" target="_blank" rel="noopener">Consultar en línea</a>' + acciones_html;
+            else if (libro.disponibles_prestamo > 0) acciones_html =
+                '<button class="btn btn-primary" data-solicitar="' + indice +
+                '">Solicitar préstamo</button>' + acciones_html;
 
-            return '<div class="card"><h2>' + Ui.esc(l.titulo) + (digital ? ' · Recurso en línea' : '') + '</h2><div class="grid-2">' +
-                lectura('Clave / ISBN', l.id_libro + ' / ' + l.isbn) + lectura('Autor', l.autores || '—') +
-                lectura('Editorial / formato', l.editorial + ' / ' + l.formato) + lectura('Tema', l.tema) +
-                (digital ? lectura('Enlace', l.enlace_digital) :
-                    lectura('Ubicación (estante / fila)', l.ubicaciones || '—') +
-                    lectura('Disponibles para préstamo', l.disponibles_prestamo + ' de ' + l.ejemplares + (l.prestados ? ' · ' + l.prestados + ' prestado(s)' : ''))) +
-                '</div>' + (!digital && l.disponibles_prestamo === 0
-                    ? '<div class="alert alert-warning"><strong>Todos los ejemplares están prestados o reservados</strong><span>Consulta la ficha para ver cuándo se devuelve cada ejemplar.</span></div>' : '') +
-                '<div class="actions" style="margin-bottom:0">' + acciones_html + '</div></div>';
+            return '<div class="card"><h2>' + ui.esc(libro.titulo) + (digital ?
+                    ' · Recurso en línea' : '') + '</h2><div class="grid-2">' +
+                lectura('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn) + lectura(
+                    'Autor', libro.autores || '—') +
+                lectura('Editorial / formato', libro.editorial + ' / ' + libro.formato) +
+                lectura('Tema', libro.tema) +
+                (digital ? lectura('Enlace', libro.enlace_digital) :
+                    lectura('Ubicación (estante / fila)', libro.ubicaciones || '—') +
+                    lectura('Disponibles para préstamo', libro.disponibles_prestamo + ' de ' +
+                        libro.ejemplares + (libro.prestados ? ' · ' + libro.prestados +
+                            ' prestado(s)' : ''))) +
+                '</div>' + (!digital && libro.disponibles_prestamo === 0 ?
+                    '<div class="alert alert-warning"><strong>Todos los ejemplares están prestados o reservados</strong><span>Consulta la ficha para ver cuándo se devuelve cada ejemplar.</span></div>' :
+                    '') +
+                '<div class="actions" style="margin-bottom:0">' + acciones_html +
+                '</div></div>';
         }).join('');
 
-        const en = (attr, fn) => document.querySelectorAll('[' + attr + ']').forEach((b) =>
-            b.addEventListener('click', () => fn(lista[Number(b.getAttribute(attr))])));
+        const en = (attr, accion) => document.querySelectorAll('[' + attr + ']').forEach((boton) =>
+            boton.addEventListener('click', () => accion(lista[Number(boton.getAttribute(attr))]))
+            );
         en('data-solicitar', acciones.solicitar);
         en('data-ficha', acciones.ficha);
     },
 
-    ficha: function(f)
+    ficha: function (filtro)
     {
-        const l = f.libro;
-        const dialogo = Ui.dialogo(
+        const libro_2 = filtro.libro;
+        const dialogo = ui.dialogo(
         {
-            titulo: l.titulo,
-            texto: (l.autores || '') + ' · ' + l.editorial + ' · ' + (l.anio_publicacion || '') + (l.edicion ? ' · ' + l.edicion + ' edición' : ''),
-            cuerpo: '<p>' + Ui.esc(l.sinopsis || 'Sin sinopsis.') + '</p><div id="ficha-ejemplares"></div>',
-            confirmar: 'Cerrar', cancelar: false
+            titulo: libro_2.titulo,
+            texto: (libro_2.autores || '') + ' · ' + libro_2.editorial + ' · ' + (libro_2
+                .anio_publicacion || '') + (libro_2.edicion ? ' · ' + libro_2.edicion +
+                ' edición' : ''),
+            cuerpo: '<p>' + ui.esc(libro_2.sinopsis || 'Sin sinopsis.') +
+                '</p><div id="ficha-ejemplares"></div>',
+            confirmar: 'Cerrar',
+            cancelar: false
         });
         /* The dialog is already in the DOM: draw its copies table */
-        Ui.tabla('ficha-ejemplares',
-        [
-            { titulo: 'Ejemplar',  valor: (e) => Ui.esc(e.id_ejemplar) },
-            { titulo: 'Ubicación', valor: (e) => Ui.esc(e.ubicacion || 'En línea') },
-            { titulo: 'Uso',       valor: (e) => Ui.esc(e.tipo_uso) },
-            { titulo: 'Estatus',   valor: (e) => Ui.badge(e.estatus) + (e.disponible_desde ? '<div class="small muted">vuelve ' + Ui.fecha(e.disponible_desde) + '</div>' : '') }
-        ], f.ejemplares);
+        ui.tabla('ficha-ejemplares',
+            [
+            {
+                titulo: 'Ejemplar',
+                valor: (elemento_3) => ui.esc(elemento_3.id_ejemplar)
+            },
+            {
+                titulo: 'Ubicación',
+                valor: (elemento_4) => ui.esc(elemento_4.ubicacion || 'En línea')
+            },
+            {
+                titulo: 'Uso',
+                valor: (elemento_5) => ui.esc(elemento_5.tipo_uso)
+            },
+            {
+                titulo: 'Estatus',
+                valor: (elemento_6) => ui.badge(elemento_6.estatus) + (elemento_6
+                    .disponible_desde ? '<div class="small muted">vuelve ' + ui.fecha(
+                        elemento_6.disponible_desde) + '</div>' : '')
+            }], filtro.ejemplares);
         return dialogo;
     },
 
-    solicitud: function(r)
+    solicitud: function (resultado)
     {
-        return Ui.dialogo(
+        return ui.dialogo(
         {
             titulo: 'Solicitud registrada',
-            texto: r.mensaje,
-            cuerpo: '<div class="alert alert-ok"><strong>Folio ' + Ui.esc(r.folio) + ' · ' + Ui.esc(r.libro) + '</strong>' +
-                    '<span>' + Ui.fecha_hora(r.fecha) + '. El bibliotecario confirmará tu préstamo al entregarte el libro.</span></div>',
-            confirmar: 'Entendido', cancelar: false
+            texto: resultado.mensaje,
+            cuerpo: '<div class="alert alert-ok"><strong>Folio ' + ui.esc(resultado.folio) +
+                ' · ' + ui.esc(resultado.libro) + '</strong>' +
+                '<span>' + ui.fecha_hora(resultado.fecha) +
+                '. El bibliotecario confirmará tu préstamo al entregarte el libro.</span></div>',
+            confirmar: 'Entendido',
+            cancelar: false
         });
     },
 
-    mensaje: function(tipo, titulo, texto) { Ui.alerta('mensaje', tipo, titulo, texto); }
+    mensaje: function (tipo, titulo, texto)
+    {
+        ui.alerta('mensaje', tipo, titulo, texto);
+    }
 };

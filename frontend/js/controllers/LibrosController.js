@@ -1,32 +1,58 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de libros.html.                       */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
-const LibrosController =
+/******************************************************************/
+/* Listing Contents: */
+/*   libros_controller.iniciar() */
+/*   libros_controller.cargar() */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const libros_controller =
 {
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'libros', migas: 'Gestionar libros', funciones: ['Gestionar libros'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'libros',
+            migas: 'Gestionar libros',
+            funciones: ['Gestionar libros']
+        });
         if (!usuario) return;
 
-        let espera = null;
-        document.getElementById('q').addEventListener('input', () => { clearTimeout(espera); espera = setTimeout(() => this.cargar(), 250); });
-        document.getElementById('estatus').addEventListener('change', () => this.cargar());
+        libros_view.enlazar(
+        {
+            cargar: (...argumentos) => this.cargar(...argumentos)
+        });
         this.cargar();
     },
 
-    cargar: async function()
+    cargar: async function ()
     {
         try
         {
-            const filtros = LibrosView.filtros();
-            const libros = await LibroModel.listar(filtros);
-            if (!filtros.q && !filtros.estatus) LibrosView.estadisticas(libros);
-            LibrosView.tabla(libros, (l) => { window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(l.id_libro); });
+            const filtros = libros_view.filtros();
+            const libros = await libro_model.listar(filtros);
+            if (!filtros.q && !filtros.estatus) libros_view.estadisticas(libros);
+            libros_view.tabla(libros, (libro) =>
+            {
+                window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(libro
+                    .id_libro);
+            });
         }
-        catch (error) { Ui.toast('error', error.message); }
+        catch (error)
+        {
+            ui.toast('error', error.message);
+        }
     }
 };

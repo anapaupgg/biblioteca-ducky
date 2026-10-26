@@ -1,23 +1,33 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Consultas de perfiles y funciones.                */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   listar()                     - Profiles with functions/users */
-/*   buscar(id)                   - One profile                   */
-/*   funciones()                  - All functions                 */
-/*   crear(client, datos)         - INSERT perfil + funciones     */
-/*   actualizar(client, id, datos)- UPDATE descripcion + funciones*/
-/*   dar_baja(client, id, admin)  - Estatus = Inactivo            */
-/*   reactivar(client, id)        - Estatus = Activo              */
-/*   nivel(funciones)             - Hierarchy level 1..3          */
+/* Listing Contents: */
+/*   listar() */
+/*   buscar(id) */
+/*   funciones() */
+/*   crear(client, datos) */
+/*   actualizar(client, id, datos) */
+/*   dar_baja(client, id, admin) */
+/*   reactivar(client, id) */
+/*   nivel(lista) */
 /******************************************************************/
 
-const { pool } = require('../db');
+/******************************************************************/
+/* Reuse Instructions */
+/* Entradas validadas por controlador; devuelve Promise de datos SQL. */
+/* client: conexión pg de la transacción cuando la firma la requiere. */
+/* No liberar ni confirmar un client recibido; propagar errores SQL. */
+/******************************************************************/
+
+const
+{
+    pool
+} = require('../db');
 
 const SELECT_PERFIL =
     `SELECT p.id_perfil AS id, p.nombre, p.descripcion, p.estatus, p.fecha_alta, p.fecha_baja,
@@ -30,11 +40,15 @@ const SELECT_PERFIL =
        LEFT JOIN perfil_funcion pf ON pf.id_perfil = p.id_perfil
        LEFT JOIN funciones f       ON f.id_funcion = pf.id_funcion`;
 
-const listar = () => pool.query(SELECT_PERFIL + ' GROUP BY p.id_perfil, a.nombre ORDER BY p.estatus, p.id_perfil');
+const listar = () => pool.query(SELECT_PERFIL +
+    ' GROUP BY p.id_perfil, a.nombre ORDER BY p.estatus, p.id_perfil');
 
-const buscar = (id) => pool.query(SELECT_PERFIL + ' WHERE p.id_perfil = $1 GROUP BY p.id_perfil, a.nombre', [id]);
+const buscar = (id) => pool.query(SELECT_PERFIL + ' WHERE p.id_perfil = $1 GROUP BY p.id_perfil, a.nombre', [
+    id
+]);
 
-const funciones = () => pool.query('SELECT id_funcion AS id, nombre, descripcion FROM funciones ORDER BY id_funcion');
+const funciones = () => pool.query(
+    'SELECT id_funcion AS id, nombre, descripcion FROM funciones ORDER BY id_funcion');
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -43,11 +57,11 @@ const funciones = () => pool.query('SELECT id_funcion AS id, nombre, descripcion
 /******************************************************************/
 const crear = async (client, datos) =>
 {
-    const r = await client.query(
+    const resultado = await client.query(
         `INSERT INTO perfiles (nombre, descripcion, clave_admin_alta) VALUES ($1, nullif($2, ''), $3)
          RETURNING id_perfil`,
         [datos.nombre, datos.descripcion || '', datos.admin]);
-    const id = r.rows[0].id_perfil;
+    const id = resultado.rows[0].id_perfil;
     await client.query(
         'INSERT INTO perfil_funcion (id_perfil, id_funcion) SELECT $1, unnest($2::int[])',
         [id, datos.funciones]);
@@ -61,10 +75,14 @@ const crear = async (client, datos) =>
 /******************************************************************/
 const actualizar = async (client, id, datos) =>
 {
-    await client.query('UPDATE perfiles SET descripcion = nullif($2, \'\') WHERE id_perfil = $1', [id, datos.descripcion || '']);
+    await client.query('UPDATE perfiles SET descripcion = nullif($2, \'\') WHERE id_perfil = $1', [id,
+        datos.descripcion || ''
+    ]);
     await client.query('DELETE FROM perfil_funcion WHERE id_perfil = $1', [id]);
     await client.query(
-        'INSERT INTO perfil_funcion (id_perfil, id_funcion) SELECT $1, unnest($2::int[])', [id, datos.funciones]);
+        'INSERT INTO perfil_funcion (id_perfil, id_funcion) SELECT $1, unnest($2::int[])', [id,
+            datos.funciones
+        ]);
 };
 
 /******************************************************************/
@@ -80,7 +98,8 @@ const dar_baja = (client, id, admin) =>
 
 const reactivar = (client, id) =>
     client.query(
-        `UPDATE perfiles SET estatus = 'Activo', fecha_baja = NULL, clave_admin_baja = NULL WHERE id_perfil = $1`, [id]);
+        `UPDATE perfiles SET estatus = 'Activo', fecha_baja = NULL, clave_admin_baja = NULL WHERE id_perfil = $1`,
+        [id]);
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -95,8 +114,18 @@ const nivel = (lista) =>
 {
     const nombres = lista || [];
     if (nombres.includes('Gestionar perfiles')) return 3;
-    if (nombres.some((f) => FUNCIONES_PERSONAL.includes(f))) return 2;
+    if (nombres.some((filtro) => FUNCIONES_PERSONAL.includes(filtro))) return 2;
     return 1;
 };
 
-module.exports = { listar, buscar, funciones, crear, actualizar, dar_baja, reactivar, nivel };
+module.exports =
+{
+    listar,
+    buscar,
+    funciones,
+    crear,
+    actualizar,
+    dar_baja,
+    reactivar,
+    nivel
+};

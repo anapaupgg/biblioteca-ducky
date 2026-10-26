@@ -1,112 +1,149 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de usuario_editar.html.               */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   UsuarioEditarController.iniciar()    - Layout, ?clave=       */
-/*   UsuarioEditarController.consultar()  - Load the user         */
-/*   UsuarioEditarController.guardar()    - Change profile        */
-/*   UsuarioEditarController.reactivar()  - Reactivate            */
+/* Listing Contents: */
+/*   usuario_editar_controller.iniciar() */
+/*   usuario_editar_controller.consultar() */
+/*   usuario_editar_controller.guardar() */
+/*   usuario_editar_controller.reactivar() */
+/*   usuario_editar_controller.consultar_silencioso() */
 /******************************************************************/
 
-const UsuarioEditarController =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const usuario_editar_controller =
 {
     perfiles: [],
     usuario: null,
 
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'usuarios', migas: 'Gestión de usuarios / Modificar', funciones: ['Gestionar usuarios'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'usuarios',
+            migas: 'Gestión de usuarios / Modificar',
+            funciones: ['Gestionar usuarios']
+        });
         if (!usuario) return;
 
-        document.getElementById('btn-buscar').addEventListener('click', () => this.consultar());
-        document.getElementById('buscar-clave').addEventListener('keydown', (e) => { if (e.key === 'Enter') this.consultar(); });
+        usuario_editar_view.enlazar(
+        {
+            consultar: (...argumentos) => this.consultar(...argumentos)
+        });
 
-        try { this.perfiles = (await UsuarioModel.catalogos()).perfiles; }
-        catch (error) { UsuarioEditarView.mensaje('error', error.message); }
+        try
+        {
+            this.perfiles = (await usuario_model.catalogos()).perfiles;
+        }
+        catch (error)
+        {
+            usuario_editar_view.mensaje('error', error.message);
+        }
 
-        const clave = Ui.param('clave');
+        const clave = ui.param('clave');
         if (clave)
         {
-            document.getElementById('buscar-clave').value = clave;
+            usuario_editar_view.poner_clave(clave);
             this.consultar();
         }
     },
 
-    consultar: async function()
+    consultar: async function ()
     {
-        const clave = UsuarioEditarView.clave();
-        UsuarioEditarView.mensaje();
+        const clave = usuario_editar_view.clave();
+        usuario_editar_view.mensaje();
         if (!/^[A-Za-z0-9]{6}$/.test(clave))
         {
-            UsuarioEditarView.vacio();
-            return UsuarioEditarView.mensaje('error', 'Verifica la Clave capturada', 'La matrícula o nómina tiene 6 caracteres.');
+            usuario_editar_view.vacio();
+            return usuario_editar_view.mensaje('error', 'Verifica la Clave capturada',
+                'La matrícula o nómina tiene 6 caracteres.');
         }
         try
         {
-            this.usuario = await UsuarioModel.detalle(clave);
-            UsuarioEditarView.detalle(this.usuario, this.perfiles);
-            const guardar = document.getElementById('btn-guardar');
-            const reactivar = document.getElementById('btn-reactivar');
-            if (guardar) guardar.addEventListener('click', () => this.guardar());
-            if (reactivar) reactivar.addEventListener('click', () => this.reactivar());
+            this.usuario = await usuario_model.detalle(clave);
+            usuario_editar_view.detalle(this.usuario, this.perfiles);
+            usuario_editar_view.enlazar_detalle(
+            {
+                guardar: () => this.guardar(),
+                reactivar: () => this.reactivar()
+            });
         }
         catch (error)
         {
-            UsuarioEditarView.vacio();
-            UsuarioEditarView.mensaje('error', error.message);
+            usuario_editar_view.vacio();
+            usuario_editar_view.mensaje('error', error.message);
         }
     },
 
-    guardar: async function()
+    guardar: async function ()
     {
-        const id_perfil = UsuarioEditarView.perfil_elegido();
-        const destino = this.perfiles.find((p) => p.id === id_perfil);
-        const retira = destino && (this.usuario.funciones || []).some((f) => !destino.funciones.includes(f));
+        const id_perfil = usuario_editar_view.perfil_elegido();
+        const destino = this.perfiles.find((elemento) => elemento.id === id_perfil);
+        const retira = destino && (this.usuario.funciones || []).some((filtro) => !destino.funciones
+            .includes(filtro));
         if (retira)
         {
-            const ok = await Ui.dialogo(
+            const ok = await ui.dialogo(
             {
                 titulo: 'El cambio retirará funciones',
-                texto: 'El nuevo perfil quita funciones a ' + this.usuario.nombre + '. Si tiene una sesión activa, se cerrará.',
+                texto: 'El nuevo perfil quita funciones a ' + this.usuario.nombre +
+                    '. Si tiene una sesión activa, se cerrará.',
                 confirmar: 'Continuar'
             });
             if (!ok) return;
         }
         try
         {
-            const r = await UsuarioModel.cambiar_perfil(this.usuario.clave, id_perfil);
-            UsuarioEditarView.mensaje('ok', r.mensaje, r.usuario.nombre + ' ahora tiene el perfil ' + r.usuario.perfil + '.');
+            const resultado = await usuario_model.cambiar_perfil(this.usuario.clave, id_perfil);
+            usuario_editar_view.mensaje('ok', resultado.mensaje, resultado.usuario.nombre +
+                ' ahora tiene el perfil ' + resultado.usuario.perfil + '.');
             this.consultar_silencioso();
         }
-        catch (error) { UsuarioEditarView.mensaje('error', error.message); }
+        catch (error)
+        {
+            usuario_editar_view.mensaje('error', error.message);
+        }
     },
 
-    reactivar: async function()
+    reactivar: async function ()
     {
         try
         {
-            const r = await UsuarioModel.reactivar(this.usuario.clave, UsuarioEditarView.perfil_elegido());
-            UsuarioEditarView.mensaje('ok', r.mensaje, r.usuario.nombre + ' vuelve a estar Activo.');
+            const resultado_2 = await usuario_model.reactivar(this.usuario.clave, usuario_editar_view
+                .perfil_elegido());
+            usuario_editar_view.mensaje('ok', resultado_2.mensaje, resultado_2.usuario.nombre +
+                ' vuelve a estar Activo.');
             await this.consultar_silencioso();
-            await Ui.dialogo({
+            await ui.dialogo(
+            {
                 titulo: 'Nueva contraseña temporal',
-                texto: 'Contraseña temporal: ' + r.contrasena_temporal + '. Entrégala al usuario por un medio privado. Deberá cambiarla al iniciar sesión. El envío por correo aún no está configurado.',
-                confirmar: 'Entendido', cancelar: false
+                texto: 'Contraseña temporal: ' + resultado_2.contrasena_temporal +
+                    '. Entrégala al usuario por un medio privado. Deberá cambiarla al iniciar sesión. El envío por correo aún no está configurado.',
+                confirmar: 'Entendido',
+                cancelar: false
             });
         }
-        catch (error) { UsuarioEditarView.mensaje('error', error.message); }
+        catch (error)
+        {
+            usuario_editar_view.mensaje('error', error.message);
+        }
     },
 
     /* Reload the user keeping the success message on screen */
-    consultar_silencioso: async function()
+    consultar_silencioso: async function ()
     {
-        const mensaje = document.getElementById('mensaje').innerHTML;
+        const mensaje = usuario_editar_view.conservar_mensaje();
         await this.consultar();
-        document.getElementById('mensaje').innerHTML = mensaje;
+        usuario_editar_view.restaurar_mensaje(mensaje);
     }
 };

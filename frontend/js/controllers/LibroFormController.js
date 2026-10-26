@@ -1,66 +1,90 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de libro_form.html.                   */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   LibroFormController.iniciar()  - Layout, catalogs, mode      */
-/*   LibroFormController.guardar()  - Validate and save           */
+/* Listing Contents: */
+/*   libro_form_controller.iniciar() */
+/*   libro_form_controller.guardar() */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
 /******************************************************************/
 
 const OBLIGATORIOS_LIBRO = ['titulo', 'isbn', 'autores', 'editorial', 'tema'];
 
-const LibroFormController =
+const libro_form_controller =
 {
     id: null,
 
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'libros', migas: 'Gestionar libros / Ficha bibliográfica', funciones: ['Gestionar libros'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'libros',
+            migas: 'Gestionar libros / Ficha bibliográfica',
+            funciones: ['Gestionar libros']
+        });
         if (!usuario) return;
 
-        this.id = Ui.param('id');
-        document.getElementById('formato').addEventListener('change', () => LibroFormView.ajustar_formato());
-        document.getElementById('menos').addEventListener('click', () => LibroFormView.copias(-1));
-        document.getElementById('mas').addEventListener('click', () => LibroFormView.copias(1));
-        document.getElementById('form-libro').addEventListener('submit', (e) => { e.preventDefault(); this.guardar(); });
-        LibroFormView.ajustar_formato();
+        this.id = ui.param('id');
+        libro_form_view.enlazar(
+        {
+            guardar: (...argumentos) => this.guardar(...argumentos)
+        });
+        libro_form_view.ajustar_formato();
 
         try
         {
-            LibroFormView.catalogos(await LibroModel.catalogos());
-            if (this.id) LibroFormView.modo_edicion(await LibroModel.detalle(this.id));
-            ['titulo', 'isbn', 'editorial', 'autores'].forEach((c) => { if (Ui.param(c)) document.getElementById(c).value = Ui.param(c); });
+            libro_form_view.catalogos(await libro_model.catalogos());
+            if (this.id) libro_form_view.modo_edicion(await libro_model.detalle(this.id));
+            ['titulo', 'isbn', 'editorial', 'autores'].forEach((campo) =>
+            {
+                if (ui.param(campo)) libro_form_view.completar(campo, ui.param(campo));
+            });
         }
-        catch (error) { LibroFormView.mensaje('error', error.message); }
+        catch (error)
+        {
+            libro_form_view.mensaje('error', error.message);
+        }
     },
 
-    guardar: async function()
+    guardar: async function ()
     {
-        const datos = LibroFormView.datos();
-        Ui.limpiar();
-        const vacios = OBLIGATORIOS_LIBRO.filter((c) => !datos[c]);
-        if (!this.id && datos.copias > 0 && datos.formato === 'Físico' && !datos.id_ubicacion) vacios.push('id_ubicacion');
+        const datos = libro_form_view.datos();
+        ui.limpiar();
+        const vacios = OBLIGATORIOS_LIBRO.filter((campo_2) => !datos[campo_2]);
+        if (!this.id && datos.copias > 0 && datos.formato === 'Físico' && !datos.id_ubicacion) vacios
+            .push('id_ubicacion');
         if (vacios.length)
         {
-            Ui.marcar(vacios);
-            return LibroFormView.mensaje('error', 'Completa los datos obligatorios', 'Revisa los campos marcados.');
+            ui.marcar(vacios);
+            return libro_form_view.mensaje('error', 'Completa los datos obligatorios',
+                'Revisa los campos marcados.');
         }
         try
         {
             if (this.id)
             {
-                await LibroModel.actualizar(this.id, datos);
-                window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) + '&ok=editado';
+                await libro_model.actualizar(this.id, datos);
+                window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) +
+                    '&ok=editado';
             }
             else
             {
-                LibroFormView.creado(await LibroModel.crear(datos));
+                libro_form_view.creado(await libro_model.crear(datos));
             }
         }
-        catch (error) { Ui.mostrar_error(error, 'mensaje'); }
+        catch (error)
+        {
+            ui.mostrar_error(error, 'mensaje');
+        }
     }
 };

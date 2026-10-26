@@ -8,62 +8,83 @@
 -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Biblioteca Ducky · Registrar usuario</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
 
-<div class="app">
-    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
-    <aside id="sidebar" class="sidebar"></aside>
-    <main class="main">
-        <header id="topbar" class="topbar"></header>
-        <div id="contenido">
-            <div class="page-header">
-                <div><h1>Registrar usuario</h1><p>La información personal se consulta de la institución.</p></div>
-                
-            </div>
-            <div id="mensaje"></div>
-            <form id="form-usuario" novalidate>
-                <div class="card">
-                    <h2>Clave y perfil</h2>
-                    <div class="grid-2">
-                        <div class="field"><label for="clave">Clave (matrícula o nómina)</label><input id="clave" maxlength="6" placeholder="Ej. 645678"><span class="hint">Escribe la clave y presiona Tab para consultar la institución.</span></div>
-                        <div class="field"><label for="id_perfil">Perfil asignado</label><select id="id_perfil"></select></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Registrar usuario</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body>
+
+        <div class="app">
+            <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header">
+                        <div>
+                            <h1>Registrar usuario</h1>
+                            <p>La información personal se consulta de la institución.</p>
+                        </div>
+
                     </div>
+                    <div id="mensaje"></div>
+                    <form id="form-usuario" novalidate>
+                        <div class="card">
+                            <h2>Clave y perfil</h2>
+                            <div class="grid-2">
+                                <div class="field"><label for="clave">Clave (matrícula o nómina)</label><input
+                                        id="clave" maxlength="6" placeholder="Ej. 645678"><span
+                                        class="hint">Escribe la clave y presiona Tab para consultar la
+                                        institución.</span></div>
+                                <div class="field"><label for="id_perfil">Perfil asignado</label><select
+                                        id="id_perfil"></select></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2>Información institucional · solo lectura</h2>
+                            <div class="grid-2" id="institucional">
+                                <div class="field"><span class="label">Nombre</span>
+                                    <div class="readonly" id="i-nombre">—</div>
+                                </div>
+                                <div class="field"><span class="label">Tipo de usuario</span>
+                                    <div class="readonly" id="i-tipo">—</div>
+                                </div>
+                                <div class="field"><span class="label">Correo institucional</span>
+                                    <div class="readonly" id="i-correo">—</div>
+                                </div>
+                                <div class="field"><span class="label">Vigencia</span>
+                                    <div class="readonly" id="i-vigente">—</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="submit">Registrar usuario</button>
+                            <a class="btn" href="usuarios.html">Cancelar</a>
+                        </div>
+                    </form>
                 </div>
-                <div class="card">
-                    <h2>Información institucional · solo lectura</h2>
-                    <div class="grid-2" id="institucional">
-                        <div class="field"><span class="label">Nombre</span><div class="readonly" id="i-nombre">—</div></div>
-                        <div class="field"><span class="label">Tipo de usuario</span><div class="readonly" id="i-tipo">—</div></div>
-                        <div class="field"><span class="label">Correo institucional</span><div class="readonly" id="i-correo">—</div></div>
-                        <div class="field"><span class="label">Vigencia</span><div class="readonly" id="i-vigente">—</div></div>
-                    </div>
-                </div>
-                <div class="actions">
-                    <button class="btn btn-primary" type="submit">Registrar usuario</button>
-                    <a class="btn" href="usuarios.html">Cancelar</a>
-                </div>
-            </form>
+            </main>
         </div>
-    </main>
-</div>
 
-<!-- Utilities -->
-<script src="js/utils/api.js"></script>
-<script src="js/utils/session.js"></script>
-<script src="js/utils/ui.js"></script>
-<script src="js/utils/layout.js"></script>
+        <!-- Utilities -->
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
 
-<!-- MVC layer of this page -->
-<script src="js/models/UsuarioModel.js"></script>
-<script src="js/views/UsuarioRegistrarView.js"></script>
-<script src="js/controllers/UsuarioRegistrarController.js"></script>
-<script>UsuarioRegistrarController.iniciar();</script>
+        <!-- MVC layer of this page -->
+        <script src="js/models/UsuarioModel.js"></script>
+        <script src="js/views/UsuarioRegistrarView.js"></script>
+        <script src="js/controllers/UsuarioRegistrarController.js"></script>
+        <script>
+            usuario_registrar_controller.iniciar();
 
-</body>
+        </script>
+
+    </body>
+
 </html>

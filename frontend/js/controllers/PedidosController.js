@@ -1,21 +1,31 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de pedidos.html.                      */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   PedidosController.iniciar()        - Layout, role, tabs      */
-/*   PedidosController.mostrar(tab)     - Load a tab              */
-/*   PedidosController.agregar()        - Add a line              */
-/*   PedidosController.enviar()         - Review and send         */
-/*   PedidosController.responder(id, e) - Tesorería answer        */
-/*   PedidosController.recibir(id, u)   - Book reception          */
+/* Listing Contents: */
+/*   pedidos_controller.iniciar() */
+/*   pedidos_controller.cargar_presupuesto() */
+/*   pedidos_controller.mostrar(tab) */
+/*   pedidos_controller.dibujar_nueva() */
+/*   pedidos_controller.agregar() */
+/*   pedidos_controller.enviar() */
+/*   pedidos_controller.ver(id) */
+/*   pedidos_controller.responder(id, estatus) */
+/*   pedidos_controller.recibir(id, id_ubicacion) */
 /******************************************************************/
 
-const PedidosController =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const pedidos_controller =
 {
     lineas: [],
     catalogo: [],
@@ -23,135 +33,221 @@ const PedidosController =
     puede_solicitar: false,
     puede_recibir: false,
 
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'pedidos', migas: 'Solicitudes a Tesorería', funciones: ['Préstamos', 'Gestionar libros'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'pedidos',
+            migas: 'Solicitudes a Tesorería',
+            funciones: ['Préstamos', 'Gestionar libros']
+        });
         if (!usuario) return;
         this.puede_solicitar = usuario.funciones.includes('Préstamos');
         this.puede_recibir = usuario.funciones.includes('Gestionar libros');
-        if (!this.puede_solicitar) PedidosView.ocultar_tabs(['nueva']);
+        if (!this.puede_solicitar) pedidos_view.ocultar_tabs(['nueva']);
 
-        document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => this.mostrar(t.dataset.tab)));
-        try { this.catalogo = usuario.funciones.includes('Buscar libros') ? await BusquedaModel.listado() : []; } catch (e) { this.catalogo = []; }
+        pedidos_view.enlazar(
+        {
+            mostrar: (...argumentos) => this.mostrar(...argumentos)
+        });
+        try
+        {
+            this.catalogo = usuario.funciones.includes('Buscar libros') ? await busqueda_model
+                .listado() : [];
+        }
+        catch (error_2)
+        {
+            this.catalogo = [];
+        }
 
-        const inicial = window.location.hash === '#recepcion' || !this.puede_solicitar ? 'recepcion' : 'nueva';
+        const inicial = window.location.hash === '#recepcion' || !this.puede_solicitar ? 'recepcion' :
+            'nueva';
         this.mostrar(inicial);
     },
 
-    cargar_presupuesto: async function()
+    cargar_presupuesto: async function ()
     {
-        const lista = await PedidoModel.presupuestos();
-        const mes = Ui.hoy().slice(0, 7);
-        this.presupuesto = lista.find((p) => p.periodo === mes) || null;
-        PedidosView.estadisticas(this.presupuesto);
+        const lista = await pedido_model.presupuestos();
+        const mes = ui.hoy().slice(0, 7);
+        this.presupuesto = lista.find((elemento) => elemento.periodo === mes) || null;
+        pedidos_view.estadisticas(this.presupuesto);
         return lista;
     },
 
-    mostrar: async function(tab)
+    mostrar: async function (tab)
     {
-        PedidosView.activar(tab);
+        pedidos_view.activar(tab);
         try
         {
             await this.cargar_presupuesto();
             if (tab === 'nueva') this.dibujar_nueva();
             if (tab === 'historial')
             {
-                PedidosView.historial(await PedidoModel.listar(), this.puede_solicitar,
-                    { ver: (id) => this.ver(id), responder: (id, e) => this.responder(id, e) });
+                pedidos_view.historial(await pedido_model.listar(), this.puede_solicitar,
+                {
+                    ver: (id) => this.ver(id),
+                    responder: (id, elemento_2) => this.responder(id, elemento_2)
+                });
             }
             if (tab === 'recepcion')
             {
-                const autorizados = (await PedidoModel.listar()).filter((p) => p.estatus === 'Autorizado');
-                const detalles = await Promise.all(autorizados.map((p) => PedidoModel.detalle(p.id_pedido)));
-                const ubicaciones = this.puede_recibir ? (await LibroModel.catalogos()).ubicaciones : [];
-                PedidosView.recepcion(detalles, ubicaciones, this.puede_recibir, (id, u) => this.recibir(id, u));
+                const autorizados = (await pedido_model.listar()).filter((elemento_3) => elemento_3
+                    .estatus === 'Autorizado');
+                const detalles = await Promise.all(autorizados.map((elemento_4) => pedido_model
+                    .detalle(elemento_4.id_pedido)));
+                const ubicaciones = this.puede_recibir ? (await libro_model.catalogos()).ubicaciones :
+                    [];
+                pedidos_view.recepcion(detalles, ubicaciones, this.puede_recibir, (id, usuario_2) =>
+                    this.recibir(id, usuario_2));
             }
         }
-        catch (error) { PedidosView.mensaje('error', error.message); }
-    },
-
-    dibujar_nueva: function()
-    {
-        PedidosView.nueva(this.catalogo, this.lineas, this.presupuesto ? this.presupuesto.saldo : null,
+        catch (error)
         {
-            agregar: () => this.agregar(),
-            quitar: (i) => { this.lineas.splice(i, 1); this.dibujar_nueva(); },
-            vaciar: () => { this.lineas = []; this.dibujar_nueva(); PedidosView.mensaje('info', 'Solicitud cancelada: no se realizaron cambios'); },
-            enviar: () => this.enviar(),
-            ejemplo: () => PedidosView.llenar_linea({ id_libro: '', titulo: 'Diseño de bases de datos', autores: 'Carlos Coronel', isbn: '9786074818785',
-                                                      editorial: 'Cengage Learning', cantidad: 2, costo_unitario: 1250, peticionario: '700123' }),
-            elegir_libro: (id) =>
-            {
-                const libro = this.catalogo.find((l) => l.id_libro === id);
-                if (libro) PedidosView.llenar_linea({ titulo: libro.titulo, autores: libro.autores || '', editorial: libro.editorial, isbn: '' });
-            }
-        });
+            pedidos_view.mensaje('error', error.message);
+        }
     },
 
-    agregar: function()
+    dibujar_nueva: function ()
     {
-        const l = PedidosView.linea();
-        Ui.limpiar();
+        pedidos_view.nueva(this.catalogo, this.lineas, this.presupuesto ? this.presupuesto.saldo :
+            null,
+            {
+                agregar: () => this.agregar(),
+                quitar: (indice) =>
+                {
+                    this.lineas.splice(indice, 1);
+                    this.dibujar_nueva();
+                },
+                vaciar: () =>
+                {
+                    this.lineas = [];
+                    this.dibujar_nueva();
+                    pedidos_view.mensaje('info',
+                        'Solicitud cancelada: no se realizaron cambios');
+                },
+                enviar: () => this.enviar(),
+                ejemplo: () => pedidos_view.llenar_linea(
+                {
+                    id_libro: '',
+                    titulo: 'Diseño de bases de datos',
+                    autores: 'Carlos Coronel',
+                    isbn: '9786074818785',
+                    editorial: 'Cengage Learning',
+                    cantidad: 2,
+                    costo_unitario: 1250,
+                    peticionario: '700123'
+                }),
+                elegir_libro: (id) =>
+                {
+                    const libro = this.catalogo.find((linea) => linea.id_libro === id);
+                    if (libro) pedidos_view.llenar_linea(
+                    {
+                        titulo: libro.titulo,
+                        autores: libro.autores || '',
+                        editorial: libro.editorial,
+                        isbn: ''
+                    });
+                }
+            });
+    },
+
+    agregar: function ()
+    {
+        const linea_2 = pedidos_view.linea();
+        ui.limpiar();
         const vacios = [];
-        if (!l.titulo) vacios.push('titulo');
-        if (!(l.cantidad > 0)) vacios.push('cantidad');
-        if (!(l.costo_unitario >= 0)) vacios.push('costo_unitario');
-        if (l.isbn && !/^([0-9]{9}[0-9X]|[0-9]{13})$/.test(l.isbn.replace(/-/g, ''))) vacios.push('isbn');
+        if (!linea_2.titulo) vacios.push('titulo');
+        if (!(linea_2.cantidad > 0)) vacios.push('cantidad');
+        if (!(linea_2.costo_unitario >= 0)) vacios.push('costo_unitario');
+        if (linea_2.isbn && !/^([0-9]{9}[0-9X]|[0-9]{13})$/.test(linea_2.isbn.replace(/-/g, '')))
+            vacios.push('isbn');
         if (vacios.length)
         {
-            Ui.marcar(vacios);
-            return PedidosView.mensaje('error', 'Completa los campos obligatorios', 'Título, cantidad y costo estimado; el ISBN debe tener 10 o 13 dígitos.');
+            ui.marcar(vacios);
+            return pedidos_view.mensaje('error', 'Completa los campos obligatorios',
+                'Título, cantidad y costo estimado; el ISBN debe tener 10 o 13 dígitos.');
         }
-        PedidosView.mensaje();
-        this.lineas.push(l);
+        pedidos_view.mensaje();
+        this.lineas.push(linea_2);
         this.dibujar_nueva();
     },
 
-    enviar: async function()
+    enviar: async function ()
     {
-        if (!this.lineas.length) return PedidosView.mensaje('error', 'Agrega al menos un libro');
-        const total = this.lineas.reduce((s, l) => s + l.cantidad * l.costo_unitario, 0);
-        const ok = await Ui.dialogo(
+        if (!this.lineas.length) return pedidos_view.mensaje('error', 'Agrega al menos un libro');
+        const total = this.lineas.reduce((registro, linea_3) => registro + linea_3.cantidad * linea_3
+            .costo_unitario, 0);
+        const ok = await ui.dialogo(
         {
             titulo: 'Revisar orden de compra',
-            texto: this.lineas.length + ' título(s) · total estimado ' + Ui.dinero(total) + '. Destinatario: Tesorería.' +
-                   (this.presupuesto ? ' Saldo del mes: ' + Ui.dinero(this.presupuesto.saldo) + '.' : ' No hay presupuesto registrado este mes.'),
+            texto: this.lineas.length + ' título(s) · total estimado ' + ui.dinero(total) +
+                '. Destinatario: Tesorería.' +
+                (this.presupuesto ? ' Saldo del mes: ' + ui.dinero(this.presupuesto.saldo) +
+                    '.' : ' No hay presupuesto registrado este mes.'),
             confirmar: 'Enviar a Tesorería'
         });
         if (!ok) return;
         try
         {
-            const r = await PedidoModel.crear(this.lineas);
+            const resultado = await pedido_model.crear(this.lineas);
             this.lineas = [];
-            PedidosView.mensaje('ok', 'Solicitud enviada a Tesorería · ' + r.pedido.folio, r.lineas.length + ' título(s) · ' + Ui.dinero(r.pedido.total));
+            pedidos_view.mensaje('ok', 'Solicitud enviada a Tesorería · ' + resultado.pedido.folio,
+                resultado.lineas.length + ' título(s) · ' + ui.dinero(resultado.pedido.total));
             this.mostrar('historial');
         }
-        catch (error) { PedidosView.mensaje('error', 'No se envió la solicitud', error.message); }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', 'No se envió la solicitud', error.message);
+        }
     },
 
-    ver: async function(id)
-    {
-        try { PedidosView.detalle(await PedidoModel.detalle(id)); }
-        catch (error) { PedidosView.mensaje('error', error.message); }
-    },
-
-    responder: async function(id, estatus)
-    {
-        const ok = await Ui.dialogo({ titulo: 'Registrar respuesta de Tesorería', texto: 'La solicitud quedará como ' + estatus + '.' +
-            (estatus === 'Rechazado' ? ' Se libera el presupuesto comprometido.' : ' El catálogo podrá confirmar la recepción.'), confirmar: 'Registrar', peligro: estatus === 'Rechazado' });
-        if (!ok) return;
-        try { const r = await PedidoModel.estatus(id, estatus); PedidosView.mensaje('ok', r.mensaje); this.mostrar('historial'); }
-        catch (error) { PedidosView.mensaje('error', error.message); }
-    },
-
-    recibir: async function(id, id_ubicacion)
+    ver: async function (id)
     {
         try
         {
-            const r = await PedidoModel.recibir(id, Number(id_ubicacion) || null);
-            await this.mostrar('recepcion');
-            PedidosView.recibido(r);
+            pedidos_view.detalle(await pedido_model.detalle(id));
         }
-        catch (error) { PedidosView.mensaje('error', error.message); }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', error.message);
+        }
+    },
+
+    responder: async function (id, estatus)
+    {
+        const ok = await ui.dialogo(
+        {
+            titulo: 'Registrar respuesta de Tesorería',
+            texto: 'La solicitud quedará como ' + estatus + '.' +
+                (estatus === 'Rechazado' ? ' Se libera el presupuesto comprometido.' :
+                    ' El catálogo podrá confirmar la recepción.'),
+            confirmar: 'Registrar',
+            peligro: estatus === 'Rechazado'
+        });
+        if (!ok) return;
+        try
+        {
+            const resultado_2 = await pedido_model.estatus(id, estatus);
+            pedidos_view.mensaje('ok', resultado_2.mensaje);
+            this.mostrar('historial');
+        }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', error.message);
+        }
+    },
+
+    recibir: async function (id, id_ubicacion)
+    {
+        try
+        {
+            const resultado_3 = await pedido_model.recibir(id, Number(id_ubicacion) || null);
+            await this.mostrar('recepcion');
+            pedidos_view.recibido(resultado_3);
+        }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', error.message);
+        }
     }
 };

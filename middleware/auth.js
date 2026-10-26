@@ -1,21 +1,28 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Valida la sesión y los permisos del perfil.       */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Valida la sesión y los permisos del perfil. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   firmar_token(id_sesion)        - Build a signed token        */
-/*   requiere_sesion(req,res,next)  - Validate token + session    */
-/*   requiere_funcion(...nombres)   - Require one of the functions*/
+/* Listing Contents: */
+/*   firmar(texto) */
+/*   firmar_token(id_sesion) */
+/*   requiere_sesion(solicitud, respuesta, next) */
+/*   requiere_funcion(...nombres) */
 /******************************************************************/
 
-const crypto        = require('crypto');
-const sesion_model  = require('../models/sesionModel');
+/******************************************************************/
+/* Reuse Instructions */
+/* Consultar las firmas y comentarios de cada operación antes de reutilizar. */
+/* No registrar contraseñas, tokens ni secretos en mensajes o bitácoras. */
+/******************************************************************/
 
-const SECRETO          = process.env.SESSION_SECRET;
+const crypto = require('crypto');
+const sesion_model = require('../models/sesionModel');
+
+const SECRETO = process.env.SESSION_SECRET;
 const HORAS_INACTIVIDAD = 8;
 
 /******************************************************************/
@@ -24,7 +31,8 @@ const HORAS_INACTIVIDAD = 8;
 /* Purpose: Produce "<id_sesion>.<hmac>" so the client cannot     */
 /*          forge another session id.                             */
 /******************************************************************/
-const firmar = (texto) => crypto.createHmac('sha256', SECRETO).update(String(texto)).digest('hex').slice(0, 32);
+const firmar = (texto) => crypto.createHmac('sha256', SECRETO).update(String(texto)).digest('hex').slice(0,
+    32);
 const firmar_token = (id_sesion) => id_sesion + '.' + firmar(id_sesion);
 
 /******************************************************************/
@@ -36,11 +44,11 @@ const firmar_token = (id_sesion) => id_sesion + '.' + firmar(id_sesion);
 /* Returns: 401 "Sesión expirada" when the token is missing,      */
 /*          forged, closed or inactive for more than 8 hours.     */
 /******************************************************************/
-const requiere_sesion = async (req, res, next) =>
+const requiere_sesion = async (solicitud, respuesta, next) =>
 {
     try
     {
-        const encabezado = req.headers.authorization || '';
+        const encabezado = solicitud.headers.authorization || '';
         const token = encabezado.startsWith('Bearer ') ? encabezado.slice(7) : '';
         const [id_sesion, firma, extra] = token.split('.');
 
@@ -48,22 +56,33 @@ const requiere_sesion = async (req, res, next) =>
             !/^[a-f0-9]{32}$/.test(firma || '') || extra !== undefined ||
             !crypto.timingSafeEqual(Buffer.from(firmar(id_sesion)), Buffer.from(firma)))
         {
-            return res.status(401).json({ codigo: 'SESION_EXPIRADA', error: 'Sesión expirada: inicia sesión nuevamente' });
+            return respuesta.status(401).json(
+            {
+                codigo: 'SESION_EXPIRADA',
+                error: 'Sesión expirada: inicia sesión nuevamente'
+            });
         }
 
         const sesion = await sesion_model.obtener_activa(Number(id_sesion), HORAS_INACTIVIDAD);
         if (!sesion)
         {
-            return res.status(401).json({ codigo: 'SESION_EXPIRADA', error: 'Sesión expirada: inicia sesión nuevamente' });
+            return respuesta.status(401).json(
+            {
+                codigo: 'SESION_EXPIRADA',
+                error: 'Sesión expirada: inicia sesión nuevamente'
+            });
         }
 
-        req.usuario = sesion;
+        solicitud.usuario = sesion;
         next();
     }
     catch (error)
     {
         console.error('requiere_sesion:', error);
-        res.status(500).json({ error: 'No fue posible validar tu sesión' });
+        respuesta.status(500).json(
+        {
+            error: 'No fue posible validar tu sesión'
+        });
     }
 };
 
@@ -74,18 +93,30 @@ const requiere_sesion = async (req, res, next) =>
 /*          of the given functions (e.g. 'Préstamos').            */
 /* Returns: 403 "Acceso denegado" otherwise                       */
 /******************************************************************/
-const requiere_funcion = (...nombres) => (req, res, next) =>
+const requiere_funcion = (...nombres) => (solicitud_2, respuesta_2, next) =>
 {
-    if (req.usuario.es_temporal)
+    if (solicitud_2.usuario.es_temporal)
     {
-        return res.status(403).json({ codigo: 'CAMBIO_CONTRASENA_REQUERIDO', error: 'Debes cambiar tu contraseña temporal antes de continuar.' });
+        return respuesta_2.status(403).json(
+        {
+            codigo: 'CAMBIO_CONTRASENA_REQUERIDO',
+            error: 'Debes cambiar tu contraseña temporal antes de continuar.'
+        });
     }
-    const permitido = nombres.some((nombre) => req.usuario.funciones.includes(nombre));
+    const permitido = nombres.some((nombre) => solicitud_2.usuario.funciones.includes(nombre));
     if (!permitido)
     {
-        return res.status(403).json({ error: 'Acceso denegado: su perfil no tiene permiso para esta función' });
+        return respuesta_2.status(403).json(
+        {
+            error: 'Acceso denegado: su perfil no tiene permiso para esta función'
+        });
     }
     next();
 };
 
-module.exports = { firmar_token, requiere_sesion, requiere_funcion };
+module.exports =
+{
+    firmar_token,
+    requiere_sesion,
+    requiere_funcion
+};

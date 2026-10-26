@@ -1,33 +1,89 @@
-const ChatbotController = {
-    ocupado:false,
-    async iniciar() {
-        if(!await Layout.montar({activo:'chatbot',migas:'Asistente',funciones:['Chatbot']}))return;
-        document.getElementById('chat-form').addEventListener('submit',e=>{e.preventDefault();this.preguntar(document.getElementById('chat-pregunta').value);});
-        document.getElementById('chat-reintentar').onclick=()=>this.cargar();
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
+/******************************************************************/
+
+/******************************************************************/
+/* Listing Contents: */
+/*   chatbot_controller.iniciar() */
+/*   chatbot_controller.cargar() */
+/*   chatbot_controller.preguntar(texto) */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const chatbot_controller =
+{
+    ocupado: false,
+    async iniciar()
+    {
+        if (!await layout.montar(
+            {
+                activo: 'chatbot',
+                migas: 'Asistente',
+                funciones: ['Chatbot']
+            })) return;
+        chatbot_view.enlazar(
+        {
+            preguntar: texto => this.preguntar(texto),
+            cargar: () => this.cargar()
+        });
         await this.cargar();
     },
-    async cargar() {
-        ChatbotView.estado('Cargando preguntas…');
-        document.getElementById('chat-reintentar').classList.add('hidden');
-        try { const r=await ChatbotModel.sugerencias();ChatbotView.sugerencias(r.sugerencias,q=>this.preguntar(q));ChatbotView.estado(r.sugerencias.length?'Elige una pregunta o escribe la tuya.':'Todavía no hay respuestas publicadas.'); }
-        catch(e){ChatbotView.estado(e.message);document.getElementById('chat-reintentar').classList.remove('hidden');}
+    async cargar()
+    {
+        chatbot_view.estado('Cargando preguntas…');
+        chatbot_view.reintentar(false);
+        try
+        {
+            const resultado = await chatbot_model.sugerencias();
+            chatbot_view.sugerencias(resultado.sugerencias, consulta => this.preguntar(consulta));
+            chatbot_view.estado(resultado.sugerencias.length ?
+                'Elige una pregunta o escribe la tuya.' : 'Todavía no hay respuestas publicadas.');
+        }
+        catch (error)
+        {
+            chatbot_view.estado(error.message);
+            chatbot_view.reintentar(true);
+        }
     },
-    async preguntar(texto) {
-        if(this.ocupado)return;
-        const q=texto.trim();
-        if(q.length<3 || q.length>300){ChatbotView.estado('Escribe una pregunta de 3 a 300 caracteres.');return;}
-        this.ocupado=true;ChatbotView.ocupado(true);ChatbotView.estado('Consultando…');
-        ChatbotView.mensaje(q,'usuario');
-        try {
-            const r=await ChatbotModel.preguntar(q);
-            ChatbotView.mensaje(r.mensaje,'bot');
-            r.resultados.forEach(f=>ChatbotView.mensaje(f.pregunta+'\n'+f.respuesta,'bot',f.fuentes));
-            (r.libros || []).forEach(l=>ChatbotView.mensaje(
-                l.titulo+' — '+l.autores+'\nClave: '+l.id_libro+' · '+l.formato+
-                '\nEjemplares disponibles para préstamo: '+l.disponibles_prestamo+
-                '\nUbicación: '+(l.ubicaciones || 'Consulta la ficha en Buscar libros'), 'bot', ['Catálogo actual de la biblioteca']));
-            document.getElementById('chat-pregunta').value='';ChatbotView.estado('Consulta terminada.');
-        } catch(e) {ChatbotView.mensaje('No pude completar la consulta. '+e.message,'bot');ChatbotView.estado('Puedes reintentar tu pregunta.');}
-        finally {this.ocupado=false;ChatbotView.ocupado(false);document.getElementById('chat-pregunta').focus();}
+    async preguntar(texto)
+    {
+        if (this.ocupado) return;
+        const consulta_2 = texto.trim();
+        if (consulta_2.length < 3 || consulta_2.length > 300)
+        {
+            chatbot_view.estado('Escribe una pregunta de 3 a 300 caracteres.');
+            return;
+        }
+        this.ocupado = true;
+        chatbot_view.ocupado(true);
+        chatbot_view.estado('Consultando…');
+        chatbot_view.mensaje(consulta_2, 'usuario');
+        try
+        {
+            const resultado_2 = await chatbot_model.preguntar(consulta_2);
+            chatbot_view.respuesta(resultado_2);
+            chatbot_view.limpiar();
+            chatbot_view.estado('Consulta terminada.');
+        }
+        catch (error_2)
+        {
+            chatbot_view.mensaje('No pude completar la consulta. ' + error_2.message, 'bot');
+            chatbot_view.estado('Puedes reintentar tu pregunta.');
+        }
+        finally
+        {
+            this.ocupado = false;
+            chatbot_view.ocupado(false);
+            chatbot_view.enfocar();
+        }
     }
 };

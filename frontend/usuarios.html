@@ -8,49 +8,64 @@
 -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Biblioteca Ducky · Gestión de usuarios</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
 
-<div class="app">
-    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
-    <aside id="sidebar" class="sidebar"></aside>
-    <main class="main">
-        <header id="topbar" class="topbar"></header>
-        <div id="contenido">
-            <div class="page-header">
-                <div><h1>Gestión de usuarios</h1><p>Consulta usuarios, perfiles y estatus institucional.</p></div>
-                <a class="btn btn-primary" href="usuario_registrar.html">Registrar usuario</a>
-            </div>
-            <div id="mensaje"></div>
-            <div class="card">
-                <h2>Usuarios de la biblioteca</h2>
-                <div class="filters">
-                    <div class="field"><label for="q">Buscar por Clave o Nombre</label><input id="q" type="search" placeholder="Clave o nombre"></div>
-                    <div class="field" style="max-width:260px"><label for="estatus">Estatus</label>
-                        <select id="estatus"><option value="">Todos</option><option>Activo</option><option>Inactivo</option></select></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Gestión de usuarios</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body>
+
+        <div class="app">
+            <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header">
+                        <div>
+                            <h1>Gestión de usuarios</h1>
+                            <p>Consulta usuarios, perfiles y estatus institucional.</p>
+                        </div>
+                        <a class="btn btn-primary" href="usuario_registrar.html">Registrar usuario</a>
+                    </div>
+                    <div id="mensaje"></div>
+                    <div class="card">
+                        <h2>Usuarios de la biblioteca</h2>
+                        <div class="filters">
+                            <div class="field"><label for="q">Buscar por Clave o Nombre</label><input id="q"
+                                    type="search" placeholder="Clave o nombre"></div>
+                            <div class="field" style="max-width:260px"><label for="estatus">Estatus</label>
+                                <select id="estatus">
+                                    <option value="">Todos</option>
+                                    <option>Activo</option>
+                                    <option>Inactivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="tabla"></div>
+                    </div>
                 </div>
-                <div id="tabla"></div>
-            </div>
+            </main>
         </div>
-    </main>
-</div>
 
-<!-- Utilities -->
-<script src="js/utils/api.js"></script>
-<script src="js/utils/session.js"></script>
-<script src="js/utils/ui.js"></script>
-<script src="js/utils/layout.js"></script>
+        <!-- Utilities -->
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
 
-<!-- MVC layer of this page -->
-<script src="js/models/UsuarioModel.js"></script>
-<script src="js/views/UsuariosView.js"></script>
-<script src="js/controllers/UsuariosController.js"></script>
-<script>UsuariosController.iniciar();</script>
+        <!-- MVC layer of this page -->
+        <script src="js/models/UsuarioModel.js"></script>
+        <script src="js/views/UsuariosView.js"></script>
+        <script src="js/controllers/UsuariosController.js"></script>
+        <script>
+            usuarios_controller.iniciar();
 
-</body>
+        </script>
+
+    </body>
+
 </html>

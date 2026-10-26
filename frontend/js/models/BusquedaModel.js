@@ -1,41 +1,48 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Llamadas a /api/busqueda.                         */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo cliente: transporte de datos hacia la API. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   BusquedaModel.buscar(filtros)                                */
-/*   BusquedaModel.ficha(id)                                      */
-/*   BusquedaModel.listado()                                      */
-/*   BusquedaModel.solicitar(id)                                  */
+/* Listing Contents: */
+/*   busqueda_model.buscar(filtros) */
+/*   busqueda_model.ficha(id) */
+/*   busqueda_model.listado() */
+/*   busqueda_model.solicitar(id) */
 /******************************************************************/
 
-const BusquedaModel =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de api; recibe datos validados por el controlador. */
+/* Devuelve Promise de JSON; rechaza con api_error ante errores HTTP. */
+/* Identificadores string/number se codifican en la URL; no manipula DOM. */
+/******************************************************************/
+
+const busqueda_model =
 {
     /* GET /busqueda?titulo=&autor=&tema=&clave=&isbn=&editorial= */
-    buscar: function(filtros)
+    buscar: function (filtros)
     {
-        return Api.get('/busqueda', filtros);
+        return api.get('/busqueda', filtros);
     },
 
     /* GET public ficha with copies */
-    ficha: function(id)
+    ficha: function (id)
     {
-        return Api.get('/busqueda/' + encodeURIComponent(id));
+        return api.get('/busqueda/' + encodeURIComponent(id));
     },
 
     /* GET printable list */
-    listado: function()
+    listado: function ()
     {
-        return Api.get('/busqueda/listado');
+        return api.get('/busqueda/listado');
     },
 
     /* POST loan request */
-    solicitar: function(id)
+    solicitar: function (id)
     {
-        return Api.post('/busqueda/' + encodeURIComponent(id) + '/solicitud');
+        return api.post('/busqueda/' + encodeURIComponent(id) + '/solicitud');
     }
 };

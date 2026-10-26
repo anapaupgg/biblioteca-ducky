@@ -1,20 +1,30 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Consultas de búsqueda de libros.                  */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   buscar(filtros)               - Search active catalog        */
-/*   ficha(id)                     - Public ficha + copies        */
-/*   listado()                     - Printable list of books      */
-/*   crear_solicitud(client, c, l) - INSERT solicitudes_prestamo  */
-/*   solicitud_pendiente(c, l)     - Open request of a reader     */
+/* Listing Contents: */
+/*   buscar(filtro) */
+/*   ficha(id) */
+/*   listado() */
+/*   crear_solicitud(client, clave, id_libro) */
+/*   solicitud_pendiente(clave, id_libro) */
 /******************************************************************/
 
-const { pool } = require('../db');
+/******************************************************************/
+/* Reuse Instructions */
+/* Entradas validadas por controlador; devuelve Promise de datos SQL. */
+/* client: conexión pg de la transacción cuando la firma la requiere. */
+/* No liberar ni confirmar un client recibido; propagar errores SQL. */
+/******************************************************************/
+
+const
+{
+    pool
+} = require('../db');
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -22,7 +32,7 @@ const { pool } = require('../db');
 /* Purpose: Combine one or several filters (AND). Only books      */
 /*          "Activo en catálogo" are returned by v_catalogo.      */
 /******************************************************************/
-const buscar = (f) =>
+const buscar = (filtro) =>
     pool.query(
         `SELECT c.*, l.sinopsis, l.enlace_digital,
                 (SELECT string_agg(DISTINCT coalesce(u.seccion || ' · ', '') || u.estante || ' / ' || u.fila, ', ')
@@ -38,7 +48,9 @@ const buscar = (f) =>
             AND ($5::text IS NULL OR c.isbn LIKE '%' || $5 || '%')
             AND ($6::text IS NULL OR unaccent_lower(c.editorial) LIKE '%' || unaccent_lower($6) || '%')
           ORDER BY c.titulo`,
-        [f.titulo || null, f.autor || null, f.tema || null, f.clave || null, f.isbn || null, f.editorial || null]);
+        [filtro.titulo || null, filtro.autor || null, filtro.tema || null, filtro.clave || null, filtro
+            .isbn || null, filtro.editorial || null
+        ]);
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -57,7 +69,11 @@ const ficha = async (id) =>
                 (SELECT p.fecha_vencimiento FROM prestamos p WHERE p.id_ejemplar = x.id_ejemplar AND p.estatus = 'Activo') AS disponible_desde
            FROM ejemplares x LEFT JOIN ubicaciones u USING (id_ubicacion)
           WHERE x.id_libro = $1 AND x.estatus <> 'Baja' ORDER BY x.id_ejemplar`, [id]);
-    return { libro: libro.rows[0], ejemplares: ejemplares.rows };
+    return (
+    {
+        libro: libro.rows[0],
+        ejemplares: ejemplares.rows
+    });
 };
 
 const listado = () =>
@@ -67,18 +83,25 @@ const listado = () =>
 
 const crear_solicitud = async (client, clave, id_libro) =>
 {
-    const r = await client.query(
+    const resultado = await client.query(
         `INSERT INTO solicitudes_prestamo (clave_usuario, id_libro) VALUES ($1, $2)
          RETURNING id_solicitud_prestamo AS folio, fecha_solicitud`, [clave, id_libro]);
-    return r.rows[0];
+    return resultado.rows[0];
 };
 
 const solicitud_pendiente = async (clave, id_libro) =>
 {
-    const r = await pool.query(
+    const resultado_2 = await pool.query(
         `SELECT id_solicitud_prestamo AS folio FROM solicitudes_prestamo
           WHERE clave_usuario = $1 AND id_libro = $2 AND estatus = 'Pendiente'`, [clave, id_libro]);
-    return r.rows[0] || null;
+    return resultado_2.rows[0] || null;
 };
 
-module.exports = { buscar, ficha, listado, crear_solicitud, solicitud_pendiente };
+module.exports =
+{
+    buscar,
+    ficha,
+    listado,
+    crear_solicitud,
+    solicitud_pendiente
+};

@@ -1,55 +1,62 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Llamadas a /api/perfiles.                         */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo cliente: transporte de datos hacia la API. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   PerfilModel.listar()                                         */
-/*   PerfilModel.funciones()                                      */
-/*   PerfilModel.crear(datos)                                     */
-/*   PerfilModel.actualizar(id, datos)                            */
-/*   PerfilModel.dar_baja(id)                                     */
-/*   PerfilModel.reactivar(id)                                    */
+/* Listing Contents: */
+/*   perfil_model.listar() */
+/*   perfil_model.funciones() */
+/*   perfil_model.crear(datos) */
+/*   perfil_model.actualizar(id, datos) */
+/*   perfil_model.dar_baja(id) */
+/*   perfil_model.reactivar(id) */
 /******************************************************************/
 
-const PerfilModel =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de api; recibe datos validados por el controlador. */
+/* Devuelve Promise de JSON; rechaza con api_error ante errores HTTP. */
+/* Identificadores string/number se codifican en la URL; no manipula DOM. */
+/******************************************************************/
+
+const perfil_model =
 {
     /* GET /perfiles */
-    listar: function()
+    listar: function ()
     {
-        return Api.get('/perfiles');
+        return api.get('/perfiles');
     },
 
     /* GET /perfiles/funciones */
-    funciones: function()
+    funciones: function ()
     {
-        return Api.get('/perfiles/funciones');
+        return api.get('/perfiles/funciones');
     },
 
     /* POST /perfiles { nombre, descripcion, funciones[] } */
-    crear: function(datos)
+    crear: function (datos)
     {
-        return Api.post('/perfiles', datos);
+        return api.post('/perfiles', datos);
     },
 
     /* PUT /perfiles/:id { descripcion, funciones[] } */
-    actualizar: function(id, datos)
+    actualizar: function (id, datos)
     {
-        return Api.put('/perfiles/' + id, datos);
+        return api.put('/perfiles/' + id, datos);
     },
 
     /* POST /perfiles/:id/baja */
-    dar_baja: function(id)
+    dar_baja: function (id)
     {
-        return Api.post('/perfiles/' + id + '/baja');
+        return api.post('/perfiles/' + id + '/baja');
     },
 
     /* POST /perfiles/:id/reactivar */
-    reactivar: function(id)
+    reactivar: function (id)
     {
-        return Api.post('/perfiles/' + id + '/reactivar');
+        return api.post('/perfiles/' + id + '/reactivar');
     }
 };

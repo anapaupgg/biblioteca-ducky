@@ -156,3 +156,11 @@ sigue exigiendo HTTPS. La URL no admite subrutas, credenciales, consulta ni
 fragmentos. El enlace local debe abrirse en la computadora que ejecuta la app.
 Con el remitente de prueba de Resend, el destinatario debe ser el correo de
 la cuenta de Resend. No usar estas variables locales en producción.
+
+
+## Arquitectura y estándar de codificación
+
+Consulta [ESTANDAR_MVC.md](ESTANDAR_MVC.md) para responsabilidades de modelos,
+vistas, controladores y servicios, además de las convenciones del documento
+proporcionado por el equipo. Las pruebas de `tests/mvc.test.js` comprueban la
+separación de capas y que los scripts de cada página cargan juntos.

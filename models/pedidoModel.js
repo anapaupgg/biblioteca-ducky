@@ -1,30 +1,47 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Consultas de pedidos y presupuestos.              */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   presupuestos()                   - Budgets with balance      */
-/*   presupuesto_del_mes(periodo)     - Budget of a month         */
-/*   listar()                         - Orders with totals        */
-/*   buscar(id)                       - Order with its lines      */
-/*   crear(client, d)                 - INSERT pedido + lines     */
-/*   cambiar_estatus(client, id, e)   - Autorizado / Rechazado... */
+/* Listing Contents: */
+/*   presupuestos() */
+/*   presupuesto_del_mes(periodo) */
+/*   listar(client = pool, id = null) */
+/*   buscar(id, client = pool) */
+/*   crear(client, datos) */
+/*   bloquear_pedido(client, id, esperado) */
+/*   cambiar_estatus(client, id, estatus) */
+/*   recibir(client, id, id_ubicacion) */
 /******************************************************************/
 
-const { pool } = require('../db');
+/******************************************************************/
+/* Reuse Instructions */
+/* Entradas validadas por controlador; devuelve Promise de datos SQL. */
+/* client: conexión pg de la transacción cuando la firma la requiere. */
+/* No liberar ni confirmar un client recibido; propagar errores SQL. */
+/******************************************************************/
+
+const
+{
+    pool
+} = require('../db');
 const libro_model = require('./libroModel');
-const { ErrorNegocio } = require('../utils/errores');
+const
+{
+    error_negocio
+} = require('../utils/errores');
 
 const presupuestos = () => pool.query('SELECT * FROM v_presupuesto_saldo ORDER BY periodo DESC');
 
 const presupuesto_del_mes = async (periodo) =>
 {
-    const r = await pool.query('SELECT * FROM v_presupuesto_saldo WHERE periodo = $1', [periodo]);
-    return r.rows[0] || null;
+    const resultado = await pool.query('SELECT * FROM v_presupuesto_saldo WHERE periodo = $1', [
+        periodo
+    ]);
+    return resultado.rows[0] || null;
 };
 
 /******************************************************************/
@@ -66,7 +83,11 @@ const buscar = async (id, client = pool) =>
            LEFT JOIN editoriales e ON e.id_editorial = d.id_editorial_solicitada
            LEFT JOIN usuarios u ON u.clave_usuario = d.clave_peticionario
           WHERE d.id_pedido = $1 ORDER BY d.numero_linea`, [id]);
-    return { pedido, lineas: lineas.rows };
+    return (
+    {
+        pedido,
+        lineas: lineas.rows
+    });
 };
 
 /******************************************************************/
@@ -77,27 +98,31 @@ const buscar = async (id, client = pool) =>
 /*          autores[], cantidad, costo_unitario, peticionario? }  */
 /* Returns: id_pedido                                             */
 /******************************************************************/
-const crear = async (client, d) =>
+const crear = async (client, datos) =>
 {
     // Separate statement: after waiting, subsequent queries see committed lines.
     const presupuesto = await client.query(
-        'SELECT id_presupuesto FROM presupuestos_mensuales WHERE id_presupuesto = $1 FOR UPDATE', [d.id_presupuesto]);
-    if (!presupuesto.rowCount) throw new ErrorNegocio(422, 'Presupuesto no disponible');
-    const r = await client.query(
+        'SELECT id_presupuesto FROM presupuestos_mensuales WHERE id_presupuesto = $1 FOR UPDATE',
+        [datos.id_presupuesto]);
+    if (!presupuesto.rowCount) throw new error_negocio(422, 'Presupuesto no disponible');
+    const resultado_2 = await client.query(
         'INSERT INTO pedidos_tesoreria (id_presupuesto, clave_solicitante) VALUES ($1, $2) RETURNING id_pedido',
-        [d.id_presupuesto, d.clave]);
-    const id_pedido = r.rows[0].id_pedido;
+        [datos.id_presupuesto, datos.clave]);
+    const id_pedido = resultado_2.rows[0].id_pedido;
 
-    for (const [indice, linea] of d.lineas.entries())
+    for (const [indice, linea] of datos.lineas.entries())
     {
         const numero = indice + 1;
-        const id_editorial = linea.editorial ? await libro_model.id_por_nombre(client, 'editoriales', linea.editorial) : null;
+        const id_editorial = linea.editorial ? await libro_model.id_por_nombre(client, 'editoriales',
+            linea.editorial) : null;
         await client.query(
             `INSERT INTO detalle_pedido (id_pedido, numero_linea, id_libro, isbn_solicitado, titulo_solicitado,
                                          id_editorial_solicitada, cantidad, costo_unitario_mxn, clave_peticionario)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-            [id_pedido, numero, linea.id_libro || null, linea.isbn || null, linea.titulo, id_editorial,
-             linea.cantidad, linea.costo_unitario, linea.peticionario || null]);
+            [id_pedido, numero, linea.id_libro || null, linea.isbn || null, linea.titulo,
+                id_editorial,
+                linea.cantidad, linea.costo_unitario, linea.peticionario || null
+            ]);
         for (const autor of linea.autores || [])
         {
             const id_autor = await libro_model.id_por_nombre(client, 'autores', autor);
@@ -111,17 +136,18 @@ const crear = async (client, d) =>
 
 const bloquear_pedido = async (client, id, esperado) =>
 {
-    const r = await client.query('SELECT estatus FROM pedidos_tesoreria WHERE id_pedido = $1 FOR UPDATE', [id]);
-    if (!r.rowCount) throw new ErrorNegocio(404, 'Solicitud no encontrada');
-    if (r.rows[0].estatus !== esperado)
-        throw new ErrorNegocio(409, 'La solicitud ya cambió de estado. Actualiza la lista.');
+    const resultado_3 = await client.query(
+        'SELECT estatus FROM pedidos_tesoreria WHERE id_pedido = $1 FOR UPDATE', [id]);
+    if (!resultado_3.rowCount) throw new error_negocio(404, 'Solicitud no encontrada');
+    if (resultado_3.rows[0].estatus !== esperado)
+        throw new error_negocio(409, 'La solicitud ya cambió de estado. Actualiza la lista.');
 };
 
 const cambiar_estatus = async (client, id, estatus) =>
 {
     const esperado = estatus === 'Recibido' ? 'Autorizado' : 'Enviado';
     if (!['Recibido', 'Autorizado', 'Rechazado'].includes(estatus))
-        throw new ErrorNegocio(400, 'Estatus no válido');
+        throw new error_negocio(400, 'Estatus no válido');
     await bloquear_pedido(client, id, esperado);
     await client.query(
         `UPDATE pedidos_tesoreria SET estatus = $2::varchar,
@@ -134,31 +160,50 @@ const recibir = async (client, id, id_ubicacion) =>
 {
     await bloquear_pedido(client, id, 'Autorizado');
     const actual = await buscar(id, client);
-    const con_ficha = actual.lineas.filter(l => l.id_libro);
+    const con_ficha = actual.lineas.filter(linea_2 => linea_2.id_libro);
     if (con_ficha.length && !id_ubicacion)
-        throw new ErrorNegocio(400, 'Elige la ubicación de los ejemplares', ['id_ubicacion']);
+        throw new error_negocio(400, 'Elige la ubicación de los ejemplares', ['id_ubicacion']);
     // Consistent book lock order prevents deadlocks between different orders.
-    const libros = [...new Set(con_ficha.map(l => l.id_libro))].sort();
+    const libros = [...new Set(con_ficha.map(linea_3 => linea_3.id_libro))].sort();
     const formatos = new Map();
     for (const libro of libros)
     {
-        const r = await client.query('SELECT formato FROM libros WHERE id_libro = $1 FOR UPDATE', [libro]);
-        if (!r.rowCount) throw new ErrorNegocio(422, 'La ficha del libro ya no está disponible');
-        formatos.set(libro, r.rows[0].formato);
+        const resultado_4 = await client.query(
+            'SELECT formato FROM libros WHERE id_libro = $1 FOR UPDATE', [libro]);
+        if (!resultado_4.rowCount) throw new error_negocio(422,
+            'La ficha del libro ya no está disponible');
+        formatos.set(libro, resultado_4.rows[0].formato);
     }
     const nuevos = [];
     for (const linea of con_ficha)
     {
         const digital = formatos.get(linea.id_libro) === 'Digital';
-        nuevos.push(...await libro_model.agregar_ejemplares(client, {
-            id_libro: linea.id_libro, cantidad: linea.cantidad, id_ubicacion: Number(id_ubicacion),
-            digital, tipo_uso: digital ? 'Préstamo digital' : 'Préstamo externo'
+        nuevos.push(...await libro_model.agregar_ejemplares(client,
+        {
+            id_libro: linea.id_libro,
+            cantidad: linea.cantidad,
+            id_ubicacion: Number(id_ubicacion),
+            digital,
+            tipo_uso: digital ? 'Préstamo digital' : 'Préstamo externo'
         }));
     }
     await cambiar_estatus(client, id, 'Recibido');
     await client.query("SELECT registrar_bitacora('Recepción de pedido', $1)",
         ['Pedido ' + id + ' · ' + nuevos.length + ' ejemplares']);
-    return { ejemplares: nuevos, sin_ficha: actual.lineas.filter(l => !l.id_libro) };
+    return (
+    {
+        ejemplares: nuevos,
+        sin_ficha: actual.lineas.filter(linea_4 => !linea_4.id_libro)
+    });
 };
 
-module.exports = { presupuestos, presupuesto_del_mes, listar, buscar, crear, cambiar_estatus, recibir };
+module.exports =
+{
+    presupuestos,
+    presupuesto_del_mes,
+    listar,
+    buscar,
+    crear,
+    cambiar_estatus,
+    recibir
+};

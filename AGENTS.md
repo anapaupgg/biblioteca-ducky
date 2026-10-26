@@ -5,3 +5,8 @@
 - Integrar avances compatibles sin perder cambios locales. No sobrescribir trabajo existente ni reiniciar la base de datos para actualizar el repositorio.
 - Mantener CAMBIOS_Y_PLAN.txt con cambios realizados, verificaciones y pendientes; distinguir el trabajo local de los commits de otras personas.
 - Al completar avances coherentes, crear commits y subirlos a GitHub; verificar el resultado del push. Incluir solo el trabajo de la solicitud y conservar los cambios locales ajenos sin incorporarlos automáticamente.
+
+- Antes de nuevas funciones, mantener la separación MVC y el estándar del
+  documento «Estandar de codificacion Biblioteca Ducky.docx», resumido en
+  ESTANDAR_MVC.md. SQL en modelos; DOM y eventos en vistas; controladores
+  coordinan. Mantener encabezados, contratos de uso y nombres descriptivos.

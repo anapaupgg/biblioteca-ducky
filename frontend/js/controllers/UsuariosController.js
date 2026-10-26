@@ -1,73 +1,107 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de usuarios.html.                     */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   UsuariosController.iniciar()       - Layout, catalogs, list  */
-/*   UsuariosController.cargar()        - Query with filters      */
-/*   UsuariosController.baja(usuario)   - Baja flow               */
-/*   UsuariosController.reactivar(u)    - Reactivation flow       */
+/* Listing Contents: */
+/*   usuarios_controller.iniciar() */
+/*   usuarios_controller.cargar() */
+/*   usuarios_controller.baja(usuario) */
+/*   usuarios_controller.reactivar(usuario) */
 /******************************************************************/
 
-const UsuariosController =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const usuarios_controller =
 {
     catalogos: null,
 
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'usuarios', migas: 'Gestión de usuarios', funciones: ['Gestionar usuarios'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'usuarios',
+            migas: 'Gestión de usuarios',
+            funciones: ['Gestionar usuarios']
+        });
         if (!usuario) return;
 
-        let espera = null;
-        document.getElementById('q').addEventListener('input', () => { clearTimeout(espera); espera = setTimeout(() => this.cargar(), 250); });
-        document.getElementById('estatus').addEventListener('change', () => this.cargar());
+        usuarios_view.enlazar(
+        {
+            cargar: (...argumentos) => this.cargar(...argumentos)
+        });
 
-        try { this.catalogos = await UsuarioModel.catalogos(); }
-        catch (error) { UsuariosView.mensaje('error', error.message); }
+        try
+        {
+            this.catalogos = await usuario_model.catalogos();
+        }
+        catch (error)
+        {
+            usuarios_view.mensaje('error', error.message);
+        }
         this.cargar();
     },
 
-    cargar: async function()
+    cargar: async function ()
     {
         try
         {
-            const usuarios = await UsuarioModel.listar(UsuariosView.filtros());
-            UsuariosView.tabla(usuarios, { baja: (u) => this.baja(u), reactivar: (u) => this.reactivar(u) });
+            const usuarios = await usuario_model.listar(usuarios_view.filtros());
+            usuarios_view.tabla(usuarios,
+            {
+                baja: (usuario_2) => this.baja(usuario_2),
+                reactivar: (usuario_3) => this.reactivar(usuario_3)
+            });
         }
-        catch (error) { UsuariosView.mensaje('error', error.message); }
+        catch (error)
+        {
+            usuarios_view.mensaje('error', error.message);
+        }
     },
 
-    baja: async function(usuario)
+    baja: async function (usuario)
     {
-        UsuariosView.mensaje();
+        usuarios_view.mensaje();
         let respuesta = null;
-        const ok = await UsuariosView.dialogo_baja(usuario, this.catalogos.motivos, async (id_motivo, comentario) =>
+        const ok = await usuarios_view.dialogo_baja(usuario, this.catalogos.motivos, async (id_motivo,
+            comentario) =>
         {
-            if (!id_motivo) throw Object.assign(new Error('Selecciona el motivo de baja'), { campos: ['id_motivo'] });
-            respuesta = await UsuarioModel.dar_baja(usuario.clave, Number(id_motivo), comentario);
+            if (!id_motivo) throw Object.assign(new Error('Selecciona el motivo de baja'),
+            {
+                campos: ['id_motivo']
+            });
+            respuesta = await usuario_model.dar_baja(usuario.clave, Number(id_motivo),
+                comentario);
         });
         if (ok)
         {
-            UsuariosView.mensaje('ok', respuesta.mensaje, usuario.nombre + ' (' + usuario.clave + ') quedó Inactivo y sus sesiones se cerraron.');
+            usuarios_view.mensaje('ok', respuesta.mensaje, usuario.nombre + ' (' + usuario.clave +
+                ') quedó Inactivo y sus sesiones se cerraron.');
             this.cargar();
         }
     },
 
-    reactivar: async function(usuario)
+    reactivar: async function (usuario)
     {
-        UsuariosView.mensaje();
+        usuarios_view.mensaje();
         let respuesta = null;
-        const ok = await UsuariosView.dialogo_reactivar(usuario, this.catalogos.perfiles, async (id_perfil) =>
+        const ok = await usuarios_view.dialogo_reactivar(usuario, this.catalogos.perfiles, async (
+            id_perfil) =>
         {
-            respuesta = await UsuarioModel.reactivar(usuario.clave, Number(id_perfil));
+            respuesta = await usuario_model.reactivar(usuario.clave, Number(id_perfil));
         });
         if (ok)
         {
-            UsuariosView.mensaje('ok', respuesta.mensaje, usuario.nombre + ' vuelve a estar Activo con el perfil ' + respuesta.usuario.perfil + '.');
+            usuarios_view.mensaje('ok', respuesta.mensaje, usuario.nombre +
+                ' vuelve a estar Activo con el perfil ' + respuesta.usuario.perfil + '.');
             this.cargar();
         }
     }

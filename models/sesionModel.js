@@ -1,22 +1,33 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Consultas de sesiones y contraseñas.              */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   iniciar_sesion(clave, contrasena, dispositivo)               */
-/*   obtener_activa(id_sesion, horas)                             */
-/*   cerrar(id_sesion)                                            */
-/*   solicitar_recuperacion(clave_o_correo)                       */
-/*   restablecer(token, nueva)                                    */
-/*   verificar_contrasena(clave, contrasena)                      */
-/*   cambiar_contrasena(clave, nueva)                             */
+/* Listing Contents: */
+/*   iniciar_sesion(clave, contrasena, dispositivo) */
+/*   obtener_activa(id_sesion, horas) */
+/*   cerrar(id_sesion) */
+/*   funciones_de(clave) */
+/*   solicitar_recuperacion(clave_o_correo) */
+/*   restablecer(token, nueva) */
+/*   verificar_contrasena(clave, contrasena) */
+/*   cambiar_contrasena(clave, nueva) */
 /******************************************************************/
 
-const { pool } = require('../db');
+/******************************************************************/
+/* Reuse Instructions */
+/* Entradas validadas por controlador; devuelve Promise de datos SQL. */
+/* client: conexión pg de la transacción cuando la firma la requiere. */
+/* No liberar ni confirmar un client recibido; propagar errores SQL. */
+/******************************************************************/
+
+const
+{
+    pool
+} = require('../db');
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -29,8 +40,10 @@ const { pool } = require('../db');
 /******************************************************************/
 const iniciar_sesion = async (clave, contrasena, dispositivo) =>
 {
-    const r = await pool.query('SELECT * FROM iniciar_sesion($1, $2, $3)', [clave, contrasena, dispositivo]);
-    return r.rows[0];
+    const resultado = await pool.query('SELECT * FROM iniciar_sesion($1, $2, $3)', [clave, contrasena,
+        dispositivo
+    ]);
+    return resultado.rows[0];
 };
 
 /******************************************************************/
@@ -42,7 +55,7 @@ const iniciar_sesion = async (clave, contrasena, dispositivo) =>
 /******************************************************************/
 const obtener_activa = async (id_sesion, horas) =>
 {
-    const r = await pool.query(
+    const resultado_2 = await pool.query(
         `SELECT s.id_sesion, s.fecha_inicio, u.clave_usuario AS clave, u.nombre, u.correo, u.estatus,
                 p.id_perfil, p.nombre AS perfil, t.nombre AS tipo,
                 coalesce(array_agg(f.nombre ORDER BY f.id_funcion) FILTER (WHERE f.nombre IS NOT NULL), '{}') AS funciones,
@@ -58,7 +71,7 @@ const obtener_activa = async (id_sesion, horas) =>
           GROUP BY s.id_sesion, u.clave_usuario, p.id_perfil, t.nombre, c.es_temporal`,
         [id_sesion]);
 
-    const sesion = r.rows[0];
+    const sesion = resultado_2.rows[0];
     if (!sesion) return null;
 
     const vencida = (Date.now() - new Date(sesion.fecha_inicio).getTime()) > horas * 3600 * 1000;
@@ -84,8 +97,9 @@ const cerrar = (id_sesion) => pool.query('SELECT cerrar_sesion($1)', [id_sesion]
 /******************************************************************/
 const funciones_de = async (clave) =>
 {
-    const r = await pool.query('SELECT funcion FROM v_menu_usuario WHERE clave_usuario = $1', [clave]);
-    return r.rows.map((fila) => fila.funcion);
+    const resultado_3 = await pool.query(
+        'SELECT funcion FROM v_menu_usuario WHERE clave_usuario = $1', [clave]);
+    return resultado_3.rows.map((fila) => fila.funcion);
 };
 
 /******************************************************************/
@@ -98,11 +112,18 @@ const funciones_de = async (clave) =>
 /******************************************************************/
 const solicitar_recuperacion = async (clave_o_correo) =>
 {
-    const r = await pool.query('SELECT solicitar_recuperacion($1) AS token', [clave_o_correo]);
-    if (!r.rows[0].token) return null;
-    const u = await pool.query(
-        'SELECT correo FROM usuarios WHERE clave_usuario = $1 OR lower(correo) = lower($1)', [clave_o_correo]);
-    return { token: r.rows[0].token, correo: u.rows[0].correo };
+    const resultado_4 = await pool.query('SELECT solicitar_recuperacion($1) AS token', [
+        clave_o_correo]);
+    if (!resultado_4.rows[0].token) return null;
+    const usuario = await pool.query(
+        'SELECT correo FROM usuarios WHERE clave_usuario = $1 OR lower(correo) = lower($1)', [
+            clave_o_correo
+        ]);
+    return (
+    {
+        token: resultado_4.rows[0].token,
+        correo: usuario.rows[0].correo
+    });
 };
 
 /******************************************************************/
@@ -112,8 +133,9 @@ const solicitar_recuperacion = async (clave_o_correo) =>
 /******************************************************************/
 const restablecer = async (token, nueva) =>
 {
-    const r = await pool.query('SELECT restablecer_contrasena($1, $2) AS ok', [token, nueva]);
-    return r.rows[0].ok;
+    const resultado_5 = await pool.query('SELECT restablecer_contrasena($1, $2) AS ok', [token,
+        nueva]);
+    return resultado_5.rows[0].ok;
 };
 
 /******************************************************************/
@@ -124,10 +146,10 @@ const restablecer = async (token, nueva) =>
 /******************************************************************/
 const verificar_contrasena = async (clave, contrasena) =>
 {
-    const r = await pool.query(
+    const resultado_6 = await pool.query(
         'SELECT contrasena_hash = crypt($2, contrasena_hash) AS ok FROM credenciales WHERE clave_usuario = $1',
         [clave, contrasena]);
-    return r.rows.length > 0 && r.rows[0].ok;
+    return resultado_6.rows.length > 0 && resultado_6.rows[0].ok;
 };
 
 const cambiar_contrasena = (clave, nueva) =>
@@ -135,6 +157,12 @@ const cambiar_contrasena = (clave, nueva) =>
 
 module.exports =
 {
-    iniciar_sesion, obtener_activa, cerrar, funciones_de,
-    solicitar_recuperacion, restablecer, verificar_contrasena, cambiar_contrasena
+    iniciar_sesion,
+    obtener_activa,
+    cerrar,
+    funciones_de,
+    solicitar_recuperacion,
+    restablecer,
+    verificar_contrasena,
+    cambiar_contrasena
 };

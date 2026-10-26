@@ -1,113 +1,149 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de perfiles.html.                     */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   PerfilesController.iniciar()        - Layout + data          */
-/*   PerfilesController.cargar()         - Profiles list          */
-/*   PerfilesController.abrir(perfil)    - Show create/edit form  */
-/*   PerfilesController.guardar(perfil)  - Validate and save      */
-/*   PerfilesController.eliminar(perfil) - Confirm and delete     */
-/*   PerfilesController.reactivar(p)     - Reactivate             */
+/* Listing Contents: */
+/*   perfiles_controller.iniciar() */
+/*   perfiles_controller.cargar() */
+/*   perfiles_controller.abrir(perfil) */
+/*   perfiles_controller.guardar(perfil) */
+/*   perfiles_controller.eliminar(perfil) */
+/*   perfiles_controller.reactivar(perfil) */
 /******************************************************************/
 
-const PerfilesController =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const perfiles_controller =
 {
     funciones: [],
 
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'perfiles', migas: 'Perfiles y permisos', funciones: ['Gestionar perfiles'] });
+        const usuario = await layout.montar(
+        {
+            activo: 'perfiles',
+            migas: 'Perfiles y permisos',
+            funciones: ['Gestionar perfiles']
+        });
         if (!usuario) return;
-        document.getElementById('btn-nuevo').addEventListener('click', () => this.abrir(null));
-        try { this.funciones = await PerfilModel.funciones(); }
-        catch (error) { PerfilesView.mensaje('error', error.message); }
+        perfiles_view.enlazar(() => this.abrir(null));
+        try
+        {
+            this.funciones = await perfil_model.funciones();
+        }
+        catch (error)
+        {
+            perfiles_view.mensaje('error', error.message);
+        }
         this.cargar();
     },
 
-    cargar: async function()
+    cargar: async function ()
     {
         try
         {
-            PerfilesView.tabla(await PerfilModel.listar(),
+            perfiles_view.tabla(await perfil_model.listar(),
             {
-                editar: (p) => this.abrir(p),
-                eliminar: (p) => this.eliminar(p),
-                reactivar: (p) => this.reactivar(p)
+                editar: (perfil_2) => this.abrir(perfil_2),
+                eliminar: (perfil_3) => this.eliminar(perfil_3),
+                reactivar: (perfil_4) => this.reactivar(perfil_4)
             });
         }
-        catch (error) { PerfilesView.mensaje('error', error.message); }
+        catch (error)
+        {
+            perfiles_view.mensaje('error', error.message);
+        }
     },
 
-    abrir: function(perfil)
+    abrir: function (perfil)
     {
-        PerfilesView.mensaje();
-        PerfilesView.formulario(this.funciones, perfil);
-        document.getElementById('form-perfil').addEventListener('submit', (e) => { e.preventDefault(); this.guardar(perfil); });
-        document.getElementById('btn-cancelar').addEventListener('click', () => PerfilesView.cerrar_formulario());
+        perfiles_view.mensaje();
+        perfiles_view.formulario(this.funciones, perfil);
+        perfiles_view.enlazar_formulario(() => this.guardar(perfil));
     },
 
-    guardar: async function(perfil)
+    guardar: async function (perfil)
     {
-        const datos = PerfilesView.datos();
-        Ui.limpiar();
-        PerfilesView.marcar_funciones(false);
+        const datos = perfiles_view.datos();
+        ui.limpiar();
+        perfiles_view.marcar_funciones(false);
         if (!datos.nombre)
         {
-            Ui.marcar(['nombre']);
-            return PerfilesView.mensaje('error', 'El nombre del perfil es obligatorio');
+            ui.marcar(['nombre']);
+            return perfiles_view.mensaje('error', 'El nombre del perfil es obligatorio');
         }
         if (datos.funciones.length === 0)
         {
-            PerfilesView.marcar_funciones(true);
-            return PerfilesView.mensaje('error', 'Selecciona al menos una función');
+            perfiles_view.marcar_funciones(true);
+            return perfiles_view.mensaje('error', 'Selecciona al menos una función');
         }
         try
         {
-            const r = perfil ? await PerfilModel.actualizar(perfil.id, datos) : await PerfilModel.crear(datos);
-            PerfilesView.cerrar_formulario();
-            PerfilesView.mensaje('ok', r.mensaje, 'Funciones: ' + r.perfil.funciones.join(', ') +
+            const resultado = perfil ? await perfil_model.actualizar(perfil.id, datos) :
+                await perfil_model.crear(datos);
+            perfiles_view.cerrar_formulario();
+            perfiles_view.mensaje('ok', resultado.mensaje, 'Funciones: ' + resultado.perfil.funciones
+                .join(', ') +
                 '. Ya puedes asignarlo en Gestión de usuarios.');
             this.cargar();
         }
         catch (error)
         {
-            Ui.marcar(error.campos);
-            PerfilesView.mensaje('error', error.message);
+            ui.marcar(error.campos);
+            perfiles_view.mensaje('error', error.message);
         }
     },
 
-    eliminar: async function(perfil)
+    eliminar: async function (perfil)
     {
-        PerfilesView.mensaje();
+        perfiles_view.mensaje();
         if (perfil.usuarios > 0)
         {
-            return PerfilesView.mensaje('error', 'No puede eliminarse un perfil con usuarios asignados',
-                'El perfil ' + perfil.nombre + ' tiene ' + perfil.usuarios + ' usuario(s) activo(s). Reasígnalos primero.');
+            return perfiles_view.mensaje('error',
+                'No puede eliminarse un perfil con usuarios asignados',
+                'El perfil ' + perfil.nombre + ' tiene ' + perfil.usuarios +
+                ' usuario(s) activo(s). Reasígnalos primero.');
         }
-        const ok = await Ui.dialogo({ titulo: 'Eliminar el perfil ' + perfil.nombre, texto: 'El perfil quedará Inactivo y no podrá asignarse a nuevos usuarios.', confirmar: 'Eliminar perfil', peligro: true });
+        const ok = await ui.dialogo(
+        {
+            titulo: 'Eliminar el perfil ' + perfil.nombre,
+            texto: 'El perfil quedará Inactivo y no podrá asignarse a nuevos usuarios.',
+            confirmar: 'Eliminar perfil',
+            peligro: true
+        });
         if (!ok) return;
         try
         {
-            const r = await PerfilModel.dar_baja(perfil.id);
-            PerfilesView.mensaje('ok', r.mensaje);
+            const resultado_2 = await perfil_model.dar_baja(perfil.id);
+            perfiles_view.mensaje('ok', resultado_2.mensaje);
             this.cargar();
         }
-        catch (error) { PerfilesView.mensaje('error', error.message); }
+        catch (error)
+        {
+            perfiles_view.mensaje('error', error.message);
+        }
     },
 
-    reactivar: async function(perfil)
+    reactivar: async function (perfil)
     {
         try
         {
-            await PerfilModel.reactivar(perfil.id);
-            PerfilesView.mensaje('ok', 'Perfil ' + perfil.nombre + ' reactivado');
+            await perfil_model.reactivar(perfil.id);
+            perfiles_view.mensaje('ok', 'Perfil ' + perfil.nombre + ' reactivado');
             this.cargar();
         }
-        catch (error) { PerfilesView.mensaje('error', error.message); }
+        catch (error)
+        {
+            perfiles_view.mensaje('error', error.message);
+        }
     }
 };

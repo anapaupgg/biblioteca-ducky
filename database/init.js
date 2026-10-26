@@ -1,14 +1,28 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Crea la base de datos con los scripts SQL.        */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Crea la base de datos con los scripts SQL. */
+/******************************************************************/
+
+/******************************************************************/
+/* Listing Contents: */
+/*   Dependencias, configuración y montaje del módulo. */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Consultar las firmas y comentarios de cada operación antes de reutilizar. */
+/* No registrar contraseñas, tokens ni secretos en mensajes o bitácoras. */
 /******************************************************************/
 
 require('dotenv').config();
-const fs   = require('fs');
+const fs = require('fs');
 const path = require('path');
-const { Client } = require('pg');
+const
+{
+    Client
+} = require('pg');
 
 const SCRIPTS = ['01_esquema.sql', '02_reglas.sql', '03_datos.sql'];
 
@@ -17,10 +31,14 @@ const SCRIPTS = ['01_esquema.sql', '02_reglas.sql', '03_datos.sql'];
     const client = new Client(
     {
         connectionString: process.env.DATABASE_URL,
-        ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false
+        ssl: process.env.DB_SSL === 'true' ?
+        {
+            rejectUnauthorized: false
+        } : false
     });
     await client.connect();
-    client.on('notice', () => {});
+    client.on('notice', () =>
+    {});
 
     for (const script of SCRIPTS)
     {

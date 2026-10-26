@@ -8,43 +8,55 @@
 -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Biblioteca Ducky · Lista de libros</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body class="listado-libros">
 
-<div class="app">
-    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
-    <aside id="sidebar" class="sidebar"></aside>
-    <main class="main">
-        <header id="topbar" class="topbar"></header>
-        <div id="contenido">
-            <div class="page-header">
-                <div><h1>Lista de libros</h1><p>Libros activos del catálogo con formato y disponibilidad.</p></div>
-                <div class="actions no-print" style="margin:0"><button class="btn" id="btn-actualizar">Actualizar lista</button><button class="btn btn-primary" id="btn-imprimir" disabled>Imprimir / Guardar PDF</button></div>
-            </div>
-            <div id="mensaje" class="no-print"></div>
-            <p class="small muted no-print">Para descargar el PDF, elige Guardar como PDF en el diálogo de impresión.</p>
-            <p class="small muted" id="generado"></p>
-            <div id="tabla"></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Lista de libros</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body class="listado-libros">
+
+        <div class="app">
+            <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header">
+                        <div>
+                            <h1>Lista de libros</h1>
+                            <p>Libros activos del catálogo con formato y disponibilidad.</p>
+                        </div>
+                        <div class="actions no-print" style="margin:0"><button class="btn"
+                                id="btn-actualizar">Actualizar lista</button><button class="btn btn-primary"
+                                id="btn-imprimir" disabled>Imprimir / Guardar PDF</button></div>
+                    </div>
+                    <div id="mensaje" class="no-print"></div>
+                    <p class="small muted no-print">Para descargar el PDF, elige Guardar como PDF en el
+                        diálogo de impresión.</p>
+                    <p class="small muted" id="generado"></p>
+                    <div id="tabla"></div>
+                </div>
+            </main>
         </div>
-    </main>
-</div>
 
-<!-- Utilities -->
-<script src="js/utils/api.js"></script>
-<script src="js/utils/session.js"></script>
-<script src="js/utils/ui.js"></script>
-<script src="js/utils/layout.js"></script>
+        <!-- Utilities -->
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
 
-<!-- MVC layer of this page -->
-<script src="js/models/BusquedaModel.js"></script>
-<script src="js/views/ListaLibrosView.js"></script>
-<script src="js/controllers/ListaLibrosController.js"></script>
-<script>ListaLibrosController.iniciar();</script>
+        <!-- MVC layer of this page -->
+        <script src="js/models/BusquedaModel.js"></script>
+        <script src="js/views/ListaLibrosView.js"></script>
+        <script src="js/controllers/ListaLibrosController.js"></script>
+        <script>
+            lista_libros_controller.iniciar();
 
-</body>
+        </script>
+
+    </body>
+
 </html>

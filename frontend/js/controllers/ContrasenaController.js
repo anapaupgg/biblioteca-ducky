@@ -1,52 +1,69 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de cambiar_contrasena.html.           */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   ContrasenaController.iniciar()  - Mount layout, bind form    */
-/*   ContrasenaController.guardar()  - Validate and save          */
+/* Listing Contents: */
+/*   contrasena_controller.iniciar() */
+/*   contrasena_controller.guardar() */
 /******************************************************************/
 
-const ContrasenaController =
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const contrasena_controller =
 {
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'inicio', migas: 'Cambiar contraseña' });
+        const usuario = await layout.montar(
+        {
+            activo: 'inicio',
+            migas: 'Cambiar contraseña'
+        });
         if (!usuario) return;
-        document.getElementById('form-contrasena').addEventListener('submit', (e) => { e.preventDefault(); this.guardar(); });
+        contrasena_view.enlazar(
+        {
+            guardar: (...argumentos) => this.guardar(...argumentos)
+        });
     },
 
-    guardar: async function()
+    guardar: async function ()
     {
-        const datos = ContrasenaView.datos();
-        Ui.limpiar();
+        const datos = contrasena_view.datos();
+        ui.limpiar();
         if (datos.nueva.length < 8)
         {
-            ContrasenaView.marcar(['nueva']);
-            return ContrasenaView.mensaje('error', 'La contraseña debe tener al menos 8 caracteres');
+            contrasena_view.marcar(['nueva']);
+            return contrasena_view.mensaje('error', 'La contraseña debe tener al menos 8 caracteres');
         }
         if (datos.nueva !== datos.confirmacion)
         {
-            ContrasenaView.marcar(['nueva', 'confirmacion']);
-            return ContrasenaView.mensaje('error', 'Las contraseñas no coinciden');
+            contrasena_view.marcar(['nueva', 'confirmacion']);
+            return contrasena_view.mensaje('error', 'Las contraseñas no coinciden');
         }
         try
         {
-            await AuthModel.cambiar_contrasena(datos.actual, datos.nueva, datos.confirmacion);
-            const usuario = Session.get();
+            await auth_model.cambiar_contrasena(datos.actual, datos.nueva, datos.confirmacion);
+            const usuario = session.get();
             usuario.es_temporal = false;
-            Session.actualizar_usuario(usuario);
-            ContrasenaView.mensaje('ok', 'Contraseña actualizada', 'Te llevamos al inicio…');
-            setTimeout(() => { window.location.href = 'inicio.html'; }, 1200);
+            session.actualizar_usuario(usuario);
+            contrasena_view.mensaje('ok', 'Contraseña actualizada', 'Te llevamos al inicio…');
+            setTimeout(() =>
+            {
+                window.location.href = 'inicio.html';
+            }, 1200);
         }
         catch (error)
         {
-            ContrasenaView.marcar(error.campos);
-            ContrasenaView.mensaje('error', error.message);
+            contrasena_view.marcar(error.campos);
+            contrasena_view.mensaje('error', error.message);
         }
     }
 };

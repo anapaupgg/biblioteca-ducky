@@ -8,47 +8,57 @@
 -->
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Biblioteca Ducky · Modificar usuario</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
 
-<div class="app">
-    <!-- Sidebar and topbar are drawn by Layout according to the profile -->
-    <aside id="sidebar" class="sidebar"></aside>
-    <main class="main">
-        <header id="topbar" class="topbar"></header>
-        <div id="contenido">
-            <div class="page-header">
-                <div><h1>Modificar perfil del usuario</h1><p>Busca por Clave. Los datos institucionales son de solo lectura.</p></div>
-                
-            </div>
-            <div id="mensaje"></div>
-            <div class="card">
-                <div class="filters" style="margin:0">
-                    <div class="field"><label for="buscar-clave">Buscar por Clave</label><input id="buscar-clave" maxlength="6" placeholder="Ej. 621234"></div>
-                    <button class="btn" id="btn-buscar" type="button">Consultar</button>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Modificar usuario</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body>
+
+        <div class="app">
+            <!-- Sidebar and topbar are drawn by Layout according to the profile -->
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header">
+                        <div>
+                            <h1>Modificar perfil del usuario</h1>
+                            <p>Busca por Clave. Los datos institucionales son de solo lectura.</p>
+                        </div>
+
+                    </div>
+                    <div id="mensaje"></div>
+                    <div class="card">
+                        <div class="filters" style="margin:0">
+                            <div class="field"><label for="buscar-clave">Buscar por Clave</label><input
+                                    id="buscar-clave" maxlength="6" placeholder="Ej. 621234"></div>
+                            <button class="btn" id="btn-buscar" type="button">Consultar</button>
+                        </div>
+                    </div>
+                    <div id="detalle"></div>
                 </div>
-            </div>
-            <div id="detalle"></div>
+            </main>
         </div>
-    </main>
-</div>
 
-<!-- Utilities -->
-<script src="js/utils/api.js"></script>
-<script src="js/utils/session.js"></script>
-<script src="js/utils/ui.js"></script>
-<script src="js/utils/layout.js"></script>
+        <!-- Utilities -->
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
 
-<!-- MVC layer of this page -->
-<script src="js/models/UsuarioModel.js"></script>
-<script src="js/views/UsuarioEditarView.js"></script>
-<script src="js/controllers/UsuarioEditarController.js"></script>
-<script>UsuarioEditarController.iniciar();</script>
+        <!-- MVC layer of this page -->
+        <script src="js/models/UsuarioModel.js"></script>
+        <script src="js/views/UsuarioEditarView.js"></script>
+        <script src="js/controllers/UsuarioEditarController.js"></script>
+        <script>
+            usuario_editar_controller.iniciar();
 
-</body>
+        </script>
+
+    </body>
+
 </html>

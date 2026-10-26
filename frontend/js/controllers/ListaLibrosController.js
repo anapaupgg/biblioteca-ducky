@@ -1,44 +1,62 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Controlador de lista_libros.html.                 */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
-const ListaLibrosController =
+/******************************************************************/
+/* Listing Contents: */
+/*   lista_libros_controller.iniciar() */
+/*   lista_libros_controller.cargar() */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Cargar después de modelos y vista; iniciar() una vez por página. */
+/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
+/* La autorización definitiva se verifica en el servidor. */
+/******************************************************************/
+
+const lista_libros_controller =
 {
-    iniciar: async function()
+    iniciar: async function ()
     {
-        const usuario = await Layout.montar({ activo: 'lista', migas: 'Lista de libros', funciones: ['Buscar libros'] });
-        if (!usuario) return;
-        document.getElementById('btn-imprimir').addEventListener('click', () => window.print());
-        document.getElementById('btn-actualizar').addEventListener('click', async () =>
+        const usuario = await layout.montar(
         {
-            if (await this.cargar()) ListaLibrosView.mensaje('ok', 'Lista de libros actualizada');
+            activo: 'lista',
+            migas: 'Lista de libros',
+            funciones: ['Buscar libros']
+        });
+        if (!usuario) return;
+        lista_libros_view.enlazar(async () =>
+        {
+            if (await this.cargar()) lista_libros_view.mensaje('ok',
+                'Lista de libros actualizada');
         });
         this.cargar();
     },
 
-    cargar: async function()
+    cargar: async function ()
     {
-        const imprimir = document.getElementById('btn-imprimir');
-        const actualizar = document.getElementById('btn-actualizar');
-        imprimir.disabled = true;
-        actualizar.disabled = true;
-        ListaLibrosView.mensaje();
+        let fallo = true;
+        lista_libros_view.bloquear(true, true);
+        lista_libros_view.mensaje();
         try
         {
-            ListaLibrosView.tabla(await BusquedaModel.listado());
-            imprimir.disabled = false;
+            lista_libros_view.tabla(await busqueda_model.listado());
+            fallo = false;
             return true;
         }
         catch (error)
         {
-            document.getElementById('tabla').textContent = '';
-            document.getElementById('generado').textContent = '';
-            ListaLibrosView.mensaje('error', error.message);
+            lista_libros_view.vaciar();
+            lista_libros_view.mensaje('error', error.message);
             return false;
         }
-        finally { actualizar.disabled = false; }
+        finally
+        {
+            lista_libros_view.bloquear(fallo, false);
+        }
     }
 };

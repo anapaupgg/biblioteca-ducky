@@ -1,34 +1,100 @@
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Infraestructura compartida del sistema Biblioteca Ducky. */
+/******************************************************************/
+
+/******************************************************************/
+/* Listing Contents: */
+/*   configuracion(env = process.env) */
+/*   crear_token(config) */
+/*   token_valido(token, config) */
+/*   enviar(config, correo, token) */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Consultar las firmas y comentarios de cada operación antes de reutilizar. */
+/* No registrar contraseñas, tokens ni secretos en mensajes o bitácoras. */
+/******************************************************************/
+
 // El proveedor recibe únicamente destinatario y enlace; nunca contraseñas.
 const crypto = require('node:crypto');
-function configuracion(env = process.env) {
-    const { RESEND_API_KEY: key, RECOVERY_FROM: from, APP_PUBLIC_URL: base, RECOVERY_SECRET: secret } = env;
+
+function configuracion(env = process.env)
+{
+    const
+    {
+        RESEND_API_KEY: key,
+        RECOVERY_FROM: from,
+        APP_PUBLIC_URL: base,
+        RECOVERY_SECRET: secret
+    } = env;
     if (!key || !from || !base || !secret || secret.length < 32) return null;
-    try {
+    try
+    {
         const url = new URL(base);
-        const local = env.NODE_ENV === 'development' && env.RECOVERY_ALLOW_LOCALHOST === 'true'
-            && url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
-        if ((url.protocol !== 'https:' && !local) || url.username || url.password || url.search || url.hash || url.pathname !== '/') return null;
-        return { key, from, base: url.origin, secret };
-    } catch { return null; }
+        const local = env.NODE_ENV === 'development' && env.RECOVERY_ALLOW_LOCALHOST === 'true' &&
+            url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+        if ((url.protocol !== 'https:' && !local) || url.username || url.password || url.search || url.hash ||
+            url.pathname !== '/') return null;
+        return (
+        {
+            key,
+            from,
+            base: url.origin,
+            secret
+        });
+    }
+    catch
+    {
+        return null;
+    }
 }
-function crear_token(config) {
+
+function crear_token(config)
+{
     const random = crypto.randomBytes(32).toString('hex');
     return random + '.' + crypto.createHmac('sha256', config.secret).update(random).digest('hex');
 }
-function token_valido(token, config) {
+
+function token_valido(token, config)
+{
     if (typeof token !== 'string' || !/^[a-f0-9]{64}\.[a-f0-9]{64}$/.test(token)) return false;
     const [random, firma] = token.split('.');
-    return crypto.timingSafeEqual(Buffer.from(firma, 'hex'), crypto.createHmac('sha256', config.secret).update(random).digest());
+    return crypto.timingSafeEqual(Buffer.from(firma, 'hex'), crypto.createHmac('sha256', config.secret)
+        .update(random).digest());
 }
-async function enviar(config, correo, token) {
+async function enviar(config, correo, token)
+{
     const enlace = config.base + '/login.html#token=' + encodeURIComponent(token);
-    const response = await fetch('https://api.resend.com/emails', {
-        method: 'POST', signal: AbortSignal.timeout(10000),
-        headers: { Authorization: 'Bearer ' + config.key, 'Content-Type': 'application/json',
-            'Idempotency-Key': 'recovery/' + crypto.createHash('sha256').update(token).digest('hex') },
-        body: JSON.stringify({ from: config.from, to: [correo], subject: 'Recupera tu acceso a Biblioteca Ducky',
-            text: 'Para elegir una nueva contraseña, abre este enlace. Vence en 30 minutos y solo puede usarse una vez.\n\n' + enlace + '\n\nSi no lo solicitaste, ignora este correo.' })
+    const response = await fetch('https://api.resend.com/emails',
+    {
+        method: 'POST',
+        signal: AbortSignal.timeout(10000),
+        headers:
+        {
+            Authorization: 'Bearer ' + config.key,
+            'Content-Type': 'application/json',
+            'Idempotency-Key': 'recovery/' + crypto.createHash('sha256').update(token).digest(
+                'hex')
+        },
+        body: JSON.stringify(
+        {
+            from: config.from,
+            to: [correo],
+            subject: 'Recupera tu acceso a Biblioteca Ducky',
+            text: 'Para elegir una nueva contraseña, abre este enlace. Vence en 30 minutos y solo puede usarse una vez.\n\n' +
+                enlace + '\n\nSi no lo solicitaste, ignora este correo.'
+        })
     });
     if (!response.ok) throw new Error('ENVIO_RECUPERACION_FALLIDO');
 }
-module.exports = { configuracion, crear_token, token_valido, enviar };
+module.exports =
+{
+    configuracion,
+    crear_token,
+    token_valido,
+    enviar
+};

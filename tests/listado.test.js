@@ -1,24 +1,86 @@
-const { test } = require('node:test');
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Pruebas de regresión y contratos del sistema. */
+/******************************************************************/
+
+/******************************************************************/
+/* Listing Contents: */
+/*   Dependencias, configuración y montaje del módulo. */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Ejecutar con npm test; DUCKY_TEST_DB=1 habilita integración local. */
+/* Las pruebas de datos revierten cambios o usan esquema aislado. */
+/******************************************************************/
+
+const
+{
+    test
+} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-test('actualización fallida elimina datos anteriores y no anuncia éxito ni permite imprimir', async () => {
-    const elementos = Object.fromEntries(['btn-imprimir', 'btn-actualizar', 'tabla', 'generado'].map(id => [id, {
-        textContent: 'datos anteriores', disabled: false,
-        addEventListener(evento, fn) { this[evento] = fn; }
-    }]));
+test('actualización fallida elimina datos anteriores y no anuncia éxito ni permite imprimir', async () =>
+{
+    const elementos = Object.fromEntries(['btn-imprimir', 'btn-actualizar', 'tabla', 'generado']
+        .map(id => [id,
+        {
+            textContent: 'datos anteriores',
+            disabled: false,
+            addEventListener(evento, fn)
+            {
+                this[evento] = fn;
+            }
+        }]));
     const mensajes = [];
     let fallar = false;
-    const contexto = vm.createContext({
-        document: { getElementById: id => elementos[id] }, window: { print() {} },
-        Layout: { montar: async () => ({}) },
-        BusquedaModel: { listado: async () => { if (fallar) throw new Error('Sin conexión'); return []; } },
-        ListaLibrosView: { tabla() {}, mensaje: (...args) => mensajes.push(args) }
+    const contexto = vm.createContext(
+    {
+        document:
+        {
+            getElementById: id => elementos[id]
+        },
+        window:
+        {
+            print()
+            {}
+        },
+        layout:
+        {
+            montar: async () => (
+            {
+            })
+        },
+        busqueda_model:
+        {
+            listado: async () =>
+            {
+                if (fallar) throw new Error('Sin conexión');
+                return [];
+            }
+        },
+        lista_libros_view:
+        {
+            tabla()
+            {},
+            mensaje: (...args) => mensajes.push(args)
+        }
     });
-    vm.runInContext(fs.readFileSync(require.resolve('../frontend/js/controllers/ListaLibrosController.js'), 'utf8'), contexto);
-    await vm.runInContext('ListaLibrosController.iniciar()', contexto);
-    await vm.runInContext('ListaLibrosController.cargar()', contexto);
+    vm.runInContext(fs.readFileSync(require.resolve('../frontend/js/views/ListaLibrosView.js'),
+            'utf8') +
+        '\nlista_libros_view.tabla = () => {}; lista_libros_view.mensaje = (...args) => mensajes.push(args);',
+        Object.assign(contexto,
+        {
+            mensajes
+        }));
+    vm.runInContext(fs.readFileSync(require.resolve(
+        '../frontend/js/controllers/ListaLibrosController.js'), 'utf8'), contexto);
+    await vm.runInContext('lista_libros_controller.iniciar()', contexto);
+    await vm.runInContext('lista_libros_controller.cargar()', contexto);
     assert.equal(elementos['btn-imprimir'].disabled, false);
     fallar = true;
     await elementos['btn-actualizar'].click();

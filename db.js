@@ -1,19 +1,28 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Conexión a PostgreSQL.                            */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Conexión a PostgreSQL. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   pool                          - Shared PostgreSQL pool       */
-/*   con_usuario(clave, trabajo)   - Run work inside a transaction*/
-/*                                   as a given user              */
+/* Listing Contents: */
+/*   con_usuario(clave, trabajo) */
+/*   simular(clave, trabajo) */
+/******************************************************************/
+
+/******************************************************************/
+/* Reuse Instructions */
+/* Consultar las firmas y comentarios de cada operación antes de reutilizar. */
+/* No registrar contraseñas, tokens ni secretos en mensajes o bitácoras. */
 /******************************************************************/
 
 require('dotenv').config();
-const { Pool, types } = require('pg');
+const
+{
+    Pool,
+    types
+} = require('pg');
 
 /* DATE columns are returned as 'YYYY-MM-DD' text (no time zone shifts) */
 types.setTypeParser(1082, (valor) => valor);
@@ -29,7 +38,10 @@ const pool = new Pool(
 {
     connectionString: process.env.DATABASE_URL,
     connectionTimeoutMillis: 5000,
-    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    ssl: process.env.DB_SSL === 'true' ?
+    {
+        rejectUnauthorized: false
+    } : false,
     options: '-c search_path=biblioteca,public'
 });
 
@@ -91,4 +103,9 @@ const simular = async (clave, trabajo) =>
     }
 };
 
-module.exports = { pool, con_usuario, simular };
+module.exports =
+{
+    pool,
+    con_usuario,
+    simular
+};

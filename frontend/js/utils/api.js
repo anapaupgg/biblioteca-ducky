@@ -1,48 +1,62 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Llamadas a la API.                                */
+/* Program Assignment: Biblioteca Ducky - Sistema web */
+/* Name: Equipo FlowBit */
+/* Date: 2026-10-26 */
+/* Description: Llamadas a la API. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents:                                              */
-/*   ApiError                 - Error with HTTP status and body   */
-/*   Api.get(path, query)     - GET with optional query object    */
-/*   Api.post(path, body)     - POST JSON                         */
-/*   Api.put(path, body)      - PUT JSON                          */
+/* Listing Contents: */
+/*   api.request(method, path, body) */
+/*   api.get(path, query) */
+/*   api.post(path, body) */
+/*   api.put(path, body) */
 /******************************************************************/
 
-/* Same origin: the Express server also serves this frontend      */
+/******************************************************************/
+/* Reuse Instructions */
+/* Consultar las firmas y comentarios de cada operación antes de reutilizar. */
+/* No registrar contraseñas, tokens ni secretos en mensajes o bitácoras. */
+/******************************************************************/
+
 const API_BASE_URL = '/api';
 
-class ApiError extends Error
+class api_error extends Error
 {
     constructor(status, body)
     {
         super((body && body.error) || ('Error ' + status));
-        this.name   = 'ApiError';
+        this.name = 'ApiError';
         this.status = status;
-        this.body   = body || {};
+        this.body = body ||
+        {
+        };
         this.campos = (body && body.campos) || [];
     }
 }
 
-const Api =
+const api =
 {
     /**************************************************************/
     /* Reuse Instructions                                         */
-    /* Api.request(method, path, body)                            */
+    /* api.request(method, path, body)                            */
     /* Purpose: Send the request with the Bearer token. A 401     */
     /*          means the session expired: the session is cleared */
     /*          and the user goes back to the login screen.       */
     /* Returns: Promise resolving to the parsed JSON              */
     /* Throws : ApiError on non-2xx; ApiError(0) on network error */
     /**************************************************************/
-    request: async function(method, path, body)
+    request: async function (method, path, body)
     {
-        const opciones = { method: method, headers: { 'Content-Type': 'application/json' } };
-        const token = Session.token();
+        const opciones =
+        {
+            method: method,
+            headers:
+            {
+                'Content-Type': 'application/json'
+            }
+        };
+        const token = session.token();
         if (token) opciones.headers.Authorization = 'Bearer ' + token;
         if (body !== undefined) opciones.body = JSON.stringify(body);
 
@@ -51,36 +65,62 @@ const Api =
         {
             respuesta = await fetch(API_BASE_URL + path, opciones);
         }
-        catch (error_red)
+        catch (error)
         {
-            throw new ApiError(0, { error: 'No fue posible conectar con el servidor. Intenta de nuevo.' });
+            throw new api_error(0,
+            {
+                error: 'No fue posible conectar con el servidor. Intenta de nuevo.'
+            });
         }
 
         const texto = await respuesta.text();
         let datos = null;
-        try { datos = texto ? JSON.parse(texto) : null; }
-        catch (e)
+        try
         {
-            throw new ApiError(respuesta.status, { error: 'El servidor devolvió una respuesta inesperada. Verifica que estés conectado a Biblioteca Ducky e intenta de nuevo.' });
+            datos = texto ? JSON.parse(texto) : null;
+        }
+        catch (error_2)
+        {
+            throw new api_error(respuesta.status,
+            {
+                error: 'El servidor devolvió una respuesta inesperada. Verifica que estés conectado a Biblioteca Ducky e intenta de nuevo.'
+            });
         }
 
         if (respuesta.status === 401 && token && datos && datos.codigo === 'SESION_EXPIRADA')
         {
-            Session.clear();
+            session.clear();
             window.location.href = 'login.html?expirada=1';
         }
-        if (!respuesta.ok) throw new ApiError(respuesta.status, datos);
+        if (!respuesta.ok) throw new api_error(respuesta.status, datos);
         return datos;
     },
 
-    get: function(path, query)
+    get: function (path, query)
     {
-        const limpio = {};
-        Object.entries(query || {}).forEach(([k, v]) => { if (v !== undefined && v !== null && v !== '') limpio[k] = v; });
+        const limpio =
+        {
+        };
+        Object.entries(query ||
+        {
+        }).forEach(([clave, valor]) =>
+        {
+            if (valor !== undefined && valor !== null && valor !== '') limpio[clave] = valor;
+        });
         const qs = new URLSearchParams(limpio).toString();
         return this.request('GET', path + (qs ? '?' + qs : ''));
     },
 
-    post: function(path, body) { return this.request('POST', path, body || {}); },
-    put:  function(path, body) { return this.request('PUT', path, body || {}); }
+    post: function (path, body)
+    {
+        return this.request('POST', path, body ||
+        {
+        });
+    },
+    put: function (path, body)
+    {
+        return this.request('PUT', path, body ||
+        {
+        });
+    }
 };

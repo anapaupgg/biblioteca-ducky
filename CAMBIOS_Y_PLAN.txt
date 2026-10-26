@@ -1,3 +1,27 @@
+ACTUALIZACIÓN — ESTÁNDAR Y MVC (26 DE OCTUBRE DE 2026)
+- Fetch correcto: sin commits nuevos desde bcd906d; rama/upstream coincidentes.
+  Todo este avance es local de Diego; package-lock.json previo queda fuera.
+- Leído el estándar DOCX proporcionado. Sin funcionalidades nuevas de negocio.
+- Controladores frontend delegan DOM y enlace de eventos a vistas. El listado
+  conserva bloqueo de impresión durante carga/error y actualización recuperable.
+- Revocación de sesiones al cambiar perfil movida del controlador al modelo de
+  usuarios, dentro de la misma transacción. Reglas FAQ/intención separadas en
+  services/chatbotService.js; controlador HTTP solo valida y coordina datos.
+- Nombres propios cliente en snake_case y referencias HTML/tests actualizadas.
+  Identificadores locales abreviados ampliados sin cambiar claves JSON ni SQL.
+- Encabezados, contenidos, instrucciones de reutilización e indentación aplicados
+  a JavaScript; HTML/CSS formateados. ESTANDAR_MVC.md y .editorconfig incorporados.
+  Sin nuevas dependencias del proyecto ni modificación del esquema de BD.
+- 29 pruebas aprobadas con DUCKY_TEST_DB=1, cero omitidas. Contratos nuevos:
+  controladores sin SQL/DOM, vistas sin API y carga de scripts de todas las páginas.
+- Navegador: login, menú, chatbot con Clean Code, listado con cinco libros y
+  actualización, apertura/cancelación de perfil verificados sin escrituras de negocio.
+- App en 3001 y PostgreSQL en 5433. No db:init ni migraciones. Continúan pendientes
+  pruebas móviles amplias, respaldo/restauración y carga concurrente del backlog.
+- Commit solicitado: Diego: iguiendo estandar y aplicar MVC
+
+---------------- REGISTRO ANTERIOR ----------------
+
 CIERRE DEL AVANCE — 26 DE OCTUBRE DE 2026
 - Reanudado el trabajo de catálogo en chatbot. Fetch de origin correcto:
   sin commits nuevos, HEAD/upstream coincidentes en 2670c7b.
