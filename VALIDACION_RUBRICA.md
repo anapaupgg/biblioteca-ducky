@@ -1,5 +1,9 @@
 # Validación del prototipo — 26 de octubre de 2026
 
+Actualización de depuración: 36 pruebas automatizadas y 64 casos HTTP aprobados.
+Consultar GUIA_AVANCE.md para el recorrido y las correcciones; las cifras de
+43 casos/32 pruebas de las secciones siguientes corresponden a la medición anterior.
+
 Esta evidencia cubre el alcance implementado; no acredita por sí sola los diez
 puntos ni los módulos todavía pendientes del backlog.
 

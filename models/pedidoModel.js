@@ -161,8 +161,6 @@ const recibir = async (client, id, id_ubicacion) =>
     await bloquear_pedido(client, id, 'Autorizado');
     const actual = await buscar(id, client);
     const con_ficha = actual.lineas.filter(linea_2 => linea_2.id_libro);
-    if (con_ficha.length && !id_ubicacion)
-        throw new error_negocio(400, 'Elige la ubicación de los ejemplares', ['id_ubicacion']);
     // Consistent book lock order prevents deadlocks between different orders.
     const libros = [...new Set(con_ficha.map(linea_3 => linea_3.id_libro))].sort();
     const formatos = new Map();
@@ -174,6 +172,8 @@ const recibir = async (client, id, id_ubicacion) =>
             'La ficha del libro ya no está disponible');
         formatos.set(libro, resultado_4.rows[0].formato);
     }
+    if ([...formatos.values()].some(formato => formato !== 'Digital') && !id_ubicacion)
+        throw new error_negocio(400, 'Elige la ubicación de los ejemplares físicos', ['id_ubicacion']);
     const nuevos = [];
     for (const linea of con_ficha)
     {

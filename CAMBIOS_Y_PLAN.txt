@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — DEPURACIÓN DEL PRIMER AVANCE (26 DE OCTUBRE DE 2026)
+- Fetch origin correcto: sin commits nuevos, rama/upstream en 7d7ffb2.
+  Cambios propios de esta solicitud; package-lock.json previo excluido.
+- Respaldo nuevo restaurado: 36 tablas, 213 filas y hashes coincidentes.
+  Aceptación ampliada a 64 casos HTTP sobre copia nueva; todos aprobados.
+- Compras digitales ya no exigen ubicación física. Físicos siguen exigiéndola;
+  pruebas de PostgreSQL verifican ambos casos y rollback de recepción inválida.
+- Búsqueda limpia resultados anteriores antes de validar/consultar para no
+  conservar disponibilidad obsoleta si hay error. Prueba de regresión añadida.
+- Compras rechazan líneas nulas, costos vacíos/no finitos y cantidades
+  fraccionarias en el formulario; entradas inválidas devuelven 400 en API.
+- Baja/reactivación de usuarios recuperan catálogos ante fallo inicial;
+  evitan acceder a motivos/perfiles nulos y permiten reintentar.
+- Suite final: 36 pruebas aprobadas, cero fallos/omisiones. Recursos HTTP:
+  14 páginas y 49 referencias correctas. git diff --check correcto.
+- GUIA_AVANCE.md incluye recorrido de presentación y límites reales.
+- Pendiente visual: herramienta bloqueó pestaña anterior; se solicitó abrir
+  manualmente la copia en Brave. No afirmar PDF multipágina/móvil comprobados.
+- Sin db:init, sin correos externos y sin modificaciones de negocio al origen.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — COMPRAS Y VALIDACIÓN (26 DE OCTUBRE DE 2026)
 - Fetch origin correcto: sin commits nuevos; HEAD/upstream dd88f67 al iniciar.
   Todo este avance es propio; package-lock.json ajeno conservado y excluido.

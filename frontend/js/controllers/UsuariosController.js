@@ -9,6 +9,7 @@
 /* Listing Contents: */
 /*   usuarios_controller.iniciar() */
 /*   usuarios_controller.cargar() */
+/*   usuarios_controller.asegurar_catalogos() */
 /*   usuarios_controller.baja(usuario) */
 /*   usuarios_controller.reactivar(usuario) */
 /******************************************************************/
@@ -39,15 +40,23 @@ const usuarios_controller =
             cargar: (...argumentos) => this.cargar(...argumentos)
         });
 
+        await this.asegurar_catalogos();
+        this.cargar();
+    },
+
+    asegurar_catalogos: async function ()
+    {
+        if (this.catalogos) return true;
         try
         {
             this.catalogos = await usuario_model.catalogos();
+            return true;
         }
         catch (error)
         {
-            usuarios_view.mensaje('error', error.message);
+            usuarios_view.mensaje('error', 'No se cargaron los perfiles y motivos', error.message);
+            return false;
         }
-        this.cargar();
     },
 
     cargar: async function ()
@@ -70,6 +79,7 @@ const usuarios_controller =
     baja: async function (usuario)
     {
         usuarios_view.mensaje();
+        if (!await this.asegurar_catalogos()) return;
         let respuesta = null;
         const ok = await usuarios_view.dialogo_baja(usuario, this.catalogos.motivos, async (id_motivo,
             comentario) =>
@@ -92,6 +102,7 @@ const usuarios_controller =
     reactivar: async function (usuario)
     {
         usuarios_view.mensaje();
+        if (!await this.asegurar_catalogos()) return;
         let respuesta = null;
         const ok = await usuarios_view.dialogo_reactivar(usuario, this.catalogos.perfiles, async (
             id_perfil) =>

@@ -245,6 +245,68 @@ async function principal()
         assert.equal(saldo, 800);
         const ejemplares = (await llamar('Ficha conserva ejemplares', 'GET', '/libros/' + libro.id_libro, catalogo)).ejemplares;
         assert.equal(ejemplares.length, 4);
+        await llamar('Perfil sin funciones rechazado', 'PUT', '/perfiles/' + perfil.id, sistema,
+        {
+            nombre: perfil.nombre,
+            funciones: []
+        }, 400);
+        await llamar('Editar funciones del perfil', 'PUT', '/perfiles/' + perfil.id, sistema,
+        {
+            nombre: perfil.nombre,
+            descripcion: 'Validación del avance',
+            funciones: [buscar]
+        });
+        await llamar('Perfil base protegido', 'POST', '/perfiles/1/baja', sistema,
+        {}, 403);
+        await llamar('Búsqueda vacía rechazada', 'GET', '/busqueda', lector, undefined, 400);
+        await llamar('Búsqueda corta rechazada', 'GET', '/busqueda?titulo=ab', lector, undefined, 400);
+        for (const [filtro, valor] of Object.entries(
+            {
+                isbn: ficha.isbn,
+                clave: libro.id_libro,
+                autor: 'Autor de prueba',
+                editorial: ficha.editorial,
+                tema: ficha.tema
+            }))
+        {
+            const coincidencias = await llamar('Búsqueda por ' + filtro, 'GET', '/busqueda?' + filtro + '=' + encodeURIComponent(valor), lector);
+            assert.ok(coincidencias.some(item => item.id_libro === libro.id_libro));
+        }
+        const ficha_publica = await llamar('Ubicación física del libro', 'GET', '/busqueda/' + libro.id_libro, lector);
+        assert.ok(ficha_publica.ejemplares.every(item => item.ubicacion));
+        const listado = await llamar('Listado imprimible contiene ISBN', 'GET', '/busqueda/listado', lector);
+        assert.equal(listado.find(item => item.id_libro === libro.id_libro).isbn, ficha.isbn);
+        const id_ejemplar = ejemplares[0].id_ejemplar;
+        await llamar('Modificar condición de ejemplar', 'PUT', '/libros/ejemplares/' + id_ejemplar, catalogo,
+        {
+            condicion: 'Regular'
+        });
+        await llamar('Baja ejemplar exige motivo', 'POST', '/libros/ejemplares/' + id_ejemplar + '/baja', catalogo,
+        {}, 400);
+        await llamar('Baja de ejemplar', 'POST', '/libros/ejemplares/' + id_ejemplar + '/baja', catalogo,
+        {
+            id_motivo: catalogos.motivos[0].id
+        });
+        await llamar('Baja de ejemplar duplicada', 'POST', '/libros/ejemplares/' + id_ejemplar + '/baja', catalogo,
+        {
+            id_motivo: catalogos.motivos[0].id
+        }, 409);
+        const sin_baja = await llamar('Ejemplar de baja no aparece en búsqueda', 'GET', '/busqueda/' + libro.id_libro, lector);
+        assert.ok(!sin_baja.ejemplares.some(item => item.id_ejemplar === id_ejemplar));
+        for (const costo of ['', null, 'Infinity'])
+            await llamar('Compra rechaza costo ' + String(costo), 'POST', '/pedidos', biblioteca,
+            {
+                id_presupuesto: presupuesto,
+                lineas: [
+                {
+                    ...linea,
+                    costo_unitario: costo
+                }]
+            }, 400);
+        await llamar('Compra rechaza línea nula', 'POST', '/pedidos', biblioteca,
+        {
+            lineas: [null]
+        }, 400);
         await llamar('Logout lector', 'POST', '/auth/logout', lector,
         {});
         await llamar('Sesión cerrada no reutilizable', 'GET', '/auth/sesion', lector, undefined, 401);

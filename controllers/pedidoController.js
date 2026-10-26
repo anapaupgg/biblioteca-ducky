@@ -96,6 +96,8 @@ const crear = async (solicitud_4, respuesta_4) =>
 
         const lineas = entrada.map((linea_2, indice) =>
         {
+            if (!linea_2 || typeof linea_2 !== 'object' || Array.isArray(linea_2))
+                throw new error_negocio(400, 'Línea ' + (indice + 1) + ': datos inválidos');
             const linea =
             {
                 id_libro: String(linea_2.id_libro || '').trim().toUpperCase() || null,
@@ -103,7 +105,7 @@ const crear = async (solicitud_4, respuesta_4) =>
                 titulo: String(linea_2.titulo || '').trim(),
                 editorial: String(linea_2.editorial || '').trim() || null,
                 autores: (Array.isArray(linea_2.autores) ? linea_2.autores : String(
-                    linea_2.autores || '').split(',')).map((primero) => primero
+                    linea_2.autores || '').split(',')).map((primero) => String(primero || '')
                     .trim()).filter(Boolean),
                 cantidad: Number(linea_2.cantidad),
                 costo_unitario: Number(linea_2.costo_unitario),
@@ -115,7 +117,9 @@ const crear = async (solicitud_4, respuesta_4) =>
                 indice + 1) + ': el ISBN debe tener 10 o 13 dígitos');
             if (!entero_positivo(linea.cantidad)) throw new error_negocio(400, 'Línea ' + (
                 indice + 1) + ': la cantidad debe ser mayor a cero');
-            if (!(linea.costo_unitario >= 0)) throw new error_negocio(400, 'Línea ' + (
+            if (linea_2.costo_unitario === null || linea_2.costo_unitario === undefined ||
+                String(linea_2.costo_unitario).trim() === '' ||
+                !Number.isFinite(linea.costo_unitario) || linea.costo_unitario < 0) throw new error_negocio(400, 'Línea ' + (
                 indice + 1) + ': captura el costo estimado');
             return linea;
         });

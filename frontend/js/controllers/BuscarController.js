@@ -49,6 +49,8 @@ const buscar_controller =
     {
         const filtros = buscar_view.filtros();
         ui.limpiar();
+        buscar_view.vaciar();
+        buscar_view.mensaje();
         const usados = Object.values(filtros).filter(Boolean);
         if (usados.length === 0)
         {

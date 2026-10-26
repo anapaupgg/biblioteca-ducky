@@ -159,8 +159,8 @@ const pedidos_controller =
         ui.limpiar();
         const vacios = [];
         if (!linea_2.titulo) vacios.push('titulo');
-        if (!(linea_2.cantidad > 0)) vacios.push('cantidad');
-        if (!(linea_2.costo_unitario >= 0)) vacios.push('costo_unitario');
+        if (!Number.isInteger(linea_2.cantidad) || linea_2.cantidad <= 0) vacios.push('cantidad');
+        if (!Number.isFinite(linea_2.costo_unitario) || linea_2.costo_unitario < 0) vacios.push('costo_unitario');
         if (linea_2.isbn && !/^([0-9]{9}[0-9X]|[0-9]{13})$/.test(linea_2.isbn.replace(/-/g, '')))
             vacios.push('isbn');
         if (vacios.length)

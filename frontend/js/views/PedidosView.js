@@ -272,7 +272,7 @@ const pedidos_view =
                 .solicitante) + '</p>' +
             (puede_recibir ?
                 '<div class="grid-2"><div class="field"><label for="ubic-' + datos_3.pedido
-                .id_pedido + '">Ubicación de los ejemplares</label><select id="ubic-' + datos_3
+                .id_pedido + '">Ubicación (solo ejemplares físicos)</label><select id="ubic-' + datos_3
                 .pedido.id_pedido + '">' +
                 ui.opciones(ubicaciones, 'id', 'etiqueta', '', 'Selecciona la ubicación') +
                 '</select></div></div>' +

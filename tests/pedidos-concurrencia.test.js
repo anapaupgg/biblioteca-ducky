@@ -207,6 +207,22 @@ test('PostgreSQL: presupuesto concurrente, recepción única y rollback íntegro
         assert.equal((await pedidos.buscar(fallido, admin)).pedido.estatus, 'Autorizado');
         await tx(c => pedidos.recibir(c, fallido, ubicacion));
         assert.equal(await contar(), antes + 2);
+        const digital = (await admin.query(
+            "SELECT id_libro FROM libros WHERE formato='Digital' LIMIT 1")).rows[0].id_libro;
+        const pedido_digital = await tx(c => crear(c, 0, { id_libro: digital }));
+        await tx(c => pedidos.cambiar_estatus(c, pedido_digital, 'Autorizado'));
+        const recibido_digital = await tx(c => pedidos.recibir(c, pedido_digital, null));
+        assert.equal(recibido_digital.ejemplares.length, 1);
+        const ejemplar_digital = (await admin.query(
+            'SELECT id_ubicacion, tipo_uso FROM ejemplares WHERE id_ejemplar=$1',
+            [recibido_digital.ejemplares[0]])).rows[0];
+        assert.equal(ejemplar_digital.id_ubicacion, null);
+        assert.equal(ejemplar_digital.tipo_uso, 'Préstamo digital');
+        const pedido_fisico = await tx(c => crear(c, 0, { id_libro: libro }));
+        await tx(c => pedidos.cambiar_estatus(c, pedido_fisico, 'Autorizado'));
+        await assert.rejects(tx(c => pedidos.recibir(c, pedido_fisico, null)),
+            error => error.status === 400);
+        assert.equal((await pedidos.buscar(pedido_fisico, admin)).pedido.estatus, 'Autorizado');
         const estado = await tx(c => crear(c, 0));
         const cambios = await competir(c => pedidos.cambiar_estatus(c, estado, 'Autorizado'),
             c => pedidos.cambiar_estatus(c, estado, 'Rechazado'));
