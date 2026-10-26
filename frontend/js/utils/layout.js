@@ -83,7 +83,7 @@ const MENU = [
     texto: 'Solicitudes a Tesorería',
     url: 'pedidos.html',
     icono: 'cart',
-    funciones: ['Préstamos', 'Gestionar libros']
+    funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
 },
 {
     id: 'buscar',

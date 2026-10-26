@@ -36,12 +36,14 @@ INSERT INTO funciones (id_funcion, nombre, descripcion) VALUES
     (4, 'Buscar libros',      'Consulta del catálogo por título, autor, tema, clave o editorial'),
     (5, 'Préstamos',          'Autorizar préstamos y renovaciones'),
     (6, 'Devoluciones',       'Registrar devoluciones, multas y pagos'),
-    (7, 'Chatbot',            'Consultar dudas frecuentes del sistema');
-SELECT setval(pg_get_serial_sequence('funciones', 'id_funcion'), 7);
+    (7, 'Chatbot',            'Consultar dudas frecuentes del sistema'),
+    (8, 'Solicitar compras', 'Crear solicitudes de compra dentro del presupuesto'),
+    (9, 'Autorizar compras', 'Autorizar o rechazar solicitudes de compra');
+SELECT setval(pg_get_serial_sequence('funciones', 'id_funcion'), 9);
 
 INSERT INTO perfil_funcion (id_perfil, id_funcion) VALUES
-    (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),
-    (2,1),(2,4),(2,5),(2,6),(2,7),
+    (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),
+    (2,1),(2,4),(2,5),(2,6),(2,7),(2,8),(2,9),
     (3,3),(3,4),(3,7),
     (4,4),(4,7);
 

@@ -70,17 +70,15 @@ const grupos = [
         ['get', '/L000128'],
         ['post', '/L000128/solicitud']
     ]],
-    ['pedidos', ['Préstamos', 'Gestionar libros'],
+    ['pedidos', ['Solicitar compras', 'Autorizar compras', 'Gestionar libros'],
         [
             ['get', '/presupuestos'],
             ['get', '/'],
             ['get', '/1']
         ]
     ],
-    ['pedidos', 'Préstamos', [
-        ['post', '/'],
-        ['put', '/1/estatus']
-    ]],
+    ['pedidos', 'Solicitar compras', [['post', '/']]],
+    ['pedidos', 'Autorizar compras', [['put', '/1/estatus']]],
     ['pedidos', 'Gestionar libros', [
         ['post', '/1/recepcion']
     ]]
@@ -97,12 +95,15 @@ const archivos =
 const roles =
 {
     sistema: ['Gestionar usuarios', 'Gestionar perfiles', 'Gestionar libros', 'Buscar libros',
-        'Préstamos', 'Devoluciones', 'Chatbot'
+        'Préstamos', 'Devoluciones', 'Chatbot', 'Solicitar compras', 'Autorizar compras'
     ],
-    biblioteca: ['Gestionar usuarios', 'Buscar libros', 'Préstamos', 'Devoluciones', 'Chatbot'],
+    biblioteca: ['Gestionar usuarios', 'Buscar libros', 'Préstamos', 'Devoluciones', 'Chatbot', 'Solicitar compras', 'Autorizar compras'],
     catalogo: ['Gestionar libros', 'Buscar libros', 'Chatbot'],
     lector: ['Buscar libros', 'Chatbot'],
     soloPerfiles: ['Gestionar perfiles'],
+    solo_prestamos: ['Préstamos'],
+    solo_solicitudes: ['Solicitar compras'],
+    solo_autorizacion: ['Autorizar compras'],
     sinPermisos: []
 };
 test('matriz HTTP: rutas reales rechazan anónimos, lector y permisos ajenos antes del controlador',
@@ -230,7 +231,7 @@ async () =>
                     Authorization: 'Bearer ' + token
                 }
             })).status, 401);
-            assert.equal(casos, 216);
+            assert.equal(casos, 324);
         }
         finally
         {

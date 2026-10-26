@@ -31,6 +31,7 @@ const pedidos_controller =
     catalogo: [],
     presupuesto: null,
     puede_solicitar: false,
+    puede_autorizar: false,
     puede_recibir: false,
 
     iniciar: async function ()
@@ -39,10 +40,11 @@ const pedidos_controller =
         {
             activo: 'pedidos',
             migas: 'Solicitudes a Tesorería',
-            funciones: ['Préstamos', 'Gestionar libros']
+            funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
         });
         if (!usuario) return;
-        this.puede_solicitar = usuario.funciones.includes('Préstamos');
+        this.puede_solicitar = usuario.funciones.includes('Solicitar compras');
+        this.puede_autorizar = usuario.funciones.includes('Autorizar compras');
         this.puede_recibir = usuario.funciones.includes('Gestionar libros');
         if (!this.puede_solicitar) pedidos_view.ocultar_tabs(['nueva']);
 
@@ -60,8 +62,8 @@ const pedidos_controller =
             this.catalogo = [];
         }
 
-        const inicial = window.location.hash === '#recepcion' || !this.puede_solicitar ? 'recepcion' :
-            'nueva';
+        const inicial = this.puede_recibir && window.location.hash === '#recepcion' ?
+            'recepcion' : this.puede_solicitar ? 'nueva' : 'historial';
         this.mostrar(inicial);
     },
 
@@ -83,7 +85,7 @@ const pedidos_controller =
             if (tab === 'nueva') this.dibujar_nueva();
             if (tab === 'historial')
             {
-                pedidos_view.historial(await pedido_model.listar(), this.puede_solicitar,
+                pedidos_view.historial(await pedido_model.listar(), this.puede_autorizar,
                 {
                     ver: (id) => this.ver(id),
                     responder: (id, elemento_2) => this.responder(id, elemento_2)

@@ -164,3 +164,38 @@ Consulta [ESTANDAR_MVC.md](ESTANDAR_MVC.md) para responsabilidades de modelos,
 vistas, controladores y servicios, además de las convenciones del documento
 proporcionado por el equipo. Las pruebas de `tests/mvc.test.js` comprueban la
 separación de capas y que los scripts de cada página cargan juntos.
+
+## Validación y migración de compras
+
+La base existente necesita la migración aditiva de permisos antes de usar la
+versión que separa compras de préstamos. **No usar `db:init` para actualizar.**
+Consultar [VALIDACION_RUBRICA.md](VALIDACION_RUBRICA.md) para resultados y límites.
+Desde la raíz, con `.env` configurado y PostgreSQL local:
+
+```sh
+# Requiere pg_dump/pg_restore compatibles y permiso CREATEDB.
+node scripts/respaldo-verificar.js
+# Trabajar primero sobre la copia nueva; nunca sobrescribe el origen.
+node scripts/migrar-compras.js --copia
+node scripts/aceptacion.js
+node scripts/carga.js
+node scripts/servidor-validacion.js
+```
+
+El servidor de validación usa 3002 y deshabilita Resend. Detenerlo con Ctrl+C.
+Aceptación requiere una copia recién restaurada: no repetirla sobre sus fixtures.
+Carga prepara 100 lectores y 250 títulos solo en la copia; permite repetir la carga.
+`.local-validation/actual.txt` identifica la última copia. No publicar esa carpeta:
+contiene datos y credenciales locales; los reportes públicos omiten esos detalles.
+Las copias se conservan para revisión; no hay eliminación automática de bases.
+
+Una vez revisados respaldo y pruebas, aplicar al origen configurado en `.env`:
+
+```sh
+node scripts/migrar-compras.js
+DUCKY_TEST_DB=1 npm test
+PORT=3001 npm start
+```
+
+La migración se registra una vez, agrega funciones y asignaciones sin reiniciar
+ni eliminar datos. Para desarrollo local se usa PostgreSQL en 5433.

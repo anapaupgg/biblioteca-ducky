@@ -25,13 +25,13 @@ const
     requiere_funcion
 } = require('../middleware/auth');
 
-router.get('/presupuestos', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'),
+router.get('/presupuestos', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'),
     pedido_controller.presupuestos);
-router.get('/', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'), pedido_controller.listar);
-router.get('/:id', requiere_sesion, requiere_funcion('Préstamos', 'Gestionar libros'), pedido_controller
+router.get('/', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'), pedido_controller.listar);
+router.get('/:id', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'), pedido_controller
     .detalle);
-router.post('/', requiere_sesion, requiere_funcion('Préstamos'), pedido_controller.crear);
-router.put('/:id/estatus', requiere_sesion, requiere_funcion('Préstamos'), pedido_controller.estatus);
+router.post('/', requiere_sesion, requiere_funcion('Solicitar compras'), pedido_controller.crear);
+router.put('/:id/estatus', requiere_sesion, requiere_funcion('Autorizar compras'), pedido_controller.estatus);
 router.post('/:id/recepcion', requiere_sesion, requiere_funcion('Gestionar libros'), pedido_controller
     .recibir);
 

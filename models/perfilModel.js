@@ -109,7 +109,7 @@ const reactivar = (client, id) =>
 /*          2 = staff (any management/circulation function),      */
 /*          1 = reader.                                           */
 /******************************************************************/
-const FUNCIONES_PERSONAL = ['Gestionar usuarios', 'Gestionar libros', 'Préstamos', 'Devoluciones'];
+const FUNCIONES_PERSONAL = ['Gestionar usuarios', 'Gestionar libros', 'Préstamos', 'Devoluciones', 'Solicitar compras', 'Autorizar compras'];
 const nivel = (lista) =>
 {
     const nombres = lista || [];

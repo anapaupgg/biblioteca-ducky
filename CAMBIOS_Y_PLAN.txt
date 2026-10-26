@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — COMPRAS Y VALIDACIÓN (26 DE OCTUBRE DE 2026)
+- Fetch origin correcto: sin commits nuevos; HEAD/upstream dd88f67 al iniciar.
+  Todo este avance es propio; package-lock.json ajeno conservado y excluido.
+- Compras separadas del permiso Préstamos: Solicitar compras y Autorizar compras.
+  Administradores de biblioteca y sistema autorizan; catálogo recibe.
+- Migración aditiva con transacción y registro, probada en copia y aplicada al
+  origen. Segunda ejecución confirmó que no vuelve a asignar permisos.
+- Respaldo y restauración aislada: 35 tablas, 198 filas, hashes de contenido
+  coincidentes. Sin db:init; no se restauró sobre la base original.
+- Aceptación HTTP real: 43 casos aprobados de usuarios/perfiles/catálogo/compras.
+  Datos sintéticos solo en copia. Suite final: 32 pruebas, cero omisiones/fallos;
+  incluye 324 combinaciones de rutas/permisos y cancelación sin escrituras.
+- Carga: 55 usuarios/275 solicitudes y 100 usuarios/500 solicitudes; cero errores,
+  máximos 237 y 369 ms. HTTP local, login fuera de medición; no extrapolar a nube.
+- Copia preparada con 250 títulos para impresión extensa. Navegador rechazó
+  acceso por política de seguridad: móvil/PDF/cancelaciones visuales pendientes.
+- Reporte y procedimiento reproducible en VALIDACION_RUBRICA.md y README.md.
+  Respaldo/configuración/reportes privados excluidos mediante .gitignore.
+- Aplicación original reiniciada en 3001 con PostgreSQL 5433; servidor de copia
+  temporal 3002 se detiene al cerrar la validación.
+- Pendientes: revisión visual bloqueada y funcionalidades aún no implementadas
+  del backlog (préstamos personales, devoluciones/multas); no afirmar rúbrica completa.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ESTÁNDAR Y MVC (26 DE OCTUBRE DE 2026)
 - Fetch correcto: sin commits nuevos desde bcd906d; rama/upstream coincidentes.
   Todo este avance es local de Diego; package-lock.json previo queda fuera.

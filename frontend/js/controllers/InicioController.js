@@ -24,7 +24,7 @@ const SERVICIOS = [
     texto: 'Peticiones de usuarios dentro del presupuesto mensual.',
     url: 'pedidos.html',
     icono: 'cart',
-    funciones: ['Préstamos']
+    funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
 },
 {
     id: 'usuarios',
