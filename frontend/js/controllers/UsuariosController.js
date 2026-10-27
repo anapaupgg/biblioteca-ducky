@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-10-27 */
 /* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
@@ -23,6 +23,8 @@
 
 const usuarios_controller =
 {
+    // Descarta respuestas de filtros anteriores que terminan más tarde.
+    version_consulta: 0,
     catalogos: null,
 
     iniciar: async function ()
@@ -61,9 +63,11 @@ const usuarios_controller =
 
     cargar: async function ()
     {
+        const version = ++this.version_consulta;
         try
         {
             const usuarios = await usuario_model.listar(usuarios_view.filtros());
+            if (version !== this.version_consulta) return;
             usuarios_view.tabla(usuarios,
             {
                 baja: (usuario_2) => this.baja(usuario_2),
@@ -72,6 +76,7 @@ const usuarios_controller =
         }
         catch (error)
         {
+            if (version !== this.version_consulta) return;
             usuarios_view.mensaje('error', error.message);
         }
     },

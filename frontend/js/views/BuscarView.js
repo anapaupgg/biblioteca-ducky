@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-10-27 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -51,8 +51,7 @@ const buscar_view =
             elemento.preventDefault();
             acciones.buscar();
         });
-        document.getElementById('btn-limpiar').addEventListener('click', () => buscar_view
-            .limpiar_filtros());
+        document.getElementById('btn-limpiar').addEventListener('click', () => acciones.limpiar());
     },
 
     filtros: function ()

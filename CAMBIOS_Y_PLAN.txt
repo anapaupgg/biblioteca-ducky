@@ -1,3 +1,22 @@
+ACTUALIZACIÓN — CONSULTAS FUERA DE ORDEN (27 DE OCTUBRE DE 2026)
+- Fetch origin correcto: sin commits nuevos; rama/upstream f365b7b al iniciar.
+  Trabajo propio; package-lock.json previo conservado y excluido del commit.
+- Controladores de búsqueda, usuarios y libros identifican la consulta vigente:
+  una respuesta o error antiguo no reemplaza el resultado más reciente.
+- Limpiar filtros invalida la consulta pendiente mediante el controlador;
+  la vista conserva DOM y eventos. No nuevas dependencias ni cambios a BD.
+- Ocho regresiones con promesas controladas: orden inverso de respuestas,
+  errores obsoletos/vigentes y limpieza durante éxito/error pendiente.
+- DUCKY_TEST_DB=1 npm test: 45 aprobadas, cero fallos/omisiones.
+  Verificación automatizada; sin nueva validación visual en esta solicitud.
+- Sin db:init, migraciones, correos ni cambios de negocio. Cambios frontend
+  disponibles al recargar la página; no requieren reiniciar el servidor.
+- Pendientes siguientes: revisión móvil completa; completar módulos del backlog
+  y ampliar capacidades del chatbot sobre funciones existentes. Dialogflow no
+  se incorporó: requeriría definir alcance, cuenta y pruebas de integración.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BRAVE, PDF Y FILTROS (26 DE OCTUBRE DE 2026)
 - Fetch correcto: sin commits nuevos; HEAD/upstream 52c593c. Trabajo propio;
   package-lock.json ajeno sigue excluido.

@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-10-27 */
 /* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
@@ -9,6 +9,7 @@
 /* Listing Contents: */
 /*   buscar_controller.iniciar() */
 /*   buscar_controller.buscar() */
+/*   buscar_controller.limpiar() */
 /*   buscar_controller.solicitar(libro) */
 /*   buscar_controller.ficha(libro) */
 /******************************************************************/
@@ -22,6 +23,8 @@
 
 const buscar_controller =
 {
+    // Solo la consulta más reciente puede modificar resultados o errores.
+    version_consulta: 0,
     iniciar: async function ()
     {
         const usuario = await layout.montar(
@@ -33,7 +36,8 @@ const buscar_controller =
         if (!usuario) return;
         buscar_view.enlazar(
         {
-            buscar: (...argumentos) => this.buscar(...argumentos)
+            buscar: (...argumentos) => this.buscar(...argumentos),
+            limpiar: () => this.limpiar()
         });
 
         const consulta = ui.param('q');
@@ -45,8 +49,15 @@ const buscar_controller =
         else buscar_view.enfocar();
     },
 
+    limpiar: function ()
+    {
+        this.version_consulta++;
+        buscar_view.limpiar_filtros();
+    },
+
     buscar: async function ()
     {
+        const version = ++this.version_consulta;
         const filtros = buscar_view.filtros();
         ui.limpiar();
         buscar_view.vaciar();
@@ -68,7 +79,9 @@ const buscar_controller =
         }
         try
         {
-            buscar_view.resultados(await busqueda_model.buscar(filtros), filtros,
+            const resultados = await busqueda_model.buscar(filtros);
+            if (version !== this.version_consulta) return;
+            buscar_view.resultados(resultados, filtros,
             {
                 solicitar: (libro_2) => this.solicitar(libro_2),
                 ficha: (libro_3) => this.ficha(libro_3)
@@ -76,6 +89,7 @@ const buscar_controller =
         }
         catch (error)
         {
+            if (version !== this.version_consulta) return;
             ui.mostrar_error(error, 'mensaje');
         }
     },
