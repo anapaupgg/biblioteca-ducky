@@ -110,7 +110,7 @@ const listar = async (solicitud, respuesta) =>
     {
         const resultado_3 = await usuario_model.listar(
         {
-            q: solicitud.query.q,
+            consulta: solicitud.query.q,
             estatus: solicitud.query.estatus
         });
         respuesta.status(200).json(resultado_3.rows);

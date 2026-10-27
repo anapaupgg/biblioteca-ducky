@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — BRAVE, PDF Y FILTROS (26 DE OCTUBRE DE 2026)
+- Fetch correcto: sin commits nuevos; HEAD/upstream 52c593c. Trabajo propio;
+  package-lock.json ajeno sigue excluido.
+- Brave en copia 3002: login, búsqueda Clean Code, disponibilidad/ubicación y
+  ficha; perfil obligatorio/cancelar; compra de ejemplo, cancelar confirmación
+  y vaciar borrador conservando presupuesto comprobados por interfaz accesible.
+- PDF real guardado desde Brave: 32 páginas, 256 títulos únicos y 256 ISBN;
+  cabecera repetida en todas, sin faltantes ni texto fuera de página. Render
+  de todas las páginas en contacto y revisión ampliada de páginas 1, 2 y 32.
+  Evidencia privada: listado-extenso.pdf en carpeta de la copia actual.
+- Hallazgo de interfaz: filtros q ignorados en gestión de usuarios y libros.
+  Controladores enviaban q, modelos esperaban consulta. Corregido el mapeo,
+  conservando contrato HTTP q; prueba real verifica coincidencias y vacío.
+- Suite final: 37 aprobadas. Repetición de carga: 55/100 usuarios, cero errores,
+  máximos 218/349 ms. App original 3001 reiniciada con corrección de filtros.
+- Emulación móvil 440x956: controles/menú y navegación a usuarios disponibles.
+  Capturas nativas fallaron (ScreenCaptureKit -3812) y finalmente dejó de
+  funcionar la entrada automatizada. No certificar diseño móvil completo ni
+  la última revalidación visual de filtros; sí comprobados con BD real.
+- Copia 3002 disponible para ensayo; sin datos de prueba agregados al origen.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — DEPURACIÓN DEL PRIMER AVANCE (26 DE OCTUBRE DE 2026)
 - Fetch origin correcto: sin commits nuevos, rama/upstream en 7d7ffb2.
   Cambios propios de esta solicitud; package-lock.json previo excluido.

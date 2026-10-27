@@ -115,7 +115,7 @@ const listar = async (solicitud, respuesta) =>
     {
         respuesta.status(200).json((await libro_model.listar(
         {
-            q: solicitud.query.q,
+            consulta: solicitud.query.q,
             estatus: solicitud.query.estatus
         })).rows);
     }

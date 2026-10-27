@@ -36,7 +36,7 @@
 
 ## Verificación del 26 de octubre de 2026
 
-- 36 pruebas automatizadas aprobadas; incluye MVC, permisos y concurrencia.
+- 37 pruebas automatizadas aprobadas; incluye MVC, permisos y concurrencia.
 - 64 casos HTTP reales aprobados en copia restaurada: usuarios, perfiles,
   búsqueda por seis filtros, ubicación, catálogo, ejemplares y compras.
 - Las 14 páginas y 49 recursos enlazados responden HTTP 200.
@@ -45,7 +45,18 @@
   tras error de búsqueda, validación de cantidades/costos y recuperación de
   catálogos para baja/reactivación de usuarios después de fallo de conexión.
 
-Estas comprobaciones no sustituyen el ensayo visual. El PDF básico fue revisado
-el 22 de octubre; sigue pendiente confirmar multipágina y navegación móvil.
-La herramienta de navegador bloqueó la pestaña anterior; se pidió abrir
-manualmente la copia en Brave para poder continuar la revisión visual.
+## Cierre de revisión en Brave
+
+Login, búsqueda/ficha de Clean Code con ubicación, validación/cancelación de
+perfil y cancelación de compra comprobados desde la interfaz de la copia.
+PDF multipágina exportado: 32 páginas, 256 títulos e ISBN, sin faltantes,
+con cabeceras repetidas. Revisado mediante render y extracción del archivo.
+Evidencia privada: `listado-extenso.pdf` en la carpeta de la copia actual.
+
+Se descubrió y corrigió un filtro ignorado en gestión de usuarios y libros.
+La suite con PostgreSQL confirma coincidencias y resultados vacíos correctos.
+La última comprobación visual de esos filtros quedó limitada porque Brave dejó
+de aceptar entrada automatizada. Emulación móvil 440x956 con controles y
+navegación disponibles; revisión de diseño completa pendiente por fallo de
+captura de macOS (ScreenCaptureKit -3812). Ensayar todavía el recorrido completo
+con quienes presentarán; no confundir la copia de 256 títulos con la base original.

@@ -1,8 +1,16 @@
 # Validación del prototipo — 26 de octubre de 2026
 
-Actualización de depuración: 36 pruebas automatizadas y 64 casos HTTP aprobados.
-Consultar GUIA_AVANCE.md para el recorrido y las correcciones; las cifras de
-43 casos/32 pruebas de las secciones siguientes corresponden a la medición anterior.
+Estado más reciente: **37 pruebas automatizadas y 64 casos HTTP aprobados**.
+PDF real de Brave: **256 títulos/ISBN en 32 páginas**, sin faltantes y con
+cabeceras repetidas; render completo en contacto y páginas 1, 2 y 32 ampliadas.
+Prueba por interfaz: login, búsqueda/ficha/ubicación, validación/cancelación de
+perfil y cancelación de compras. Corregido mapeo q → consulta en gestión de
+usuarios y libros, con regresión PostgreSQL. Ver GUIA_AVANCE.md.
+
+La revisión visual móvil completa y última revalidación de filtros en Brave
+siguen pendientes por fallo de captura/entrada automatizada. Los resultados
+históricos de 43 casos/32 pruebas y pendientes de PDF que siguen abajo han sido
+superados por estas comprobaciones; se conservan como registro de la medición.
 
 Esta evidencia cubre el alcance implementado; no acredita por sí sola los diez
 puntos ni los módulos todavía pendientes del backlog.
