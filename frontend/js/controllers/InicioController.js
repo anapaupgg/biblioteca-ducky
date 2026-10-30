@@ -65,6 +65,14 @@ const SERVICIOS = [
     url: 'lista_libros.html',
     icono: 'document',
     funciones: ['Buscar libros']
+},
+{
+    id: 'prestamos',
+    titulo: 'Solicitudes y préstamos',
+    texto: 'Consulta tus préstamos o autoriza las solicitudes pendientes.',
+    url: 'prestamos.html',
+    icono: 'retorno',
+    funciones: ['Buscar libros', 'Préstamos']
 }];
 
 const inicio_controller =

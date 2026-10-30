@@ -93,6 +93,13 @@ const MENU = [
     funciones: ['Buscar libros']
 },
 {
+    id: 'prestamos',
+    texto: 'Préstamos',
+    url: 'prestamos.html',
+    icono: 'retorno',
+    funciones: ['Buscar libros', 'Préstamos']
+},
+{
     id: 'lista',
     texto: 'Lista de libros',
     url: 'lista_libros.html',

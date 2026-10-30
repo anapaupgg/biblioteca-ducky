@@ -44,6 +44,7 @@ const perfil_routes = require('./routes/perfilRoutes');
 const libro_routes = require('./routes/libroRoutes');
 const busqueda_routes = require('./routes/busquedaRoutes');
 const pedido_routes = require('./routes/pedidoRoutes');
+const prestamo_routes = require('./routes/prestamoRoutes');
 
 /******************************************************************/
 /* Express application setup                                      */
@@ -68,6 +69,7 @@ app.use('/api/perfiles', perfil_routes);
 app.use('/api/libros', libro_routes);
 app.use('/api/busqueda', busqueda_routes);
 app.use('/api/pedidos', pedido_routes);
+app.use('/api/prestamos', prestamo_routes);
 
 /******************************************************************/
 /* Error handlers                                                 */

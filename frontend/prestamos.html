@@ -1,0 +1,51 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-10-30                                               */
+/* Description: Solicitudes y préstamos según perfil.             */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Préstamos</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <div class="app">
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header">
+                        <div>
+                            <h1>Solicitudes y préstamos</h1>
+                            <p>Consulta tus préstamos. El personal autorizado puede atender solicitudes pendientes.</p>
+                        </div>
+                    </div>
+                    <div id="mensaje"></div>
+                    <section id="panel-mios" class="hidden">
+                        <div class="card"><h2>Mis préstamos activos</h2><div id="mis-prestamos"></div></div>
+                        <div class="card"><h2>Mis solicitudes</h2><div id="mis-solicitudes"></div></div>
+                    </section>
+                    <section id="panel-pendientes" class="card hidden">
+                        <h2>Solicitudes pendientes de autorización</h2>
+                        <p>Selecciona un ejemplar disponible y confirma la entrega en mostrador.</p>
+                        <div id="solicitudes-pendientes"></div>
+                    </section>
+                </div>
+            </main>
+        </div>
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
+        <script src="js/models/PrestamoModel.js"></script>
+        <script src="js/views/PrestamosView.js"></script>
+        <script src="js/controllers/PrestamosController.js"></script>
+        <script>prestamos_controller.iniciar();</script>
+    </body>
+</html>

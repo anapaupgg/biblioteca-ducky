@@ -1,3 +1,29 @@
+ACTUALIZACIÓN — SOLICITUDES Y PRÉSTAMOS (30 DE OCTUBRE DE 2026)
+- Fetch origin correcto: rama y upstream 782f33b al iniciar, sin commits nuevos.
+  Todo este avance es propio; package-lock.json previo conservado y excluido.
+- Nuevo módulo MVC de préstamos: el lector consulta sus solicitudes y préstamos
+  activos con su clave de sesión; personal con función Préstamos ve la bandeja de
+  pendientes y autoriza un ejemplar disponible tras confirmar la entrega.
+- La autorización bloquea la solicitud dentro de la transacción. El trigger
+  existente valida permisos, adeudos, límite, ejemplar y libro; después marca
+  solicitud Atendida y ejemplar Prestado. Un segundo intento devuelve 409.
+- No se ejecutó db:init ni se cambió el esquema. Las pruebas de negocio
+  escribieron solo en copias; el login visual creó sesiones normales en origen.
+- Respaldos/restauraciones aisladas: 36 tablas, huellas iguales; la última
+  copia tenía 250 filas (incluidas sesiones del ensayo visual). Aceptación HTTP
+  sobre copia: solicitar, privacidad, permisos, rechazo de ejemplar ajeno con
+  rollback, autorizar, consultar y doble autorización bloqueada; todo correcto.
+  Suite: 45 pruebas aprobadas,
+  incluidas 351 combinaciones de rutas/permisos; git diff --check correcto.
+- En 3001, pantalla abierta con bibliotecario y alumno: menú correcto, paneles
+  según perfil y préstamo vencido/solicitud atendida visibles en viewport estrecho.
+  Servidor reiniciado para cargar las rutas nuevas.
+- Pendientes: devolución, renovación, multas y revisión visual en escritorio
+  ancho y móvil estricto, incluida una bandeja no vacía. El chatbot no responde aún por préstamos
+  personales; ampliar después de estabilizar este flujo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CONSULTAS FUERA DE ORDEN (27 DE OCTUBRE DE 2026)
 - Fetch origin correcto: sin commits nuevos; rama/upstream f365b7b al iniciar.
   Trabajo propio; package-lock.json previo conservado y excluido del commit.

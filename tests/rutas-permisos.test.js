@@ -81,6 +81,11 @@ const grupos = [
     ['pedidos', 'Autorizar compras', [['put', '/1/estatus']]],
     ['pedidos', 'Gestionar libros', [
         ['post', '/1/recepcion']
+    ]],
+    ['prestamos', 'Buscar libros', [['get', '/mios']]],
+    ['prestamos', 'Préstamos', [
+        ['get', '/solicitudes'],
+        ['post', '/solicitudes/1/autorizar']
     ]]
 ];
 const archivos =
@@ -90,7 +95,8 @@ const archivos =
     perfiles: 'perfil',
     libros: 'libro',
     busqueda: 'busqueda',
-    pedidos: 'pedido'
+    pedidos: 'pedido',
+    prestamos: 'prestamo'
 };
 const roles =
 {
@@ -231,7 +237,7 @@ async () =>
                     Authorization: 'Bearer ' + token
                 }
             })).status, 401);
-            assert.equal(casos, 324);
+            assert.equal(casos, 351);
         }
         finally
         {
