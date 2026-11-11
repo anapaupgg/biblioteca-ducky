@@ -21,5 +21,10 @@ router.post('/renovaciones/validar', requiere_funcion('Préstamos'), controller.
 router.post('/renovaciones', requiere_funcion('Préstamos'), controller.renovar);
 router.post('/devoluciones/validar', requiere_funcion('Devoluciones'), controller.validar_devolucion);
 router.post('/devoluciones', requiere_funcion('Devoluciones'), controller.devolver);
+router.post('/perdidas/validar', requiere_funcion('Devoluciones'), controller.validar_perdida);
+router.post('/perdidas', requiere_funcion('Devoluciones'), controller.confirmar_perdida);
+router.get('/multas', requiere_funcion('Devoluciones'), controller.multas);
+router.post('/multas/pagos', requiere_funcion('Devoluciones'), controller.pago);
+router.post('/multas/avisos', requiere_funcion('Devoluciones'), controller.avisos);
 
 module.exports = router;

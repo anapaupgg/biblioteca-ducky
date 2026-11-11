@@ -99,7 +99,12 @@ const grupos = [
     ['circulacion', 'Devoluciones', [
         ['get', '/ejemplar/L000128-01'],
         ['post', '/devoluciones/validar'],
-        ['post', '/devoluciones']
+        ['post', '/devoluciones'],
+        ['post', '/perdidas/validar'],
+        ['post', '/perdidas'],
+        ['get', '/multas'],
+        ['post', '/multas/pagos'],
+        ['post', '/multas/avisos']
     ]]
 ];
 const archivos =

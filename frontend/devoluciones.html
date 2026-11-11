@@ -67,6 +67,46 @@
                         <div class="card receipt" id="recibo-devolucion"></div>
                         <div class="actions"><a class="btn btn-primary" href="devoluciones.html">Volver a devoluciones</a></div>
                     </section>
+                    <section id="panel-perdida" class="hidden">
+                        <form id="form-buscar-perdida" novalidate>
+                            <div class="card"><h2>Préstamo del ejemplar perdido</h2>
+                                <div class="grid-2">
+                                    <div class="field"><label for="perdida-ejemplar">Clave del ejemplar</label>
+                                        <input id="perdida-ejemplar" maxlength="10" autocomplete="off" placeholder="Ej. L000130-01"></div>
+                                    <div class="field"><label for="perdida-cambio">Tipo de cambio confirmado por Tesorería</label>
+                                        <input id="perdida-cambio" type="number" min="0.01" max="1000" step="0.0001" placeholder="MXN por dólar"></div>
+                                </div>
+                            </div>
+                            <div class="actions"><button class="btn btn-primary" type="submit">Buscar préstamo</button>
+                                <button class="btn" type="button" id="btn-cancelar-perdida">Cancelar</button></div>
+                        </form>
+                    </section>
+                    <section id="panel-revisar-perdida" class="hidden">
+                        <div class="card"><h2>Préstamo y multa de reposición</h2>
+                            <div class="grid-2" id="datos-perdida"></div></div>
+                        <div class="alert alert-warning"><strong>Esta operación no se puede deshacer</strong>
+                            <span>El préstamo y el ejemplar quedarán como perdidos. Se registrarán avisos para Tesorería y Servicios Escolares.</span></div>
+                        <div class="actions"><button class="btn btn-primary" type="button" id="btn-confirmar-perdida">Confirmar pérdida</button>
+                            <button class="btn" type="button" id="btn-volver-perdida">Volver</button></div>
+                    </section>
+                    <section id="panel-multas" class="hidden">
+                        <h2>Multas</h2><div id="lista-multas"></div>
+                        <div class="actions"><button class="btn btn-primary" type="button" id="btn-abrir-pago">Registrar pago</button>
+                            <button class="btn" type="button" id="btn-avisar-adeudos">Avisar adeudos a Servicios Escolares</button>
+                            <button class="btn" type="button" id="btn-volver-multas">Volver a devoluciones</button></div>
+                    </section>
+                    <section id="panel-pago" class="hidden">
+                        <form id="form-pago" novalidate>
+                            <div class="card"><h2>Datos del pago</h2><div class="grid-2">
+                                <div class="field"><label for="pago-multa">Folio de la multa</label>
+                                    <input id="pago-multa" autocomplete="off" placeholder="Ej. MUL-0052"></div>
+                                <div class="field"><label for="pago-tesoreria">Folio de Tesorería</label>
+                                    <input id="pago-tesoreria" autocomplete="off" maxlength="30" placeholder="Ej. TES-00912"></div>
+                            </div></div>
+                            <div class="actions"><button class="btn btn-primary" type="submit">Registrar pago</button>
+                                <button class="btn" type="button" id="btn-cancelar-pago">Cancelar</button></div>
+                        </form>
+                    </section>
                 </div>
             </main>
         </div>

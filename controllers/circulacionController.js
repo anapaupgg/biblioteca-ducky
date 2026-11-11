@@ -7,7 +7,7 @@
 
 /******************************************************************/
 /* Listing Contents: buscar, validar_renovacion, renovar,         */
-/* validar_devolucion, devolver.                                   */
+/* validar_devolucion, devolver, perdida, multas, pago, avisos.   */
 /* Reuse Instructions: exige sesión con permiso Préstamos;         */
 /* simular revierte siempre, confirmar guarda una sola vez.       */
 /******************************************************************/
@@ -71,4 +71,84 @@ const renovar = (solicitud, respuesta) => ejecutar(solicitud, respuesta, 'renova
 const validar_devolucion = (solicitud, respuesta) => ejecutar(solicitud, respuesta, 'devolver', false);
 const devolver = (solicitud, respuesta) => ejecutar(solicitud, respuesta, 'devolver', true);
 
-module.exports = { buscar, validar_renovacion, renovar, validar_devolucion, devolver };
+const ejecutar_perdida = async (solicitud, respuesta, confirmar) =>
+{
+    try
+    {
+        const id_ejemplar = ejemplar_valido(solicitud.body?.id_ejemplar);
+        const tipo_cambio = Number(solicitud.body?.tipo_cambio);
+        if (!Number.isFinite(tipo_cambio) || tipo_cambio <= 0 || tipo_cambio > 1000)
+        {
+            throw new error_negocio(400, 'Indica el tipo de cambio confirmado por Tesorería',
+                ['tipo_cambio']);
+        }
+        const prestamo = await circulacion_model.buscar_activo(id_ejemplar);
+        if (!prestamo) throw new error_negocio(404, 'No hay préstamo activo para ese ejemplar');
+        const transaccion = confirmar ? con_usuario : simular;
+        const multa = await transaccion(solicitud.usuario.clave, (client) =>
+            circulacion_model.reportar_perdida(client, prestamo.id_prestamo,
+                tipo_cambio, solicitud.usuario.clave));
+        respuesta.status(confirmar ? 201 : 200).json({ prestamo, multa });
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'circulacion.perdida');
+    }
+};
+
+const validar_perdida = (solicitud, respuesta) => ejecutar_perdida(solicitud, respuesta, false);
+const confirmar_perdida = (solicitud, respuesta) => ejecutar_perdida(solicitud, respuesta, true);
+
+const multas = async (solicitud, respuesta) =>
+{
+    try
+    {
+        respuesta.status(200).json(await circulacion_model.multas());
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'circulacion.multas');
+    }
+};
+
+const pago = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const folio = String(solicitud.body?.folio_multa || '').trim();
+        const coincidencia = /^(?:MUL-)?0*([1-9][0-9]*)$/i.exec(folio);
+        const id_multa = coincidencia ? Number(coincidencia[1]) : NaN;
+        const folio_tesoreria = String(solicitud.body?.folio_tesoreria || '').trim().toUpperCase();
+        if (!Number.isSafeInteger(id_multa) || id_multa < 1 ||
+            !/^[A-Z0-9-]{3,30}$/.test(folio_tesoreria))
+        {
+            throw new error_negocio(400, 'Folio de multa o Tesorería inválido',
+                ['folio_multa', 'folio_tesoreria']);
+        }
+        const registro = await con_usuario(solicitud.usuario.clave, (client) =>
+            circulacion_model.registrar_pago(client, id_multa, folio_tesoreria,
+                solicitud.usuario.clave));
+        respuesta.status(201).json(registro);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'circulacion.pago');
+    }
+};
+
+const avisos = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const resultado = await con_usuario(solicitud.usuario.clave, (client) =>
+            circulacion_model.avisar_adeudos(client, solicitud.usuario.clave));
+        respuesta.status(200).json(resultado);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'circulacion.avisos');
+    }
+};
+
+module.exports = { buscar, validar_renovacion, renovar, validar_devolucion, devolver,
+    validar_perdida, confirmar_perdida, multas, pago, avisos };

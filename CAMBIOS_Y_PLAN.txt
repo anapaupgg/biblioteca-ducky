@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — PÉRDIDA, MULTAS Y PAGOS SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
+- Continuación local del avance propio dc15d66; origin/main estaba sincronizado
+  tras el push. package-lock.json sigue siendo un cambio local ajeno y se excluye.
+- Frames Figma 2465:102377, 2465:103366, 2465:104054 y 2465:104703:
+  formulario y revisión de pérdida; listado de multas y registro de pago con
+  folio de Tesorería. El tipo de cambio se pide al operador porque la regla
+  de reposición usa el último precio en USD y no hay fuente de cambio integrada.
+- MVC: SQL y funciones existentes en circulacionModel; controladores validan,
+  simulan con rollback y coordinan; la vista contiene DOM y eventos. Nuevas
+  rutas exigen permiso Devoluciones. El trigger existente marca multas pagadas.
+- Prueba de integración: préstamo, reporte de pérdida, multa y pago dentro de
+  transacción de prueba con rollback. Suite completa: 48 pruebas aprobadas,
+  cero fallos; no se ejecutó db:init ni hubo cambios de esquema.
+- Revisión visual: pérdida y su previsualización, multas y formulario de pago.
+  No se confirmó pérdida o pago reales por la interfaz de pruebas.
+- Los avisos de Tesorería y Servicios Escolares se registran internamente en
+  PostgreSQL. No existe aún envío a esos sistemas externos; no presentarlo
+  como entrega efectiva. Pendientes: recibos y avisos secundarios, estados de
+  error, y cotejo de usuarios, perfiles, catálogo, compras, lector y asistente.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ALINEACIÓN CON FIGMA (11 DE NOVIEMBRE DE 2026)
 - Al iniciar: git fetch origin correcto. main y origin/main estaban en 81c6374,
   sin commits remotos nuevos ni diferencias de historia; no hubo integración.
