@@ -1,3 +1,32 @@
+ACTUALIZACIÓN — ALINEACIÓN CON FIGMA (11 DE NOVIEMBRE DE 2026)
+- Al iniciar: git fetch origin correcto. main y origin/main estaban en 81c6374,
+  sin commits remotos nuevos ni diferencias de historia; no hubo integración.
+  package-lock.json ya tenía un cambio local ajeno: se conservó y se excluye.
+- Se leyó AGENTS.md, ESTANDAR_MVC.md y el prototipo Figma Prototipo-AES.
+  FIGMA_ALINEACION.md registra nodos 00–10, diferencias y alcance verificado.
+- Acceso: selector de perfil de Figma con opciones activas de BD; el servidor
+  cierra la sesión recién creada y rechaza un perfil que no corresponde.
+- Shell, inicio y búsqueda: orden, textos y disposición de Figma; búsqueda
+  móvil propia, filtros en dos columnas y acciones fuera de la tarjeta.
+- Circulación: registro directo con prevalidación reversible; bandeja de
+  préstamos activos, renovación, lista de espera y devolución. Las reglas
+  SQL existentes calculan vencimientos, multas y actualizan ejemplares.
+  Nuevas rutas exigen Préstamos o Devoluciones según la operación.
+- Verificación: login, inicio, búsqueda escritorio/móvil, registro directo,
+  devolución vencida y lista de espera revisados en navegador. Las pruebas
+  de datos hicieron rollback; no se creó préstamo ni devolución real de prueba.
+  DUCKY_TEST_DB=1 npm test: 47 aprobadas, cero fallos. La prueba nueva
+  recorre préstamo, renovación y devolución y comprueba rollback completo.
+  Matriz HTTP cubre 441 combinaciones de roles/rutas. git diff --check limpio.
+- No se ejecutó db:init ni se cambió el esquema. La app queda corriendo en
+  localhost:3001 con PostgreSQL local 5433.
+- Pendientes reales: libro perdido y multas/pagos; recibos y avisos secundarios;
+  cotejo visual de todos los estados de usuarios, perfiles, libros, compras,
+  chatbot y diez vistas móviles; ajuste de ejemplos de IDs de Figma frente
+  a claves actuales de seis caracteres. No declarar paridad completa aún.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — SOLICITUDES Y PRÉSTAMOS (30 DE OCTUBRE DE 2026)
 - Fetch origin correcto: rama y upstream 782f33b al iniciar, sin commits nuevos.
   Todo este avance es propio; package-lock.json previo conservado y excluido.

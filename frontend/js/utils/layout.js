@@ -44,13 +44,6 @@ const icono = (nombre) =>
 /* Menu entries. "funciones": the entry appears when the profile has ANY of them */
 const MENU = [
 {
-    id: 'chatbot',
-    texto: 'Asistente',
-    url: 'chatbot.html',
-    icono: 'chat',
-    funciones: ['Chatbot']
-},
-{
     id: 'inicio',
     texto: 'Inicio',
     url: 'inicio.html',
@@ -79,13 +72,6 @@ const MENU = [
     funciones: ['Gestionar libros']
 },
 {
-    id: 'pedidos',
-    texto: 'Solicitudes a Tesorería',
-    url: 'pedidos.html',
-    icono: 'cart',
-    funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
-},
-{
     id: 'buscar',
     texto: 'Buscar libros',
     url: 'buscar.html',
@@ -98,13 +84,6 @@ const MENU = [
     url: 'prestamos.html',
     icono: 'retorno',
     funciones: ['Buscar libros', 'Préstamos']
-},
-{
-    id: 'lista',
-    texto: 'Lista de libros',
-    url: 'lista_libros.html',
-    icono: 'document',
-    funciones: ['Buscar libros']
 }];
 
 const layout =
@@ -193,8 +172,7 @@ const layout =
             '<button class="btn btn-sm menu-toggle" id="menu-toggle" aria-label="Abrir menú">' +
             icono('menu') + '</button>' +
             '<div class="breadcrumb">Biblioteca / ' + ui.esc(opciones.migas) + '</div></div>' +
-            '<div class="topbar-right"><span>' + ui.esc(usuario.nombre) + ' · ' + ui.esc(usuario
-                .perfil) + ' · Sesión activa</span>' +
+            '<div class="topbar-right"><span>' + ui.esc(usuario.perfil) + ' · Sesión activa</span>' +
             '<button class="btn" id="btn-cerrar-sesion">Cerrar sesión</button></div>';
 
         document.getElementById('btn-cerrar-sesion').addEventListener('click', () => this

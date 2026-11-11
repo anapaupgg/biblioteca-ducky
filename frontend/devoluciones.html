@@ -1,0 +1,82 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-11-11                                               */
+/* Description: Devoluciones según el prototipo de Figma.         */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Devoluciones</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body class="circulation-page">
+        <div class="app">
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header"><div>
+                        <h1 id="titulo-devolucion">Devolución de libros</h1>
+                        <p id="descripcion-devolucion">Recibe ejemplares, calcula multas por atraso y avisa a la lista de espera.</p>
+                    </div></div>
+                    <div id="mensaje"></div>
+                    <section id="panel-devoluciones">
+                        <div class="actions circulation-actions">
+                            <button class="btn btn-primary" type="button" id="btn-registrar-devolucion">Registrar devolución</button>
+                            <button class="btn" type="button" id="btn-reportar-perdido">Reportar libro perdido</button>
+                            <button class="btn" type="button" id="btn-multas-pagos">Multas y pagos</button>
+                        </div>
+                        <div id="aviso-vencido"></div>
+                        <h2>Préstamos por devolver</h2>
+                        <div id="prestamos-por-devolver"></div>
+                        <div class="actions">
+                            <a class="btn" href="prestamos.html">Ir a préstamos</a>
+                            <a class="btn" href="inicio.html">Volver al inicio</a>
+                        </div>
+                    </section>
+                    <section id="panel-buscar-devolucion" class="hidden">
+                        <form id="form-buscar-devolucion" novalidate>
+                            <div class="card">
+                                <h2>Ejemplar recibido</h2>
+                                <div class="grid-2"><div class="field">
+                                    <label for="devolucion-ejemplar">Clave del ejemplar</label>
+                                    <input id="devolucion-ejemplar" maxlength="10" autocomplete="off" placeholder="Ej. L000128-01">
+                                </div></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-primary" type="submit">Buscar préstamo</button>
+                                <button class="btn" type="button" id="btn-cancelar-devolucion">Cancelar</button>
+                            </div>
+                        </form>
+                    </section>
+                    <section id="panel-revisar-devolucion" class="hidden">
+                        <div class="card"><h2>Préstamo a cerrar</h2><div class="grid-2" id="datos-devolucion"></div></div>
+                        <div class="alert" id="aviso-devolucion"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-devolver-bueno">Confirmar · buen estado</button>
+                            <button class="btn" type="button" id="btn-devolver-danado">Confirmar · con daño</button>
+                            <button class="btn" type="button" id="btn-volver-devolucion">Volver</button>
+                        </div>
+                    </section>
+                    <section id="panel-recibo-devolucion" class="hidden">
+                        <div class="card receipt" id="recibo-devolucion"></div>
+                        <div class="actions"><a class="btn btn-primary" href="devoluciones.html">Volver a devoluciones</a></div>
+                    </section>
+                </div>
+            </main>
+        </div>
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
+        <script src="js/models/CirculacionModel.js"></script>
+        <script src="js/views/DevolucionesView.js"></script>
+        <script src="js/controllers/DevolucionesController.js"></script>
+        <script>devoluciones_controller.iniciar();</script>
+    </body>
+</html>

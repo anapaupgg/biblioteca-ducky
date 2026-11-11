@@ -8,6 +8,7 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   iniciar_sesion(clave, contrasena, dispositivo) */
+/*   perfiles_acceso() */
 /*   obtener_activa(id_sesion, horas) */
 /*   cerrar(id_sesion) */
 /*   funciones_de(clave) */
@@ -44,6 +45,14 @@ const iniciar_sesion = async (clave, contrasena, dispositivo) =>
         dispositivo
     ]);
     return resultado.rows[0];
+};
+
+/* Listar nombres activos para el selector del prototipo de acceso. */
+const perfiles_acceso = async () =>
+{
+    const resultado = await pool.query(
+        `SELECT nombre FROM perfiles WHERE estatus = 'Activo' ORDER BY id_perfil`);
+    return resultado.rows.map((perfil) => perfil.nombre);
 };
 
 /******************************************************************/
@@ -158,6 +167,7 @@ const cambiar_contrasena = (clave, nueva) =>
 module.exports =
 {
     iniciar_sesion,
+    perfiles_acceso,
     obtener_activa,
     cerrar,
     funciones_de,

@@ -6,14 +6,15 @@
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: mios, solicitudes, autorizar.                */
+/* Listing Contents: mios, solicitudes, autorizar, activos,       */
+/* validar_directo y registrar_directo.                           */
 /* Reuse Instructions: rutas protegidas por sesión/permisos.      */
 /* mios usa exclusivamente la clave de sesión, nunca la entrada   */
 /* del cliente. autorizar requiere folio e ID de ejemplar válido; */
 /* responde 409 si la solicitud dejó de estar pendiente.         */
 /******************************************************************/
 
-const { con_usuario } = require('../db');
+const { con_usuario, simular } = require('../db');
 const prestamo_model = require('../models/prestamoModel');
 const { responder_error, error_negocio } = require('../utils/errores');
 
@@ -77,4 +78,111 @@ const autorizar = async (solicitud, respuesta) =>
     }
 };
 
-module.exports = { mios, solicitudes, autorizar };
+const activos = async (solicitud, respuesta) =>
+{
+    try
+    {
+        respuesta.status(200).json(await prestamo_model.activos());
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'prestamos.activos');
+    }
+};
+
+const datos_directos = (solicitud) =>
+{
+    const clave_usuario = String(solicitud.body?.clave_usuario || '').trim();
+    const id_ejemplar = String(solicitud.body?.id_ejemplar || '').trim().toUpperCase();
+    if (!/^[A-Za-z0-9]{6}$/.test(clave_usuario) || !/^[A-Z0-9-]{1,10}$/.test(id_ejemplar))
+    {
+        throw new error_negocio(400, 'Matrícula, nómina o clave del ejemplar inválida',
+            ['clave_usuario', 'id_ejemplar']);
+    }
+    return { clave_usuario, id_ejemplar };
+};
+
+const ejecutar_directo = async (solicitud, respuesta, confirmar) =>
+{
+    try
+    {
+        const datos = datos_directos(solicitud);
+        const operacion = confirmar ? con_usuario : simular;
+        const prestamo = await operacion(solicitud.usuario.clave, async (client) =>
+        {
+            const id_prestamo = await prestamo_model.registrar_directo(client,
+                datos.clave_usuario, datos.id_ejemplar, solicitud.usuario.clave);
+            return prestamo_model.detalle(client, id_prestamo);
+        });
+        respuesta.status(confirmar ? 201 : 200).json(prestamo);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, confirmar ? 'prestamos.registrar' : 'prestamos.validar');
+    }
+};
+
+const validar_directo = (solicitud, respuesta) => ejecutar_directo(solicitud, respuesta, false);
+const registrar_directo = (solicitud, respuesta) => ejecutar_directo(solicitud, respuesta, true);
+
+const libro_valido = (valor) =>
+{
+    const id_libro = String(valor || '').trim().toUpperCase();
+    if (!/^[A-Z0-9]{7}$/.test(id_libro))
+    {
+        throw new error_negocio(400, 'Clave del libro inválida', ['id_libro']);
+    }
+    return id_libro;
+};
+
+const espera = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const datos = await prestamo_model.espera(libro_valido(solicitud.params.libro));
+        if (!datos) throw new error_negocio(404, 'El libro no existe');
+        respuesta.status(200).json(datos);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'prestamos.espera');
+    }
+};
+
+const registrar_espera = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const id_libro = libro_valido(solicitud.body?.id_libro);
+        const clave_usuario = String(solicitud.body?.clave_usuario || '').trim();
+        if (!/^[A-Za-z0-9]{6}$/.test(clave_usuario))
+        {
+            throw new error_negocio(400, 'Matrícula o nómina inválida', ['clave_usuario']);
+        }
+        const registro = await con_usuario(solicitud.usuario.clave, async (client) =>
+        {
+            const contexto = await prestamo_model.contexto_espera(client, clave_usuario, id_libro);
+            if (!contexto.usuario || contexto.usuario.estatus !== 'Activo')
+            {
+                throw new error_negocio(422, 'El usuario no está activo o no existe');
+            }
+            if (!contexto.libro || contexto.libro.estatus !== 'Activo en catálogo')
+            {
+                throw new error_negocio(422, 'El libro no está activo en el catálogo');
+            }
+            if (contexto.disponibles > 0)
+            {
+                throw new error_negocio(422, 'Hay ejemplares disponibles; registra un préstamo en vez de la lista de espera');
+            }
+            return prestamo_model.registrar_espera(client, clave_usuario, id_libro);
+        });
+        respuesta.status(201).json(registro);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'prestamos.registrar_espera');
+    }
+};
+
+module.exports = { mios, solicitudes, autorizar, activos, validar_directo,
+    registrar_directo, espera, registrar_espera };

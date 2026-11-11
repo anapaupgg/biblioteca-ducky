@@ -1,0 +1,29 @@
+# Alineación con Prototipo-AES
+
+Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
+
+| Sección de Figma | Estado antes de esta revisión | Diferencia comprobada |
+| --- | --- | --- |
+| 00 Acceso y sesión (`2006:941`) | Parcial | Falta selector de perfil visible y su diálogo `2198:48700`. La autenticación, bloqueo y recuperación existen. |
+| 01 Administrador del sistema (`2006:1313`) | Parcial | El shell usa los tokens correctos, pero el contenido estaba a 48 px en vez de 32 px del frame estándar. Orden y textos de servicios difieren. |
+| 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
+| 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
+| 04 Lector (`2044:48055`) | Parcial | Inicio, listado y PDF existen; el conjunto y orden de tarjetas no coincide. |
+| 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda tiene los seis filtros pero los agrupa en tres columnas; Figma usa dos. Faltan accesos «Ejemplo por ISBN» y «Ver búsqueda en móvil». |
+| 06 Circulación conservada (`2014:35297`) | Mayormente pendiente | Solo se implementó la solicitud de búsqueda y su autorización; no existen devolución ni espera operativas en la interfaz. |
+| 07 App móvil (`2258:48812`) | Parcial | Existe diseño adaptable, pero falta cotejo con las diez vistas móviles de búsqueda del Figma. |
+| 08 Préstamo (`2447:106950`) | Parcial | Existe bandeja de solicitudes y préstamos del usuario. Faltan registro directo en tres pasos, renovaciones, espera, recibo y envío. |
+| 09 Devolución (`2465:98968`) | Pendiente | Faltan devolución, pérdida, multas, pagos y avisos en interfaz/API. Hay reglas SQL existentes aprovechables. |
+| 10 Asistente (`2483:74914`) | Parcial | FAQ y consulta de catálogo existen; falta cotejo de preguntas y respuestas personales de préstamos, multas y renovación. |
+
+La referencia visual mantiene Manrope, colores `#142B45`, `#F5F7FA`, `#DCE3EC`, sidebar de 244 px y contenido con margen de 32 px a 1440 × 960. Los logos locales Ducky y FlowBit coinciden visualmente con las imágenes originales del diseño. Los perfiles y permisos reales siguen validándose en el servidor aunque algunos fotogramas ilustrativos del Figma muestren navegación no autorizada.
+
+Orden de trabajo: alinear shell, login, inicio y búsqueda; después completar los flujos 08 y 09 con las reglas existentes y verificar sus estados; por último cotejar todos los estados secundarios y las vistas móviles. Cada avance debe identificar los nodos de Figma revisados, pruebas y diferencias restantes en `CAMBIOS_Y_PLAN.txt`.
+
+## Avance local del 11 de noviembre de 2026
+
+- Se cotejaron visualmente en navegador los frames `2006:941`, `2198:48700`, `2006:1313`, `2013:31577`, `2258:48812`, `2447:106950`, `2447:107284`, `2447:108277`, `2465:98968` y `2465:100295`. Acceso, inicio y búsqueda ahora usan su distribución, textos y acciones principales; la búsqueda móvil tiene una presentación propia.
+- Los frames `2447:112316`, `2447:114653` y `2447:115298` guiaron renovación y lista de espera. El registro directo, la renovación y la devolución usan prevalidación reversible y confirmación transaccional. Los registros de espera se limitan a libros activos sin copias disponibles.
+- La pantalla `devoluciones.html` sigue los frames `2465:98968`, `2465:99306` y `2465:100295`. El navegador verificó la revisión de una devolución vencida y el cálculo simulado de multa, sin registrar una devolución real.
+- **Aún no hay paridad completa.** Faltan los flujos de libro perdido, multas y pagos (`2465:102377` a `2465:106028`), recibos/avisos secundarios, comparación de estados de error, y cotejo visual detallado de usuarios, perfiles, catálogo, compras y asistente. Los botones de pérdida y multas señalan que siguen en construcción; no deben presentarse como terminados.
+- Figma ilustra matrículas de siete caracteres y ejemplares que comienzan con `B`; el esquema existente acepta claves de usuario de seis caracteres y ejemplares `L...`. Los formularios usan ejemplos válidos para la base actual. Cambiar identificadores exige una migración compatible y revisión de todos los contratos; queda pendiente.

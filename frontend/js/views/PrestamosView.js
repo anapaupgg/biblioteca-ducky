@@ -6,17 +6,231 @@
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: configurar, mios, pendientes, mensaje.       */
+/* Listing Contents: configurar, enlazar, mostrar, activos,       */
+/* validacion, recibo, mios, pendientes y mensaje.                */
 /* Reuse Instructions: cargar después de ui; callbacks reciben    */
 /* folio y ejemplar. Todos los datos externos se escapan.        */
 /******************************************************************/
 
 const prestamos_view =
 {
-    configurar: function (ver_mios, ver_pendientes)
+    configurar: function (ver_mios, ver_pendientes, ver_devoluciones)
     {
-        document.getElementById('panel-mios').classList.toggle('hidden', !ver_mios);
-        document.getElementById('panel-pendientes').classList.toggle('hidden', !ver_pendientes);
+        document.getElementById('panel-mios').classList.toggle('hidden', !ver_mios || ver_pendientes);
+        document.getElementById('panel-personal').classList.toggle('hidden', !ver_pendientes);
+        document.getElementById('panel-pendientes').classList.add('hidden');
+        document.getElementById('enlace-devoluciones').classList.toggle('hidden', !ver_devoluciones);
+        if (ver_mios && !ver_pendientes)
+        {
+            document.getElementById('titulo-prestamos').textContent = 'Mis préstamos';
+            document.getElementById('descripcion-prestamos').textContent =
+                'Consulta tus préstamos y solicitudes de libros.';
+        }
+    },
+
+    enlazar: function (acciones)
+    {
+        document.getElementById('btn-registrar-prestamo').addEventListener('click', acciones.abrir_registro);
+        document.getElementById('btn-renovar-prestamo').addEventListener('click', acciones.abrir_renovacion);
+        document.getElementById('btn-lista-espera').addEventListener('click', acciones.abrir_espera);
+        document.getElementById('btn-cancelar-registro').addEventListener('click', acciones.volver);
+        document.getElementById('btn-volver-registro').addEventListener('click', acciones.abrir_registro);
+        document.getElementById('btn-volver-prestamos').addEventListener('click', acciones.volver);
+        document.getElementById('btn-cancelar-renovacion').addEventListener('click', acciones.volver);
+        document.getElementById('btn-volver-renovacion').addEventListener('click', acciones.abrir_renovacion);
+        document.getElementById('form-renovar').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.validar_renovacion({
+                id_ejemplar: document.getElementById('renovar-ejemplar').value.trim().toUpperCase()
+            });
+        });
+        document.getElementById('btn-confirmar-renovacion').addEventListener('click', acciones.renovar);
+        document.getElementById('btn-volver-espera').addEventListener('click', acciones.volver);
+        document.getElementById('btn-agregar-espera').addEventListener('click', acciones.abrir_agregar_espera);
+        document.getElementById('btn-cancelar-espera').addEventListener('click', acciones.abrir_espera);
+        document.getElementById('form-consultar-espera').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.consultar_espera(document.getElementById('espera-libro').value.trim().toUpperCase());
+        });
+        document.getElementById('form-agregar-espera').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.registrar_espera({
+                clave_usuario: document.getElementById('espera-usuario').value.trim(),
+                id_libro: document.getElementById('espera-libro-registro').value.trim().toUpperCase()
+            });
+        });
+        document.getElementById('btn-atender-solicitud').addEventListener('click', () =>
+        {
+            document.getElementById('panel-pendientes').classList.remove('hidden');
+            document.getElementById('panel-pendientes').scrollIntoView({ behavior: 'smooth' });
+        });
+        document.getElementById('form-registrar-prestamo').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.validar(this.datos_registro());
+        });
+        document.getElementById('btn-confirmar-registro').addEventListener('click', acciones.confirmar);
+        document.getElementById('btn-imprimir-recibo').addEventListener('click', () => window.print());
+    },
+
+    datos_registro: function ()
+    {
+        return {
+            clave_usuario: document.getElementById('prestamo-usuario').value.trim(),
+            id_ejemplar: document.getElementById('prestamo-ejemplar').value.trim().toUpperCase()
+        };
+    },
+
+    enfocar_registro: function ()
+    {
+        document.getElementById('prestamo-usuario').focus();
+    },
+
+    mostrar: function (modo)
+    {
+        ['personal', 'registrar', 'validacion', 'recibo', 'renovar', 'renovacion-validada',
+            'espera', 'agregar-espera'].forEach((panel) =>
+            document.getElementById('panel-' + panel).classList.toggle('hidden', panel !== modo));
+        document.getElementById('panel-mios').classList.add('hidden');
+        document.getElementById('panel-pendientes').classList.add('hidden');
+        const titulos = {
+            personal: ['Préstamo de libros',
+                'Registra préstamos, renovaciones y solicitudes de lista de espera.'],
+            registrar: ['Registrar préstamo',
+                '1. Identifica al solicitante y el ejemplar → 2. Valida → 3. Confirma y entrega el recibo.'],
+            validacion: ['Préstamo autorizado',
+                '2. Condiciones verificadas → 3. Confirma el préstamo y entrega el recibo.'],
+            recibo: ['Préstamo registrado', 'Entrega el recibo al solicitante.'],
+            renovar: ['Renovar préstamo',
+                'Busca el préstamo activo con la clave del ejemplar y confirma el nuevo vencimiento.'],
+            'renovacion-validada': ['Renovación autorizada',
+                'Revisa el préstamo y confirma el nuevo vencimiento.'],
+            espera: ['Lista de espera', 'Se avisa en orden cuando se devuelve un ejemplar.'],
+            'agregar-espera': ['Agregar a lista de espera',
+                'Registra al usuario cuando todos los ejemplares del libro están prestados.']
+        };
+        document.getElementById('titulo-prestamos').textContent = titulos[modo][0];
+        document.getElementById('descripcion-prestamos').textContent = titulos[modo][1];
+        ui.alerta('mensaje');
+    },
+
+    activos: function (lista)
+    {
+        const destino = document.getElementById('prestamos-activos');
+        const cabecera = '<div class="circulation-row">Folio · Solicitante · Libro · Ejemplar · Vence · Estado</div>';
+        destino.innerHTML = cabecera + (lista.length ? lista.map((prestamo) =>
+            '<div class="circulation-row">PRE-' + ui.esc(prestamo.id_prestamo) + ' · ' +
+            ui.esc(prestamo.solicitante) + ' · ' + ui.esc(prestamo.titulo) + ' · ' +
+            ui.esc(prestamo.id_ejemplar) + ' · ' + ui.fecha(prestamo.fecha_vencimiento) + ' · ' +
+            (prestamo.fecha_vencimiento < ui.hoy() ? 'Vencido' : 'Activo') +
+            (prestamo.renovaciones ? ' · ' + ui.esc(prestamo.renovaciones) + ' renovación(es)' : '') +
+            '</div>').join('') : '<div class="circulation-row muted">No hay préstamos activos.</div>');
+    },
+
+    aviso_solicitud: function (solicitudes)
+    {
+        const destino = document.getElementById('aviso-solicitud');
+        if (!solicitudes.length)
+        {
+            destino.innerHTML = '';
+            return;
+        }
+        const primera = solicitudes[0];
+        destino.innerHTML = '<div class="alert alert-info"><strong>Solicitud pendiente desde Buscar libros</strong>' +
+            '<span>' + ui.esc(primera.usuario) + ' (' + ui.esc(primera.clave_usuario) +
+            ') solicitó ' + ui.esc(primera.titulo) + '. ' +
+            (primera.ejemplares.length ? 'Ejemplar disponible: ' +
+                ui.esc(primera.ejemplares[0].id_ejemplar) + '.' :
+                'No hay ejemplares disponibles.') + '</span></div>';
+    },
+
+    validacion: function (prestamo)
+    {
+        const campo = (titulo, valor) => '<div class="field"><span class="label">' +
+            ui.esc(titulo) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        document.getElementById('datos-validacion').innerHTML = [
+            campo('Solicitante', prestamo.solicitante),
+            campo('Matrícula o nómina', prestamo.clave_usuario),
+            campo('Tipo de usuario', prestamo.tipo_usuario + ' · máximo ' +
+                prestamo.max_ejemplares + ' libro(s)'),
+            campo('Libro', prestamo.titulo),
+            campo('Ejemplar', prestamo.id_ejemplar),
+            campo('Ubicación', (prestamo.ubicacion || 'Sin ubicación') + ' · ' + prestamo.tipo_uso),
+            campo('Fecha de préstamo', ui.fecha(prestamo.fecha_prestamo)),
+            campo('Vencimiento', ui.fecha(prestamo.fecha_vencimiento) + ' · ' +
+                prestamo.dias_prestamo + ' días hábiles')
+        ].join('');
+        document.getElementById('aviso-validacion').innerHTML =
+            '<strong>Préstamo autorizado</strong><span>Usuario y ejemplar disponibles. ' +
+            'Confirma la entrega para registrar el préstamo.</span>';
+    },
+
+    recibo: function (prestamo)
+    {
+        document.getElementById('recibo-prestamo').innerHTML = '<h2>Recibo PRE-' +
+            ui.esc(prestamo.id_prestamo) + '</h2><p><strong>Solicitante:</strong> ' +
+            ui.esc(prestamo.solicitante) + ' (' + ui.esc(prestamo.clave_usuario) +
+            ')</p><p><strong>Libro:</strong> ' + ui.esc(prestamo.titulo) +
+            '</p><p><strong>Ejemplar:</strong> ' + ui.esc(prestamo.id_ejemplar) +
+            '</p><p><strong>Vencimiento:</strong> ' + ui.fecha(prestamo.fecha_vencimiento) + '</p>';
+    },
+
+    renovacion: function (datos)
+    {
+        const prestamo = datos.prestamo;
+        const resultado = datos.resultado;
+        const campo = (titulo, valor) => '<div class="field"><span class="label">' +
+            ui.esc(titulo) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        document.getElementById('datos-renovacion').innerHTML = [
+            campo('Solicitante', prestamo.solicitante + ' · ' + prestamo.clave_usuario),
+            campo('Libro', prestamo.titulo),
+            campo('Ejemplar', prestamo.id_ejemplar),
+            campo('Vencimiento anterior', ui.fecha(resultado.vencimiento_anterior)),
+            campo('Nuevo vencimiento', ui.fecha(resultado.vencimiento_nuevo)),
+            campo('Renovaciones', (prestamo.renovaciones + 1) + ' de ' + prestamo.max_renovaciones)
+        ].join('');
+        document.getElementById('aviso-renovacion').innerHTML = '<strong>Renovación autorizada</strong>' +
+            '<span>La base de datos verificó el máximo permitido para este usuario.</span>';
+    },
+
+    recibo_renovacion: function (datos)
+    {
+        document.getElementById('titulo-prestamos').textContent = 'Renovación registrada';
+        document.getElementById('descripcion-prestamos').textContent =
+            'Entrega el comprobante con el nuevo vencimiento.';
+        document.getElementById('recibo-prestamo').innerHTML = '<h2>Renovación registrada</h2>' +
+            '<p><strong>Préstamo:</strong> PRE-' + ui.esc(datos.prestamo.id_prestamo) +
+            '</p><p><strong>Libro:</strong> ' + ui.esc(datos.prestamo.titulo) +
+            '</p><p><strong>Nuevo vencimiento:</strong> ' +
+            ui.fecha(datos.resultado.vencimiento_nuevo) + '</p>';
+    },
+
+    lista_espera: function (datos)
+    {
+        const destino = document.getElementById('lista-espera');
+        document.getElementById('descripcion-prestamos').textContent = datos.libro.titulo + ' · ' +
+            datos.libro.id_libro + ' · ' + datos.libro.disponibles + ' de ' + datos.libro.total +
+            ' ejemplares disponibles. Se avisa en orden cuando se devuelve un ejemplar.';
+        destino.innerHTML = '<div class="circulation-row">Posición · Clave · Nombre · Fecha de solicitud · Estado</div>' +
+            (datos.solicitudes.length ? datos.solicitudes.map((registro, indice) =>
+                '<div class="circulation-row">' + (indice + 1) + ' · ' +
+                ui.esc(registro.clave_usuario) + ' · ' + ui.esc(registro.nombre) + ' · ' +
+                ui.fecha_hora(registro.fecha_registro) + ' · ' + ui.esc(registro.estatus) +
+                '</div>').join('') :
+                '<div class="circulation-row muted">Aún no hay solicitudes en espera.</div>');
+    },
+
+    libro_espera: function ()
+    {
+        return document.getElementById('espera-libro').value.trim().toUpperCase();
+    },
+
+    preparar_espera: function ()
+    {
+        document.getElementById('espera-libro-registro').value = this.libro_espera();
     },
 
     mios: function (datos)

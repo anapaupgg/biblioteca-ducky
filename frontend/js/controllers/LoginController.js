@@ -45,7 +45,12 @@ const login_controller =
         if (ui.param('salida')) login_view.mensaje('ok', 'Sesión cerrada',
             'Gracias por usar Biblioteca Ducky.');
         if (this.token) login_view.mostrar_restablecer();
-        else login_view.enfocar();
+        else
+        {
+            login_view.enfocar();
+            auth_model.perfiles_acceso().then((perfiles) => login_view.perfiles(perfiles))
+                .catch(() => {});
+        }
     },
 
     /**************************************************************/
@@ -64,11 +69,12 @@ const login_controller =
         const vacios = [];
         if (!datos.clave) vacios.push('clave');
         if (!datos.contrasena) vacios.push('contrasena');
+        if (!datos.perfil) vacios.push('perfil');
         if (vacios.length > 0)
         {
             login_view.marcar(vacios);
             login_view.mensaje('error', 'Faltan datos para entrar',
-                'Ingresa tu Usuario y contraseña.');
+                'Ingresa tu Usuario, contraseña y perfil de acceso.');
             return;
         }
         if (!/^[A-Za-z0-9]{6}$/.test(datos.clave))
@@ -82,7 +88,7 @@ const login_controller =
         login_view.ocupado(true);
         try
         {
-            const resultado = await auth_model.login(datos.clave, datos.contrasena);
+            const resultado = await auth_model.login(datos.clave, datos.contrasena, datos.perfil);
             session.set(resultado.token, resultado.usuario);
             window.location.href = resultado.cambiar_contrasena ? 'cambiar_contrasena.html' :
                 'inicio.html';

@@ -263,9 +263,7 @@ a
 
 .nav svg
 {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
+    display: none;
 }
 
 .sidebar-footer
@@ -290,7 +288,7 @@ a
 {
     flex: 1;
     min-width: 0;
-    padding: var(--space-32) var(--space-48) var(--space-48);
+    padding: var(--space-32);
 }
 
 .topbar
@@ -466,6 +464,7 @@ a
     border-radius: var(--radius-12);
     padding: var(--space-24);
     margin-bottom: var(--space-16);
+    min-height: 72px;
 }
 
 .service svg
@@ -499,6 +498,23 @@ a
     min-width: 140px;
 }
 
+.service-pedidos
+{
+    border-color: transparent;
+    border-radius: 0;
+    min-height: 80px;
+}
+
+.service-pedidos .service-text h2
+{
+    font: var(--text-label);
+}
+
+.service-pedidos .service-text p
+{
+    display: none;
+}
+
 .service-badge
 {
     font: 700 13px/18px var(--font);
@@ -506,6 +522,32 @@ a
     color: var(--color-amber);
     border-radius: 999px;
     padding: 2px 10px;
+}
+
+.circulation-row
+{
+    min-height: 56px;
+    padding: var(--space-16);
+    margin-bottom: var(--space-4);
+    background: var(--color-white);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    overflow-wrap: anywhere;
+}
+
+.circulation-actions
+{
+    margin-top: 0;
+}
+
+.circulation-page .page-header
+{
+    margin-bottom: var(--space-8);
+}
+
+.circulation-page #form-consultar-espera
+{
+    align-items: flex-end;
 }
 
 .stats
@@ -620,7 +662,8 @@ a
 
 .field-error input,
 .field-error select,
-.field-error textarea
+.field-error textarea,
+.field-error .selector-perfil
 {
     border-color: var(--color-red);
     background: var(--color-red-soft);
@@ -1033,23 +1076,252 @@ table.table
 
 .login-form
 {
-    padding: var(--space-48) var(--space-48) var(--space-48) 80px;
+    padding: 64px var(--space-48) var(--space-48) 80px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     max-width: 820px;
+}
+
+.search-desktop-heading
+{
+    margin-bottom: var(--space-8);
+}
+
+.search-desktop-links
+{
+    margin: 0 0 var(--space-16);
+}
+
+.search-desktop-links .btn:first-child
+{
+    min-width: 204px;
+}
+
+.search-desktop-links .btn:last-child
+{
+    min-width: 172px;
+}
+
+.search-submit-actions
+{
+    margin-top: 0;
+}
+
+.search-form-card .grid-2
+{
+    row-gap: var(--space-24);
+}
+
+.search-submit-actions .btn-primary
+{
+    min-width: 140px;
 }
 
 .login-form .flowbit
 {
-    width: 120px;
-    margin-bottom: var(--space-48);
+    width: 140px;
+    margin-bottom: var(--space-24);
 }
 
 .login-form h2
 {
-    font: 700 26px/34px var(--font);
+    font: var(--text-heading);
     margin-bottom: var(--space-8);
+}
+
+.login-profile-field
+{
+    margin-top: var(--space-16);
+}
+
+.selector-perfil
+{
+    width: 100%;
+    min-height: 48px;
+    padding: 11px 14px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    background: var(--color-white);
+    color: var(--color-muted);
+    text-align: left;
+    font: var(--text-body);
+    cursor: pointer;
+}
+
+.selector-perfil.selected
+{
+    color: var(--color-ink);
+}
+
+.selector-perfil:focus-visible
+{
+    outline: 2px solid var(--color-gold);
+}
+
+.login-profile-dialog
+{
+    max-width: 440px;
+    background: var(--color-paper);
+}
+
+.login-profile-dialog h2
+{
+    font: var(--text-title);
+}
+
+.login-profile-options
+{
+    display: grid;
+    gap: var(--space-16);
+    margin-top: var(--space-16);
+}
+
+.login-profile-options .btn
+{
+    width: 100%;
+    min-height: 48px;
+    color: var(--color-navy);
+}
+
+/* Búsqueda móvil según el frame 2258:48812 de Figma. */
+.search-mobile-heading
+{
+    display: none;
+}
+
+@media (max-width: 600px)
+{
+    .search-mobile-heading
+    {
+        display: grid;
+        gap: var(--space-16);
+        margin-bottom: var(--space-24);
+    }
+
+    .search-mobile-brand
+    {
+        font: 600 14px/20px var(--font);
+    }
+
+    .search-mobile-heading h1
+    {
+        font: var(--text-heading);
+    }
+
+    .search-mobile-heading p
+    {
+        color: var(--color-muted);
+        margin: 0;
+    }
+
+    .search-mobile-heading .btn
+    {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .search-desktop-heading,
+    .search-desktop-links,
+    .search-form-card h2,
+    .search-desktop-example
+    {
+        display: none;
+    }
+
+    .search-form-card
+    {
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .search-form-card .grid-2
+    {
+        grid-template-columns: 1fr;
+        gap: var(--space-24);
+    }
+
+    .search-submit-actions
+    {
+        flex-direction: column;
+    }
+
+    .search-submit-actions .btn
+    {
+        width: 100%;
+    }
+}
+
+@media (min-width: 601px)
+{
+    .search-mobile-preview
+    {
+        max-width: 390px;
+        margin: 0 auto;
+        box-shadow: var(--shadow-dialog);
+    }
+
+    .search-mobile-preview .sidebar,
+    .search-mobile-preview .topbar,
+    .search-mobile-preview .search-desktop-heading,
+    .search-mobile-preview .search-desktop-links,
+    .search-mobile-preview .search-form-card h2,
+    .search-mobile-preview .search-desktop-example
+    {
+        display: none;
+    }
+
+    .search-mobile-preview .main
+    {
+        padding: var(--space-24);
+    }
+
+    .search-mobile-preview .search-mobile-heading
+    {
+        display: grid;
+        gap: var(--space-16);
+        margin-bottom: var(--space-24);
+    }
+
+    .search-mobile-preview .search-mobile-brand
+    {
+        font: 600 14px/20px var(--font);
+    }
+
+    .search-mobile-preview .search-mobile-heading h1
+    {
+        font: var(--text-heading);
+    }
+
+    .search-mobile-preview .search-mobile-heading p
+    {
+        margin: 0;
+    }
+
+    .search-mobile-preview .search-mobile-heading .btn,
+    .search-mobile-preview .search-submit-actions .btn
+    {
+        width: 100%;
+    }
+
+    .search-mobile-preview .search-form-card
+    {
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .search-mobile-preview .search-form-card .grid-2
+    {
+        grid-template-columns: 1fr;
+        gap: var(--space-24);
+    }
+
+    .search-mobile-preview .search-submit-actions
+    {
+        flex-direction: column;
+    }
 }
 
 /******************************************************************/

@@ -10,6 +10,8 @@
 /*   login_view.enfocar() */
 /*   login_view.enlazar(acciones) */
 /*   login_view.credenciales() */
+/*   login_view.perfiles(lista) */
+/*   login_view.elegir_perfil() */
 /*   login_view.mensaje(tipo, titulo, texto) */
 /*   login_view.marcar(campos) */
 /*   login_view.ocupado(si) */
@@ -29,6 +31,11 @@
 
 const login_view =
 {
+    perfiles_disponibles: [
+        'Administrador del sistema', 'Administrador de biblioteca',
+        'Administrador del catálogo', 'Lector'
+    ],
+
     enfocar: function ()
     {
         document.getElementById('clave').focus();
@@ -43,6 +50,7 @@ const login_view =
             acciones.login();
         });
         document.getElementById('btn-olvide').addEventListener('click', () => acciones.recuperar());
+        document.getElementById('perfil').addEventListener('click', () => this.elegir_perfil());
         document.getElementById('form-restablecer').addEventListener('submit', (elemento_2) =>
         {
             elemento_2.preventDefault();
@@ -55,8 +63,61 @@ const login_view =
         return (
         {
             clave: document.getElementById('clave').value.trim(),
-            contrasena: document.getElementById('contrasena').value
+            contrasena: document.getElementById('contrasena').value,
+            perfil: document.getElementById('perfil').dataset.valor || ''
         });
+    },
+
+    perfiles: function (lista)
+    {
+        if (Array.isArray(lista) && lista.length > 0)
+        {
+            this.perfiles_disponibles = lista.filter((nombre) => typeof nombre === 'string');
+        }
+    },
+
+    elegir_perfil: function ()
+    {
+        const boton = document.getElementById('perfil');
+        const overlay = document.createElement('div');
+        overlay.className = 'overlay';
+        overlay.innerHTML =
+            '<div class="dialog login-profile-dialog" role="dialog" aria-modal="true" ' +
+            'aria-labelledby="perfil-titulo"><h2 id="perfil-titulo">¿Con qué perfil entras?</h2>' +
+            '<p>Elige el perfil asignado a tu cuenta institucional.</p>' +
+            '<div class="login-profile-options">' + this.perfiles_disponibles.map((perfil) =>
+                '<button type="button" class="btn" data-perfil="' + ui.esc(perfil) + '">' +
+                ui.esc(perfil === 'Lector' ? 'Lector (alumno o docente)' : perfil) +
+                '</button>').join('') + '</div></div>';
+        document.body.appendChild(overlay);
+        boton.setAttribute('aria-expanded', 'true');
+
+        const cerrar = () =>
+        {
+            overlay.remove();
+            boton.setAttribute('aria-expanded', 'false');
+            document.removeEventListener('keydown', tecla);
+            boton.focus();
+        };
+        const tecla = (evento) =>
+        {
+            if (evento.key === 'Escape') cerrar();
+        };
+        document.addEventListener('keydown', tecla);
+        overlay.addEventListener('click', (evento) =>
+        {
+            if (evento.target === overlay) cerrar();
+        });
+        overlay.querySelectorAll('[data-perfil]').forEach((opcion) =>
+            opcion.addEventListener('click', () =>
+            {
+                boton.dataset.valor = opcion.dataset.perfil;
+                boton.textContent = opcion.textContent;
+                boton.classList.add('selected');
+                boton.classList.remove('error');
+                cerrar();
+            }));
+        overlay.querySelector('[data-perfil]')?.focus();
     },
 
     mensaje: function (tipo, titulo, texto)

@@ -70,6 +70,7 @@ app.use('/api/libros', libro_routes);
 app.use('/api/busqueda', busqueda_routes);
 app.use('/api/pedidos', pedido_routes);
 app.use('/api/prestamos', prestamo_routes);
+app.use('/api/circulacion', require('./routes/circulacionRoutes'));
 
 /******************************************************************/
 /* Error handlers                                                 */

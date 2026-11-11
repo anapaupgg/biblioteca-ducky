@@ -18,6 +18,16 @@ const { requiere_sesion, requiere_funcion } = require('../middleware/auth');
 
 router.get('/mios', requiere_sesion, requiere_funcion('Buscar libros'), prestamo_controller.mios);
 router.get('/solicitudes', requiere_sesion, requiere_funcion('Préstamos'), prestamo_controller.solicitudes);
+router.get('/activos', requiere_sesion, requiere_funcion('Préstamos', 'Devoluciones'),
+    prestamo_controller.activos);
+router.post('/validar', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.validar_directo);
+router.post('/registrar', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.registrar_directo);
+router.get('/espera/:libro', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.espera);
+router.post('/espera', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.registrar_espera);
 router.post('/solicitudes/:id/autorizar', requiere_sesion, requiere_funcion('Préstamos'),
     prestamo_controller.autorizar);
 

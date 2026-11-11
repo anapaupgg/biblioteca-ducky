@@ -7,7 +7,8 @@
 
 /******************************************************************/
 /* Listing Contents: */
-/*   auth_model.login(clave, contrasena) */
+/*   auth_model.login(clave, contrasena, perfil) */
+/*   auth_model.perfiles_acceso() */
 /*   auth_model.recuperar(clave_o_correo) */
 /*   auth_model.restablecer(token, nueva, confirmacion) */
 /*   auth_model.cambiar_contrasena(actual, nueva, confirmacion) */
@@ -23,13 +24,19 @@
 const auth_model =
 {
     /* POST /auth/login -> { token, usuario, cambiar_contrasena } */
-    login: function (clave, contrasena)
+    login: function (clave, contrasena, perfil)
     {
         return api.post('/auth/login',
         {
             clave: clave,
-            contrasena: contrasena
+            contrasena: contrasena,
+            perfil: perfil
         });
+    },
+
+    perfiles_acceso: function ()
+    {
+        return api.get('/auth/perfiles-acceso');
     },
 
     /* POST /auth/recuperar -> { mensaje } */

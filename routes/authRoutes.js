@@ -25,6 +25,7 @@ const
     requiere_funcion
 } = require('../middleware/auth');
 
+router.get('/perfiles-acceso', auth_controller.perfiles_acceso);
 router.post('/login', auth_controller.login);
 const limite_recuperacion = require('../middleware/limiteRecuperacion');
 

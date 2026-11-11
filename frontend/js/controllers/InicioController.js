@@ -24,6 +24,7 @@ const SERVICIOS = [
     texto: 'Peticiones de usuarios dentro del presupuesto mensual.',
     url: 'pedidos.html',
     icono: 'cart',
+    boton: 'Abrir solicitudes',
     funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
 },
 {
@@ -59,20 +60,29 @@ const SERVICIOS = [
     funciones: ['Buscar libros']
 },
 {
+    id: 'prestamos',
+    titulo: 'Préstamo de libros',
+    texto: 'Registra préstamos, devoluciones, multas y lista de espera.',
+    url: 'prestamos.html',
+    icono: 'retorno',
+    funciones: ['Préstamos']
+},
+{
+    id: 'chatbot',
+    titulo: 'Asistente Ducky',
+    texto: 'Conoce el sistema y resuelve dudas de préstamos, multas y búsqueda.',
+    url: 'chatbot.html',
+    icono: 'document',
+    funciones: ['Chatbot']
+},
+{
     id: 'lista',
     titulo: 'Listado de libros',
     texto: 'Visualiza un listado de los libros disponibles y formatos.',
     url: 'lista_libros.html',
     icono: 'document',
-    funciones: ['Buscar libros']
-},
-{
-    id: 'prestamos',
-    titulo: 'Solicitudes y préstamos',
-    texto: 'Consulta tus préstamos o autoriza las solicitudes pendientes.',
-    url: 'prestamos.html',
-    icono: 'retorno',
-    funciones: ['Buscar libros', 'Préstamos']
+    funciones: ['Buscar libros'],
+    solo_lector: true
 }];
 
 const inicio_controller =
@@ -87,8 +97,14 @@ const inicio_controller =
         if (!usuario) return;
 
         inicio_view.saludo(usuario);
-        inicio_view.servicios(SERVICIOS.filter((registro) => !registro.funciones || registro.funciones
-            .some((filtro) => usuario.funciones.includes(filtro))));
+        const es_lector = usuario.perfil === 'Lector';
+        inicio_view.descripcion(es_lector ?
+            'Servicios de consulta para alumnos, profesores y colaboradores.' :
+            'Selecciona un servicio de tu perfil.');
+        inicio_view.servicios(SERVICIOS.filter((registro) =>
+            (!registro.solo_lector || es_lector) &&
+            registro.funciones.some((filtro) => usuario.funciones.includes(filtro)) &&
+            !(usuario.perfil === 'Administrador del catálogo' && registro.id === 'chatbot')));
 
     }
 };

@@ -85,7 +85,21 @@ const grupos = [
     ['prestamos', 'Buscar libros', [['get', '/mios']]],
     ['prestamos', 'Préstamos', [
         ['get', '/solicitudes'],
-        ['post', '/solicitudes/1/autorizar']
+        ['post', '/solicitudes/1/autorizar'],
+        ['post', '/validar'],
+        ['post', '/registrar'],
+        ['get', '/espera/L000128'],
+        ['post', '/espera']
+    ]],
+    ['prestamos', ['Préstamos', 'Devoluciones'], [['get', '/activos']]],
+    ['circulacion', 'Préstamos', [
+        ['post', '/renovaciones/validar'],
+        ['post', '/renovaciones']
+    ]],
+    ['circulacion', 'Devoluciones', [
+        ['get', '/ejemplar/L000128-01'],
+        ['post', '/devoluciones/validar'],
+        ['post', '/devoluciones']
     ]]
 ];
 const archivos =
@@ -96,7 +110,8 @@ const archivos =
     libros: 'libro',
     busqueda: 'busqueda',
     pedidos: 'pedido',
-    prestamos: 'prestamo'
+    prestamos: 'prestamo',
+    circulacion: 'circulacion'
 };
 const roles =
 {
@@ -237,7 +252,8 @@ async () =>
                     Authorization: 'Bearer ' + token
                 }
             })).status, 401);
-            assert.equal(casos, 351);
+            assert.equal(casos, grupos.reduce((total, [, , rutas]) => total + rutas.length, 0) *
+                Object.keys(roles).length);
         }
         finally
         {

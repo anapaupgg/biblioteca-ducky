@@ -13,6 +13,8 @@
 /*   buscar_view.enlazar(acciones) */
 /*   buscar_view.filtros() */
 /*   buscar_view.limpiar_filtros() */
+/*   buscar_view.activar_movil() */
+/*   buscar_view.ejemplo(campo, valor) */
 /*   buscar_view.resultados(lista, filtros, acciones) */
 /*   buscar_view.ficha(filtro) */
 /*   buscar_view.solicitud(resultado) */
@@ -52,6 +54,21 @@ const buscar_view =
             acciones.buscar();
         });
         document.getElementById('btn-limpiar').addEventListener('click', () => acciones.limpiar());
+        document.getElementById('btn-ejemplo-isbn').addEventListener('click', () =>
+            acciones.ejemplo('isbn', '9786073206037'));
+        document.getElementById('btn-ejemplo-movil').addEventListener('click', () =>
+            acciones.ejemplo('titulo', 'software'));
+    },
+
+    activar_movil: function ()
+    {
+        document.body.classList.add('search-mobile-preview');
+    },
+
+    ejemplo: function (campo, valor)
+    {
+        this.limpiar_filtros();
+        document.getElementById(campo).value = valor;
     },
 
     filtros: function ()

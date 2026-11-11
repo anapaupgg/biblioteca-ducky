@@ -8,6 +8,7 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   inicio_view.saludo(usuario) */
+/*   inicio_view.descripcion(texto) */
 /*   inicio_view.servicios(lista) */
 /******************************************************************/
 
@@ -25,12 +26,19 @@ const inicio_view =
         document.getElementById('nombre-usuario').textContent = usuario.nombre;
     },
 
+    descripcion: function (texto)
+    {
+        document.getElementById('descripcion-inicio').textContent = texto;
+    },
+
     servicios: function (lista)
     {
         document.getElementById('servicios').innerHTML = lista.map((registro) =>
-            '<div class="service">' + layout.icono(registro.icono) +
+            '<div class="service service-' + registro.id + '">' +
+            (registro.id === 'pedidos' ? '' : layout.icono(registro.icono)) +
             '<div class="service-text"><h2>' + ui.esc(registro.titulo) + '</h2>' +
             '<p>' + ui.esc(registro.texto) + '</p></div>' +
-            '<a class="btn btn-primary" href="' + registro.url + '">Abrir</a></div>').join('');
+            '<a class="btn btn-primary" href="' + registro.url + '">' +
+            ui.esc(registro.boton || 'Abrir') + '</a></div>').join('');
     }
 };

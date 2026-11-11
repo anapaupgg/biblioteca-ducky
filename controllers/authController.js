@@ -8,6 +8,7 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   login(solicitud, respuesta) */
+/*   perfiles_acceso(solicitud, respuesta) */
 /*   sesion(solicitud_2, respuesta_2) */
 /*   logout(solicitud_3, respuesta_3) */
 /*   no_disponible(respuesta_4) */
@@ -97,6 +98,13 @@ const login = async (solicitud, respuesta) =>
                 'Tu perfil no tiene funciones asignadas. Contacta al administrador.');
         }
 
+        if (solicitud.body.perfil && solicitud.body.perfil !== sesion.perfil)
+        {
+            await sesion_model.cerrar(resultado.id_sesion);
+            throw new error_negocio(401,
+                'El perfil elegido no corresponde a la cuenta institucional', ['perfil']);
+        }
+
         respuesta.status(200).json(
         {
             token: firmar_token(resultado.id_sesion),
@@ -107,6 +115,18 @@ const login = async (solicitud, respuesta) =>
     catch (error)
     {
         responder_error(respuesta, error, 'login');
+    }
+};
+
+const perfiles_acceso = async (solicitud, respuesta) =>
+{
+    try
+    {
+        respuesta.status(200).json(await sesion_model.perfiles_acceso());
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'auth.perfiles_acceso');
     }
 };
 
@@ -297,6 +317,7 @@ const validar_nueva = (nueva, confirmacion) =>
 module.exports =
 {
     login,
+    perfiles_acceso,
     sesion,
     logout,
     recuperar,

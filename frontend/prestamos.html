@@ -3,7 +3,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
 /* Date: 2026-10-30                                               */
-/* Description: Solicitudes y préstamos según perfil.             */
+/* Description: Préstamos y registro según el prototipo Figma.    */
 /******************************************************************/
 -->
 <!DOCTYPE html>
@@ -14,19 +14,117 @@
         <title>Biblioteca Ducky · Préstamos</title>
         <link rel="stylesheet" href="css/styles.css">
     </head>
-    <body>
+    <body class="circulation-page">
         <div class="app">
             <aside id="sidebar" class="sidebar"></aside>
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
-                    <div class="page-header">
+                    <div class="page-header" id="encabezado-prestamos">
                         <div>
-                            <h1>Solicitudes y préstamos</h1>
-                            <p>Consulta tus préstamos. El personal autorizado puede atender solicitudes pendientes.</p>
+                            <h1 id="titulo-prestamos">Préstamo de libros</h1>
+                            <p id="descripcion-prestamos">Registra préstamos, renovaciones y solicitudes de lista de espera.</p>
                         </div>
                     </div>
                     <div id="mensaje"></div>
+                    <section id="panel-personal" class="hidden">
+                        <div class="actions circulation-actions">
+                            <button class="btn btn-primary" type="button" id="btn-registrar-prestamo">Registrar préstamo</button>
+                            <button class="btn" type="button" id="btn-renovar-prestamo">Renovar préstamo</button>
+                            <button class="btn" type="button" id="btn-lista-espera">Lista de espera</button>
+                            <a class="btn" href="devoluciones.html" id="enlace-devoluciones">Devoluciones</a>
+                        </div>
+                        <div id="aviso-solicitud"></div>
+                        <h2>Préstamos activos</h2>
+                        <div id="prestamos-activos"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-atender-solicitud">Atender solicitud</button>
+                            <a class="btn" href="inicio.html">Volver al inicio</a>
+                        </div>
+                    </section>
+                    <section id="panel-registrar" class="hidden">
+                        <form id="form-registrar-prestamo" novalidate>
+                            <div class="card">
+                                <h2>Datos de la solicitud</h2>
+                                <div class="grid-2">
+                                    <div class="field"><label for="prestamo-usuario">Matrícula o nómina</label>
+                                        <input id="prestamo-usuario" autocomplete="off" maxlength="6" placeholder="Ej. 621234"></div>
+                                    <div class="field"><label for="prestamo-ejemplar">Clave del ejemplar</label>
+                                        <input id="prestamo-ejemplar" autocomplete="off" maxlength="10" placeholder="Ej. B000128-02"></div>
+                                </div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-primary" type="submit">Validar solicitud</button>
+                                <button class="btn" type="button" id="btn-cancelar-registro">Cancelar</button>
+                            </div>
+                        </form>
+                    </section>
+                    <section id="panel-validacion" class="hidden">
+                        <div class="card">
+                            <h2>Solicitante y ejemplar</h2>
+                            <div class="grid-2" id="datos-validacion"></div>
+                        </div>
+                        <div class="alert alert-ok" id="aviso-validacion"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-confirmar-registro">Confirmar y registrar</button>
+                            <button class="btn" type="button" id="btn-volver-registro">Volver a la solicitud</button>
+                        </div>
+                    </section>
+                    <section id="panel-recibo" class="hidden">
+                        <div class="card receipt" id="recibo-prestamo"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-imprimir-recibo">Imprimir recibo</button>
+                            <button class="btn" type="button" id="btn-volver-prestamos">Volver a préstamos</button>
+                        </div>
+                    </section>
+                    <section id="panel-renovar" class="hidden">
+                        <form id="form-renovar" novalidate>
+                            <div class="card">
+                                <h2>Préstamo a renovar</h2>
+                                <div class="grid-2"><div class="field">
+                                    <label for="renovar-ejemplar">Clave del ejemplar prestado</label>
+                                    <input id="renovar-ejemplar" maxlength="10" autocomplete="off" placeholder="Ej. L000128-01">
+                                </div></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-primary" type="submit">Buscar préstamo</button>
+                                <button class="btn" type="button" id="btn-cancelar-renovacion">Cancelar</button>
+                            </div>
+                        </form>
+                    </section>
+                    <section id="panel-renovacion-validada" class="hidden">
+                        <div class="card"><h2>Préstamo a renovar</h2>
+                            <div class="grid-2" id="datos-renovacion"></div></div>
+                        <div class="alert alert-ok" id="aviso-renovacion"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-confirmar-renovacion">Confirmar renovación</button>
+                            <button class="btn" type="button" id="btn-volver-renovacion">Volver</button>
+                        </div>
+                    </section>
+                    <section id="panel-espera" class="hidden">
+                        <form id="form-consultar-espera" class="actions" novalidate>
+                            <div class="field"><label for="espera-libro">Clave del libro</label>
+                                <input id="espera-libro" maxlength="7" autocomplete="off" placeholder="Ej. L000128"></div>
+                            <button class="btn btn-primary" type="submit">Ver lista</button>
+                        </form>
+                        <div id="lista-espera"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-agregar-espera">Agregar a la lista</button>
+                            <button class="btn" type="button" id="btn-volver-espera">Volver a préstamos</button>
+                        </div>
+                    </section>
+                    <section id="panel-agregar-espera" class="hidden">
+                        <form id="form-agregar-espera" novalidate>
+                            <div class="card"><h2>Solicitud de espera</h2><div class="grid-2">
+                                <div class="field"><label for="espera-usuario">Matrícula o nómina</label>
+                                    <input id="espera-usuario" maxlength="6" autocomplete="off" placeholder="Ej. 621234"></div>
+                                <div class="field"><label for="espera-libro-registro">Clave del libro</label>
+                                    <input id="espera-libro-registro" maxlength="7" autocomplete="off" placeholder="Ej. L000128"></div>
+                            </div></div>
+                            <div class="actions"><button class="btn btn-primary" type="submit">Registrar en lista de espera</button>
+                                <button class="btn" type="button" id="btn-cancelar-espera">Cancelar</button></div>
+                        </form>
+                    </section>
                     <section id="panel-mios" class="hidden">
                         <div class="card"><h2>Mis préstamos activos</h2><div id="mis-prestamos"></div></div>
                         <div class="card"><h2>Mis solicitudes</h2><div id="mis-solicitudes"></div></div>

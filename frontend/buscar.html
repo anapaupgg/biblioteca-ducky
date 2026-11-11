@@ -24,17 +24,27 @@
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
-                    <div class="page-header">
+                    <div class="search-mobile-heading">
+                        <div class="search-mobile-brand">BIBLIOTECA DUCKY</div>
+                        <h1>Buscar libros</h1>
+                        <p>Encuentra títulos, autores y su ubicación.</p>
+                        <a class="btn" href="chatbot.html">Preguntar al asistente</a>
+                        <button class="btn" id="btn-ejemplo-movil" type="button">Ejemplo: software</button>
+                    </div>
+                    <div class="page-header search-desktop-heading">
                         <div>
                             <h1>Buscar libros</h1>
                             <p>Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.</p>
                         </div>
+                    </div>
+                    <div class="actions search-desktop-links">
+                        <a class="btn" href="buscar.html?vista=movil">Ver búsqueda en móvil</a>
                         <a class="btn" href="lista_libros.html">Listado de libros</a>
                     </div>
-                    <div class="card">
-                        <h2>Filtros del catálogo activo</h2>
-                        <form id="form-buscar" novalidate>
-                            <div class="grid-3">
+                    <form id="form-buscar" novalidate>
+                        <div class="card search-form-card">
+                            <h2>Filtros del catálogo activo</h2>
+                            <div class="grid-2">
                                 <div class="field"><label for="titulo">Título</label><input id="titulo"
                                         type="search"></div>
                                 <div class="field"><label for="autor">Autor</label><input id="autor"
@@ -48,12 +58,13 @@
                                 <div class="field"><label for="editorial">Editorial</label><input
                                         id="editorial" type="search"></div>
                             </div>
-                            <div class="actions">
-                                <button class="btn btn-primary" type="submit">Buscar</button>
-                                <button class="btn" type="button" id="btn-limpiar">Limpiar filtros</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="actions search-submit-actions">
+                            <button class="btn btn-primary" type="submit">Buscar</button>
+                            <button class="btn search-desktop-example" type="button" id="btn-ejemplo-isbn">Ejemplo por ISBN</button>
+                            <button class="btn" type="button" id="btn-limpiar">Limpiar filtros</button>
+                        </div>
+                    </form>
                     <div id="mensaje"></div>
                     <div id="resultados"></div>
                 </div>

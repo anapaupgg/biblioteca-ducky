@@ -10,6 +10,7 @@
 /*   buscar_controller.iniciar() */
 /*   buscar_controller.buscar() */
 /*   buscar_controller.limpiar() */
+/*   buscar_controller.ejemplo(campo, valor) */
 /*   buscar_controller.solicitar(libro) */
 /*   buscar_controller.ficha(libro) */
 /******************************************************************/
@@ -37,8 +38,11 @@ const buscar_controller =
         buscar_view.enlazar(
         {
             buscar: (...argumentos) => this.buscar(...argumentos),
-            limpiar: () => this.limpiar()
+            limpiar: () => this.limpiar(),
+            ejemplo: (campo, valor) => this.ejemplo(campo, valor)
         });
+
+        if (ui.param('vista') === 'movil') buscar_view.activar_movil();
 
         const consulta = ui.param('q');
         if (consulta)
@@ -53,6 +57,13 @@ const buscar_controller =
     {
         this.version_consulta++;
         buscar_view.limpiar_filtros();
+    },
+
+    ejemplo: function (campo, valor)
+    {
+        this.version_consulta++;
+        buscar_view.ejemplo(campo, valor);
+        this.buscar();
     },
 
     buscar: async function ()
