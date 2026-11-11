@@ -24,18 +24,22 @@
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
-                    <div class="page-header">
+                    <div class="page-header catalogo-encabezado">
                         <div>
                             <h1>Gestionar libros</h1>
                             <p>Fichas bibliográficas, catálogo, solicitudes y listas.</p>
                         </div>
-                        <div class="actions" style="margin:0"><a class="btn"
-                                href="pedidos.html#recepcion">Recibir libros adquiridos</a><a
-                                class="btn btn-primary" href="libro_form.html">Crear ficha bibliográfica</a>
-                        </div>
                     </div>
-                    <div class="stats" id="stats"></div>
-                    <div class="card">
+                    <div class="actions"><a class="btn btn-primary" href="pedidos.html#recepcion">Recibir libros adquiridos</a></div>
+                    <div id="tabla"></div>
+                    <div class="actions catalogo-acciones">
+                        <a class="btn btn-primary" href="libro_form.html">Crear ficha bibliográfica</a>
+                        <button class="btn" id="accion-ficha" type="button" disabled>Consultar ficha</button>
+                        <a class="btn" href="pedidos.html">Solicitar libros a Tesorería</a>
+                    </div>
+                    <div class="actions catalogo-acciones-secundarias"><a class="btn" href="lista_libros.html">Lista de libros</a></div>
+                    <details class="catalogo-filtros">
+                        <summary>Filtrar catálogo completo</summary>
                         <div class="filters">
                             <div class="field"><label for="q">Buscar por Clave, Título o ISBN</label><input
                                     id="q" type="search" placeholder="Ej. L000128 o Ingeniería"></div>
@@ -48,8 +52,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="tabla"></div>
-                    </div>
+                    </details>
                 </div>
             </main>
         </div>

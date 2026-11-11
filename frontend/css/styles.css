@@ -785,6 +785,75 @@ a
     background: var(--color-blue-soft);
 }
 
+.catalogo-encabezado
+{
+    margin-bottom: var(--space-8);
+}
+
+.catalogo-lista
+{
+    display: grid;
+    gap: 4px;
+    max-height: 176px;
+    overflow-y: auto;
+}
+
+.catalogo-fila
+{
+    display: block;
+    width: 100%;
+    min-height: 56px;
+    overflow: hidden;
+    padding: var(--space-16);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    background: var(--color-white);
+    color: var(--color-ink);
+    font: 400 16px/24px var(--font);
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.catalogo-cabecera
+{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.catalogo-registro
+{
+    cursor: pointer;
+}
+
+.catalogo-registro:hover,
+.catalogo-registro[aria-selected="true"]
+{
+    background: var(--color-blue-soft);
+}
+
+.catalogo-acciones
+{
+    margin-bottom: 0;
+}
+
+.catalogo-acciones-secundarias
+{
+    margin-top: var(--space-12);
+}
+
+.catalogo-filtros
+{
+    margin-top: var(--space-24);
+    color: var(--color-muted);
+}
+
+.catalogo-filtros .filters
+{
+    padding-top: var(--space-16);
+}
+
 /******************************************************************/
 /* COMPONENTS · Table rows                                        */
 /******************************************************************/

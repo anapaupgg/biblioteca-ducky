@@ -47,12 +47,7 @@ const libros_controller =
             const filtros = libros_view.filtros();
             const libros = await libro_model.listar(filtros);
             if (version !== this.version_consulta) return;
-            if (!filtros.q && !filtros.estatus) libros_view.estadisticas(libros);
-            libros_view.tabla(libros, (libro) =>
-            {
-                window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(libro
-                    .id_libro);
-            });
+            libros_view.tabla(libros);
         }
         catch (error)
         {

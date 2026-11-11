@@ -1,3 +1,15 @@
+ACTUALIZACIÓN — CATÁLOGO SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
+- Frame 2010:23308 cotejado con navegador: recepción, filas compactas y
+  acciones bajo la lista. Se agregó condición de ejemplares a la consulta
+  SQL existente; la lista admite desplazamiento para todos los libros reales.
+  Seleccionar una fila habilita Consultar ficha; el filtro anterior permanece
+  plegado debajo para encontrar fichas creadas o libros retirados.
+- Se comprobó selección de Ingeniería de software en navegador y las pruebas
+  de filtros, concurrencia y MVC (11 aprobadas). No se alteraron datos.
+- Pendiente cotejar formularios y estados secundarios de catálogo y compras.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ASISTENTE SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
 - Frame 2483:74914 cotejado con navegador. Conversación inicial, campo de
   pregunta, ocho sugerencias en dos grupos y regreso al inicio siguen la

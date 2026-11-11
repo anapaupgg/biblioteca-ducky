@@ -57,7 +57,8 @@ const listar = (
                    FROM libro_autor la JOIN autores a USING (id_autor) WHERE la.id_libro = l.id_libro) AS autores,
                 count(x.id_ejemplar) FILTER (WHERE x.estatus <> 'Baja')::int        AS ejemplares,
                 count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Disponible')::int   AS disponibles,
-                count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Prestado')::int     AS prestados
+                count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Prestado')::int     AS prestados,
+                string_agg(DISTINCT x.condicion, ', ') FILTER (WHERE x.estatus <> 'Baja') AS condiciones
            FROM libros l
            JOIN editoriales e ON e.id_editorial = l.id_editorial
            JOIN temas t       ON t.id_tema = l.id_tema

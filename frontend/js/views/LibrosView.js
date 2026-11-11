@@ -9,8 +9,7 @@
 /* Listing Contents: */
 /*   libros_view.enlazar(acciones) */
 /*   libros_view.filtros() */
-/*   libros_view.estadisticas(libros) */
-/*   libros_view.tabla(libros, al_abrir) */
+/*   libros_view.tabla(libros) */
 /******************************************************************/
 
 /******************************************************************/
@@ -32,6 +31,11 @@ const libros_view =
             espera = setTimeout(() => acciones.cargar(), 250);
         });
         document.getElementById('estatus').addEventListener('change', () => acciones.cargar());
+        document.getElementById('accion-ficha').addEventListener('click', () =>
+        {
+            const libro = this.libros?.find((registro) => registro.id_libro === this.clave_seleccionada);
+            if (libro) window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(libro.id_libro);
+        });
     },
 
     filtros: function ()
@@ -39,62 +43,31 @@ const libros_view =
         return ui.leer(['q', 'estatus']);
     },
 
-    estadisticas: function (libros)
+    tabla: function (libros)
     {
-        const suma = (campo) => libros.reduce((registro, libro) => registro + libro[campo], 0);
-        document.getElementById('stats').innerHTML =
-            '<div class="stat"><span>Fichas</span><strong>' + libros.length + '</strong></div>' +
-            '<div class="stat"><span>Activos en catálogo</span><strong>' + libros.filter((libro_2) =>
-                libro_2.estatus === 'Activo en catálogo').length + '</strong></div>' +
-            '<div class="stat"><span>Ejemplares</span><strong>' + suma('ejemplares') +
-            '</strong></div>' +
-            '<div class="stat"><span>Disponibles</span><strong>' + suma('disponibles') +
-            '</strong></div>' +
-            '<div class="stat"><span>Prestados</span><strong>' + suma('prestados') +
-            '</strong></div>';
-    },
-
-    tabla: function (libros, al_abrir)
-    {
-        ui.tabla('tabla',
-            [
+        this.libros = libros;
+        if (!libros.some((libro) => libro.id_libro === this.clave_seleccionada))
+            this.clave_seleccionada = null;
+        document.getElementById('tabla').innerHTML =
+            '<div class="catalogo-lista" role="listbox" aria-label="Libros del catálogo">' +
+            '<div class="catalogo-fila catalogo-cabecera">Clave · ISBN · Título · Autor · Editorial · Condición</div>' +
+            (libros.length ? libros.map((libro) =>
+                '<button class="catalogo-fila catalogo-registro" type="button" role="option" data-libro="' +
+                ui.esc(libro.id_libro) + '" aria-selected="' +
+                (libro.id_libro === this.clave_seleccionada) + '" title="' +
+                ui.esc(libro.titulo) + '">' + ui.esc([
+                    libro.id_libro, libro.isbn, libro.titulo, libro.autores || 'Sin autor',
+                    libro.editorial, libro.condiciones || 'Sin ejemplares'].join(' · ')) +
+                '</button>').join('') :
+                '<div class="catalogo-fila muted">No hay libros con ese filtro</div>') + '</div>';
+        document.querySelectorAll('[data-libro]').forEach((fila) =>
+            fila.addEventListener('click', () =>
             {
-                titulo: 'Clave',
-                valor: (libro_3) => '<strong>' + ui.esc(libro_3.id_libro) + '</strong>'
-            },
-            {
-                titulo: 'Título',
-                valor: (libro_4) => ui.esc(libro_4.titulo) + '<div class="small muted">' + ui
-                    .esc(libro_4.autores || 'Sin autor') + '</div>'
-            },
-            {
-                titulo: 'ISBN',
-                valor: (libro_5) => ui.esc(libro_5.isbn)
-            },
-            {
-                titulo: 'Editorial',
-                valor: (libro_6) => ui.esc(libro_6.editorial)
-            },
-            {
-                titulo: 'Formato',
-                valor: (libro_7) => ui.esc(libro_7.formato)
-            },
-            {
-                titulo: 'Ejemplares',
-                valor: (libro_8) => libro_8.disponibles + ' disp. / ' + libro_8.ejemplares
-            },
-            {
-                titulo: 'Estatus',
-                valor: (libro_9) => ui.badge(libro_9.estatus)
-            },
-            {
-                titulo: '',
-                valor: (libro_10) => '<a class="btn btn-sm" href="libro_detalle.html?id=' +
-                    encodeURIComponent(libro_10.id_libro) + '">Consultar ficha</a>'
-            }], libros,
-            {
-                vacio: 'No hay libros con ese filtro',
-                al_click: al_abrir
-            });
+                this.clave_seleccionada = fila.dataset.libro;
+                document.querySelectorAll('[data-libro]').forEach((otra) =>
+                    otra.setAttribute('aria-selected', String(otra === fila)));
+                document.getElementById('accion-ficha').disabled = false;
+            }));
+        document.getElementById('accion-ficha').disabled = !this.clave_seleccionada;
     }
 };
