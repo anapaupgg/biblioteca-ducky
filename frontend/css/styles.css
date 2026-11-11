@@ -738,6 +738,53 @@ a
     flex: 1;
 }
 
+.usuarios-filtros
+{
+    gap: var(--space-24);
+}
+
+.usuarios-acciones
+{
+    margin-bottom: 0;
+}
+
+.usuarios-acciones-secundarias
+{
+    margin-top: var(--space-12);
+}
+
+.usuarios-lista
+{
+    display: grid;
+    gap: 4px;
+}
+
+.usuarios-fila
+{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 56px;
+    padding: var(--space-16);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    background: var(--color-white);
+    color: var(--color-ink);
+    font: 400 16px/24px var(--font);
+    text-align: left;
+}
+
+.usuarios-registro
+{
+    cursor: pointer;
+}
+
+.usuarios-registro:hover,
+.usuarios-registro[aria-selected="true"]
+{
+    background: var(--color-blue-soft);
+}
+
 /******************************************************************/
 /* COMPONENTS · Table rows                                        */
 /******************************************************************/
@@ -1762,4 +1809,107 @@ table.table
 {
     white-space: normal;
     text-align: left;
+}
+
+.sr-only
+{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+.faq-chat
+{
+    max-width: none;
+}
+
+.faq-chat .chatbot-messages
+{
+    min-height: 0;
+    max-height: 360px;
+    padding: 0;
+    background: var(--color-white);
+}
+
+.faq-chat .msg
+{
+    width: min(100%, 652px);
+    max-width: 100%;
+    padding: 12px 16px;
+    border-radius: var(--radius-12);
+}
+
+.faq-chat .msg-bot
+{
+    background: var(--color-paper);
+    border: 0;
+}
+
+.faq-chat .msg strong
+{
+    display: block;
+    margin-bottom: 6px;
+    font: 600 14px/20px var(--font);
+}
+
+.faq-form
+{
+    display: flex;
+    align-items: end;
+    gap: var(--space-12);
+    margin: var(--space-16) 0;
+    padding: 0;
+    border: 0;
+}
+
+.faq-form .field
+{
+    flex: 1;
+    min-width: 0;
+}
+
+.faq-form input
+{
+    width: 100%;
+}
+
+.faq-form .btn
+{
+    min-height: 48px;
+}
+
+.faq-sugerencias
+{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: var(--space-12);
+    padding: 0;
+    margin: 0 0 var(--space-16);
+    background: transparent;
+}
+
+.faq-grupo-titulo
+{
+    margin: 0;
+    font: 600 14px/20px var(--font);
+}
+
+.faq-preguntas
+{
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-12);
+}
+
+.faq-sugerencias button
+{
+    min-height: 48px;
+    border-radius: var(--radius-8);
+    padding: 12px;
+    font: 600 14px/20px var(--font);
+    text-align: center;
 }

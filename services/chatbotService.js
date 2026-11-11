@@ -11,6 +11,8 @@
 /*   palabras(texto) */
 /*   intencion(texto) */
 /*   buscar_faq(lista, texto) */
+/*   sugerencias_sistema() */
+/*   responder_sistema(texto, usuario) */
 /******************************************************************/
 
 /******************************************************************/
@@ -85,10 +87,42 @@ function buscar_faq(lista, texto)
             .id_pregunta)
         .slice(0, 3).map(resultado => resultado.fila);
 }
+const PREGUNTAS_SISTEMA = [
+    '¿Cuál es el objetivo del sistema?',
+    '¿Qué incluye el sistema?',
+    '¿En qué plataformas funciona?',
+    '¿Qué puedo hacer según mi perfil?',
+    '¿Cómo encuentro un libro?'
+];
+const sugerencias_sistema = () => PREGUNTAS_SISTEMA.map((pregunta) => ({
+    pregunta,
+    grupo: pregunta === '¿Cómo encuentro un libro?' ? 'Uso de la biblioteca' : 'Sobre el sistema'
+}));
+
+function responder_sistema(texto, usuario)
+{
+    const indice = PREGUNTAS_SISTEMA.findIndex((pregunta) => normalizar(pregunta) ===
+        normalizar(texto));
+    if (indice < 0) return null;
+    const respuestas = [
+        'Facilitar la consulta y circulación de libros, y administrar usuarios, catálogo y préstamos de la Biblioteca Ducky.',
+        'Incluye usuarios y perfiles, fichas y catálogo, búsqueda, solicitudes de compra, préstamos, devoluciones, multas, lista de espera y este asistente.',
+        'Es una aplicación web para navegadores de escritorio y móvil. Necesita conexión al servidor de la biblioteca.',
+        'Tu perfil tiene estas funciones: ' + (usuario?.funciones?.join(', ') || 'consulta al personal de biblioteca') + '.',
+        'Abre Buscar libros y filtra por título, autor, tema o ISBN. En cada resultado puedes ver la ficha, ubicación y disponibilidad.'
+    ];
+    return {
+        pregunta: PREGUNTAS_SISTEMA[indice],
+        respuesta: respuestas[indice],
+        fuentes: ['Funciones de Biblioteca Ducky']
+    };
+}
 module.exports =
 {
     normalizar,
     palabras,
     intencion,
-    buscar_faq
+    buscar_faq,
+    sugerencias_sistema,
+    responder_sistema
 };

@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — ASISTENTE SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
+- Frame 2483:74914 cotejado con navegador. Conversación inicial, campo de
+  pregunta, ocho sugerencias en dos grupos y regreso al inicio siguen la
+  distribución del prototipo. Las cinco preguntas nuevas tienen respuesta
+  explícita del sistema; las otras tres conservan FAQ y fuentes de PostgreSQL.
+- Consulta visual de «objetivo del sistema» respondió sin repetir un mensaje
+  genérico. El asistente aún no muestra préstamos personales; no afirmar que sí.
+- Sin db:init ni cambios de esquema o datos permanentes de prueba.
+
+---------------- REGISTRO ANTERIOR ----------------
+
+ACTUALIZACIÓN — GESTIÓN DE USUARIOS SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
+- Frame 2007:4863 cotejado con la pantalla real en navegador. Los filtros
+  ocupan columnas iguales; filas de 56 px y acciones globales bajo la tarjeta.
+  Se selecciona una fila para consultar/modificar, dar de baja o reactivar;
+  el estado del usuario determina qué acción está disponible. No se efectuó
+  ninguna baja o reactivación real durante la revisión visual.
+- Suite completa con PostgreSQL: 48 pruebas aprobadas; git diff --check limpio.
+- Frame 2010:23308 revisado: Gestionar libros aún muestra métricas, filtros y
+  tabla que no están en el frame inicial. Su alineación debe conservar acceso
+  operativo a todos los libros, no solo las dos filas de ejemplo de Figma.
+- Cambio local propio posterior a c295e8a; package-lock.json ajeno se conserva.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PÉRDIDA, MULTAS Y PAGOS SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
 - Continuación local del avance propio dc15d66; origin/main estaba sincronizado
   tras el push. package-lock.json sigue siendo un cambio local ajeno y se excluye.

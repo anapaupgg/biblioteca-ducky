@@ -52,7 +52,8 @@ const chatbot_view =
     /* respuesta(datos): contrato JSON de /api/chatbot; contenido siempre como texto. */
     respuesta(datos)
     {
-        this.mensaje(datos.mensaje, 'bot');
+        if (!datos.resultados?.length || datos.libros?.length)
+            this.mensaje(datos.mensaje, 'bot');
         datos.resultados.forEach(pregunta => this.mensaje(pregunta.pregunta + '\n' + pregunta.respuesta,
             'bot', pregunta.fuentes));
         (datos.libros || []).forEach(libro => this.mensaje(
@@ -77,14 +78,27 @@ const chatbot_view =
     {
         const caja = document.getElementById('chat-sugerencias');
         caja.replaceChildren();
-        lista.forEach(filtro =>
+        ['Sobre el sistema', 'Uso de la biblioteca'].forEach((grupo) =>
         {
-            const boton_2 = document.createElement('button');
-            boton_2.type = 'button';
-            boton_2.className = 'btn';
-            boton_2.textContent = filtro.pregunta;
-            boton_2.onclick = () => preguntar(filtro.pregunta);
-            caja.appendChild(boton_2);
+            const preguntas = lista.filter((filtro) =>
+                (filtro.grupo || 'Uso de la biblioteca') === grupo);
+            if (!preguntas.length) return;
+            const titulo = document.createElement('h2');
+            titulo.className = 'faq-grupo-titulo';
+            titulo.textContent = grupo;
+            caja.appendChild(titulo);
+            const fila = document.createElement('div');
+            fila.className = 'faq-preguntas';
+            preguntas.forEach((filtro) =>
+            {
+                const boton = document.createElement('button');
+                boton.type = 'button';
+                boton.className = 'btn';
+                boton.textContent = filtro.pregunta;
+                boton.onclick = () => preguntar(filtro.pregunta);
+                fila.appendChild(boton);
+            });
+            caja.appendChild(fila);
         });
     },
     mensaje(texto, tipo, fuentes = [])
@@ -92,6 +106,9 @@ const chatbot_view =
         const caja = document.getElementById('chat-mensajes');
         const mensaje = document.createElement('div');
         mensaje.className = 'msg ' + (tipo === 'usuario' ? 'msg-user' : 'msg-bot');
+        const autor = document.createElement('strong');
+        autor.textContent = tipo === 'usuario' ? 'Tú' : 'Asistente Ducky';
+        mensaje.appendChild(autor);
         const elemento = document.createElement('p');
         elemento.textContent = texto;
         mensaje.appendChild(elemento);

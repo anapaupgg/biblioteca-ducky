@@ -27,6 +27,7 @@ const usuarios_view =
     /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
     enlazar: function (acciones)
     {
+        this.acciones = acciones;
         let espera = null;
         document.getElementById('q').addEventListener('input', () =>
         {
@@ -34,6 +35,27 @@ const usuarios_view =
             espera = setTimeout(() => acciones.cargar(), 250);
         });
         document.getElementById('estatus').addEventListener('change', () => acciones.cargar());
+        document.getElementById('accion-consultar').addEventListener('click', () =>
+            this.con_usuario((usuario) =>
+            {
+                window.location.href = 'usuario_editar.html?clave=' + encodeURIComponent(usuario.clave);
+            }));
+        document.getElementById('accion-baja').addEventListener('click', () =>
+            this.con_usuario(acciones.baja));
+        document.getElementById('accion-reactivar').addEventListener('click', () =>
+            this.con_usuario(acciones.reactivar));
+    },
+
+    con_usuario: function (accion)
+    {
+        const usuario = this.usuarios?.find((registro) => registro.clave === this.clave_seleccionada);
+        if (!usuario)
+        {
+            this.mensaje('info', 'Selecciona un usuario',
+                'Elige una fila de la lista para continuar.');
+            return;
+        }
+        accion(usuario);
     },
 
     filtros: function ()
@@ -43,50 +65,40 @@ const usuarios_view =
 
     tabla: function (usuarios, acciones)
     {
-        ui.tabla('tabla',
-            [
+        this.usuarios = usuarios;
+        if (!usuarios.some((usuario) => usuario.clave === this.clave_seleccionada))
+            this.clave_seleccionada = null;
+        document.getElementById('tabla').innerHTML =
+            '<div class="usuarios-lista" role="listbox" aria-label="Usuarios de la biblioteca">' +
+            '<div class="usuarios-fila usuarios-cabecera">Clave · Nombre · Tipo · Perfil · Estatus</div>' +
+            (usuarios.length ? usuarios.map((usuario) =>
+                '<button type="button" role="option" class="usuarios-fila usuarios-registro" data-usuario="' +
+                ui.esc(usuario.clave) + '" aria-selected="' +
+                (usuario.clave === this.clave_seleccionada) + '">' +
+                ui.esc([usuario.clave, usuario.nombre, usuario.tipo, usuario.perfil,
+                    usuario.estatus].join(' · ')) + '</button>').join('') :
+                '<div class="usuarios-fila muted">Usuario no encontrado: no hay coincidencias con el filtro</div>') +
+            '</div>';
+        document.querySelectorAll('[data-usuario]').forEach((fila) =>
+            fila.addEventListener('click', () =>
             {
-                titulo: 'Clave',
-                valor: (usuario_2) => '<strong>' + ui.esc(usuario_2.clave) + '</strong>'
-            },
-            {
-                titulo: 'Nombre',
-                valor: (usuario_3) => ui.esc(usuario_3.nombre) + '<div class="small muted">' +
-                    ui.esc(usuario_3.correo) + '</div>'
-            },
-            {
-                titulo: 'Tipo',
-                valor: (usuario_4) => ui.esc(usuario_4.tipo)
-            },
-            {
-                titulo: 'Perfil',
-                valor: (usuario_5) => ui.esc(usuario_5.perfil)
-            },
-            {
-                titulo: 'Estatus',
-                valor: (usuario_6) => ui.badge(usuario_6.estatus)
-            },
-            {
-                titulo: '',
-                valor: (usuario_7) => '<div class="row-actions">' +
-                    (usuario_7.estatus === 'Activo' ?
-                        '<a class="btn btn-sm" href="usuario_editar.html?clave=' +
-                        encodeURIComponent(usuario_7.clave) + '">Consultar y modificar</a>' +
-                        '<button class="btn btn-sm btn-danger" data-baja="' + ui.esc(usuario_7
-                            .clave) + '">Dar de baja</button>' :
-                        '<button class="btn btn-sm btn-primary" data-reactivar="' + ui.esc(
-                            usuario_7.clave) + '">Reactivar</button>') + '</div>'
-            }], usuarios,
-            {
-                vacio: 'Usuario no encontrado: no hay coincidencias con el filtro'
-            });
+                this.clave_seleccionada = fila.dataset.usuario;
+                document.querySelectorAll('[data-usuario]').forEach((otra) =>
+                    otra.setAttribute('aria-selected', String(otra === fila)));
+                this.actualizar_acciones();
+            }));
+        this.actualizar_acciones();
+    },
 
-        document.querySelectorAll('[data-baja]').forEach((boton) =>
-            boton.addEventListener('click', () => acciones.baja(usuarios.find((usuario_8) =>
-                usuario_8.clave === boton.dataset.baja))));
-        document.querySelectorAll('[data-reactivar]').forEach((boton_2) =>
-            boton_2.addEventListener('click', () => acciones.reactivar(usuarios.find((
-                usuario_9) => usuario_9.clave === boton_2.dataset.reactivar))));
+    actualizar_acciones: function ()
+    {
+        const usuario = this.usuarios?.find((registro) => registro.clave === this.clave_seleccionada);
+        const inactivo = usuario?.estatus === 'Inactivo';
+        document.getElementById('accion-consultar').disabled = !usuario || inactivo;
+        document.getElementById('accion-baja').disabled = !usuario || inactivo;
+        document.getElementById('accion-reactivar').disabled = !inactivo;
+        document.getElementById('accion-reactivar').textContent = inactivo ?
+            'Reactivar a ' + usuario.nombre : 'Reactivar usuario';
     },
 
     dialogo_baja: function (usuario, motivos, al_confirmar)

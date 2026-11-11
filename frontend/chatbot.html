@@ -25,27 +25,22 @@ Reuse Instructions: servir desde Express; conservar IDs usados por la vista.
                 <div id="contenido">
                     <div class="page-header">
                         <div>
-                            <h1>Asistente de biblioteca</h1>
-                            <p>Consulta el catálogo y las preguntas frecuentes de la biblioteca.</p>
+                            <h1>Asistente Ducky</h1>
                         </div>
                     </div>
                     <section class="card faq-chat" aria-label="Conversación con el asistente">
-                        <p class="muted">Escribe «¿Qué libros hay?», «Libros de programación» o «¿Tienen Cien
-                            años de soledad?». También puedo orientarte sobre plazos, multas y renovaciones.
-                            Para ver fichas y solicitar libros utiliza <a href="buscar.html">Buscar
-                                libros</a>. No escribas contraseñas ni datos personales.</p>
-                        <div id="chat-estado" role="status"></div><button id="chat-reintentar"
-                            class="btn hidden" type="button">Reintentar carga</button>
-                        <div id="chat-sugerencias" class="chatbot-suggestions"
-                            aria-label="Preguntas sugeridas"></div>
+                        <h2>Conversación</h2>
                         <div id="chat-mensajes" class="chatbot-messages" role="log" aria-live="polite"
-                            aria-label="Mensajes"></div>
-                        <form id="chat-form" class="chatbot-form"><label for="chat-pregunta" class="small">Tu
-                                pregunta</label><input id="chat-pregunta" name="pregunta" minlength="3"
-                                maxlength="300" required autocomplete="off"
-                                placeholder="Ej. Libros de programación"><button id="chat-enviar"
-                                class="btn btn-primary" type="submit">Enviar</button></form>
+                            aria-label="Mensajes"><div class="msg msg-bot"><strong>Asistente Ducky</strong><p>Hola, soy el asistente de la Biblioteca Ducky. Pregúntame qué es el sistema, qué incluye y en qué plataformas funciona, o resuelve dudas de préstamos, multas y búsqueda.</p></div></div>
                     </section>
+                    <div id="chat-estado" class="sr-only" role="status"></div>
+                    <button id="chat-reintentar" class="btn hidden" type="button">Reintentar carga</button>
+                    <form id="chat-form" class="chatbot-form faq-form"><div class="field"><label for="chat-pregunta">Pregunta</label><input id="chat-pregunta" name="pregunta" minlength="3"
+                            maxlength="300" required autocomplete="off" placeholder="Escribe tu pregunta"></div><button id="chat-enviar"
+                            class="btn btn-primary" type="submit">Enviar</button></form>
+                    <div id="chat-sugerencias" class="chatbot-suggestions faq-sugerencias"
+                        aria-label="Preguntas sugeridas"></div>
+                    <a class="btn" href="inicio.html">Volver al inicio</a>
                 </div>
             </main>
         </div>

@@ -35,6 +35,8 @@ async function consultar(solicitud, respuesta)
             throw new error_negocio(400, 'Escribe una pregunta de 3 a 300 caracteres.');
         if (texto !== undefined)
         {
+            const sistema = chatbot_servicio.responder_sistema(texto, solicitud.usuario);
+            if (sistema) return respuesta.json({ resultados: [sistema], mensaje: 'Respuesta del sistema:' });
             const intent = chatbot_servicio.intencion(texto);
             if (intent.tipo === 'personal') return respuesta.json(
             {
@@ -62,15 +64,21 @@ async function consultar(solicitud, respuesta)
         const lista = await modelo.listar();
         if (texto === undefined) return respuesta.json(
         {
-            sugerencias: lista.map((
+            sugerencias: [
+                ...chatbot_servicio.sugerencias_sistema().filter((sugerencia) =>
+                    sugerencia.grupo === 'Sobre el sistema'),
+                ...lista.map((
             {
                 id_pregunta,
                 pregunta
             }) => (
             {
                 id_pregunta,
-                pregunta
-            }))
+                pregunta,
+                grupo: 'Uso de la biblioteca'
+            })),
+                ...chatbot_servicio.sugerencias_sistema().filter((sugerencia) =>
+                    sugerencia.grupo === 'Uso de la biblioteca')]
         });
         const resultados = chatbot_servicio.buscar_faq(lista, texto);
         return respuesta.json(

@@ -29,15 +29,14 @@
                             <h1>Gestión de usuarios</h1>
                             <p>Consulta usuarios, perfiles y estatus institucional.</p>
                         </div>
-                        <a class="btn btn-primary" href="usuario_registrar.html">Registrar usuario</a>
                     </div>
                     <div id="mensaje"></div>
                     <div class="card">
                         <h2>Usuarios de la biblioteca</h2>
-                        <div class="filters">
+                        <div class="filters usuarios-filtros">
                             <div class="field"><label for="q">Buscar por Clave o Nombre</label><input id="q"
                                     type="search" placeholder="Clave o nombre"></div>
-                            <div class="field" style="max-width:260px"><label for="estatus">Estatus</label>
+                            <div class="field"><label for="estatus">Estatus</label>
                                 <select id="estatus">
                                     <option value="">Todos</option>
                                     <option>Activo</option>
@@ -46,6 +45,15 @@
                             </div>
                         </div>
                         <div id="tabla"></div>
+                    </div>
+                    <div class="actions usuarios-acciones">
+                        <a class="btn btn-primary" href="usuario_registrar.html">Registrar usuario</a>
+                        <button class="btn" id="accion-consultar" type="button">Consultar y modificar</button>
+                        <button class="btn btn-danger" id="accion-baja" type="button">Dar de baja</button>
+                    </div>
+                    <div class="actions usuarios-acciones usuarios-acciones-secundarias">
+                        <button class="btn" id="accion-reactivar" type="button">Reactivar usuario</button>
+                        <a class="btn" href="perfiles.html">Administrar perfiles</a>
                     </div>
                 </div>
             </main>

@@ -90,7 +90,16 @@ test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desc
             ]) assert.equal((await pedir(q)).data.resultados[0].id_pregunta, id);
         assert.deepEqual((await pedir('¿Cuál es mi contraseña?')).data.resultados, []);
         assert.deepEqual((await pedir('multa')).data.resultados[0].fuentes, ['Regla 3']);
-        assert.equal((await pedir()).data.sugerencias.length, 3);
+        const sugerencias = (await pedir()).data.sugerencias;
+        assert.equal(sugerencias.length, 8);
+        assert.deepEqual(sugerencias.map((fila) => fila.grupo).slice(0, 4),
+            Array(4).fill('Sobre el sistema'));
+        const objetivo = await pedir('¿Cuál es el objetivo del sistema?');
+        assert.match(objetivo.data.resultados[0].respuesta, /consulta y circulación/);
+        const perfil = await pedir('¿Qué puedo hacer según mi perfil?', ['Chatbot']);
+        assert.match(perfil.data.resultados[0].respuesta, /Chatbot/);
+        const buscar = await pedir('¿Cómo encuentro un libro?');
+        assert.match(buscar.data.resultados[0].respuesta, /Buscar libros/);
         for (const q of ['',
                 {
                 },

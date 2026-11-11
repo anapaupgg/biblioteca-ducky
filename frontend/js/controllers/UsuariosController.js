@@ -39,7 +39,9 @@ const usuarios_controller =
 
         usuarios_view.enlazar(
         {
-            cargar: (...argumentos) => this.cargar(...argumentos)
+            cargar: (...argumentos) => this.cargar(...argumentos),
+            baja: (usuario) => this.baja(usuario),
+            reactivar: (usuario) => this.reactivar(usuario)
         });
 
         await this.asegurar_catalogos();
