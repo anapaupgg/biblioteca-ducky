@@ -44,6 +44,11 @@ const libro_form_view =
             .ajustar_formato());
         document.getElementById('menos').addEventListener('click', () => libro_form_view.copias(-1));
         document.getElementById('mas').addEventListener('click', () => libro_form_view.copias(1));
+        document.getElementById('btn-sinopsis-ejemplo').addEventListener('click', () =>
+        {
+            document.getElementById('sinopsis').value =
+                'Principios de ingeniería de software, requisitos, diseño, pruebas y mantenimiento de sistemas.';
+        });
         document.getElementById('form-libro').addEventListener('submit', (elemento) =>
         {
             elemento.preventDefault();
@@ -68,9 +73,12 @@ const libro_form_view =
     modo_edicion: function (ficha)
     {
         const libro = ficha.libro;
-        document.getElementById('titulo-pagina').textContent = 'Modificar libro del catálogo · ' +
-            libro.id_libro;
-        document.getElementById('btn-guardar').textContent = 'Guardar cambios';
+        document.getElementById('titulo-pagina').textContent = 'Modificar libro del catálogo';
+        document.getElementById('descripcion-pagina').textContent =
+            'Se guardarán únicamente los campos modificados.';
+        document.getElementById('titulo-datos-libro').textContent = 'Datos del libro';
+        document.getElementById('clave').value = libro.id_libro;
+        document.getElementById('btn-guardar').textContent = 'Guardar modificación';
         document.getElementById('btn-cancelar').href = 'libro_detalle.html?id=' + encodeURIComponent(
             libro.id_libro);
         const valores =
@@ -96,6 +104,8 @@ const libro_form_view =
         document.getElementById('isbn').readOnly = true;
         document.getElementById('formato').disabled = true;
         document.getElementById('card-copias').classList.add('hidden');
+        document.getElementById('campo-ubicacion').classList.add('hidden');
+        document.getElementById('campo-uso').classList.add('hidden');
         this.ajustar_formato();
     },
 

@@ -1,3 +1,23 @@
+ACTUALIZACIÓN — FORMULARIOS DE LIBRO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación local sobre bed1d46 ya subido; el paquete de registro y
+  perfiles quedó sincronizado con origin/main. package-lock.json previo sigue
+  excluido de esta solicitud.
+- Frames 2010:23633 y 2010:25664: acciones arriba, orden de seis campos
+  principales, sinopsis y control de copias ajustados. La sinopsis de ejemplo
+  y la selección Digital se verificaron en navegador. Edición de L000129
+  mostró los datos reales, clave y guardado; no se confirmó modificación.
+- La clave B... de Figma no se admite en PostgreSQL actual (L...); crear
+  muestra «Se asigna al guardar». Los campos adicionales reales siguen
+  disponibles abajo para que la operación no pierda formato, ubicación ni
+  metadatos. La edición no presenta controles de ejemplares que el guardado
+  de libro no procesa. Falta resolver ubicación/condición de ejemplares
+  del frame de edición y la migración compatible de claves.
+- No se ejecutó db:init ni se grabó un libro de prueba.
+- DUCKY_TEST_DB=1 npm test: 48 aprobadas, cero fallos; git diff --check
+  limpio tras el cambio de formulario.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ALINEACIÓN VISUAL DE USUARIOS Y PERFILES (13 DE NOVIEMBRE DE 2026)
 - git fetch origin correcto al iniciar: main y origin/main en e9d2faf, sin
   commits remotos nuevos ni diferencias de historia; no hubo integración.

@@ -29,7 +29,7 @@ const libro_form_controller =
         const usuario = await layout.montar(
         {
             activo: 'libros',
-            migas: 'Gestionar libros / Ficha bibliográfica',
+            migas: 'Gestionar libros',
             funciones: ['Gestionar libros']
         });
         if (!usuario) return;

@@ -723,6 +723,30 @@ a
     font: 700 18px var(--font);
 }
 
+#form-libro #sinopsis
+{
+    height: 48px;
+    min-height: 48px;
+}
+
+#btn-sinopsis-ejemplo
+{
+    margin-top: var(--space-16);
+}
+
+.libro-copias
+{
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+    margin-top: var(--space-16);
+}
+
+.libro-copias .label
+{
+    min-width: 180px;
+}
+
 .filters
 {
     display: flex;
