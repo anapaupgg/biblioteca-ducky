@@ -63,16 +63,18 @@ const ficha = async (id) =>
         `SELECT c.*, l.sinopsis, l.enlace_digital, l.edicion, l.paginas
            FROM v_catalogo c JOIN libros l USING (id_libro) WHERE c.id_libro = $1`, [id]);
     if (libro.rows.length === 0) return null;
-    const ejemplares = await pool.query(
+    const [ejemplares, ubicaciones] = await Promise.all([pool.query(
         `SELECT x.id_ejemplar, x.tipo_uso, x.condicion, x.estatus,
                 coalesce(u.seccion || ' · ', '') || u.estante || ' / ' || u.fila AS ubicacion,
                 (SELECT p.fecha_vencimiento FROM prestamos p WHERE p.id_ejemplar = x.id_ejemplar AND p.estatus = 'Activo') AS disponible_desde
            FROM ejemplares x LEFT JOIN ubicaciones u USING (id_ubicacion)
-          WHERE x.id_libro = $1 AND x.estatus <> 'Baja' ORDER BY x.id_ejemplar`, [id]);
+          WHERE x.id_libro = $1 AND x.estatus <> 'Baja' ORDER BY x.id_ejemplar`, [id]),
+    pool.query(`SELECT seccion, estante, fila FROM ubicaciones ORDER BY id_ubicacion`)]);
     return (
     {
         libro: libro.rows[0],
-        ejemplares: ejemplares.rows
+        ejemplares: ejemplares.rows,
+        ubicaciones: ubicaciones.rows
     });
 };
 

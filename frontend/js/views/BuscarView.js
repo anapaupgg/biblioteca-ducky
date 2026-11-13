@@ -47,7 +47,7 @@ const buscar_view =
         document.getElementById('resultados').innerHTML = '';
         document.body.classList.remove('search-results-mobile');
         document.body.classList.remove('search-state-mobile', 'search-state-empty',
-            'search-state-invalid');
+            'search-state-invalid', 'search-detail-mobile');
     },
 
     /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
@@ -122,7 +122,7 @@ const buscar_view =
         document.getElementById('resultados').innerHTML = '';
         document.body.classList.remove('search-results-mobile');
         document.body.classList.remove('search-state-mobile', 'search-state-empty',
-            'search-state-invalid');
+            'search-state-invalid', 'search-detail-mobile');
         ui.alerta('mensaje');
         document.getElementById('titulo').focus();
     },
@@ -143,6 +143,7 @@ const buscar_view =
         ui.alerta('mensaje', 'info', 'Resultados de búsqueda', resumen + ' · ' + lista.length +
             ' resultado(s) activos.');
         document.body.classList.add('search-results-mobile');
+        document.body.classList.remove('search-detail-mobile');
         if (window.matchMedia('(max-width: 600px)').matches ||
             document.body.classList.contains('search-mobile-preview')) window.scrollTo(0, 0);
 
@@ -151,11 +152,26 @@ const buscar_view =
         document.getElementById('resultados').innerHTML = lista.map((libro, indice) =>
         {
             const digital = libro.formato === 'Digital';
+            let enlace_digital = null;
+            if (digital && libro.enlace_digital)
+            {
+                try
+                {
+                    const url = new URL(libro.enlace_digital, window.location.origin);
+                    if (url.protocol === 'https:' || url.origin === window.location.origin)
+                        enlace_digital = url.href;
+                }
+                catch
+                {
+                    enlace_digital = null;
+                }
+            }
             let acciones_html = '<button class="btn" data-ficha="' + indice +
                 '">Ver ficha bibliográfica</button>';
-            if (digital) acciones_html = '<a class="btn btn-primary" href="' + ui.esc(libro
-                    .enlace_digital) +
-                '" target="_blank" rel="noopener">Consultar en línea</a>' + acciones_html;
+            if (digital && enlace_digital) acciones_html =
+                '<a class="btn btn-primary" href="' + ui.esc(enlace_digital) +
+                '" target="_blank" rel="noopener noreferrer">Consultar en línea</a>' +
+                acciones_html;
             else if (libro.disponibles_prestamo > 0) acciones_html =
                 '<button class="btn btn-primary" data-solicitar="' + indice +
                 '">Solicitar préstamo</button>' + acciones_html;

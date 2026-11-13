@@ -1,3 +1,24 @@
+ACTUALIZACIÓN — FICHAS Y RECORRIDO MÓVIL FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 76801f2 ya subido; no había commits remotos nuevos.
+  package-lock.json previo permanece fuera de los commits.
+- Frames 2258:48820, 2258:48824, 2258:48828, 2258:48832,
+  2258:48836 y 2258:48848 cotejados a 390 px. Ficha, ubicación,
+  libro digital, consulta, copia prestada y resultado de solicitud
+  navegan entre sí sin abrir el diálogo de escritorio.
+- API de ficha incluye ahora zonas reales de ubicaciones. El mapa destaca
+  la ubicación del ejemplar consultado; evita zonas ficticias. Solicitud
+  pendiente conserva folio y no inventa copia asignada; doble toque se
+  limita a un POST. Los enlaces digitales aceptan HTTPS u origen local.
+- Navegador: seis estados con datos temporales; consulta SQL real de
+  L000128 devolvió ficha, tres copias y cuatro ubicaciones. No se creó
+  solicitud ni se modificó la BD para estas pruebas.
+- Pendiente de contenido: el enlace digital local de L000132 apunta a
+  biblioteca.ducky.edu.mx, que no resuelve; hace falta PDF/URL real para
+  lectura integrada. Permanecen pendientes los envíos de boleta,
+  estados secundarios de otras secciones y claves B/L. No db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RESULTADOS Y ERRORES MÓVILES FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 5bd6f66 ya subido; antes de editar, origin/main no
   tenía commits nuevos (0/0). package-lock.json local ajeno sigue excluido.

@@ -14,6 +14,7 @@
 /*   buscar_controller.ejemplo(campo, valor) */
 /*   buscar_controller.solicitar(libro) */
 /*   buscar_controller.ficha(libro) */
+/*   buscar_controller.volver_ficha_movil() */
 /******************************************************************/
 
 /******************************************************************/
@@ -27,6 +28,8 @@ const buscar_controller =
 {
     // Solo la consulta más reciente puede modificar resultados o errores.
     version_consulta: 0,
+    ficha_actual: null,
+    solicitud_en_curso: false,
     iniciar: async function ()
     {
         const usuario = await layout.montar(
@@ -42,6 +45,15 @@ const buscar_controller =
             limpiar: () => this.limpiar(),
             modificar: () => this.modificar(),
             ejemplo: (campo, valor) => this.ejemplo(campo, valor)
+        });
+        buscar_movil_view.iniciar({
+            resultados: () => buscar_movil_view.resultados(),
+            ficha: () => this.volver_ficha_movil(),
+            ubicacion: () => buscar_movil_view.ubicacion(this.ficha_actual),
+            prestado: () => buscar_movil_view.no_disponible(this.ficha_actual),
+            solicitar: () => this.solicitar(this.ficha_actual.libro),
+            lector: () => buscar_movil_view.lector(this.ficha_actual),
+            'buscar-otro': () => this.buscar_otro()
         });
 
         if (ui.param('vista') === 'movil') buscar_view.activar_movil();
@@ -65,6 +77,18 @@ const buscar_controller =
     {
         this.version_consulta++;
         buscar_view.modificar();
+    },
+
+    buscar_otro: function ()
+    {
+        this.version_consulta++;
+        this.ficha_actual = null;
+        buscar_view.limpiar_filtros();
+    },
+
+    volver_ficha_movil: function ()
+    {
+        if (this.ficha_actual) buscar_movil_view.ficha(this.ficha_actual);
     },
 
     ejemplo: function (campo, valor)
@@ -121,14 +145,29 @@ const buscar_controller =
 
     solicitar: async function (libro)
     {
+        if (this.solicitud_en_curso) return;
+        this.solicitud_en_curso = true;
         try
         {
-            await buscar_view.solicitud(await busqueda_model.solicitar(libro.id_libro));
-            this.buscar();
+            const resultado = await busqueda_model.solicitar(libro.id_libro);
+            if (buscar_movil_view.activo() && this.ficha_actual &&
+                this.ficha_actual.libro.id_libro === libro.id_libro)
+            {
+                buscar_movil_view.solicitud(resultado, this.ficha_actual);
+            }
+            else
+            {
+                await buscar_view.solicitud(resultado);
+                this.buscar();
+            }
         }
         catch (error)
         {
             ui.toast('error', 'No se registró la solicitud', error.message);
+        }
+        finally
+        {
+            this.solicitud_en_curso = false;
         }
     },
 
@@ -136,7 +175,10 @@ const buscar_controller =
     {
         try
         {
-            buscar_view.ficha(await busqueda_model.ficha(libro.id_libro));
+            const datos = await busqueda_model.ficha(libro.id_libro);
+            this.ficha_actual = datos;
+            if (buscar_movil_view.activo()) buscar_movil_view.ficha(datos);
+            else buscar_view.ficha(datos);
         }
         catch (error)
         {

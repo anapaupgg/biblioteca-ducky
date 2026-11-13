@@ -1587,6 +1587,7 @@ table.table
 
 .search-mobile-results-heading,
 .search-mobile-state,
+.search-mobile-detail,
 .search-result-mobile
 {
     display: none;
@@ -1668,6 +1669,13 @@ table.table
 
     .search-results-mobile .search-mobile-heading,
     .search-state-mobile .search-mobile-heading,
+    .search-detail-mobile .search-mobile-heading,
+    .search-detail-mobile .search-mobile-results-heading,
+    .search-detail-mobile .search-desktop-heading,
+    .search-detail-mobile .search-desktop-links,
+    .search-detail-mobile #form-buscar,
+    .search-detail-mobile #mensaje,
+    .search-detail-mobile #resultados,
     .search-state-mobile .search-mobile-results-heading,
     .search-state-mobile .search-desktop-heading,
     .search-state-mobile .search-desktop-links,
@@ -1715,6 +1723,107 @@ table.table
     {
         display: grid;
     }
+
+    .search-detail-mobile .search-mobile-detail
+    {
+        display: grid;
+    }
+}
+
+.search-mobile-detail,
+.search-mobile-detail-content
+{
+    gap: var(--space-16);
+}
+
+.search-mobile-detail h1,
+.search-mobile-detail-content > h2:first-child
+{
+    font: var(--text-heading);
+    margin: 0;
+}
+
+.search-mobile-detail-subtitle,
+.search-mobile-detail .search-mobile-note
+{
+    font: var(--text-small);
+    color: var(--color-muted);
+}
+
+.search-mobile-detail p
+{
+    margin: 0;
+}
+
+.search-mobile-detail > .btn,
+.search-mobile-detail-content > .btn,
+.search-mobile-reader-card .btn
+{
+    width: 100%;
+    min-height: 48px;
+}
+
+.search-mobile-detail-content
+{
+    display: grid;
+}
+
+.search-mobile-detail-content > strong
+{
+    font: var(--text-label);
+}
+
+.search-mobile-detail .search-mobile-availability
+{
+    color: var(--color-green);
+    font: var(--text-label);
+}
+
+.search-mobile-detail .search-mobile-unavailable
+{
+    color: var(--color-amber);
+}
+
+.search-mobile-detail-content > .btn:disabled
+{
+    background: var(--color-line);
+    color: var(--color-muted);
+    border: 0;
+    cursor: not-allowed;
+}
+
+.search-mobile-location-copy
+{
+    font: var(--text-label);
+}
+
+.search-mobile-location-zones,
+.search-mobile-reader-card
+{
+    display: grid;
+    gap: var(--space-16);
+    margin: 0;
+}
+
+.search-mobile-location-zones > h2:first-child,
+.search-mobile-reader-card > h2:first-child
+{
+    font: var(--text-heading);
+    margin: 0;
+}
+
+.search-mobile-zone
+{
+    padding: var(--space-16);
+    background: var(--color-paper);
+    font: var(--text-label);
+    color: var(--color-muted);
+}
+
+.search-mobile-zone.selected
+{
+    background: var(--color-blue-soft);
+    color: var(--color-navy);
 }
 
 .search-mobile-state
@@ -1865,6 +1974,13 @@ table.table
 
     .search-mobile-preview.search-results-mobile .search-mobile-heading,
     .search-mobile-preview.search-state-mobile .search-mobile-heading,
+    .search-mobile-preview.search-detail-mobile .search-mobile-heading,
+    .search-mobile-preview.search-detail-mobile .search-mobile-results-heading,
+    .search-mobile-preview.search-detail-mobile .search-desktop-heading,
+    .search-mobile-preview.search-detail-mobile .search-desktop-links,
+    .search-mobile-preview.search-detail-mobile #form-buscar,
+    .search-mobile-preview.search-detail-mobile #mensaje,
+    .search-mobile-preview.search-detail-mobile #resultados,
     .search-mobile-preview.search-state-mobile .search-desktop-heading,
     .search-mobile-preview.search-state-mobile .search-desktop-links,
     .search-mobile-preview.search-state-mobile #form-buscar,
@@ -1907,6 +2023,11 @@ table.table
     }
 
     .search-mobile-preview.search-state-mobile .search-mobile-state
+    {
+        display: grid;
+    }
+
+    .search-mobile-preview.search-detail-mobile .search-mobile-detail
     {
         display: grid;
     }

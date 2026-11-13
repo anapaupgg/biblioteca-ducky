@@ -24,6 +24,13 @@
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
+                    <section class="search-mobile-detail" id="detalle-movil">
+                        <div class="search-mobile-brand">BIBLIOTECA DUCKY</div>
+                        <h1 id="titulo-detalle-movil"></h1>
+                        <p class="search-mobile-detail-subtitle" id="subtitulo-detalle-movil"></p>
+                        <button class="btn" id="btn-volver-detalle-movil" type="button"></button>
+                        <div class="search-mobile-detail-content" id="contenido-detalle-movil"></div>
+                    </section>
                     <section class="search-mobile-state" id="estado-busqueda-movil">
                         <div class="search-mobile-brand">BIBLIOTECA DUCKY</div>
                         <h1 id="titulo-estado-busqueda"></h1>
@@ -93,6 +100,7 @@
         <!-- MVC layer of this page -->
         <script src="js/models/BusquedaModel.js"></script>
         <script src="js/views/BuscarView.js"></script>
+        <script src="js/views/BuscarMovilView.js"></script>
         <script src="js/controllers/BuscarController.js"></script>
         <script>
             buscar_controller.iniciar();
