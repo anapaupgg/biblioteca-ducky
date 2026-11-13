@@ -16,6 +16,9 @@
 /*   pedidos_view.llenar_linea(valores) */
 /*   pedidos_view.historial(lista, puede_responder, acciones) */
 /*   pedidos_view.detalle(datos_2) */
+/*   pedidos_view.enviada(datos, puede_solicitar) */
+/*   pedidos_view.consulta(datos, puede_solicitar) */
+/*   pedidos_view.revision(lineas, presupuesto, acciones) */
 /*   pedidos_view.recepcion(pendientes, ubicaciones, puede_recibir, recibir) */
 /*   pedidos_view.recibido(resultado) */
 /*   pedidos_view.mensaje(tipo, titulo, texto) */
@@ -30,6 +33,83 @@
 
 const pedidos_view =
 {
+    pagina: function (titulo, descripcion)
+    {
+        document.querySelector('.page-header h1').textContent = titulo;
+        document.querySelector('.page-header p').textContent = descripcion;
+        document.getElementById('stats').classList.add('hidden');
+        document.querySelector('.tabs').classList.add('hidden');
+        ui.alerta('mensaje');
+    },
+
+    enviada: function (datos, puede_solicitar)
+    {
+        const pedido = datos.pedido;
+        this.pagina('Solicitud enviada a Tesorería',
+            pedido.folio + ' · ' + ui.fecha_hora(pedido.fecha_envio) + '.');
+        document.getElementById('panel').innerHTML =
+            '<div class="alert alert-ok" role="status"><strong>Solicitud registrada</strong>' +
+            '<span>Destino: Tesorería · Estado: ' + ui.esc(pedido.estatus) +
+            '. Puedes consultar su estado y los libros solicitados. El registro es interno.</span></div>' +
+            '<div class="actions purchase-result-actions"><a class="btn btn-primary" href="pedidos.html?modo=consulta&id=' +
+            encodeURIComponent(pedido.id_pedido) + '">Consultar solicitud</a>' +
+            (puede_solicitar ? '<a class="btn" href="pedidos.html">Nueva solicitud</a>' : '') +
+            '<a class="btn" href="inicio.html">Volver a Inicio</a></div>';
+    },
+
+    consulta: function (datos, puede_solicitar)
+    {
+        const pedido = datos.pedido;
+        const lectura = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor || '—') +
+            '</div></div>';
+        this.pagina('Consultar solicitud a Tesorería',
+            pedido.folio + ' · ' + pedido.estatus + '.');
+        document.getElementById('panel').innerHTML =
+            '<div class="card"><h2>Estado de la solicitud</h2><div class="grid-2">' +
+            lectura('Estado', pedido.estatus) +
+            lectura('Fecha', ui.fecha_hora(pedido.fecha_envio)) +
+            lectura('Destinatario', 'Tesorería') +
+            lectura('Presupuesto relacionado', pedido.periodo) + '</div></div>' +
+            '<div class="card"><h2>Libros incluidos en la solicitud</h2>' +
+            (datos.lineas.length ? datos.lineas.map((linea) =>
+                '<p>' + ui.esc(linea.titulo_solicitado) + ' · ' + linea.cantidad +
+                ' ejemplar(es) · ' + ui.dinero(linea.subtotal) + '</p>').join('') :
+                '<p>Aún no hay libros registrados.</p>') + '</div>' +
+            '<div class="actions"><a class="btn btn-primary" href="inicio.html">Volver a Inicio</a>' +
+            (puede_solicitar ? '<a class="btn" href="pedidos.html">Crear otra solicitud</a>' :
+                '<a class="btn" href="pedidos.html">Volver a solicitudes</a>') + '</div>';
+    },
+
+    revision: function (lineas, presupuesto, acciones)
+    {
+        const total = lineas.reduce((suma, linea) => suma + linea.cantidad *
+            linea.costo_unitario, 0);
+        const hay_presupuesto = Boolean(presupuesto && total <= presupuesto.saldo);
+        this.pagina('Revisar solicitud de compra',
+            'Verifica los títulos y cantidades antes de enviar la solicitud a Tesorería.');
+        document.getElementById('panel').innerHTML =
+            '<div class="actions actions-top"><button class="btn" id="editar-solicitud">' +
+            'Editar solicitud</button><button class="btn btn-primary" id="confirmar-envio"' +
+            (hay_presupuesto ? '' : ' disabled') + '>Enviar a Tesorería</button></div>' +
+            '<p><strong>Destino: Tesorería · Presupuesto de ' +
+            ui.esc(presupuesto?.periodo || 'mes sin registrar') + ': ' +
+            (presupuesto ? ui.dinero(presupuesto.monto_autorizado) : 'Sin registrar') +
+            '</strong></p>' +
+            '<p class="small muted">La solicitud registra una petición de adquisición; no realiza un pago.</p>' +
+            '<div class="card"><h2>Libros de la solicitud</h2>' +
+            lineas.map((linea) => '<p>' + ui.esc(linea.titulo) + ' · ' +
+                ui.esc(linea.autores || '—') + ' · ' + linea.cantidad +
+                ' ejemplar(es) · ' + ui.dinero(linea.cantidad * linea.costo_unitario) +
+                '</p>').join('') + '<p><strong>Total estimado: ' + ui.dinero(total) +
+            '</strong></p></div>' +
+            (hay_presupuesto ? '' : '<div class="alert alert-warning" role="status">' +
+                '<strong>Presupuesto no disponible</strong><span>Registra presupuesto mensual ' +
+                'suficiente antes de enviar.</span></div>');
+        document.getElementById('editar-solicitud').addEventListener('click', acciones.editar);
+        document.getElementById('confirmar-envio').addEventListener('click', acciones.confirmar);
+    },
+
     /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
     enlazar: function (acciones)
     {
@@ -41,6 +121,8 @@ const pedidos_view =
     {
         document.querySelectorAll('.tab').forEach((elemento_2) => elemento_2.classList.toggle(
             'active', elemento_2.dataset.tab === tab));
+        document.getElementById('stats').classList.toggle('hidden', tab === 'nueva');
+        document.querySelector('.tabs').classList.toggle('hidden', tab === 'nueva');
     },
 
     ocultar_tabs: function (tabs)
@@ -64,12 +146,43 @@ const pedidos_view =
             '<div class="stat"><span>Presupuesto del mes</span><strong>Sin registrar</strong></div>';
     },
 
-    nueva: function (catalogo, lineas, saldo, acciones)
+    nueva: function (catalogo, lineas, presupuesto, acciones)
     {
+        document.querySelector('.page-header h1').textContent = 'Solicitar libros a Tesorería';
+        document.querySelector('.page-header p').textContent =
+            'Consolida las peticiones de usuarios dentro del presupuesto mensual.';
+        const saldo = presupuesto ? presupuesto.saldo : null;
         const total = lineas.reduce((registro, linea) => registro + linea.cantidad * linea
             .costo_unitario, 0);
+        const primera = lineas[0];
+        const resumen = lineas.length ? lineas.map((linea) =>
+            '<div class="purchase-summary-row">' + ui.esc(linea.titulo) + ' · ' +
+            ui.esc(linea.autores || '—') + ' · ' + ui.esc(linea.isbn || '—') + ' · ' +
+            linea.cantidad + '</div>').join('') :
+            '<p class="small muted">Aún no has agregado libros. Selecciona «Ver solicitud / agregar más» para comenzar.</p>';
         document.getElementById('panel').innerHTML =
-            '<div class="card"><h2>Agregar libro a la solicitud</h2><form id="form-linea" novalidate><div class="grid-3">' +
+            '<div class="actions actions-top"><button class="btn" id="btn-ver-solicitud">' +
+            'Ver solicitud / agregar más</button><button class="btn btn-primary" id="btn-revisar-top"' +
+            (lineas.length ? '' : ' disabled') + '>Revisar solicitud</button>' +
+            '<button class="btn" id="btn-cancelar-top"' + (lineas.length ? '' : ' disabled') +
+            '>Cancelar</button></div>' +
+            '<div class="card"><h2>Solicitud en preparación</h2><div class="grid-2">' +
+            '<div class="field"><span class="label">Destinatario</span><div class="readonly">Tesorería</div></div>' +
+            '<div class="field"><span class="label">Presupuesto mensual</span><div class="readonly">' +
+            (presupuesto ? ui.esc(presupuesto.periodo) + ' · ' +
+                ui.dinero(presupuesto.monto_autorizado) : 'Sin registrar') +
+            '</div></div></div><div class="grid-2 purchase-summary-fields">' +
+            '<div class="field"><span class="label">Petición de usuario</span><div class="readonly">' +
+            ui.esc(primera?.peticionario || 'Aún sin peticionario') + '</div></div>' +
+            '<div class="field"><span class="label">Libro solicitado</span><div class="readonly">' +
+            ui.esc(primera?.titulo || 'Aún sin libros') + '</div></div></div>' +
+            '<div class="purchase-summary-row">Título · Autor · ISBN · Cantidad</div>' +
+            resumen + '</div>' +
+            '<div class="actions"><button class="btn" id="btn-ejemplo">' +
+            'Cargar petición de ejemplo</button></div>' +
+            '<details class="card purchase-operational" id="detalle-solicitud"><summary>' +
+            'Agregar o editar libros de la solicitud</summary>' +
+            '<h2>Agregar libro a la solicitud</h2><form id="form-linea" novalidate><div class="grid-3">' +
             '<div class="field span-2"><label for="id_libro">Libro del catálogo (opcional)</label><select id="id_libro">' +
             ui.opciones(catalogo, 'id_libro', (linea_2) => linea_2.id_libro + ' · ' + linea_2.titulo,
                 '', 'Título nuevo (no está en el catálogo)') + '</select></div>' +
@@ -80,8 +193,7 @@ const pedidos_view =
             '<div class="field"><label for="editorial">Editorial</label><input id="editorial" placeholder="Ej. Cengage Learning"></div>' +
             '<div class="field"><label for="cantidad">Cantidad</label><input id="cantidad" type="number" min="1" value="1"></div>' +
             '<div class="field"><label for="costo_unitario">Costo unitario estimado (MXN)</label><input id="costo_unitario" type="number" min="0" step="0.01" placeholder="Ej. 950"></div>' +
-            '</div><div class="actions" style="margin-bottom:0"><button class="btn" type="submit">Agregar libro</button>' +
-            '<button class="btn" type="button" id="btn-ejemplo">Cargar petición de ejemplo</button></div></form></div>' +
+            '</div><div class="actions" style="margin-bottom:0"><button class="btn" type="submit">Agregar libro</button></div></form>' +
 
             '<div class="card"><h2>Solicitud a Tesorería · ' + lineas.length +
             ' libro(s)</h2><div id="tabla-lineas"></div>' +
@@ -91,7 +203,10 @@ const pedidos_view =
             '<div class="actions" style="margin-bottom:0"><button class="btn btn-primary" id="btn-enviar"' +
             (lineas.length ? '' : ' disabled') + '>Revisar y enviar a Tesorería</button>' +
             '<button class="btn" id="btn-vaciar"' + (lineas.length ? '' : ' disabled') +
-            '>Cancelar solicitud</button></div></div>';
+            '>Cancelar solicitud</button></div></div></details>' +
+            '<details class="purchase-other-actions"><summary>Historial y recepción</summary>' +
+            '<div class="actions"><button class="btn" id="btn-historial">Solicitudes enviadas</button>' +
+            '<button class="btn" id="btn-recepcion">Recepción de libros</button></div></details>';
 
         ui.tabla('tabla-lineas',
             [
@@ -140,7 +255,21 @@ const pedidos_view =
             elemento_5.preventDefault();
             acciones.agregar();
         });
-        document.getElementById('btn-ejemplo').addEventListener('click', acciones.ejemplo);
+        document.getElementById('btn-ejemplo').addEventListener('click', () =>
+        {
+            document.getElementById('detalle-solicitud').open = true;
+            acciones.ejemplo();
+            document.getElementById('titulo').focus();
+        });
+        document.getElementById('btn-ver-solicitud').addEventListener('click', () =>
+        {
+            document.getElementById('detalle-solicitud').open = true;
+            document.getElementById('titulo').focus();
+        });
+        document.getElementById('btn-revisar-top').addEventListener('click', acciones.enviar);
+        document.getElementById('btn-cancelar-top').addEventListener('click', acciones.vaciar);
+        document.getElementById('btn-historial').addEventListener('click', () => acciones.mostrar('historial'));
+        document.getElementById('btn-recepcion').addEventListener('click', () => acciones.mostrar('recepcion'));
         document.getElementById('btn-enviar').addEventListener('click', acciones.enviar);
         document.getElementById('btn-vaciar').addEventListener('click', acciones.vaciar);
         document.getElementById('id_libro').addEventListener('change', (elemento_6) => acciones

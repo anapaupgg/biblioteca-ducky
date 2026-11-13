@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — SOLICITUDES DE COMPRA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 4446331 ya subido; main y origin/main sincronizados.
+  package-lock.json local ajeno sigue excluido.
+- Frames 2011:28537, 2011:28878, 2257:48827, 2011:29200 y 2011:29522
+  cotejados. La solicitud inicial ahora presenta acciones, destino, presupuesto,
+  peticionario, título y filas como en el diseño. Los campos operativos quedan
+  en «Ver solicitud / agregar más»; historial y recepción siguen accesibles.
+- Revisión de compra en pantalla propia: editar conserva el borrador; enviar
+  llama a la API solo tras confirmar y evita doble envío. Si falta presupuesto
+  mensual o no alcanza el saldo, el envío se bloquea sin escribir datos.
+- Resultado y consulta usan folio, fecha, estatus y líneas reales. El resultado
+  aclara que «Tesorería» es destino del registro interno, sin afirmar entrega
+  externa o pago. La navegación desde historial abre la consulta.
+- Navegador: se compararon solicitud vacía, borrador de ejemplo, revisión,
+  regreso a edición, cancelación, estado y resultado con la orden OCT-2026-005.
+  No se envió solicitud nueva ni se autorizó una orden durante el cotejo.
+- DUCKY_TEST_DB=1 npm test: 53 aprobadas, cero fallos. git diff --check limpio.
+  No se ejecutó db:init ni hubo cambios de esquema en este bloque.
+- Pendiente: cotejar los estados alternos de compra, recepción y móvil; resolver
+  presupuesto del periodo actual para demostrar envío real sin fingir saldo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — MODIFICACIÓN Y BAJA DE LIBROS SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main en 8719c6c, sin commits remotos nuevos
   (0/0). package-lock.json local ajeno se conservó sin incorporar.

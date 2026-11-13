@@ -431,6 +431,42 @@ a
     margin-top: 0;
 }
 
+.purchase-result-actions
+{
+    margin-top: var(--space-48);
+}
+
+.purchase-summary-fields
+{
+    margin-top: var(--space-16);
+}
+
+.purchase-summary-row
+{
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    margin-top: var(--space-4);
+}
+
+.purchase-operational summary,
+.purchase-other-actions summary
+{
+    cursor: pointer;
+    font: var(--text-label);
+}
+
+.purchase-operational h2
+{
+    margin: var(--space-24) 0 var(--space-16);
+}
+
+.purchase-other-actions
+{
+    margin-bottom: var(--space-24);
+}
+
 .dialog-actions-primary-first [data-accion="confirmar"]
 {
     order: -1;

@@ -14,6 +14,8 @@
 /*   pedidos_controller.agregar() */
 /*   pedidos_controller.enviar() */
 /*   pedidos_controller.ver(id) */
+/*   pedidos_controller.abrir_detalle(modo, id) */
+/*   pedidos_controller.confirmar_envio() */
 /*   pedidos_controller.responder(id, estatus) */
 /*   pedidos_controller.recibir(id, id_ubicacion) */
 /******************************************************************/
@@ -33,6 +35,7 @@ const pedidos_controller =
     puede_solicitar: false,
     puede_autorizar: false,
     puede_recibir: false,
+    procesando_envio: false,
 
     iniciar: async function ()
     {
@@ -52,6 +55,13 @@ const pedidos_controller =
         {
             mostrar: (...argumentos) => this.mostrar(...argumentos)
         });
+        const modo = ui.param('modo');
+        const id = Number(ui.param('id'));
+        if (['enviada', 'consulta'].includes(modo) && Number.isInteger(id) && id > 0)
+        {
+            await this.abrir_detalle(modo, id);
+            return;
+        }
         try
         {
             this.catalogo = usuario.funciones.includes('Buscar libros') ? await busqueda_model
@@ -65,6 +75,20 @@ const pedidos_controller =
         const inicial = this.puede_recibir && window.location.hash === '#recepcion' ?
             'recepcion' : this.puede_solicitar ? 'nueva' : 'historial';
         this.mostrar(inicial);
+    },
+
+    abrir_detalle: async function (modo, id)
+    {
+        try
+        {
+            const datos = await pedido_model.detalle(id);
+            if (modo === 'enviada') pedidos_view.enviada(datos, this.puede_solicitar);
+            else pedidos_view.consulta(datos, this.puede_solicitar);
+        }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', error.message);
+        }
     },
 
     cargar_presupuesto: async function ()
@@ -111,10 +135,10 @@ const pedidos_controller =
 
     dibujar_nueva: function ()
     {
-        pedidos_view.nueva(this.catalogo, this.lineas, this.presupuesto ? this.presupuesto.saldo :
-            null,
+        pedidos_view.nueva(this.catalogo, this.lineas, this.presupuesto,
             {
                 agregar: () => this.agregar(),
+                mostrar: (tab) => this.mostrar(tab),
                 quitar: (indice) =>
                 {
                     this.lineas.splice(indice, 1);
@@ -177,42 +201,41 @@ const pedidos_controller =
     enviar: async function ()
     {
         if (!this.lineas.length) return pedidos_view.mensaje('error', 'Agrega al menos un libro');
-        const total = this.lineas.reduce((registro, linea_3) => registro + linea_3.cantidad * linea_3
-            .costo_unitario, 0);
-        const ok = await ui.dialogo(
+        pedidos_view.revision(this.lineas, this.presupuesto,
         {
-            titulo: 'Revisar orden de compra',
-            texto: this.lineas.length + ' título(s) · total estimado ' + ui.dinero(total) +
-                '. Destinatario: Tesorería.' +
-                (this.presupuesto ? ' Saldo del mes: ' + ui.dinero(this.presupuesto.saldo) +
-                    '.' : ' No hay presupuesto registrado este mes.'),
-            confirmar: 'Enviar a Tesorería'
+            editar: () => this.mostrar('nueva'),
+            confirmar: () => this.confirmar_envio()
         });
-        if (!ok) return;
+    },
+
+    confirmar_envio: async function ()
+    {
+        if (this.procesando_envio) return;
+        const total = this.lineas.reduce((suma, linea) => suma + linea.cantidad *
+            linea.costo_unitario, 0);
+        if (!this.lineas.length || !this.presupuesto || total > this.presupuesto.saldo)
+            return pedidos_view.mensaje('error', 'No hay presupuesto suficiente para enviar');
+        this.procesando_envio = true;
         try
         {
             const resultado = await pedido_model.crear(this.lineas);
             this.lineas = [];
-            pedidos_view.mensaje('ok', 'Solicitud enviada a Tesorería · ' + resultado.pedido.folio,
-                resultado.lineas.length + ' título(s) · ' + ui.dinero(resultado.pedido.total));
-            this.mostrar('historial');
+            window.location.href = 'pedidos.html?modo=enviada&id=' +
+                encodeURIComponent(resultado.pedido.id_pedido);
         }
         catch (error)
         {
             pedidos_view.mensaje('error', 'No se envió la solicitud', error.message);
         }
+        finally
+        {
+            this.procesando_envio = false;
+        }
     },
 
     ver: async function (id)
     {
-        try
-        {
-            pedidos_view.detalle(await pedido_model.detalle(id));
-        }
-        catch (error)
-        {
-            pedidos_view.mensaje('error', error.message);
-        }
+        window.location.href = 'pedidos.html?modo=consulta&id=' + encodeURIComponent(id);
     },
 
     responder: async function (id, estatus)

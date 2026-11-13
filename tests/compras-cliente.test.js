@@ -40,6 +40,7 @@ test('compras: solo autorización abre historial y no formulario de solicitud', 
                 hash: '#recepcion'
             }
         },
+        ui: { param: () => null },
         pedidos_view:
         {
             ocultar_tabs: tabs => ocultas.push(...tabs),
@@ -86,7 +87,7 @@ test('compras: solicitar por sí solo no habilita autorización en historial', a
     await controlador.mostrar('historial');
     assert.equal(autorizacion, true);
 });
-test('compras: cancelar confirmación conserva borrador y no escribe compra ni respuesta', async () =>
+test('compras: abrir revisión y cancelar respuesta conserva borrador sin escrituras', async () =>
 {
     let escrituras = 0;
     const controlador = cargar(
@@ -106,6 +107,10 @@ test('compras: cancelar confirmación conserva borrador y no escribe compra ni r
             {
                 escrituras++;
             }
+        },
+        pedidos_view:
+        {
+            revision: () => {}
         }
     });
     controlador.lineas = [
@@ -117,4 +122,38 @@ test('compras: cancelar confirmación conserva borrador y no escribe compra ni r
     await controlador.responder(1, 'Autorizado');
     assert.equal(escrituras, 0);
     assert.equal(controlador.lineas.length, 1);
+});
+
+test('compras: solo la confirmación de revisión crea la solicitud una vez', async () =>
+{
+    let confirmar;
+    let resolver;
+    let escrituras = 0;
+    const destino = { href: '' };
+    const controlador = cargar({
+        window: { location: destino },
+        pedidos_view: {
+            revision: (_lineas, _presupuesto, acciones) => { confirmar = acciones.confirmar; },
+            mensaje: () => {}
+        },
+        pedido_model: {
+            crear: () =>
+            {
+                escrituras++;
+                return new Promise((finalizar) => { resolver = finalizar; });
+            }
+        },
+        encodeURIComponent
+    });
+    controlador.lineas = [{ titulo: 'Libro', cantidad: 1, costo_unitario: 100 }];
+    controlador.presupuesto = { saldo: 500 };
+    await controlador.enviar();
+    assert.equal(escrituras, 0);
+    const primero = confirmar();
+    const segundo = confirmar();
+    assert.equal(escrituras, 1);
+    resolver({ pedido: { id_pedido: 9 } });
+    await Promise.all([primero, segundo]);
+    assert.equal(controlador.lineas.length, 0);
+    assert.match(destino.href, /modo=enviada&id=9$/);
 });
