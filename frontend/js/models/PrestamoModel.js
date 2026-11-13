@@ -24,5 +24,9 @@ const prestamo_model =
     espera: (id_libro) => api.get('/prestamos/espera/' + encodeURIComponent(id_libro)),
     registrar_espera: (datos) => api.post('/prestamos/espera', datos),
     autorizar: (folio, id_ejemplar) => api.post('/prestamos/solicitudes/' +
-        encodeURIComponent(folio) + '/autorizar', { id_ejemplar })
+        encodeURIComponent(folio) + '/autorizar', { id_ejemplar }),
+    descargar_boleta: (id_prestamo) => api.get_blob('/prestamos/recibos/' +
+        encodeURIComponent(id_prestamo) + '/pdf'),
+    enviar_boleta: (id_prestamo) => api.post('/prestamos/recibos/' +
+        encodeURIComponent(id_prestamo) + '/correo')
 };

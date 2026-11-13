@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — ENVÍO DE BOLETA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Al comenzar: git fetch origin correcto, main y origin/main 0/0; no había
+  commits remotos nuevos. Se preservó la eliminación local previa de
+  `peer: true` en package-lock.json fuera del commit de esta solicitud.
+- Frames 2483:80899, 2483:81248, 2483:81588, 2483:81913 y 2483:82244
+  consultados. Correo: revisión de destinatario registrado, PDF generado desde
+  préstamo activo real, adjunto por Resend y pantalla de aceptación. WhatsApp:
+  validación de diez dígitos, PDF descargable y mensaje preparado; el envío
+  se completa manualmente y no se declara entregado sin integración externa.
+- MVC: SQL de detalle en modelo, PDF/correo en servicio, rutas/controlador
+  protegidos por permiso Préstamos; vista y controlador cliente separados.
+  Se añadió PDFKit y su lockfile sin incorporar el cambio local ajeno.
+- Verificación: PDF A4 de una página renderizado e inspeccionado; correo con
+  adjunto y rechazo de Resend simulados, sin enviar correo real; consulta de
+  solo lectura a PostgreSQL de un préstamo activo; tres pantallas cotejadas
+  en navegador a 1440 × 960 con datos temporales ya eliminados. npm test:
+  53 aprobadas, 8 omitidas, 0 fallos. No se ejecutó db:init.
+- Pendiente: remitente con dominio verificado para correos a usuarios reales;
+  integración WhatsApp Business si se requiere envío automático; más estados
+  secundarios de Figma y recurso PDF/URL real de lectura digital.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — FICHAS Y RECORRIDO MÓVIL FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 76801f2 ya subido; no había commits remotos nuevos.
   package-lock.json previo permanece fuera de los commits.

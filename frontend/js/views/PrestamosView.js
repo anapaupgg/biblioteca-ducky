@@ -77,6 +77,23 @@ const prestamos_view =
         document.getElementById('btn-imprimir-boleta').addEventListener('click', () => this.imprimir());
         document.getElementById('btn-volver-recibo').addEventListener('click', acciones.volver_recibo);
         document.getElementById('btn-otro-prestamo').addEventListener('click', acciones.abrir_registro);
+        document.getElementById('btn-correo-boleta').addEventListener('click', acciones.abrir_correo);
+        document.getElementById('btn-whatsapp-boleta').addEventListener('click', acciones.abrir_whatsapp);
+        document.getElementById('btn-enviar-correo').addEventListener('click', acciones.enviar_correo);
+        document.getElementById('btn-volver-correo').addEventListener('click', acciones.volver_recibo);
+        document.getElementById('btn-volver-correo-enviado').addEventListener('click', acciones.volver);
+        document.getElementById('btn-whatsapp-correo-enviado').addEventListener('click', acciones.abrir_whatsapp);
+        document.getElementById('btn-imprimir-correo-enviado').addEventListener('click', acciones.abrir_boleta);
+        document.getElementById('btn-cancelar-whatsapp').addEventListener('click', acciones.volver_recibo);
+        document.getElementById('btn-volver-whatsapp-preparado').addEventListener('click', acciones.volver);
+        document.getElementById('btn-abrir-whatsapp-preparado').addEventListener('click', acciones.abrir_mensaje_whatsapp);
+        document.getElementById('btn-correo-whatsapp-preparado').addEventListener('click', acciones.abrir_correo);
+        document.getElementById('btn-descargar-whatsapp-preparado').addEventListener('click', acciones.descargar_boleta);
+        document.getElementById('form-whatsapp-boleta').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.preparar_whatsapp(document.getElementById('numero-whatsapp-boleta').value.trim());
+        });
     },
 
     datos_registro: function ()
@@ -94,7 +111,8 @@ const prestamos_view =
 
     mostrar: function (modo)
     {
-        ['personal', 'registrar', 'validacion', 'recibo', 'boleta', 'renovar', 'renovacion-validada',
+        ['personal', 'registrar', 'validacion', 'recibo', 'boleta', 'correo', 'correo-enviado',
+            'whatsapp', 'whatsapp-preparado', 'renovar', 'renovacion-validada',
             'espera', 'agregar-espera'].forEach((panel) =>
             document.getElementById('panel-' + panel).classList.toggle('hidden', panel !== modo));
         document.body.classList.toggle('boleta-imprimible', modo === 'boleta');
@@ -110,6 +128,12 @@ const prestamos_view =
             recibo: ['Préstamo registrado', 'Entrega el recibo al solicitante.'],
             boleta: ['Recibo para entrega',
                 'Vista previa de impresión · Biblioteca Universidad Ducky.'],
+            correo: ['Enviar boleta por correo', 'Revisa el destinatario antes de enviar la boleta.'],
+            'correo-enviado': ['Boleta enviada por correo', 'Resend aceptó el correo del solicitante.'],
+            whatsapp: ['Enviar boleta por WhatsApp',
+                'Captura el celular del solicitante para preparar la boleta.'],
+            'whatsapp-preparado': ['Boleta preparada para WhatsApp',
+                'Completa el envío desde la aplicación de WhatsApp.'],
             renovar: ['Renovar préstamo',
                 'Busca el préstamo activo con la clave del ejemplar y confirma el nuevo vencimiento.'],
             'renovacion-validada': ['Renovación autorizada',
@@ -201,6 +225,8 @@ const prestamos_view =
         document.getElementById('aviso-entrega').classList.remove('hidden');
         document.getElementById('btn-otro-prestamo').classList.remove('hidden');
         document.getElementById('btn-imprimir-recibo').textContent = 'Imprimir boleta';
+        document.getElementById('btn-correo-boleta').classList.remove('hidden');
+        document.getElementById('btn-whatsapp-boleta').classList.remove('hidden');
     },
 
     boleta: function (prestamo)
@@ -224,6 +250,73 @@ const prestamos_view =
     imprimir: function ()
     {
         window.print();
+    },
+
+    correo: function (prestamo)
+    {
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        document.getElementById('datos-correo-boleta').innerHTML =
+            campo('Folio', prestamo.folio_prestamo) +
+            campo('Solicitante', prestamo.solicitante) +
+            campo('Destinatario', prestamo.correo || 'Sin correo registrado') +
+            campo('Asunto', 'Boleta de préstamo · Biblioteca Ducky') +
+            campo('Adjunto', 'Boleta de préstamo en PDF') +
+            campo('Vencimiento', ui.fecha(prestamo.fecha_vencimiento) + ' · ' +
+                prestamo.dias_prestamo + ' días hábiles');
+        document.getElementById('btn-enviar-correo').disabled = !prestamo.correo;
+    },
+
+    correo_enviado: function (prestamo)
+    {
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        document.getElementById('datos-correo-enviado').innerHTML =
+            campo('Folio', prestamo.folio_prestamo) +
+            campo('Solicitante', prestamo.solicitante) +
+            campo('Medio', 'Correo institucional') + campo('Estado', 'Enviado');
+    },
+
+    enviando_correo: function (enviando)
+    {
+        const boton = document.getElementById('btn-enviar-correo');
+        boton.disabled = enviando;
+        boton.textContent = enviando ? 'Enviando…' : 'Enviar boleta';
+    },
+
+    error_whatsapp: function (mostrar)
+    {
+        document.getElementById('error-whatsapp-boleta').classList.toggle('hidden', !mostrar);
+        document.getElementById('numero-whatsapp-boleta').setAttribute('aria-invalid', String(mostrar));
+    },
+
+    whatsapp_preparado: function (prestamo, numero)
+    {
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        document.getElementById('datos-whatsapp-preparado').innerHTML =
+            campo('Folio', prestamo.folio_prestamo) +
+            campo('Solicitante', prestamo.solicitante) +
+            campo('WhatsApp', numero) + campo('Estado', 'Pendiente de envío manual');
+    },
+
+    descargar_pdf: function (contenido, folio)
+    {
+        const url = URL.createObjectURL(contenido);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = 'Boleta-' + folio + '.pdf';
+        enlace.click();
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+    },
+
+    abrir_mensaje_whatsapp: function (numero, prestamo)
+    {
+        const mensaje = 'Biblioteca Ducky: boleta ' + prestamo.folio_prestamo +
+            '. El préstamo de ' + prestamo.titulo + ' vence el ' +
+            ui.fecha(prestamo.fecha_vencimiento) + '. Adjuntaré el PDF de la boleta.';
+        return window.open('https://wa.me/52' + numero + '?text=' + encodeURIComponent(mensaje),
+            '_blank', 'noopener,noreferrer');
     },
 
     renovacion: function (datos)
@@ -257,6 +350,8 @@ const prestamos_view =
         document.getElementById('aviso-entrega').classList.add('hidden');
         document.getElementById('btn-otro-prestamo').classList.add('hidden');
         document.getElementById('btn-imprimir-recibo').textContent = 'Imprimir comprobante';
+        document.getElementById('btn-correo-boleta').classList.add('hidden');
+        document.getElementById('btn-whatsapp-boleta').classList.add('hidden');
     },
 
     lista_espera: function (datos)

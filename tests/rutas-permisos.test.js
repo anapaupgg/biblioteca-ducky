@@ -88,6 +88,8 @@ const grupos = [
         ['post', '/solicitudes/1/autorizar'],
         ['post', '/validar'],
         ['post', '/registrar'],
+        ['get', '/recibos/1/pdf'],
+        ['post', '/recibos/1/correo'],
         ['get', '/espera/L000128'],
         ['post', '/espera']
     ]],

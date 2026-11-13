@@ -11,6 +11,7 @@
 /*   api.get(path, query) */
 /*   api.post(path, body) */
 /*   api.put(path, body) */
+/*   api.get_blob(path) */
 /******************************************************************/
 
 /******************************************************************/
@@ -122,5 +123,33 @@ const api =
         return this.request('PUT', path, body ||
         {
         });
+    },
+
+    get_blob: async function (path)
+    {
+        const token = session.token();
+        let respuesta;
+        try
+        {
+            respuesta = await fetch(API_BASE_URL + path, {
+                headers: token ? { Authorization: 'Bearer ' + token } : {}
+            });
+        }
+        catch
+        {
+            throw new api_error(0, { error: 'No fue posible descargar la boleta.' });
+        }
+        if (!respuesta.ok)
+        {
+            let datos = null;
+            try { datos = await respuesta.json(); } catch { /* respuesta inesperada */ }
+            if (respuesta.status === 401 && datos?.codigo === 'SESION_EXPIRADA')
+            {
+                session.clear();
+                window.location.href = 'login.html?expirada=1';
+            }
+            throw new api_error(respuesta.status, datos);
+        }
+        return respuesta.blob();
     }
 };

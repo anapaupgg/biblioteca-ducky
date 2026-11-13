@@ -77,6 +77,8 @@
                             <button class="btn btn-primary" type="button" id="btn-volver-prestamos">Volver a préstamos</button>
                             <button class="btn" type="button" id="btn-imprimir-recibo">Imprimir boleta</button>
                             <button class="btn" type="button" id="btn-otro-prestamo">Registrar otro préstamo</button>
+                            <button class="btn" type="button" id="btn-correo-boleta">Enviar por correo</button>
+                            <button class="btn" type="button" id="btn-whatsapp-boleta">Enviar por WhatsApp</button>
                         </div>
                     </section>
                     <section id="panel-boleta" class="hidden">
@@ -85,6 +87,61 @@
                         <div class="actions">
                             <button class="btn btn-primary" type="button" id="btn-imprimir-boleta">Imprimir</button>
                             <button class="btn" type="button" id="btn-volver-recibo">Volver al recibo</button>
+                        </div>
+                    </section>
+                    <section id="panel-correo" class="hidden">
+                        <div class="card loan-receipt-card">
+                            <h2>Boleta de préstamo</h2>
+                            <div class="grid-2" id="datos-correo-boleta"></div>
+                        </div>
+                        <div class="alert alert-info" id="aviso-correo-boleta">
+                            <strong>La boleta incluye la fecha de vencimiento</strong>
+                            <span>Se envía al correo registrado del solicitante con el folio y los datos del ejemplar.</span>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-enviar-correo">Enviar boleta</button>
+                            <button class="btn" type="button" id="btn-volver-correo">Volver a la boleta</button>
+                        </div>
+                    </section>
+                    <section id="panel-correo-enviado" class="hidden">
+                        <div class="card loan-receipt-card"><h2>Envío de boleta</h2>
+                            <div class="grid-2" id="datos-correo-enviado"></div></div>
+                        <div class="alert alert-ok"><strong>Correo enviado</strong>
+                            <span>Resend aceptó la boleta con el folio y la fecha de vencimiento.</span></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-volver-correo-enviado">Volver a préstamos</button>
+                            <button class="btn" type="button" id="btn-whatsapp-correo-enviado">Enviar por WhatsApp</button>
+                            <button class="btn" type="button" id="btn-imprimir-correo-enviado">Imprimir boleta</button>
+                        </div>
+                    </section>
+                    <section id="panel-whatsapp" class="hidden">
+                        <div id="error-whatsapp-boleta" class="hidden alert alert-error">
+                            <strong>Verifica el número de WhatsApp</strong>
+                            <span>Captura los 10 dígitos del celular, sin espacios ni guiones (ej. 8112345678).</span>
+                        </div>
+                        <form id="form-whatsapp-boleta" novalidate>
+                            <div class="card"><h2>Datos del envío</h2>
+                                <div class="grid-2"><div class="field">
+                                    <label for="numero-whatsapp-boleta">Número de WhatsApp (10 dígitos)</label>
+                                    <input id="numero-whatsapp-boleta" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="Ej. 8112345678">
+                                </div></div>
+                            </div>
+                            <div class="actions">
+                                <button class="btn btn-primary" type="submit">Preparar boleta</button>
+                                <button class="btn" type="button" id="btn-cancelar-whatsapp">Cancelar</button>
+                            </div>
+                        </form>
+                    </section>
+                    <section id="panel-whatsapp-preparado" class="hidden">
+                        <div class="card loan-receipt-card"><h2>Boleta preparada</h2>
+                            <div class="grid-2" id="datos-whatsapp-preparado"></div></div>
+                        <div class="alert alert-info"><strong>Completa el envío en WhatsApp</strong>
+                            <span>Se descargó el PDF. Abre WhatsApp, adjúntalo y pulsa Enviar allí.</span></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-abrir-whatsapp-preparado">Abrir WhatsApp</button>
+                            <button class="btn" type="button" id="btn-volver-whatsapp-preparado">Volver a préstamos</button>
+                            <button class="btn" type="button" id="btn-correo-whatsapp-preparado">Enviar por correo</button>
+                            <button class="btn" type="button" id="btn-descargar-whatsapp-preparado">Descargar PDF otra vez</button>
                         </div>
                     </section>
                     <section id="panel-renovar" class="hidden">

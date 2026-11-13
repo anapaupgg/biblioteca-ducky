@@ -16,6 +16,7 @@
 
 const { con_usuario, simular } = require('../db');
 const prestamo_model = require('../models/prestamoModel');
+const boleta_service = require('../services/boletaService');
 const { responder_error, error_negocio } = require('../utils/errores');
 
 const mios = async (solicitud, respuesta) =>
@@ -125,6 +126,71 @@ const ejecutar_directo = async (solicitud, respuesta, confirmar) =>
 const validar_directo = (solicitud, respuesta) => ejecutar_directo(solicitud, respuesta, false);
 const registrar_directo = (solicitud, respuesta) => ejecutar_directo(solicitud, respuesta, true);
 
+const boleta_confirmada = async (solicitud) =>
+{
+    const id_prestamo = Number(solicitud.params.id);
+    if (!Number.isSafeInteger(id_prestamo) || id_prestamo < 1)
+    {
+        throw new error_negocio(400, 'Folio de préstamo inválido');
+    }
+    const prestamo = await prestamo_model.detalle_registrado(id_prestamo);
+    if (!prestamo || prestamo.estatus !== 'Activo')
+    {
+        throw new error_negocio(404, 'El préstamo activo no existe');
+    }
+    return prestamo;
+};
+
+const descargar_boleta = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const prestamo = await boleta_confirmada(solicitud);
+        const pdf = await boleta_service.crear_pdf(prestamo);
+        respuesta.set('Content-Type', 'application/pdf');
+        respuesta.set('Content-Disposition', 'attachment; filename="Boleta-' +
+            prestamo.folio_prestamo + '.pdf"');
+        respuesta.set('Cache-Control', 'no-store');
+        respuesta.status(200).send(pdf);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'prestamos.descargar_boleta');
+    }
+};
+
+const enviar_boleta = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const prestamo = await boleta_confirmada(solicitud);
+        if (!prestamo.correo)
+        {
+            throw new error_negocio(422, 'El solicitante no tiene correo registrado');
+        }
+        const configuracion = boleta_service.configuracion_correo();
+        if (!configuracion)
+        {
+            throw new error_negocio(503, 'El envío de correo no está configurado');
+        }
+        const pdf = await boleta_service.crear_pdf(prestamo);
+        await boleta_service.enviar(configuracion, prestamo, pdf);
+        respuesta.status(200).json({ folio_prestamo: prestamo.folio_prestamo,
+            solicitante: prestamo.solicitante, correo: prestamo.correo, estado: 'Enviado' });
+    }
+    catch (error)
+    {
+        if (error.message === 'ENVIO_BOLETA_FALLIDO')
+        {
+            responder_error(respuesta, new error_negocio(502,
+                'Resend rechazó el envío. Revisa el remitente y el dominio verificado.'),
+            'prestamos.enviar_boleta');
+            return;
+        }
+        responder_error(respuesta, error, 'prestamos.enviar_boleta');
+    }
+};
+
 const libro_valido = (valor) =>
 {
     const id_libro = String(valor || '').trim().toUpperCase();
@@ -185,4 +251,4 @@ const registrar_espera = async (solicitud, respuesta) =>
 };
 
 module.exports = { mios, solicitudes, autorizar, activos, validar_directo,
-    registrar_directo, espera, registrar_espera };
+    registrar_directo, descargar_boleta, enviar_boleta, espera, registrar_espera };

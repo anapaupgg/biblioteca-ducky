@@ -18,6 +18,8 @@ const prestamos_controller =
     datos_pendientes: null,
     renovacion_pendiente: null,
     prestamo_actual: null,
+    enviando_correo: false,
+    numero_whatsapp: null,
 
     iniciar: async function ()
     {
@@ -43,7 +45,13 @@ const prestamos_controller =
             consultar_espera: (id) => this.consultar_espera(id),
             registrar_espera: (datos) => this.registrar_espera(datos),
             abrir_boleta: () => this.abrir_boleta(),
-            volver_recibo: () => this.volver_recibo()
+            volver_recibo: () => this.volver_recibo(),
+            abrir_correo: () => this.abrir_correo(),
+            enviar_correo: () => this.enviar_correo(),
+            abrir_whatsapp: () => this.abrir_whatsapp(),
+            preparar_whatsapp: (numero) => this.preparar_whatsapp(numero),
+            abrir_mensaje_whatsapp: () => this.abrir_mensaje_whatsapp(),
+            descargar_boleta: () => this.descargar_boleta()
         });
         await this.cargar();
     },
@@ -76,6 +84,7 @@ const prestamos_controller =
     {
         this.datos_pendientes = null;
         this.prestamo_actual = null;
+        this.numero_whatsapp = null;
         prestamos_view.mostrar('registrar');
         prestamos_view.enfocar_registro();
     },
@@ -85,6 +94,7 @@ const prestamos_controller =
         this.datos_pendientes = null;
         this.renovacion_pendiente = null;
         this.prestamo_actual = null;
+        this.numero_whatsapp = null;
         prestamos_view.mostrar('personal');
         await this.cargar();
     },
@@ -234,5 +244,84 @@ const prestamos_controller =
         if (!this.prestamo_actual) return;
         prestamos_view.mostrar('recibo');
         prestamos_view.recibo(this.prestamo_actual);
+    },
+
+    abrir_correo: function ()
+    {
+        if (!this.prestamo_actual) return;
+        prestamos_view.mostrar('correo');
+        prestamos_view.correo(this.prestamo_actual);
+    },
+
+    enviar_correo: async function ()
+    {
+        if (!this.prestamo_actual || this.enviando_correo) return;
+        this.enviando_correo = true;
+        prestamos_view.enviando_correo(true);
+        try
+        {
+            await prestamo_model.enviar_boleta(this.prestamo_actual.id_prestamo);
+            prestamos_view.mostrar('correo-enviado');
+            prestamos_view.correo_enviado(this.prestamo_actual);
+        }
+        catch (error)
+        {
+            prestamos_view.mensaje('error', 'No se pudo enviar la boleta', error.message);
+        }
+        finally
+        {
+            this.enviando_correo = false;
+            prestamos_view.enviando_correo(false);
+        }
+    },
+
+    abrir_whatsapp: function ()
+    {
+        if (!this.prestamo_actual) return;
+        prestamos_view.error_whatsapp(false);
+        prestamos_view.mostrar('whatsapp');
+    },
+
+    preparar_whatsapp: async function (numero)
+    {
+        if (!this.prestamo_actual) return;
+        if (!/^\d{10}$/.test(numero))
+        {
+            prestamos_view.error_whatsapp(true);
+            return;
+        }
+        prestamos_view.error_whatsapp(false);
+        try
+        {
+            const pdf = await prestamo_model.descargar_boleta(this.prestamo_actual.id_prestamo);
+            prestamos_view.descargar_pdf(pdf, this.prestamo_actual.folio_prestamo);
+            this.numero_whatsapp = numero;
+            prestamos_view.mostrar('whatsapp-preparado');
+            prestamos_view.whatsapp_preparado(this.prestamo_actual, numero);
+        }
+        catch (error)
+        {
+            prestamos_view.mensaje('error', 'No se pudo preparar la boleta', error.message);
+        }
+    },
+
+    abrir_mensaje_whatsapp: function ()
+    {
+        if (!this.prestamo_actual || !this.numero_whatsapp) return;
+        prestamos_view.abrir_mensaje_whatsapp(this.numero_whatsapp, this.prestamo_actual);
+    },
+
+    descargar_boleta: async function ()
+    {
+        if (!this.prestamo_actual) return;
+        try
+        {
+            const pdf = await prestamo_model.descargar_boleta(this.prestamo_actual.id_prestamo);
+            prestamos_view.descargar_pdf(pdf, this.prestamo_actual.folio_prestamo);
+        }
+        catch (error)
+        {
+            prestamos_view.mensaje('error', 'No se pudo descargar la boleta', error.message);
+        }
     }
 };

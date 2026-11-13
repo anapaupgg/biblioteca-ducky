@@ -95,7 +95,7 @@ const detalle = async (client, id_prestamo) =>
                 'PRE-' || extract(year FROM p.fecha_prestamo)::int || '-' ||
                     lpad(p.id_prestamo::text, 4, '0') AS folio_prestamo,
                 p.fecha_prestamo, p.fecha_vencimiento, p.estatus, l.titulo,
-                u.nombre AS solicitante, t.nombre AS tipo_usuario,
+                u.nombre AS solicitante, u.correo, t.nombre AS tipo_usuario,
                 t.dias_prestamo, t.max_ejemplares, t.multa_diaria, e.tipo_uso,
                 (SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
                     AND x.tipo_uso = 'Préstamo externo') AS ejemplares_total,
@@ -111,6 +111,9 @@ const detalle = async (client, id_prestamo) =>
           WHERE p.id_prestamo = $1`, [id_prestamo]);
     return resultado.rows[0];
 };
+
+/* Consulta un préstamo confirmado; la boleta nunca usa datos enviados por el cliente. */
+const detalle_registrado = async (id_prestamo) => detalle(pool, id_prestamo);
 
 const activos = async () =>
 {
@@ -168,4 +171,5 @@ const contexto_espera = async (client, clave_usuario, id_libro) =>
 };
 
 module.exports = { mis_solicitudes, mis_prestamos, pendientes, bloquear_solicitud,
-    autorizar, registrar_directo, detalle, activos, espera, registrar_espera, contexto_espera };
+    autorizar, registrar_directo, detalle, detalle_registrado, activos, espera,
+    registrar_espera, contexto_espera };

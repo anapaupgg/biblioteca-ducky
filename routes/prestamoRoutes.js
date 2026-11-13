@@ -24,6 +24,10 @@ router.post('/validar', requiere_sesion, requiere_funcion('Préstamos'),
     prestamo_controller.validar_directo);
 router.post('/registrar', requiere_sesion, requiere_funcion('Préstamos'),
     prestamo_controller.registrar_directo);
+router.get('/recibos/:id/pdf', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.descargar_boleta);
+router.post('/recibos/:id/correo', requiere_sesion, requiere_funcion('Préstamos'),
+    prestamo_controller.enviar_boleta);
 router.get('/espera/:libro', requiere_sesion, requiere_funcion('Préstamos'),
     prestamo_controller.espera);
 router.post('/espera', requiere_sesion, requiere_funcion('Préstamos'),
