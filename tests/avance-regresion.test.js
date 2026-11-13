@@ -28,6 +28,7 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
         titulo: 'Bases'
     };
     let errores = 0;
+    let estado_movil;
     const controlador = cargar('BuscarController.js', 'buscar_controller',
     {
         buscar_view:
@@ -38,7 +39,11 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
                 resultados = [];
             },
             mensaje: () =>
-            {}
+            {},
+            estado_movil: (tipo) =>
+            {
+                estado_movil = tipo;
+            }
         },
         ui:
         {
@@ -66,6 +71,7 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
     };
     await controlador.buscar();
     assert.equal(resultados.length, 0);
+    assert.equal(estado_movil, 'invalid');
 });
 test('compras: cantidad fraccionaria y costo infinito no entran al borrador', () =>
 {

@@ -10,6 +10,7 @@
 /*   buscar_controller.iniciar() */
 /*   buscar_controller.buscar() */
 /*   buscar_controller.limpiar() */
+/*   buscar_controller.modificar() */
 /*   buscar_controller.ejemplo(campo, valor) */
 /*   buscar_controller.solicitar(libro) */
 /*   buscar_controller.ficha(libro) */
@@ -39,6 +40,7 @@ const buscar_controller =
         {
             buscar: (...argumentos) => this.buscar(...argumentos),
             limpiar: () => this.limpiar(),
+            modificar: () => this.modificar(),
             ejemplo: (campo, valor) => this.ejemplo(campo, valor)
         });
 
@@ -59,6 +61,12 @@ const buscar_controller =
         buscar_view.limpiar_filtros();
     },
 
+    modificar: function ()
+    {
+        this.version_consulta++;
+        buscar_view.modificar();
+    },
+
     ejemplo: function (campo, valor)
     {
         this.version_consulta++;
@@ -76,7 +84,10 @@ const buscar_controller =
         const usados = Object.values(filtros).filter(Boolean);
         if (usados.length === 0)
         {
-            return buscar_view.mensaje('error', 'Escribe al menos un filtro de búsqueda');
+            buscar_view.mensaje('error', 'Escribe al menos un filtro de búsqueda');
+            buscar_view.estado_movil('invalid', 'Introduce al menos un filtro. ' +
+                'Los textos requieren 3 caracteres; el ISBN solo admite números, X o guiones.');
+            return;
         }
         const cortos = ['titulo', 'autor', 'tema', 'editorial'].filter((campo) => filtros[campo] &&
             filtros[campo].length < 3);
@@ -85,8 +96,11 @@ const buscar_controller =
         {
             ui.marcar(cortos);
             buscar_view.vaciar();
-            return buscar_view.mensaje('error', 'Verifica los filtros marcados',
+            buscar_view.mensaje('error', 'Verifica los filtros marcados',
                 'Los textos requieren al menos 3 caracteres y el ISBN solo números.');
+            buscar_view.estado_movil('invalid', 'Corrige los filtros indicados. ' +
+                'Los textos requieren 3 caracteres; el ISBN solo admite números, X o guiones.');
+            return;
         }
         try
         {

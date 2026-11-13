@@ -14,6 +14,8 @@
 /*   buscar_view.filtros() */
 /*   buscar_view.limpiar_filtros() */
 /*   buscar_view.activar_movil() */
+/*   buscar_view.modificar() */
+/*   buscar_view.estado_movil(tipo, detalle) */
 /*   buscar_view.ejemplo(campo, valor) */
 /*   buscar_view.resultados(lista, filtros, acciones) */
 /*   buscar_view.ficha(filtro) */
@@ -43,6 +45,9 @@ const buscar_view =
     vaciar: function ()
     {
         document.getElementById('resultados').innerHTML = '';
+        document.body.classList.remove('search-results-mobile');
+        document.body.classList.remove('search-state-mobile', 'search-state-empty',
+            'search-state-invalid');
     },
 
     /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
@@ -58,11 +63,42 @@ const buscar_view =
             acciones.ejemplo('isbn', '9786073206037'));
         document.getElementById('btn-ejemplo-movil').addEventListener('click', () =>
             acciones.ejemplo('titulo', 'software'));
+        document.getElementById('btn-modificar-busqueda').addEventListener('click', () =>
+            acciones.modificar());
+        document.getElementById('btn-corregir-busqueda').addEventListener('click', () =>
+            acciones.modificar());
     },
 
     activar_movil: function ()
     {
         document.body.classList.add('search-mobile-preview');
+    },
+
+    modificar: function ()
+    {
+        this.vaciar();
+        ui.alerta('mensaje');
+        window.scrollTo(0, 0);
+        this.enfocar();
+    },
+
+    estado_movil: function (tipo, detalle)
+    {
+        const vacio = tipo === 'empty';
+        document.body.classList.remove('search-results-mobile', 'search-state-empty',
+            'search-state-invalid');
+        document.body.classList.add('search-state-mobile', vacio ? 'search-state-empty' :
+            'search-state-invalid');
+        document.getElementById('titulo-estado-busqueda').textContent = vacio ?
+            'Sin resultados' : 'Revisa los filtros';
+        document.getElementById('subtitulo-estado-busqueda').textContent = vacio ?
+            'No encontramos libros con esos filtros.' :
+            'Corrige los datos indicados para continuar.';
+        document.getElementById('detalle-estado-busqueda').textContent = detalle;
+        document.getElementById('btn-corregir-busqueda').textContent = vacio ?
+            'Cambiar filtros' : 'Corregir búsqueda';
+        if (window.matchMedia('(max-width: 600px)').matches ||
+            document.body.classList.contains('search-mobile-preview')) window.scrollTo(0, 0);
     },
 
     ejemplo: function (campo, valor)
@@ -84,6 +120,9 @@ const buscar_view =
         });
         ui.limpiar();
         document.getElementById('resultados').innerHTML = '';
+        document.body.classList.remove('search-results-mobile');
+        document.body.classList.remove('search-state-mobile', 'search-state-empty',
+            'search-state-invalid');
         ui.alerta('mensaje');
         document.getElementById('titulo').focus();
     },
@@ -95,12 +134,17 @@ const buscar_view =
         if (lista.length === 0)
         {
             document.getElementById('resultados').innerHTML = '';
+            document.body.classList.remove('search-results-mobile');
             ui.alerta('mensaje', 'warning', 'No se encontraron coincidencias',
                 'Revisa los filtros (' + resumen + ') o intenta con menos datos.');
+            this.estado_movil('empty', 'Prueba con otro título, autor o tema.');
             return;
         }
         ui.alerta('mensaje', 'info', 'Resultados de búsqueda', resumen + ' · ' + lista.length +
             ' resultado(s) activos.');
+        document.body.classList.add('search-results-mobile');
+        if (window.matchMedia('(max-width: 600px)').matches ||
+            document.body.classList.contains('search-mobile-preview')) window.scrollTo(0, 0);
 
         const lectura = (elemento_2, valor_4) => '<div class="field"><span class="label">' +
             elemento_2 + '</span><div class="readonly">' + ui.esc(valor_4) + '</div></div>';
@@ -116,7 +160,17 @@ const buscar_view =
                 '<button class="btn btn-primary" data-solicitar="' + indice +
                 '">Solicitar préstamo</button>' + acciones_html;
 
-            return '<div class="card"><h2>' + ui.esc(libro.titulo) + (digital ?
+            const disponibilidad = digital ? 'Digital · Disponible en línea' :
+                libro.ejemplares + (libro.ejemplares === 1 ? ' copia · ' : ' copias · ') +
+                libro.disponibles_prestamo + (libro.disponibles_prestamo === 1 ?
+                    ' disponible · ' : ' disponibles · ') + libro.prestados +
+                (libro.prestados === 1 ? ' prestada' : ' prestadas');
+            const movil = '<div class="card search-result-mobile"><h2>' +
+                ui.esc(libro.titulo) + '</h2><p>' + ui.esc(libro.autores || '—') +
+                '</p><p class="search-result-availability">' + ui.esc(disponibilidad) +
+                '</p><button class="btn btn-primary" data-ficha="' + indice +
+                '" type="button">Ver ficha</button></div>';
+            return '<div class="card search-result-desktop"><h2>' + ui.esc(libro.titulo) + (digital ?
                     ' · Recurso en línea' : '') + '</h2><div class="grid-2">' +
                 lectura('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn) + lectura(
                     'Autor', libro.autores || '—') +
@@ -131,7 +185,7 @@ const buscar_view =
                     '<div class="alert alert-warning"><strong>Todos los ejemplares están prestados o reservados</strong><span>Consulta la ficha para ver cuándo se devuelve cada ejemplar.</span></div>' :
                     '') +
                 '<div class="actions" style="margin-bottom:0">' + acciones_html +
-                '</div></div>';
+                '</div></div>' + movil;
         }).join('');
 
         const en = (attr, accion) => document.querySelectorAll('[' + attr + ']').forEach((boton) =>

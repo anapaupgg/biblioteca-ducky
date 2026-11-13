@@ -1585,6 +1585,13 @@ table.table
     display: none;
 }
 
+.search-mobile-results-heading,
+.search-mobile-state,
+.search-result-mobile
+{
+    display: none;
+}
+
 @media (max-width: 600px)
 {
     .search-page .topbar
@@ -1658,6 +1665,130 @@ table.table
     {
         width: 100%;
     }
+
+    .search-results-mobile .search-mobile-heading,
+    .search-state-mobile .search-mobile-heading,
+    .search-state-mobile .search-mobile-results-heading,
+    .search-state-mobile .search-desktop-heading,
+    .search-state-mobile .search-desktop-links,
+    .search-state-mobile #form-buscar,
+    .search-state-mobile #mensaje,
+    .search-state-mobile #resultados,
+    .search-results-mobile #form-buscar,
+    .search-results-mobile #mensaje,
+    .search-results-mobile .search-result-desktop
+    {
+        display: none;
+    }
+
+    .search-results-mobile .search-mobile-results-heading
+    {
+        display: grid;
+        gap: var(--space-16);
+        margin-bottom: var(--space-16);
+    }
+
+    .search-mobile-results-heading h1
+    {
+        font: var(--text-heading);
+    }
+
+    .search-mobile-results-heading p
+    {
+        font: var(--text-small);
+        color: var(--color-muted);
+        margin: 0;
+    }
+
+    .search-mobile-results-heading .btn
+    {
+        width: 100%;
+        min-height: 48px;
+    }
+
+    .search-results-mobile .search-result-mobile
+    {
+        display: flex;
+    }
+
+    .search-state-mobile .search-mobile-state
+    {
+        display: grid;
+    }
+}
+
+.search-mobile-state
+{
+    gap: var(--space-16);
+}
+
+.search-mobile-state h1
+{
+    font: var(--text-heading);
+}
+
+.search-mobile-state p
+{
+    margin: 0;
+}
+
+.search-mobile-state-subtitle
+{
+    font: var(--text-small);
+    color: var(--color-muted);
+}
+
+.search-mobile-state-detail
+{
+    font: var(--text-body);
+    color: var(--color-muted);
+}
+
+.search-state-invalid .search-mobile-state-detail
+{
+    color: var(--color-red);
+}
+
+.search-state-empty .search-mobile-state-detail
+{
+    order: 2;
+}
+
+.search-mobile-state .btn
+{
+    width: 100%;
+    min-height: 48px;
+}
+
+.search-result-mobile
+{
+    flex-direction: column;
+    gap: var(--space-16);
+    padding: var(--space-24);
+}
+
+.search-result-mobile > h2:first-child
+{
+    font: var(--text-heading);
+    margin: 0;
+}
+
+.search-result-mobile p
+{
+    margin: 0;
+    color: var(--color-muted);
+}
+
+.search-result-mobile .search-result-availability
+{
+    color: var(--color-green);
+    font: var(--text-label);
+}
+
+.search-result-mobile .btn
+{
+    width: 100%;
+    min-height: 48px;
 }
 
 @media (min-width: 601px)
@@ -1730,6 +1861,54 @@ table.table
     {
         flex-direction: column;
         gap: var(--space-16);
+    }
+
+    .search-mobile-preview.search-results-mobile .search-mobile-heading,
+    .search-mobile-preview.search-state-mobile .search-mobile-heading,
+    .search-mobile-preview.search-state-mobile .search-desktop-heading,
+    .search-mobile-preview.search-state-mobile .search-desktop-links,
+    .search-mobile-preview.search-state-mobile #form-buscar,
+    .search-mobile-preview.search-state-mobile #mensaje,
+    .search-mobile-preview.search-state-mobile #resultados,
+    .search-mobile-preview.search-results-mobile #form-buscar,
+    .search-mobile-preview.search-results-mobile #mensaje,
+    .search-mobile-preview.search-results-mobile .search-result-desktop
+    {
+        display: none;
+    }
+
+    .search-mobile-preview.search-results-mobile .search-mobile-results-heading
+    {
+        display: grid;
+        gap: var(--space-16);
+        margin-bottom: var(--space-16);
+    }
+
+    .search-mobile-preview .search-mobile-results-heading h1
+    {
+        font: var(--text-heading);
+    }
+
+    .search-mobile-preview .search-mobile-results-heading p
+    {
+        font: var(--text-small);
+        color: var(--color-muted);
+        margin: 0;
+    }
+
+    .search-mobile-preview .search-mobile-results-heading .btn
+    {
+        width: 100%;
+    }
+
+    .search-mobile-preview.search-results-mobile .search-result-mobile
+    {
+        display: flex;
+    }
+
+    .search-mobile-preview.search-state-mobile .search-mobile-state
+    {
+        display: grid;
     }
 }
 

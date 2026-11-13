@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — RESULTADOS Y ERRORES MÓVILES FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 5bd6f66 ya subido; antes de editar, origin/main no
+  tenía commits nuevos (0/0). package-lock.json local ajeno sigue excluido.
+- Frames 2258:48816, 2258:48840 y 2258:48844: tarjetas con datos reales,
+  disponibilidad, acciones de ficha y pantallas móviles específicas para
+  ausencia de resultados y filtros inválidos. Volver conserva filtros.
+- Navegador a 390 px: tarjetas en (24,204) y (24,438), retorno a búsqueda
+  y estados vacío/inválido cotejados con Figma usando datos sintéticos.
+  Se eliminaron las vistas temporales; no hubo escrituras en la BD.
+- El texto de ISBN inválido conserva las reglas reales de búsqueda y BD
+  (ISBN-10/13 y filtros parciales), que difieren de la frase ilustrativa de
+  Figma «13 dígitos».
+- Pendientes: seis estados móviles restantes de búsqueda, envíos de boleta,
+  estados alternos de las demás secciones y claves B/L. No se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BOLETA DE PRÉSTAMO Y BÚSQUEDA MÓVIL FIGMA (13 DE NOVIEMBRE DE 2026)
 - Al comenzar: git fetch origin correcto, main/origin main 0/0; no había
   commits nuevos. package-lock.json previo se conserva fuera del commit.
