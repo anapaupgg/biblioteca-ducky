@@ -1412,17 +1412,20 @@ table.table
     align-items: center;
     justify-content: center;
     aspect-ratio: 504 / 430;
+    min-height: 0;
 }
 
 .login-brand .logo-card img
 {
     width: 85%;
+    max-height: 100%;
+    object-fit: contain;
 }
 
 .login-brand h1
 {
     font: var(--text-display);
-    margin-top: var(--space-32);
+    margin-top: var(--space-24);
 }
 
 .login-brand p
@@ -1432,11 +1435,30 @@ table.table
 
 .login-form
 {
-    padding: 64px var(--space-48) var(--space-48) 80px;
+    padding: var(--space-48) var(--space-48) var(--space-48) 80px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    max-width: 820px;
+}
+
+#panel-login > h2
+{
+    margin-bottom: 20px;
+}
+
+#panel-login > p.muted
+{
+    margin-bottom: var(--space-24);
+}
+
+#form-login .actions
+{
+    margin-top: 36px;
+}
+
+#form-login .btn-primary
+{
+    min-height: 48px;
 }
 
 .search-desktop-heading
@@ -1488,7 +1510,7 @@ table.table
 
 .login-profile-field
 {
-    margin-top: var(--space-16);
+    margin-top: 28px;
 }
 
 .selector-perfil

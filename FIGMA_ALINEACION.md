@@ -4,6 +4,10 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 ## Revisión del 13 de noviembre de 2026
 
+### Acceso
+
+- Frames `2006:941` y `2198:48700`: cotejo visual del acceso y el diálogo de perfiles. El selector ya estaba implementado y la API sigue rechazando perfiles ajenos a la cuenta. Se ajustaron las medidas de la página a las coordenadas del frame original de 1440 × 960: logo (48, 48; 504 × 430), encabezado institucional (48, 502), título de acceso (680, 212), campos (680, 308) y acción principal (680, 524). Se verificó el diálogo y una vista móvil de 390 px sin comparar esta última con un frame móvil específico. Las cuentas de ejemplo muestran las claves reales de la base, distintas de las ilustrativas de Figma; no se afirma paridad de todos los estados de acceso.
+
 ### Compras y Tesorería
 
 - Frames `2261:48852` y `2261:48856`: recepción con encabezado, orden autorizada, título, ISBN, cantidad, condición inicial y acción de confirmar; resultado con folio/cantidad, siguiente paso y navegación a ficha o catálogo. La app mantiene un selector de ubicación necesario para registrar ejemplares físicos. Se cotejó en navegador el estado vacío real y se compararon la orden y los resultados con datos sintéticos sin modificar la base. Si la orden contiene un título nuevo, la acción abre el formulario de ficha con sus datos; si contiene fichas existentes, enlaza la primera ficha y muestra las etiquetas reales. El prototipo ilustra una sola orden y no representa la selección de ubicación ni órdenes con varios títulos; no se afirma paridad exacta para esos casos.
@@ -34,7 +38,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 | Sección de Figma | Estado antes de esta revisión | Diferencia comprobada |
 | --- | --- | --- |
-| 00 Acceso y sesión (`2006:941`) | Parcial | Falta selector de perfil visible y su diálogo `2198:48700`. La autenticación, bloqueo y recuperación existen. |
+| 00 Acceso y sesión (`2006:941`) | Parcial | Acceso y selector de perfil cotejados en escritorio. Faltan estados alternos y contraste con un frame móvil específico. |
 | 01 Administrador del sistema (`2006:1313`) | Parcial | El shell usa los tokens correctos, pero el contenido estaba a 48 px en vez de 32 px del frame estándar. Orden y textos de servicios difieren. |
 | 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
 | 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |

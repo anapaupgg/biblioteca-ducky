@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — GEOMETRÍA DE ACCESO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 1cd5e8a ya subido; origin/main sin commits nuevos.
+  package-lock.json previo permanece fuera de este trabajo.
+- Frames 2006:941 y 2198:48700 cotejados. El selector de perfil y su diálogo
+  ya funcionaban, por lo que no se duplicaron. Se ajustaron alto del logo,
+  separación vertical, ancho y posición del formulario y altura de la acción.
+- A 1440 × 960 se comprobaron las coordenadas principales de logo, encabezado,
+  título de acceso, campos y botón contra el frame. El diálogo conserva sus
+  cuatro perfiles. Se revisó una vista móvil de 390 px sin un frame móvil de
+  login para afirmar paridad. No se enviaron credenciales ni se cambió la BD.
+- Pendientes: estados alternos de acceso, móvil Figma y demás pantallas.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RECEPCIÓN DE COMPRAS SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - git fetch origin correcto; main y origin/main sin commits remotos nuevos
   (0/0). package-lock.json local ajeno sigue excluido.
