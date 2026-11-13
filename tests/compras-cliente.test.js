@@ -182,3 +182,35 @@ test('compras: solicitud vacía conserva campos y vuelve al formulario sin crear
     assert.equal(parcial_restaurado.peticionario, '700123');
     assert.equal(abierto, true);
 });
+
+test('compras: recepción consulta la orden y registra una sola vez el resultado', async () =>
+{
+    const llamadas = [];
+    let finalizar_recepcion;
+    let recibido;
+    const detalle = { pedido: { folio: 'OCT-2026-013' }, lineas: [{ cantidad: 2 }] };
+    const resultado = { ejemplares: ['E000001'], sin_ficha: [] };
+    const controlador = cargar({
+        pedido_model: {
+            detalle: async id => { llamadas.push('detalle:' + id); return detalle; },
+            recibir: (id, ubicacion) => {
+                llamadas.push('recibir:' + id + ':' + ubicacion);
+                return new Promise(resolve => { finalizar_recepcion = resolve; });
+            }
+        },
+        pedidos_view: {
+            bloquear_recepcion: (_id, estado) => llamadas.push('bloquear:' + estado),
+            recibido: (datos, orden) => { recibido = { datos, orden }; }
+        }
+    });
+    const primera = controlador.recibir(13, '2');
+    const segunda = controlador.recibir(13, '2');
+    await segunda;
+    await Promise.resolve();
+    assert.deepEqual(llamadas, ['bloquear:true', 'detalle:13', 'recibir:13:2']);
+    finalizar_recepcion(resultado);
+    await primera;
+    assert.equal(recibido.datos, resultado);
+    assert.equal(recibido.orden, detalle);
+    assert.equal(controlador.procesando_recepcion, false);
+});

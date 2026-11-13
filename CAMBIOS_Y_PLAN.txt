@@ -1,3 +1,24 @@
+ACTUALIZACIÓN — RECEPCIÓN DE COMPRAS SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- git fetch origin correcto; main y origin/main sin commits remotos nuevos
+  (0/0). package-lock.json local ajeno sigue excluido.
+- Frames 2261:48852 y 2261:48856 consultados. Recepción muestra encabezado,
+  orden autorizada, libros, condición inicial, ubicación física requerida y
+  confirmación. El resultado muestra folio, cantidad, etiquetas y el paso
+  siguiente según haya fichas pendientes o ejemplares ya etiquetados.
+- Al confirmar, el controlador obtiene el detalle antes de registrar y bloquea
+  los clics duplicados; un error habilita de nuevo el botón. Los enlaces de
+  ficha nueva conservan título, ISBN, editorial y autores en el formulario.
+- Navegador: estado vacío cotejado con la base real; orden autorizada y dos
+  resultados cotejados con datos sintéticos en una vista temporal eliminada.
+  No se autorizó ni recibió una orden real. La selección de ubicación se
+  conserva porque la API la exige para ejemplares físicos.
+- Prueba cliente agregada para secuencia y doble clic. Pendientes: probar
+  recepción integral con una orden autorizada real cuando exista; cotejo móvil
+  y estados alternos de compras. DUCKY_TEST_DB=1 npm test: 55 aprobadas,
+  cero fallos; git diff --check limpio. No se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — SOLICITUD VACÍA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 131803c ya subido; origin/main sin commits nuevos.
   package-lock.json previo se conserva excluido.

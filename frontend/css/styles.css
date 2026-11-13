@@ -473,6 +473,12 @@ a
     background: var(--color-red-soft);
 }
 
+.purchase-received-heading
+{
+    color: var(--color-green);
+    margin-bottom: var(--space-16);
+}
+
 .dialog-actions-primary-first [data-accion="confirmar"]
 {
     order: -1;

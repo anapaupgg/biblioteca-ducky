@@ -22,7 +22,8 @@
 /*   pedidos_view.vacia(presupuesto, parcial, acciones) */
 /*   pedidos_view.borrador_parcial() */
 /*   pedidos_view.recepcion(pendientes, ubicaciones, puede_recibir, recibir) */
-/*   pedidos_view.recibido(resultado) */
+/*   pedidos_view.bloquear_recepcion(id, bloqueado) */
+/*   pedidos_view.recibido(resultado, detalle) */
 /*   pedidos_view.mensaje(tipo, titulo, texto) */
 /******************************************************************/
 
@@ -159,8 +160,8 @@ const pedidos_view =
     {
         document.querySelectorAll('.tab').forEach((elemento_2) => elemento_2.classList.toggle(
             'active', elemento_2.dataset.tab === tab));
-        document.getElementById('stats').classList.toggle('hidden', tab === 'nueva');
-        document.querySelector('.tabs').classList.toggle('hidden', tab === 'nueva');
+        document.getElementById('stats').classList.toggle('hidden', tab !== 'historial');
+        document.querySelector('.tabs').classList.toggle('hidden', tab !== 'historial');
     },
 
     ocultar_tabs: function (tabs)
@@ -418,20 +419,25 @@ const pedidos_view =
 
     recepcion: function (pendientes, ubicaciones, puede_recibir, recibir)
     {
+        this.pagina('Recepción de libros adquiridos',
+            'Administrador del catálogo · Recibe los ejemplares y registra su ficha.');
         if (!pendientes.length)
         {
             document.getElementById('panel').innerHTML =
+                '<div class="actions actions-top"><a class="btn" href="libros.html">Volver al catálogo</a></div>' +
                 '<div class="empty">No hay solicitudes autorizadas por Tesorería pendientes de recibir</div>';
             return;
         }
-        document.getElementById('panel').innerHTML = pendientes.map((datos_3) =>
+        document.getElementById('panel').innerHTML =
+            '<div class="actions actions-top"><a class="btn" href="libros.html">Volver al catálogo</a></div>' +
+            pendientes.map((datos_3) =>
             '<div class="card"><h2>Orden ' + ui.esc(datos_3.pedido.folio) +
             ' · Autorizada por Tesorería</h2>' +
             datos_3.lineas.map((linea_14) => '<p>' + ui.esc(linea_14.titulo_solicitado) + (
                     linea_14.autores ? ' · ' + ui.esc(linea_14.autores) : '') +
                 '<br><span class="small muted">' +
                 (linea_14.isbn_solicitado ? 'ISBN ' + ui.esc(linea_14.isbn_solicitado) + ' · ' :
-                    '') + linea_14.cantidad + ' ejemplar(es) · ' +
+                    '') + linea_14.cantidad + ' ejemplar(es) por recibir · Condición inicial: Bueno · ' +
                 (linea_14.id_libro ? 'se etiquetan en ' + ui.esc(linea_14.id_libro) :
                     'título nuevo: requiere crear su ficha') + '</span></p>').join('') +
             '<p class="small muted">Responsable de la solicitud: ' + ui.esc(datos_3.pedido
@@ -452,22 +458,44 @@ const pedidos_view =
                 .dataset.recibir).value)));
     },
 
-    recibido: function (resultado)
+    bloquear_recepcion: function (id, bloqueado)
     {
-        const nuevos = resultado.sin_ficha.map((linea_15) =>
-            '<a class="btn btn-sm" href="libro_form.html?titulo=' + encodeURIComponent(linea_15
-                .titulo_solicitado) +
+        const boton = document.querySelector('[data-recibir="' + id + '"]');
+        if (boton) boton.disabled = bloqueado;
+    },
+
+    recibido: function (resultado, detalle)
+    {
+        this.pagina('Recepción registrada',
+            resultado.sin_ficha.length ? 'Los títulos nuevos están pendientes de catalogación.' :
+                'La recepción quedó registrada y los ejemplares fueron etiquetados.');
+        const enlace_ficha = (linea_15) => 'libro_form.html?titulo=' + encodeURIComponent(linea_15
+            .titulo_solicitado) +
             '&isbn=' + encodeURIComponent(linea_15.isbn_solicitado || '') + '&editorial=' +
             encodeURIComponent(linea_15.editorial || '') +
-            '&autores=' + encodeURIComponent(linea_15.autores || '') + '">Crear ficha: ' + ui.esc(
+            '&autores=' + encodeURIComponent(linea_15.autores || '');
+        const nuevos = resultado.sin_ficha.map((linea_15) =>
+            '<a class="btn btn-sm" href="' + enlace_ficha(linea_15) + '">Crear ficha: ' + ui.esc(
                 linea_15.titulo_solicitado) + '</a>').join(' ');
-        document.getElementById('mensaje').innerHTML =
-            '<div class="alert alert-ok"><strong>Recepción confirmada</strong><span>' +
-            (resultado.ejemplares.length ? 'Ejemplares etiquetados: ' + ui.esc(resultado.ejemplares
-                .join(', ')) + '. ' : '') +
-            (resultado.sin_ficha.length ? 'Faltan fichas para ' + resultado.sin_ficha.length +
-                ' título(s) nuevo(s).' : '') + '</span></div>' +
-            (nuevos ? '<div class="actions">' + nuevos + '</div>' : '');
+        const cantidad = detalle.lineas.reduce((suma, linea) => suma + linea.cantidad, 0);
+        const primera_ficha = detalle.lineas.find((linea) => linea.id_libro)?.id_libro;
+        document.getElementById('panel').innerHTML =
+            '<h2 class="purchase-received-heading">Orden ' + ui.esc(detalle.pedido.folio) +
+            ' · ' + cantidad + ' ejemplar(es) recibidos</h2>' +
+            '<p>Siguiente paso: ' + (resultado.sin_ficha.length ?
+                'capturar la ficha bibliográfica de los títulos nuevos y dar de alta los ejemplares.' :
+                'consultar las fichas bibliográficas y verificar los ejemplares etiquetados.') +
+            '</p>' +
+            (resultado.ejemplares.length ? '<p class="small muted">Etiquetas creadas: ' +
+                ui.esc(resultado.ejemplares.join(', ')) + '</p>' : '') +
+            (resultado.sin_ficha.length > 1 ? '<div class="actions">' + nuevos + '</div>' : '') +
+            '<div class="actions"><a class="btn btn-primary" href="' +
+            (resultado.sin_ficha.length ? enlace_ficha(resultado.sin_ficha[0]) :
+                primera_ficha ? 'libro_detalle.html?id=' + encodeURIComponent(primera_ficha) :
+                    'libros.html') +
+            '">' + (resultado.sin_ficha.length ? 'Registrar ficha bibliográfica' :
+                'Consultar ficha bibliográfica') + '</a>' +
+            '<a class="btn" href="libros.html">Volver al catálogo</a></div>';
     },
 
     mensaje: function (tipo, titulo, texto)

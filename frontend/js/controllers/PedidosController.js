@@ -36,6 +36,7 @@ const pedidos_controller =
     puede_autorizar: false,
     puede_recibir: false,
     procesando_envio: false,
+    procesando_recepcion: false,
     parcial: null,
 
     iniciar: async function ()
@@ -285,15 +286,23 @@ const pedidos_controller =
 
     recibir: async function (id, id_ubicacion)
     {
+        if (this.procesando_recepcion) return;
+        this.procesando_recepcion = true;
+        pedidos_view.bloquear_recepcion(id, true);
         try
         {
+            const detalle = await pedido_model.detalle(id);
             const resultado_3 = await pedido_model.recibir(id, Number(id_ubicacion) || null);
-            await this.mostrar('recepcion');
-            pedidos_view.recibido(resultado_3);
+            pedidos_view.recibido(resultado_3, detalle);
         }
         catch (error)
         {
             pedidos_view.mensaje('error', error.message);
+            pedidos_view.bloquear_recepcion(id, false);
+        }
+        finally
+        {
+            this.procesando_recepcion = false;
         }
     }
 };
