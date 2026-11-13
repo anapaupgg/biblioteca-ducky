@@ -467,6 +467,12 @@ a
     margin-bottom: var(--space-24);
 }
 
+.field .readonly.purchase-empty-book
+{
+    border-color: var(--color-red);
+    background: var(--color-red-soft);
+}
+
 .dialog-actions-primary-first [data-accion="confirmar"]
 {
     order: -1;

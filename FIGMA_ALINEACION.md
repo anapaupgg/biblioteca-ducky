@@ -7,6 +7,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 ### Compras y Tesorería
 
 - Frames `2011:28537`, `2011:28878`, `2257:48827`, `2011:29200` y `2011:29522`: la solicitud inicial muestra acciones, campos de contexto y resumen de libros; el formulario ampliado permanece en «Ver solicitud / agregar más». La revisión es una vista reversible y el resultado/consulta muestran datos reales de la orden. Se cotejaron en navegador con un borrador no enviado y una solicitud anterior.
+- Frame `2011:29860`: el intento de revisar sin libros presenta la alerta de solicitud no enviada, conserva presupuesto/destinatario y los datos parciales de título/peticionario, y permite regresar a añadir. Se verificó visualmente y sin crear una orden. `2011:30194` y `2257:48831` son recorridos ilustrativos del prototipo que no tienen todavía una fuente de peticiones de usuarios conectada; siguen pendientes.
 - La base no tiene presupuesto para el mes actual de la revisión; por eso «Enviar a Tesorería» queda deshabilitado en la revisión. La aplicación registra órdenes internas dirigidas a Tesorería, sin integración de correo o sistema externo. El texto del resultado lo aclara. No se afirma paridad de los estados alternos, recepción ni móvil.
 
 ### Modificación y baja de libros

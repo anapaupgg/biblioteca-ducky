@@ -157,3 +157,28 @@ test('compras: solo la confirmación de revisión crea la solicitud una vez', as
     assert.equal(controlador.lineas.length, 0);
     assert.match(destino.href, /modo=enviada&id=9$/);
 });
+
+test('compras: solicitud vacía conserva campos y vuelve al formulario sin crear orden', async () =>
+{
+    let acciones;
+    let escrituras = 0;
+    let parcial_restaurado;
+    let abierto = false;
+    const controlador = cargar({
+        pedidos_view: {
+            borrador_parcial: () => ({ titulo: 'Álgebra lineal', peticionario: '700123' }),
+            vacia: (_presupuesto, _parcial, callbacks) => { acciones = callbacks; },
+            activar: () => {},
+            llenar_linea: (datos) => { parcial_restaurado = datos; },
+            abrir_formulario: () => { abierto = true; }
+        },
+        pedido_model: { crear: () => { escrituras++; } }
+    });
+    controlador.dibujar_nueva = () => {};
+    await controlador.enviar();
+    assert.equal(escrituras, 0);
+    assert.equal(controlador.parcial.titulo, 'Álgebra lineal');
+    acciones.anadir();
+    assert.equal(parcial_restaurado.peticionario, '700123');
+    assert.equal(abierto, true);
+});

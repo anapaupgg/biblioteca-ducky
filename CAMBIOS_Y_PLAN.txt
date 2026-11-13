@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — SOLICITUD VACÍA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 131803c ya subido; origin/main sin commits nuevos.
+  package-lock.json previo se conserva excluido.
+- Frame 2011:29860 cotejado en navegador. Al revisar sin libros, la app
+  presenta «Solicitud no enviada», datos conservados y «Añadir libro»; el
+  campo de libro vacío conserva el borde rojo del diseño.
+- Si se habían escrito título y peticionario en el formulario, se muestran
+  en el estado de error y se restauran al volver a añadir. Cancelar limpia el
+  borrador; no se llama a la API ni se crea una orden vacía.
+- Se cotejaron intento vacío, conservación de dos campos y retorno al
+  formulario sin escrituras. Quedan pendientes los escenarios ilustrativos
+  2011:30194 y el selector de peticiones 2257:48831, que necesitan fuente
+  real de peticiones antes de mostrarse como funcionales.
+- DUCKY_TEST_DB=1 npm test: 54 aprobadas, cero fallos. git diff --check limpio.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — SOLICITUDES DE COMPRA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 4446331 ya subido; main y origin/main sincronizados.
   package-lock.json local ajeno sigue excluido.

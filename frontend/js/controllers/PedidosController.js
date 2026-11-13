@@ -36,6 +36,7 @@ const pedidos_controller =
     puede_autorizar: false,
     puede_recibir: false,
     procesando_envio: false,
+    parcial: null,
 
     iniciar: async function ()
     {
@@ -200,7 +201,27 @@ const pedidos_controller =
 
     enviar: async function ()
     {
-        if (!this.lineas.length) return pedidos_view.mensaje('error', 'Agrega al menos un libro');
+        if (!this.lineas.length)
+        {
+            this.parcial = pedidos_view.borrador_parcial();
+            pedidos_view.vacia(this.presupuesto, this.parcial,
+            {
+                anadir: () =>
+                {
+                    pedidos_view.activar('nueva');
+                    this.dibujar_nueva();
+                    pedidos_view.llenar_linea(this.parcial);
+                    pedidos_view.abrir_formulario();
+                },
+                cancelar: () =>
+                {
+                    this.parcial = null;
+                    pedidos_view.activar('nueva');
+                    this.dibujar_nueva();
+                }
+            });
+            return;
+        }
         pedidos_view.revision(this.lineas, this.presupuesto,
         {
             editar: () => this.mostrar('nueva'),

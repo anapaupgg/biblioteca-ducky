@@ -19,6 +19,8 @@
 /*   pedidos_view.enviada(datos, puede_solicitar) */
 /*   pedidos_view.consulta(datos, puede_solicitar) */
 /*   pedidos_view.revision(lineas, presupuesto, acciones) */
+/*   pedidos_view.vacia(presupuesto, parcial, acciones) */
+/*   pedidos_view.borrador_parcial() */
 /*   pedidos_view.recepcion(pendientes, ubicaciones, puede_recibir, recibir) */
 /*   pedidos_view.recibido(resultado) */
 /*   pedidos_view.mensaje(tipo, titulo, texto) */
@@ -110,6 +112,42 @@ const pedidos_view =
         document.getElementById('confirmar-envio').addEventListener('click', acciones.confirmar);
     },
 
+    vacia: function (presupuesto, parcial, acciones)
+    {
+        this.pagina('Agrega al menos un libro', 'No se envió una solicitud vacía.');
+        document.getElementById('panel').innerHTML =
+            '<div class="alert alert-error" role="alert"><strong>Solicitud no enviada</strong>' +
+            '<span>Se conserva el presupuesto, la petición de usuario y el destinatario.</span></div>' +
+            '<div class="card"><h2>Datos conservados</h2><div class="grid-2">' +
+            '<div class="field"><span class="label">Destinatario</span><div class="readonly">Tesorería</div></div>' +
+            '<div class="field"><span class="label">Presupuesto mensual</span><div class="readonly">' +
+            (presupuesto ? ui.esc(presupuesto.periodo) + ' · ' +
+                ui.dinero(presupuesto.monto_autorizado) : 'Sin registrar') + '</div></div>' +
+            '<div class="field"><span class="label">Libro solicitado</span>' +
+            '<div class="readonly purchase-empty-book">' + ui.esc(parcial.titulo || '') +
+            '</div></div><div class="field"><span class="label">Petición de usuario</span>' +
+            '<div class="readonly">' + ui.esc(parcial.peticionario || '—') +
+            '</div></div></div></div>' +
+            '<div class="actions"><button class="btn btn-primary" id="anadir-libro-vacio">' +
+            'Añadir libro</button><button class="btn" id="cancelar-vacio">Cancelar</button></div>';
+        document.getElementById('anadir-libro-vacio').addEventListener('click', acciones.anadir);
+        document.getElementById('cancelar-vacio').addEventListener('click', acciones.cancelar);
+    },
+
+    borrador_parcial: function ()
+    {
+        return {
+            titulo: document.getElementById('titulo')?.value || '',
+            peticionario: document.getElementById('peticionario')?.value || ''
+        };
+    },
+
+    abrir_formulario: function ()
+    {
+        document.getElementById('detalle-solicitud').open = true;
+        document.getElementById('titulo').focus();
+    },
+
     /* enlazar(acciones): callbacks del controlador; llamar una vez por página. */
     enlazar: function (acciones)
     {
@@ -163,9 +201,8 @@ const pedidos_view =
         document.getElementById('panel').innerHTML =
             '<div class="actions actions-top"><button class="btn" id="btn-ver-solicitud">' +
             'Ver solicitud / agregar más</button><button class="btn btn-primary" id="btn-revisar-top"' +
-            (lineas.length ? '' : ' disabled') + '>Revisar solicitud</button>' +
-            '<button class="btn" id="btn-cancelar-top"' + (lineas.length ? '' : ' disabled') +
-            '>Cancelar</button></div>' +
+            '>Revisar solicitud</button>' +
+            '<button class="btn" id="btn-cancelar-top">Cancelar</button></div>' +
             '<div class="card"><h2>Solicitud en preparación</h2><div class="grid-2">' +
             '<div class="field"><span class="label">Destinatario</span><div class="readonly">Tesorería</div></div>' +
             '<div class="field"><span class="label">Presupuesto mensual</span><div class="readonly">' +
@@ -201,7 +238,7 @@ const pedidos_view =
             (saldo !== null ? ' · Saldo del mes: ' + ui.dinero(saldo) + (total > saldo ?
                 ' <span class="badge badge-error">Rebasa el presupuesto</span>' : '') : '') + '</p>' +
             '<div class="actions" style="margin-bottom:0"><button class="btn btn-primary" id="btn-enviar"' +
-            (lineas.length ? '' : ' disabled') + '>Revisar y enviar a Tesorería</button>' +
+            '>Revisar y enviar a Tesorería</button>' +
             '<button class="btn" id="btn-vaciar"' + (lineas.length ? '' : ' disabled') +
             '>Cancelar solicitud</button></div></div></details>' +
             '<details class="purchase-other-actions"><summary>Historial y recepción</summary>' +
