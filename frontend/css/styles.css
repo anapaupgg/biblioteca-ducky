@@ -454,6 +454,26 @@ a
     margin-bottom: var(--space-16);
 }
 
+.usuario-exito-operacion p
+{
+    margin: 0 0 var(--space-16);
+}
+
+.usuario-exito-operacion p:last-child
+{
+    margin-bottom: 0;
+}
+
+.usuario-exito-credencial
+{
+    margin-top: var(--space-16);
+}
+
+.usuario-exito-credencial p
+{
+    margin: 0 0 var(--space-16);
+}
+
 .service
 {
     display: flex;
@@ -745,6 +765,23 @@ a
 .libro-copias .label
 {
     min-width: 180px;
+}
+
+.libro-copias-registradas
+{
+    display: flex;
+    align-items: center;
+    gap: var(--space-16);
+}
+
+.libro-copias-registradas .label
+{
+    min-width: 180px;
+}
+
+.libro-copias-registradas strong
+{
+    font: var(--text-heading);
 }
 
 .filters

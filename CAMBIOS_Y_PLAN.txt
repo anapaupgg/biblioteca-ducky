@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — CONTINUACIÓN DE FIGMA: ÉXITOS Y ALTA (13 DE NOVIEMBRE DE 2026)
+- Al comenzar, git fetch origin correcto: 574a70f en main y origin/main,
+  sin commits remotos nuevos ni diferencias. package-lock.json local ajeno
+  se conserva y queda fuera de este trabajo.
+- Frame 2007:5551: éxito de registro ahora muestra título, alerta,
+  campos institucionales, operación y acciones en orden Figma. La
+  contraseña temporal aparece después en un bloque adicional para no
+  perder la entrega de primer acceso. Fecha real sin hora inventada.
+- Frames 2010:23976, 2010:24662 y 2010:25002: ficha creada, revisión
+  previa a alta y resultado de catálogo enlazados al modelo existente.
+  Confirmar llama a la API una sola vez; cancelar regresa a ficha creada,
+  y un fallo deja reintentar. La revisión muestra ubicación y condición
+  de ejemplares reales; sin copias, bloquea confirmar y ofrece etiquetar.
+- Se compararon visualmente vistas temporales sintéticas en navegador y
+  se eliminaron después. No se registró usuario/libro ni se activó ficha
+  real durante esa validación. Dos pruebas nuevas verifican secuencia y
+  reintento del controlador sin BD.
+- DUCKY_TEST_DB=1 npm test: 50 aprobadas, cero fallos; no se ejecutó db:init.
+- Pendientes: diferencias de claves B/L, edición de ejemplares en el
+  flujo de libro, compras, estados de error y cotejo móvil integral.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — FORMULARIOS DE LIBRO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación local sobre bed1d46 ya subido; el paquete de registro y
   perfiles quedó sincronizado con origin/main. package-lock.json previo sigue

@@ -71,19 +71,34 @@ const usuario_registrar_view =
 
     exito: function (resultado)
     {
+        const usuario = resultado.usuario;
+        const campo = (etiqueta, valor) =>
+            '<div class="field"><span class="label">' + etiqueta + '</span>' +
+            '<div class="readonly">' + ui.esc(valor || '—') + '</div></div>';
+        document.getElementById('titulo-pagina').textContent =
+            'Usuario registrado exitosamente';
+        document.getElementById('descripcion-pagina').textContent = usuario.nombre +
+            ' ya puede acceder a los servicios de su perfil.';
         document.getElementById('form-usuario').classList.add('hidden');
         document.getElementById('mensaje').innerHTML =
-            '<div class="alert alert-ok"><strong>Usuario registrado exitosamente</strong>' +
-            '<span>' + ui.esc(resultado.usuario.nombre) + ' · ' + ui.esc(resultado.usuario.clave) +
-            ' · ' + ui.esc(resultado.usuario.tipo) +
-            ' · perfil ' + ui.esc(resultado.usuario.perfil) + '</span></div>' +
-            '<div class="card"><h2>Credenciales generadas</h2>' +
-            '<p>Correo institucional del usuario: <strong>' + ui.esc(resultado.usuario.correo) +
-            '</strong></p>' +
-            '<div class="alert alert-warning"><strong>Contraseña temporal: ' + ui.esc(resultado
-                .contrasena_temporal) + '</strong>' +
-            '<span>Entrégala al usuario; deberá cambiarla en su primer acceso.</span></div>' +
-            '<div class="actions"><a class="btn btn-primary" href="usuarios.html">Ver usuarios</a>' +
-            '<a class="btn" href="usuario_registrar.html">Registrar otro usuario</a></div></div>';
+            '<div class="alert alert-ok"><strong>Alta completada</strong>' +
+            '<span>' + ui.esc(usuario.nombre) +
+            ' ya puede acceder a los servicios de su perfil.</span></div>' +
+            '<div class="card"><h2>Usuario registrado</h2><div class="grid-2">' +
+            campo('Clave', usuario.clave) + campo('Nombre', usuario.nombre) +
+            campo('Tipo de usuario', usuario.tipo) +
+            campo('Correo institucional', usuario.correo) + '</div></div>' +
+            '<div class="card usuario-exito-operacion"><h2>Registro de la operación</h2>' +
+            '<p class="small muted">' + ui.esc(ui.fecha(usuario.fecha_alta)) +
+            ' · Administrador ' + ui.esc(usuario.clave_admin_alta || '—') + '</p>' +
+            '<p>Alta de ' + ui.esc(usuario.clave) + ' · Perfil ' +
+            ui.esc(usuario.perfil) +
+            ' · Datos institucionales verificados. Cuota de libros: política general del sistema.</p></div>' +
+            '<div class="actions"><a class="btn btn-primary" href="usuarios.html">Volver a usuarios</a>' +
+            '<a class="btn" href="usuario_registrar.html">Registrar otro usuario</a></div>' +
+            '<div class="card usuario-exito-credencial"><h2>Contraseña temporal de primer acceso</h2>' +
+            '<p>Se muestra una sola vez. Entrégala al usuario por un canal seguro; deberá cambiarla al entrar.</p>' +
+            '<div class="readonly" aria-label="Contraseña temporal">' +
+            ui.esc(resultado.contrasena_temporal) + '</div></div>';
     }
 };

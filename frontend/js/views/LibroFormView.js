@@ -15,7 +15,9 @@
 /*   libro_form_view.ajustar_formato() */
 /*   libro_form_view.copias(delta) */
 /*   libro_form_view.mensaje(tipo, titulo, texto) */
-/*   libro_form_view.creado(resultado) */
+/*   libro_form_view.creado(resultado, datos, preparar_alta) */
+/*   libro_form_view.confirmar_alta(ficha, confirmar, cancelar) */
+/*   libro_form_view.alta_completada(ficha) */
 /******************************************************************/
 
 /******************************************************************/
@@ -29,6 +31,10 @@ const CAMPOS_LIBRO = ['titulo', 'isbn', 'autores', 'editorial', 'tema', 'formato
     'anio_publicacion',
     'paginas', 'precio_ultima_compra_usd', 'enlace_digital', 'sinopsis', 'id_ubicacion', 'tipo_uso'
 ];
+
+const campo_libro_lectura = (etiqueta, valor) =>
+    '<div class="field"><span class="label">' + ui.esc(etiqueta) +
+    '</span><div class="readonly">' + ui.esc(valor || '—') + '</div></div>';
 
 const libro_form_view =
 {
@@ -135,17 +141,97 @@ const libro_form_view =
         ui.alerta('mensaje', tipo, titulo, texto);
     },
 
-    creado: function (resultado)
+    creado: function (resultado, datos, preparar_alta)
     {
         document.getElementById('form-libro').classList.add('hidden');
+        document.getElementById('titulo-pagina').textContent = 'Ficha bibliográfica creada';
+        document.getElementById('descripcion-pagina').textContent =
+            'La ficha muestra los datos que acabas de registrar.';
         document.getElementById('mensaje').innerHTML =
-            '<div class="alert alert-ok"><strong>Ficha bibliográfica creada · ' + ui.esc(resultado
-                .id_libro) + '</strong>' +
-            '<span>' + (resultado.ejemplares.length ? 'Ejemplares etiquetados: ' + ui.esc(resultado
-                .ejemplares.join(', ')) + '.' : 'Sin ejemplares todavía.') +
-            ' La ficha queda en estatus "Ficha creada" hasta darla de alta en el catálogo.</span></div>' +
-            '<div class="actions"><a class="btn btn-primary" href="libro_detalle.html?id=' +
-            encodeURIComponent(resultado.id_libro) + '">Ver ficha y dar de alta</a>' +
-            '<a class="btn" href="libro_form.html">Registrar otra ficha</a><a class="btn" href="libros.html">Volver al catálogo</a></div>';
+            '<div class="actions"><button class="btn btn-primary" type="button" id="btn-preparar-alta">' +
+            'Dar de alta en catálogo</button>' +
+            '<a class="btn" href="libro_detalle.html?id=' + encodeURIComponent(resultado.id_libro) +
+            '">Ver ficha para etiquetado</a><a class="btn" href="libros.html">Volver a libros</a></div>' +
+            '<div id="error-preparar-alta"></div>' +
+            '<div class="alert alert-ok"><strong>Ficha guardada</strong>' +
+            '<span>Disponible para etiquetado y entrega del libro. El alta en catálogo es el siguiente paso.</span></div>' +
+            '<div class="card"><h2>Sinopsis y ejemplares</h2><p>' +
+            ui.esc(datos.sinopsis || 'Sin sinopsis') + '</p>' +
+            '<p class="libro-copias-registradas"><span class="label">Copias registradas:</span><strong>' +
+            resultado.ejemplares.length + '</strong></p>' +
+            '<p class="small muted">La disponibilidad y ubicación se consultan por ejemplar.</p></div>' +
+            '<div class="card"><h2>' + ui.esc(datos.titulo) + '</h2><div class="grid-2">' +
+            campo_libro_lectura('Clave', resultado.id_libro) +
+            campo_libro_lectura('ISBN', datos.isbn) +
+            campo_libro_lectura('Título', datos.titulo) +
+            campo_libro_lectura('Autor', datos.autores) +
+            campo_libro_lectura('Tema', datos.tema) +
+            campo_libro_lectura('Editorial', datos.editorial) + '</div></div>';
+        document.getElementById('btn-preparar-alta').addEventListener('click', preparar_alta);
+    },
+
+    confirmar_alta: function (ficha, confirmar, cancelar)
+    {
+        const libro = ficha.libro;
+        const ejemplares = ficha.ejemplares.filter((ejemplar) => ejemplar.estatus !== 'Baja');
+        const ubicaciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.estante ?
+            ejemplar.estante + ' / ' + ejemplar.fila : 'En línea'))];
+        const condiciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.condicion))];
+        const disponibles = ejemplares.filter((ejemplar) => ejemplar.estatus === 'Disponible').length;
+        const prestados = ejemplares.filter((ejemplar) => ejemplar.estatus === 'Prestado').length;
+        document.getElementById('titulo-pagina').textContent = 'Dar de alta en catálogo';
+        document.getElementById('descripcion-pagina').textContent =
+            'Selecciona una ficha bibliográfica válida.';
+        document.getElementById('mensaje').innerHTML =
+            '<div id="error-alta"></div><div class="card"><h2>' +
+            ui.esc(libro.id_libro) + '</h2><div class="grid-2">' +
+            campo_libro_lectura('Título', libro.titulo) +
+            campo_libro_lectura('ISBN', libro.isbn) +
+            campo_libro_lectura('Formato', libro.formato) +
+            campo_libro_lectura('Estante / fila', ubicaciones.length === 1 ?
+                ubicaciones[0] : ubicaciones.length ? 'Varias ubicaciones' : '—') +
+            campo_libro_lectura('Condición', condiciones.length === 1 ?
+                condiciones[0] : condiciones.length ? 'Varias condiciones' : '—') +
+            campo_libro_lectura('Disponibles / prestados', disponibles + ' / ' + prestados) +
+            '</div></div>' +
+            (ejemplares.length ? '' : '<div class="alert alert-warning"><strong>Falta etiquetar un ejemplar</strong>' +
+                '<span>Abre la ficha y registra al menos una copia antes de confirmar el alta.</span></div>') +
+            '<div class="actions"><button class="btn btn-primary" type="button" id="btn-confirmar-alta"' +
+            (ejemplares.length ? '' : ' disabled') + '>Confirmar alta</button>' +
+            '<button class="btn" type="button" id="btn-cancelar-alta">Cancelar</button>' +
+            (ejemplares.length ? '' : '<a class="btn" href="libro_detalle.html?id=' +
+                encodeURIComponent(libro.id_libro) + '">Etiquetar ejemplares</a>') + '</div>';
+        document.getElementById('btn-confirmar-alta').addEventListener('click', confirmar);
+        document.getElementById('btn-cancelar-alta').addEventListener('click', cancelar);
+    },
+
+    bloquear_alta: function (bloquear)
+    {
+        document.getElementById('btn-confirmar-alta').disabled = bloquear;
+    },
+
+    error_alta: function (mensaje)
+    {
+        ui.alerta('error-alta', 'error', 'No se pudo dar de alta', mensaje);
+    },
+
+    error_preparar_alta: function (mensaje)
+    {
+        ui.alerta('error-preparar-alta', 'error', 'No se pudo revisar la ficha', mensaje);
+    },
+
+    alta_completada: function (ficha)
+    {
+        const libro = ficha.libro;
+        document.getElementById('titulo-pagina').textContent = 'Libro dado de alta en catálogo';
+        document.getElementById('descripcion-pagina').textContent = '';
+        document.getElementById('mensaje').innerHTML =
+            '<div class="alert alert-ok"><strong>Libro dado de alta en catálogo</strong>' +
+            '<span>' + ui.esc(libro.id_libro) + ' · ' + ui.esc(libro.titulo) +
+            '. Estatus Activo; disponible para consulta y préstamo.</span></div>' +
+            '<div class="card"><h2>Información de la operación</h2>' +
+            '<p>Libro registrado en el catálogo.</p></div>' +
+            '<div class="actions"><a class="btn" href="libros.html">Ver catálogo actualizado</a>' +
+            '<a class="btn" href="inicio.html">Ir al inicio</a></div>';
     }
 };

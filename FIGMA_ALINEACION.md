@@ -4,6 +4,12 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 ## Revisión del 13 de noviembre de 2026
 
+### Continuación: éxito de usuario y alta de catálogo
+
+- Frame `2007:5551`: se implementó el encabezado, alerta de alta, tarjeta de datos institucionales, registro de operación y acciones. La contraseña temporal necesaria para el primer acceso aparece en una tarjeta adicional después de las acciones. La base guarda solo fecha (sin hora) y datos institucionales replicados, así que la operación muestra la fecha real y no repite la afirmación del prototipo de que esos datos no se duplican. Se cotejó visualmente con una vista temporal sintética; no se creó un usuario real.
+- Frames `2010:23976`, `2010:24662` y `2010:25002`: la creación de ficha muestra los datos guardados y conduce a una revisión antes de llamar a la API de alta. La revisión usa ejemplares reales para ubicación, condición y disponibilidad; si no hay copias etiquetadas, bloquea la confirmación y ofrece ir a etiquetar. La operación terminada presenta el resultado y las acciones del prototipo. Se comprobaron las tres vistas, cancelación y confirmación con una vista sintética sin escribir en la base; el controlador y su ruta de reintento tienen pruebas automatizadas.
+- Continúan pendientes las claves `B...` frente a `L...`, edición directa de ubicación/condición desde el formulario de libro y el cotejo integral de compras, errores y móvil. No se afirma paridad total.
+
 - Se consultaron los frames `2007:5205` (registrar usuario), `2007:5551` (registro exitoso), `2009:19980` (perfiles), `2009:20306` (crear perfil), `2010:23633` (registrar ficha) y `2010:25664` (modificar libro), y se compararon con la app local.
 - Registro de usuario: orden y agrupación de Clave/Perfil y datos institucionales, breadcrumb y separación vertical ajustados al frame `2007:5205`. Se comprobó en navegador que la consulta institucional presenta Clave, Nombre, Tipo y Correo en ese orden, y que Lector queda como perfil inicial.
 - Perfiles: la lista usa filas seleccionables de 56 px, cinco columnas y acciones globales bajo la lista; la creación presenta Datos del perfil y seis funciones principales en dos columnas. Se verificaron lista, selección, edición, cancelación y creación en navegador sin guardar cambios de prueba. Otras tres funciones reales permanecen en «Funciones adicionales».

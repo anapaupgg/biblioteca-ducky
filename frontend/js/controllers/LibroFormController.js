@@ -23,6 +23,10 @@ const OBLIGATORIOS_LIBRO = ['titulo', 'isbn', 'autores', 'editorial', 'tema'];
 const libro_form_controller =
 {
     id: null,
+    creado_id: null,
+    creado_datos: null,
+    creado_resultado: null,
+    procesando_alta: false,
 
     iniciar: async function ()
     {
@@ -79,12 +83,51 @@ const libro_form_controller =
             }
             else
             {
-                libro_form_view.creado(await libro_model.crear(datos));
+                const resultado = await libro_model.crear(datos);
+                this.creado_id = resultado.id_libro;
+                this.creado_datos = datos;
+                this.creado_resultado = resultado;
+                libro_form_view.creado(resultado, datos, () => this.preparar_alta());
             }
         }
         catch (error)
         {
             ui.mostrar_error(error, 'mensaje');
+        }
+    },
+
+    preparar_alta: async function ()
+    {
+        try
+        {
+            const ficha = await libro_model.detalle(this.creado_id);
+            libro_form_view.confirmar_alta(ficha, () => this.confirmar_alta(),
+                () => libro_form_view.creado(this.creado_resultado, this.creado_datos,
+                    () => this.preparar_alta()));
+        }
+        catch (error)
+        {
+            libro_form_view.error_preparar_alta(error.message);
+        }
+    },
+
+    confirmar_alta: async function ()
+    {
+        if (this.procesando_alta) return;
+        this.procesando_alta = true;
+        libro_form_view.bloquear_alta(true);
+        try
+        {
+            libro_form_view.alta_completada(await libro_model.activar(this.creado_id));
+        }
+        catch (error)
+        {
+            libro_form_view.error_alta(error.message);
+            libro_form_view.bloquear_alta(false);
+        }
+        finally
+        {
+            this.procesando_alta = false;
         }
     }
 };
