@@ -29,17 +29,20 @@ const libro_detalle_controller =
     id: null,
     ficha: null,
     catalogos: null,
+    modo: null,
+    procesando_alta: false,
 
     iniciar: async function ()
     {
         const usuario = await layout.montar(
         {
             activo: 'libros',
-            migas: 'Gestionar libros / Consultar libro',
+            migas: 'Gestionar libros',
             funciones: ['Gestionar libros']
         });
         if (!usuario) return;
         this.id = ui.param('id');
+        this.modo = ui.param('modo');
         if (ui.param('ok') === 'editado') libro_detalle_view.mensaje('ok',
             'Libro modificado exitosamente');
         try
@@ -57,6 +60,28 @@ const libro_detalle_controller =
         try
         {
             this.ficha = await libro_model.detalle(this.id);
+            if (this.modo === 'etiquetado')
+            {
+                libro_detalle_view.etiquetado(this.ficha);
+                return;
+            }
+            if (this.modo === 'resultado' && this.ficha.libro.estatus === 'Activo en catálogo')
+            {
+                libro_form_view.alta_completada(this.ficha);
+                return;
+            }
+            if (this.modo === 'alta')
+            {
+                if (this.ficha.libro.estatus === 'Activo en catálogo')
+                {
+                    libro_form_view.alta_completada(this.ficha);
+                    return;
+                }
+                libro_form_view.confirmar_alta(this.ficha, () => this.confirmar_alta(),
+                    () => window.location.href = 'libro_detalle.html?id=' +
+                        encodeURIComponent(this.id));
+                return;
+            }
             libro_detalle_view.ficha(this.ficha,
             {
                 alta: () => this.alta(),
@@ -65,6 +90,7 @@ const libro_detalle_controller =
                 condicion: (elemento) => this.condicion(elemento),
                 baja: (elemento_2) => this.baja(elemento_2)
             });
+            if (this.modo === 'ejemplares') libro_detalle_view.mostrar_ejemplares();
         }
         catch (error)
         {
@@ -88,7 +114,30 @@ const libro_detalle_controller =
 
     alta: function ()
     {
-        this.ejecutar(libro_model.activar(this.id));
+        window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) +
+            '&modo=alta';
+    },
+
+    confirmar_alta: async function ()
+    {
+        if (this.procesando_alta) return;
+        this.procesando_alta = true;
+        libro_form_view.bloquear_alta(true);
+        try
+        {
+            await libro_model.activar(this.id);
+            window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) +
+                '&modo=resultado';
+        }
+        catch (error)
+        {
+            libro_form_view.error_alta(error.message);
+            libro_form_view.bloquear_alta(false);
+        }
+        finally
+        {
+            this.procesando_alta = false;
+        }
     },
 
     ejemplares: async function ()

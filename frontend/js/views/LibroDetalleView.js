@@ -8,6 +8,8 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   libro_detalle_view.ficha(filtro, acciones) */
+/*   libro_detalle_view.etiquetado(ficha) */
+/*   libro_detalle_view.mostrar_ejemplares() */
 /*   libro_detalle_view.dialogo_ejemplares(digital, catalogos, al_confirmar) */
 /*   libro_detalle_view.dialogo_condicion(ejemplar, catalogos, digital, al_confirmar) */
 /*   libro_detalle_view.dialogo_baja(ejemplar, motivos, al_confirmar) */
@@ -23,6 +25,37 @@
 
 const libro_detalle_view =
 {
+    etiquetado: function (ficha)
+    {
+        const libro = ficha.libro;
+        const campo = (etiqueta, valor) =>
+            '<div class="field"><span class="label">' + ui.esc(etiqueta) +
+            '</span><div class="readonly">' + ui.esc(valor || '—') + '</div></div>';
+        document.getElementById('titulo-pagina').textContent =
+            'Ficha para etiquetado y entrega';
+        document.getElementById('descripcion-pagina').textContent =
+            'Clave de etiquetado al pie de la ficha. Entrega al responsable del acervo.';
+        document.getElementById('detalle').innerHTML =
+            '<div class="card"><h2>' + ui.esc(libro.titulo) + '</h2><div class="grid-2">' +
+            campo('Clave', libro.id_libro) + campo('ISBN', libro.isbn) +
+            campo('Título', libro.titulo) +
+            campo('Autor', ficha.autores.map((autor) => autor.nombre).join(', ')) +
+            campo('Tema', libro.tema) + campo('Editorial', libro.editorial) +
+            '</div><p class="ficha-clave-etiqueta">' + ui.esc(libro.id_libro) + '</p></div>' +
+            '<div class="actions"><a class="btn btn-primary" href="libro_detalle.html?id=' +
+            encodeURIComponent(libro.id_libro) + '&modo=alta">Continuar al alta</a>' +
+            '<a class="btn" href="libro_detalle.html?id=' +
+            encodeURIComponent(libro.id_libro) + '">Volver a ficha</a></div>';
+    },
+
+    mostrar_ejemplares: function ()
+    {
+        const detalles = document.getElementById('detalle-acervo');
+        detalles.open = true;
+        detalles.scrollIntoView({ block: 'start' });
+        detalles.querySelector('#btn-ejemplares')?.focus();
+    },
+
     ficha: function (filtro, acciones)
     {
         const libro = filtro.libro;
@@ -30,26 +63,51 @@ const libro_detalle_view =
             '</span><div class="readonly">' + ui.esc(valor === null || valor === undefined ||
                 valor === '' ? '—' : valor) + '</div></div>';
         const retirado = libro.estatus === 'Retirado';
+        const vigente = filtro.ejemplares.filter((ejemplar) => ejemplar.estatus !== 'Baja');
+        const ubicaciones = [...new Set(vigente.map((ejemplar) => ejemplar.estante ?
+            ejemplar.estante + ' / ' + ejemplar.fila : 'En línea'))];
+        const condiciones = [...new Set(vigente.map((ejemplar) => ejemplar.condicion))];
+        const disponibles = vigente.filter((ejemplar) => ejemplar.estatus === 'Disponible').length;
+        const prestados = vigente.filter((ejemplar) => ejemplar.estatus === 'Prestado').length;
+        const ubicacion = ubicaciones.length === 1 ? ubicaciones[0] :
+            ubicaciones.length ? 'Varias ubicaciones' : '—';
+        const condicion = condiciones.length === 1 ? condiciones[0] :
+            condiciones.length ? 'Varias condiciones' : '—';
+        const resumen = [libro.formato, ubicacion, disponibles, prestados, condicion];
 
         document.getElementById('detalle').innerHTML =
             '<div class="actions">' +
             (retirado ? '' : '<a class="btn btn-primary" href="libro_form.html?id=' +
                 encodeURIComponent(libro.id_libro) + '">Modificar libro</a>') +
             (libro.estatus === 'Ficha creada' ?
-                '<button class="btn btn-gold" id="btn-alta">Dar de alta en catálogo</button>' : '') +
-            (retirado ? '' :
-            '<button class="btn" id="btn-ejemplares">Etiquetar ejemplares</button>') +
+                '<button class="btn" id="btn-alta">Dar de alta en catálogo</button>' : '') +
             (retirado ? '' :
                 '<button class="btn btn-danger" id="btn-retirar">Dar de baja libro</button>') +
-            '<a class="btn" href="libros.html">Volver al catálogo</a></div>' +
-
-            '<div class="card"><h2>' + ui.esc(libro.titulo) + ' ' + ui.badge(libro.estatus) +
+            (retirado ? '' :
+                '<button class="btn" id="btn-condicion-global"' +
+                (vigente.length ? '' : ' disabled') + '>Cambiar condición</button>') +
+            '</div>' +
+            '<div class="card"><h2>' + ui.esc(libro.titulo) +
             '</h2><div class="grid-2">' +
             lectura('Clave', libro.id_libro) + lectura('ISBN', libro.isbn) +
-            lectura('Autor(es)', filtro.autores.map((primero) => primero.nombre + (primero
-                .es_principal ? ' (principal)' : '')).join(', ')) + lectura('Editorial', libro
-                .editorial) +
-            lectura('Tema', libro.tema) + lectura('Formato', libro.formato) +
+            lectura('Título', libro.titulo) +
+            lectura('Autor', filtro.autores.map((autor) => autor.nombre).join(', ')) +
+            lectura('Tema', libro.tema) + lectura('Editorial', libro.editorial) +
+            '</div></div>' +
+            '<div class="card"><h2>Sinopsis y ejemplares</h2><p>' +
+            ui.esc(libro.sinopsis || 'Sin sinopsis') +
+            '</p><p class="libro-copias-registradas"><span class="label">Copias registradas:</span>' +
+            '<strong>' + vigente.length + '</strong></p>' +
+            '<p class="small muted">La disponibilidad y ubicación se consultan por ejemplar.</p></div>' +
+            '<div class="ficha-resumen" aria-label="Resumen de disponibilidad">' +
+            '<div class="ficha-resumen-fila">' +
+            ['Formato', 'Ubicación', 'Disponibles', 'Prestados', 'Condición'].map((texto) =>
+                '<span>' + texto + '</span>').join('') + '</div>' +
+            '<div class="ficha-resumen-fila">' + resumen.map((valor) =>
+                '<span title="' + ui.esc(valor) + '">' + ui.esc(valor) + '</span>').join('') +
+            '</div></div>' +
+            '<details class="card ficha-detalles" id="detalle-acervo"><summary>Datos adicionales y ejemplares</summary>' +
+            '<div class="grid-2">' +
             lectura('Edición · Año', (libro.edicion || '—') + ' · ' + (libro.anio_publicacion ||
             '—')) + lectura('Páginas', libro.paginas) +
             lectura('Precio última compra', libro.precio_ultima_compra_usd ? '$' + Number(libro
@@ -59,12 +117,11 @@ const libro_detalle_view =
                 '<div class="field span-2"><span class="label">Enlace digital</span><div class="readonly"><a href="' +
                 ui.esc(libro.enlace_digital) + '" target="_blank" rel="noopener">' + ui.esc(libro
                     .enlace_digital) + '</a></div></div>' : '') +
-            '</div><h3 style="margin-top:20px">Sinopsis</h3><p class="muted">' + ui.esc(libro
-                .sinopsis || 'Sin sinopsis') + '</p></div>' +
-
-            '<div class="card"><h2>Ejemplares (' + filtro.ejemplares.filter((elemento_2) => elemento_2
-                .estatus !== 'Baja').length +
-            ' vigentes)</h2><div id="tabla-ejemplares"></div></div>';
+            '</div><h3>Ejemplares (' + vigente.length + ' vigentes)</h3>' +
+            (retirado ? '' : '<div class="actions"><button class="btn" id="btn-ejemplares">' +
+                'Etiquetar ejemplares</button></div>') +
+            '<div id="tabla-ejemplares"></div>' +
+            '<div class="actions"><a class="btn" href="libros.html">Volver al catálogo</a></div></details>';
 
         ui.tabla('tabla-ejemplares',
             [
@@ -114,6 +171,11 @@ const libro_detalle_view =
         enlazar('btn-alta', acciones.alta);
         enlazar('btn-ejemplares', acciones.ejemplares);
         enlazar('btn-retirar', acciones.retirar);
+        enlazar('btn-condicion-global', () =>
+        {
+            this.mostrar_ejemplares();
+            document.querySelector('[data-condicion]')?.focus();
+        });
         const buscar = (id) => filtro.ejemplares.find((elemento_9) => elemento_9.id_ejemplar === id);
         document.querySelectorAll('[data-condicion]').forEach((boton_2) => boton_2.addEventListener(
             'click', () => acciones.condicion(buscar(boton_2.dataset.condicion))));

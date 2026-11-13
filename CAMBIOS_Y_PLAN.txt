@@ -1,3 +1,22 @@
+ACTUALIZACIÓN — FICHA Y ETIQUETADO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 465b24b subido y origin/main sincronizado.
+  package-lock.json local ajeno sigue excluido.
+- Frames 2010:24321 y 2010:25317 cotejados. Vista de etiquetado con
+  datos reales y clave al pie; continúa a revisión de alta. La ficha
+  activa muestra seis campos, sinopsis y resumen real de disponibilidad,
+  con detalle operativo por ejemplar desplegable.
+- En navegador: L000129 activo comparado; «Cambiar condición» abrió y
+  enfocó una copia sin modificarla. L000133 sin copias mostró la ficha
+  para etiquetado y bloqueó correctamente la confirmación de alta;
+  «Etiquetar ejemplares» abrió el panel correspondiente sin grabar datos.
+- No se implementó «Disponibilidad en otra biblioteca» porque todavía
+  faltan entidad y fuente de datos externos. Pendientes también estados
+  secundarios, compras, móvil y claves B/L.
+- DUCKY_TEST_DB=1 npm test: 50 aprobadas, cero fallos; git diff --check
+  limpio. No se ejecutó db:init ni se alteraron libros de prueba.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CONTINUACIÓN DE FIGMA: ÉXITOS Y ALTA (13 DE NOVIEMBRE DE 2026)
 - Al comenzar, git fetch origin correcto: 574a70f en main y origin/main,
   sin commits remotos nuevos ni diferencias. package-lock.json local ajeno

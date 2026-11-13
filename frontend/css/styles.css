@@ -784,6 +784,52 @@ a
     font: var(--text-heading);
 }
 
+.ficha-resumen
+{
+    display: grid;
+    gap: 4px;
+    margin-bottom: var(--space-16);
+    overflow-x: auto;
+}
+
+.ficha-resumen-fila
+{
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--space-12);
+    align-items: center;
+    min-width: 760px;
+    height: 56px;
+    padding: var(--space-16);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    background: var(--color-white);
+}
+
+.ficha-resumen-fila span
+{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ficha-detalles summary
+{
+    cursor: pointer;
+    font: var(--text-heading);
+}
+
+.ficha-detalles .grid-2,
+.ficha-detalles h3
+{
+    margin-top: var(--space-16);
+}
+
+.ficha-clave-etiqueta
+{
+    margin: var(--space-16) 0 0;
+}
+
 .filters
 {
     display: flex;

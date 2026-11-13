@@ -151,6 +151,7 @@ const libro_form_view =
             '<div class="actions"><button class="btn btn-primary" type="button" id="btn-preparar-alta">' +
             'Dar de alta en catálogo</button>' +
             '<a class="btn" href="libro_detalle.html?id=' + encodeURIComponent(resultado.id_libro) +
+            '&modo=etiquetado' +
             '">Ver ficha para etiquetado</a><a class="btn" href="libros.html">Volver a libros</a></div>' +
             '<div id="error-preparar-alta"></div>' +
             '<div class="alert alert-ok"><strong>Ficha guardada</strong>' +
@@ -200,7 +201,7 @@ const libro_form_view =
             (ejemplares.length ? '' : ' disabled') + '>Confirmar alta</button>' +
             '<button class="btn" type="button" id="btn-cancelar-alta">Cancelar</button>' +
             (ejemplares.length ? '' : '<a class="btn" href="libro_detalle.html?id=' +
-                encodeURIComponent(libro.id_libro) + '">Etiquetar ejemplares</a>') + '</div>';
+                encodeURIComponent(libro.id_libro) + '&modo=ejemplares">Etiquetar ejemplares</a>') + '</div>';
         document.getElementById('btn-confirmar-alta').addEventListener('click', confirmar);
         document.getElementById('btn-cancelar-alta').addEventListener('click', cancelar);
     },
