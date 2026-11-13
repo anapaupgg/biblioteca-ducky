@@ -38,9 +38,12 @@ const usuario_registrar_view =
 
     perfiles: function (lista)
     {
+        const perfil_lector = lista.find((elemento) => elemento.asignable &&
+            elemento.nombre === 'Lector');
         document.getElementById('id_perfil').innerHTML = ui.opciones(lista.filter((elemento_2) =>
                 elemento_2.asignable), 'id',
-            (elemento_3) => elemento_3.nombre + ' (' + elemento_3.funciones.join(', ') + ')', '',
+            (elemento_3) => elemento_3.nombre === 'Lector' ?
+                'Lector (alumno o docente)' : elemento_3.nombre, perfil_lector?.id || '',
             'Selecciona un perfil');
     },
 
@@ -55,12 +58,10 @@ const usuario_registrar_view =
         {
             document.getElementById(id).textContent = valor || '—';
         };
+        poner('i-clave', persona && persona.clave);
         poner('i-nombre', persona && persona.nombre);
         poner('i-tipo', persona && persona.tipo);
         poner('i-correo', persona && (persona.correo || 'Sin correo institucional'));
-        poner('i-vigente', persona && (persona.vigente ? 'Vigente' : 'No vigente') +
-            (persona && persona.registrado ? ' · Ya registrado en la biblioteca (' + persona
-                .estatus_biblioteca + ')' : ''));
     },
 
     mensaje: function (tipo, titulo, texto)

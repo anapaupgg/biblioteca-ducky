@@ -26,14 +26,19 @@
                 <div id="contenido">
                     <div class="page-header">
                         <div>
-                            <h1>Perfiles y permisos</h1>
-                            <p>Asigna funciones a cada perfil y controla su disponibilidad.</p>
+                            <h1 id="perfiles-titulo">Perfiles y permisos</h1>
+                            <p id="perfiles-descripcion">Asigna funciones a cada perfil y controla su disponibilidad.</p>
                         </div>
-                        <button class="btn btn-primary" id="btn-nuevo">Crear perfil</button>
                     </div>
                     <div id="mensaje"></div>
                     <div id="formulario" class="hidden"></div>
                     <div id="tabla"></div>
+                    <div class="actions" id="acciones-perfiles">
+                        <button class="btn btn-primary" id="btn-nuevo" type="button">Crear perfil</button>
+                        <button class="btn" id="btn-editar-perfil" type="button" disabled>Editar funciones</button>
+                        <button class="btn btn-danger" id="btn-eliminar-perfil" type="button" disabled>Eliminar perfil</button>
+                        <button class="btn hidden" id="btn-reactivar-perfil" type="button" disabled>Reactivar perfil</button>
+                    </div>
                 </div>
             </main>
         </div>

@@ -35,7 +35,12 @@ const perfiles_controller =
             funciones: ['Gestionar perfiles']
         });
         if (!usuario) return;
-        perfiles_view.enlazar(() => this.abrir(null));
+        perfiles_view.enlazar({
+            crear: () => this.abrir(null),
+            editar: (perfil) => this.abrir(perfil),
+            eliminar: (perfil) => this.eliminar(perfil),
+            reactivar: (perfil) => this.reactivar(perfil)
+        });
         try
         {
             this.funciones = await perfil_model.funciones();
@@ -51,12 +56,7 @@ const perfiles_controller =
     {
         try
         {
-            perfiles_view.tabla(await perfil_model.listar(),
-            {
-                editar: (perfil_2) => this.abrir(perfil_2),
-                eliminar: (perfil_3) => this.eliminar(perfil_3),
-                reactivar: (perfil_4) => this.reactivar(perfil_4)
-            });
+            perfiles_view.tabla(await perfil_model.listar());
         }
         catch (error)
         {

@@ -1,3 +1,30 @@
+ACTUALIZACIÓN — ALINEACIÓN VISUAL DE USUARIOS Y PERFILES (13 DE NOVIEMBRE DE 2026)
+- git fetch origin correcto al iniciar: main y origin/main en e9d2faf, sin
+  commits remotos nuevos ni diferencias de historia; no hubo integración.
+  package-lock.json ya estaba modificado localmente y se conserva fuera del
+  commit de esta solicitud.
+- Frames Figma 2007:5205, 2007:5551, 2009:19980, 2009:20306,
+  2010:23633 y 2010:25664 consultados. La app NO tiene todavía paridad total.
+- Registro de usuario: campos institucionales reordenados como Clave, Nombre,
+  Tipo y Correo; sin Vigencia adicional, breadcrumb alineado y Lector
+  seleccionado inicialmente. Consultado en navegador sin registrar datos.
+- Perfiles: filas de 56 px con columnas y selección, acciones globales,
+  creación/edición de perfil con seis funciones principales según Figma y
+  funciones adicionales reales plegadas. Se verificaron selección, edición,
+  cancelación y creación sin guardar cambios.
+- Espaciado común de topbar y encabezado ajustado al frame estándar. Se
+  comprobó visualmente en registro y perfiles. La lista de perfiles conserva
+  desplazamiento horizontal bajo 900 px; falta cotejo móvil detallado.
+- DUCKY_TEST_DB=1 npm test: 48 pruebas aprobadas (incluida BD en 5433),
+  cero fallos; git diff --check limpio. No se ejecutó db:init ni se
+  guardaron perfiles o usuarios de prueba.
+- Pendiente: éxito de registro con contraseña temporal; formularios de
+  catálogo y discrepancia de identificadores B/L; estados de error,
+  compras y vistas móviles. Conservar requisitos de ubicación, permisos y
+  acceso mientras se resuelven esas diferencias.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CATÁLOGO SEGÚN FIGMA (11 DE NOVIEMBRE DE 2026)
 - Frame 2010:23308 cotejado con navegador: recepción, filas compactas y
   acciones bajo la lista. Se agregó condición de ejemplares a la consulta

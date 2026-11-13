@@ -7,9 +7,9 @@
 
 /******************************************************************/
 /* Listing Contents: */
-/*   perfiles_view.enlazar(abrir) */
+/*   perfiles_view.enlazar(acciones) */
 /*   perfiles_view.enlazar_formulario(guardar) */
-/*   perfiles_view.tabla(perfiles, acciones) */
+/*   perfiles_view.tabla(perfiles) */
 /*   perfiles_view.formulario(funciones, perfil) */
 /*   perfiles_view.datos() */
 /*   perfiles_view.marcar_funciones(si) */
@@ -26,9 +26,21 @@
 
 const perfiles_view =
 {
-    enlazar: function (abrir)
+    enlazar: function (acciones)
     {
-        document.getElementById('btn-nuevo').addEventListener('click', abrir);
+        this.acciones = acciones;
+        document.getElementById('btn-nuevo').addEventListener('click', acciones.crear);
+        document.getElementById('btn-editar-perfil').addEventListener('click', () =>
+            this.con_perfil(acciones.editar));
+        document.getElementById('btn-eliminar-perfil').addEventListener('click', () =>
+            this.con_perfil(acciones.eliminar));
+        document.getElementById('btn-reactivar-perfil').addEventListener('click', () =>
+            this.con_perfil(acciones.reactivar));
+    },
+    con_perfil: function (accion)
+    {
+        const perfil = this.perfiles?.find((registro) => registro.id === this.id_seleccionado);
+        if (perfil) accion(perfil);
     },
     enlazar_formulario: function (guardar)
     {
@@ -40,56 +52,75 @@ const perfiles_view =
         document.getElementById('btn-cancelar').addEventListener('click', () => this
             .cerrar_formulario());
     },
-    tabla: function (perfiles, acciones)
+    tabla: function (perfiles)
     {
-        ui.tabla('tabla',
-            [
+        this.perfiles = perfiles;
+        if (!perfiles.some((perfil) => perfil.id === this.id_seleccionado))
+            this.id_seleccionado = null;
+        document.getElementById('tabla').innerHTML =
+            '<div class="perfiles-lista" role="listbox" aria-label="Perfiles disponibles">' +
+            '<div class="perfiles-fila perfiles-encabezado" aria-hidden="true">' +
+            '<span>Perfil</span><span>Descripción</span><span>Funciones</span>' +
+            '<span>Usuarios</span><span>Estatus</span></div>' +
+            perfiles.map((perfil) =>
             {
-                titulo: 'Perfil',
-                valor: (perfil_2) => '<strong>' + ui.esc(perfil_2.nombre) + '</strong>'
-            },
+                const resumen = perfil.funciones.length > 3 ?
+                    perfil.funciones.length + ' funciones' : perfil.funciones.join(', ');
+                const texto = [perfil.nombre, perfil.descripcion || '—', resumen,
+                    perfil.usuarios, perfil.estatus].join(' · ');
+                const columnas = [perfil.nombre, perfil.descripcion || '—', resumen,
+                    perfil.usuarios, perfil.estatus].map((valor) =>
+                    '<span title="' + ui.esc(String(valor)) + '">' +
+                    ui.esc(String(valor)) + '</span>').join('');
+                return '<button type="button" role="option" class="perfiles-fila perfiles-registro"' +
+                    ' data-perfil="' + perfil.id + '" aria-selected="' +
+                    (perfil.id === this.id_seleccionado) + '" title="' + ui.esc(texto) + '">' +
+                    columnas + '</button>';
+            }).join('') + '</div>';
+        document.querySelectorAll('[data-perfil]').forEach((fila) =>
+            fila.addEventListener('click', () =>
             {
-                titulo: 'Descripción',
-                valor: (perfil_3) => ui.esc(perfil_3.descripcion || '—')
-            },
-            {
-                titulo: 'Funciones',
-                valor: (perfil_4) => perfil_4.funciones.map((filtro) =>
-                    '<span class="badge" style="margin:2px">' + ui.esc(filtro) + '</span>'
-                    ).join(' ')
-            },
-            {
-                titulo: 'Usuarios',
-                valor: (perfil_5) => String(perfil_5.usuarios)
-            },
-            {
-                titulo: 'Estatus',
-                valor: (perfil_6) => ui.badge(perfil_6.estatus)
-            },
-            {
-                titulo: '',
-                valor: (perfil_7) => '<div class="row-actions">' + (perfil_7.id === 1 ?
-                    '<span class="small muted">Perfil base protegido</span>' :
-                    (perfil_7.estatus === 'Activo' ?
-                        '<button class="btn btn-sm" data-editar="' + perfil_7.id +
-                        '">Editar funciones</button>' +
-                        '<button class="btn btn-sm btn-danger" data-eliminar="' + perfil_7
-                        .id + '">Eliminar</button>' :
-                        '<button class="btn btn-sm" data-reactivar="' + perfil_7.id +
-                        '">Reactivar</button>')) + '</div>'
-            }], perfiles);
+                this.id_seleccionado = Number(fila.dataset.perfil);
+                document.querySelectorAll('[data-perfil]').forEach((otra) =>
+                    otra.setAttribute('aria-selected', String(otra === fila)));
+                this.actualizar_acciones();
+            }));
+        this.actualizar_acciones();
+    },
 
-        const buscar = (id) => perfiles.find((perfil_8) => perfil_8.id === Number(id));
-        document.querySelectorAll('[data-editar]').forEach((boton) => boton.addEventListener('click',
-            () => acciones.editar(buscar(boton.dataset.editar))));
-        document.querySelectorAll('[data-eliminar]').forEach((boton_2) => boton_2.addEventListener(
-            'click', () => acciones.eliminar(buscar(boton_2.dataset.eliminar))));
-        document.querySelectorAll('[data-reactivar]').forEach((boton_3) => boton_3.addEventListener(
-            'click', () => acciones.reactivar(buscar(boton_3.dataset.reactivar))));
+    actualizar_acciones: function ()
+    {
+        const perfil = this.perfiles?.find((registro) => registro.id === this.id_seleccionado);
+        const editable = perfil && perfil.id !== 1;
+        const activo = editable && perfil.estatus === 'Activo';
+        const reactivar = document.getElementById('btn-reactivar-perfil');
+        document.getElementById('btn-editar-perfil').disabled = !activo;
+        document.getElementById('btn-eliminar-perfil').disabled = !activo;
+        document.getElementById('btn-eliminar-perfil').textContent = activo ?
+            'Eliminar ' + perfil.nombre : 'Eliminar perfil';
+        reactivar.classList.toggle('hidden', !editable || perfil.estatus !== 'Inactivo');
+        reactivar.disabled = !editable || perfil.estatus !== 'Inactivo';
     },
 
     formulario: function (funciones, perfil)
     {
+        const nombres_figma = ['Gestionar usuarios', 'Gestionar libros', 'Buscar libros',
+            'Préstamos', 'Devoluciones', 'Chatbot'];
+        const principales = nombres_figma.flatMap((nombre) =>
+            funciones.filter((funcion) => funcion.nombre === nombre));
+        const adicionales = funciones.filter((funcion) =>
+            !nombres_figma.includes(funcion.nombre));
+        const casillas = (lista) => lista.map((funcion) =>
+            '<label class="check"><input type="checkbox" value="' + funcion.id + '"' +
+            (perfil && perfil.ids_funciones.includes(funcion.id) ? ' checked' : '') + '>' +
+            ui.esc(funcion.nombre) + '</label>').join('');
+        document.getElementById('tabla').classList.add('hidden');
+        document.getElementById('acciones-perfiles').classList.add('hidden');
+        document.getElementById('perfiles-titulo').textContent = perfil ?
+            'Modificar perfil' : 'Crear perfil';
+        document.getElementById('perfiles-descripcion').textContent = perfil ?
+            'Actualiza las funciones autorizadas del perfil.' :
+            'Selecciona al menos una función. El nombre debe ser único.';
         const panel = document.getElementById('formulario');
         panel.classList.remove('hidden');
         panel.innerHTML =
@@ -101,13 +132,11 @@ const perfiles_view =
             (perfil ? ' value="' + ui.esc(perfil.nombre) + '" readonly' : '') + '></div>' +
             '<div class="field"><label for="descripcion">Descripción</label><input id="descripcion" maxlength="200" placeholder="Ej. Consulta avanzada del acervo" value="' +
             ui.esc(perfil ? perfil.descripcion || '' : '') + '"></div></div></div>' +
-            '<div class="card"><h2>Funciones autorizadas</h2><div class="checks" id="funciones">' +
-            funciones.map((filtro_2) => '<label class="check"><input type="checkbox" value="' +
-                filtro_2.id + '"' +
-                (perfil && perfil.ids_funciones.includes(filtro_2.id) ? ' checked' : '') + '>' + ui
-                .esc(filtro_2.nombre) +
-                '<span class="small muted">· ' + ui.esc(filtro_2.descripcion || '') +
-                '</span></label>').join('') +
+            '<div class="card perfiles-formulario"><h2>Funciones autorizadas</h2><div id="funciones">' +
+            '<div class="checks">' + casillas(principales) + '</div>' +
+            '<p class="small muted">Préstamos, Devoluciones y Chatbot pertenecen al sistema completo; su selección configura el perfil. La cuota de libros se define como política general.</p>' +
+            (adicionales.length ? '<details class="perfiles-adicionales"><summary>Funciones adicionales</summary>' +
+                '<div class="checks">' + casillas(adicionales) + '</div></details>' : '') +
             '</div></div>' +
             '<div class="actions"><button class="btn btn-primary" type="submit">Guardar perfil</button>' +
             '<button class="btn" type="button" id="btn-cancelar">Cancelar</button></div></form>';
@@ -136,6 +165,11 @@ const perfiles_view =
         const panel = document.getElementById('formulario');
         panel.classList.add('hidden');
         panel.innerHTML = '';
+        document.getElementById('tabla').classList.remove('hidden');
+        document.getElementById('acciones-perfiles').classList.remove('hidden');
+        document.getElementById('perfiles-titulo').textContent = 'Perfiles y permisos';
+        document.getElementById('perfiles-descripcion').textContent =
+            'Asigna funciones a cada perfil y controla su disponibilidad.';
     },
 
     mensaje: function (tipo, titulo, texto)

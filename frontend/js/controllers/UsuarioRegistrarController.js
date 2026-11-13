@@ -26,7 +26,7 @@ const usuario_registrar_controller =
         const usuario = await layout.montar(
         {
             activo: 'usuarios',
-            migas: 'Gestión de usuarios / Registrar usuario',
+            migas: 'Gestión de usuarios',
             funciones: ['Gestionar usuarios']
         });
         if (!usuario) return;

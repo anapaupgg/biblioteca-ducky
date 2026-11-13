@@ -2,6 +2,14 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Revisión del 13 de noviembre de 2026
+
+- Se consultaron los frames `2007:5205` (registrar usuario), `2007:5551` (registro exitoso), `2009:19980` (perfiles), `2009:20306` (crear perfil), `2010:23633` (registrar ficha) y `2010:25664` (modificar libro), y se compararon con la app local.
+- Registro de usuario: orden y agrupación de Clave/Perfil y datos institucionales, breadcrumb y separación vertical ajustados al frame `2007:5205`. Se comprobó en navegador que la consulta institucional presenta Clave, Nombre, Tipo y Correo en ese orden, y que Lector queda como perfil inicial.
+- Perfiles: la lista usa filas seleccionables de 56 px, cinco columnas y acciones globales bajo la lista; la creación presenta Datos del perfil y seis funciones principales en dos columnas. Se verificaron lista, selección, edición, cancelación y creación en navegador sin guardar cambios de prueba. Otras tres funciones reales permanecen en «Funciones adicionales».
+- **No hay paridad completa.** El éxito del registro `2007:5551` aún presenta la contraseña temporal necesaria para acceder y no coincide exactamente con el frame. Los formularios de libro `2010:23633` y `2010:25664` difieren en orden, campos y acciones; el prototipo supone claves `B...` y ubicación/condición de ejemplar en la edición, mientras PostgreSQL usa claves `L...` y contratos de libro/ejemplar separados. Estas diferencias requieren una decisión de datos y una migración compatible antes de poder afirmar equivalencia funcional y visual.
+- No se han cotejado todos los estados de error, las compras, las diez vistas móviles ni el resto de fotogramas de las secciones 00–10. La alineación se acredita por pantalla y estado comprobados, no por el prototipo completo.
+
 | Sección de Figma | Estado antes de esta revisión | Diferencia comprobada |
 | --- | --- | --- |
 | 00 Acceso y sesión (`2006:941`) | Parcial | Falta selector de perfil visible y su diálogo `2198:48700`. La autenticación, bloqueo y recuperación existen. |

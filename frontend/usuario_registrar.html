@@ -37,9 +37,7 @@
                             <h2>Clave y perfil</h2>
                             <div class="grid-2">
                                 <div class="field"><label for="clave">Clave (matrícula o nómina)</label><input
-                                        id="clave" maxlength="6" placeholder="Ej. 645678"><span
-                                        class="hint">Escribe la clave y presiona Tab para consultar la
-                                        institución.</span></div>
+                                        id="clave" maxlength="6" placeholder="Ej. 645678"></div>
                                 <div class="field"><label for="id_perfil">Perfil asignado</label><select
                                         id="id_perfil"></select></div>
                             </div>
@@ -47,6 +45,9 @@
                         <div class="card">
                             <h2>Información institucional · solo lectura</h2>
                             <div class="grid-2" id="institucional">
+                                <div class="field"><span class="label">Clave</span>
+                                    <div class="readonly" id="i-clave">—</div>
+                                </div>
                                 <div class="field"><span class="label">Nombre</span>
                                     <div class="readonly" id="i-nombre">—</div>
                                 </div>
@@ -55,9 +56,6 @@
                                 </div>
                                 <div class="field"><span class="label">Correo institucional</span>
                                     <div class="readonly" id="i-correo">—</div>
-                                </div>
-                                <div class="field"><span class="label">Vigencia</span>
-                                    <div class="readonly" id="i-vigente">—</div>
                                 </div>
                             </div>
                         </div>
