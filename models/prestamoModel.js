@@ -92,9 +92,16 @@ const detalle = async (client, id_prestamo) =>
 {
     const resultado = await client.query(
         `SELECT p.id_prestamo, p.id_ejemplar, p.clave_usuario, p.id_solicitud_prestamo AS folio,
+                'PRE-' || extract(year FROM p.fecha_prestamo)::int || '-' ||
+                    lpad(p.id_prestamo::text, 4, '0') AS folio_prestamo,
                 p.fecha_prestamo, p.fecha_vencimiento, p.estatus, l.titulo,
                 u.nombre AS solicitante, t.nombre AS tipo_usuario,
-                t.dias_prestamo, t.max_ejemplares, e.tipo_uso,
+                t.dias_prestamo, t.max_ejemplares, t.multa_diaria, e.tipo_uso,
+                (SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
+                    AND x.tipo_uso = 'Préstamo externo') AS ejemplares_total,
+                (SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
+                    AND x.tipo_uso = 'Préstamo externo' AND x.estatus = 'Disponible')
+                    AS ejemplares_disponibles,
                 concat_ws(' / ', ub.estante, ub.fila) AS ubicacion
            FROM prestamos p JOIN ejemplares e ON e.id_ejemplar = p.id_ejemplar
                             JOIN libros l ON l.id_libro = e.id_libro

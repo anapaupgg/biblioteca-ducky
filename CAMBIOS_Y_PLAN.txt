@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — BOLETA DE PRÉSTAMO Y BÚSQUEDA MÓVIL FIGMA (13 DE NOVIEMBRE DE 2026)
+- Al comenzar: git fetch origin correcto, main/origin main 0/0; no había
+  commits nuevos. package-lock.json previo se conserva fuera del commit.
+- Frames 2447:108630 y 2447:108979: recibo y vista previa con datos reales
+  de préstamo, folio, disponibilidad y multa; la autorización lleva al
+  recibo. Impresión conserva el comprobante y oculta acciones.
+- Frame 2258:48812: a 390 × 1028 se cotejaron coordenadas de marca,
+  encabezado, acciones, seis campos y botones contra Figma; se ajustaron
+  padding, tipografía, separaciones y ocultación de barra superior.
+- Verificación: ambas vistas de boleta en navegador con datos sintéticos,
+  vista móvil medida en navegador, pruebas de PostgreSQL con rollback,
+  flujo de autorización simulado y git diff --check. No se ejecutó db:init.
+- Pendientes: correo con PDF adjunto y WhatsApp del recibo, otros nueve
+  estados móviles de búsqueda, estados alternos y claves B/L. Las vistas
+  sintéticas temporales se eliminaron; no se registró préstamo real.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — GEOMETRÍA DE BÚSQUEDA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 64fa6a3 ya subido; origin/main sin commits nuevos.
   package-lock.json local ajeno queda excluido.

@@ -12,9 +12,34 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
 const { pool, simular } = require('../db');
 const prestamo_model = require('../models/prestamoModel');
 const circulacion_model = require('../models/circulacionModel');
+
+test('autorización muestra recibo y conserva sus datos al abrir la boleta', async () =>
+{
+    const prestamo = { id_prestamo: 71, folio_prestamo: 'PRE-2026-0071' };
+    const pasos = [];
+    const contexto =
+    {
+        prestamo_model: { autorizar: async () => prestamo },
+        prestamos_view:
+        {
+            mostrar: (modo) => pasos.push('mostrar:' + modo),
+            recibo: (datos) => pasos.push('recibo:' + datos.folio_prestamo),
+            boleta: (datos) => pasos.push('boleta:' + datos.folio_prestamo)
+        }
+    };
+    vm.runInNewContext(fs.readFileSync(require.resolve('../frontend/js/controllers/PrestamosController.js'),
+        'utf8') + '\nthis.controlador = prestamos_controller;', contexto);
+    await contexto.controlador.autorizar(3, 'L000128-01');
+    contexto.controlador.abrir_boleta();
+    contexto.controlador.volver_recibo();
+    assert.deepEqual(pasos, ['mostrar:recibo', 'recibo:PRE-2026-0071', 'mostrar:boleta',
+        'boleta:PRE-2026-0071', 'mostrar:recibo', 'recibo:PRE-2026-0071']);
+});
 
 test('PostgreSQL: registro, renovación y devolución revierten todo en la prueba',
     { skip: process.env.DUCKY_TEST_DB !== '1' }, async () =>
@@ -39,6 +64,10 @@ test('PostgreSQL: registro, renovación y devolución revierten todo en la prueb
         assert.equal(prestamo.clave_usuario, clave);
         assert.equal(prestamo.id_ejemplar, id_ejemplar);
         assert.ok(prestamo.fecha_vencimiento > prestamo.fecha_prestamo);
+        assert.match(prestamo.folio_prestamo, /^PRE-\d{4}-\d{4,}$/);
+        assert.ok(prestamo.ejemplares_total >= 1);
+        assert.ok(prestamo.ejemplares_disponibles < prestamo.ejemplares_total);
+        assert.ok(prestamo.multa_diaria >= 0);
         const renovacion = await circulacion_model.renovar(client, id_prestamo, '100001');
         assert.ok(renovacion.vencimiento_nuevo > renovacion.vencimiento_anterior);
         const devolucion = await circulacion_model.devolver(client, id_prestamo, 'Bueno', '100001');

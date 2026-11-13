@@ -2,6 +2,13 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Cotejo adicional del 13 de noviembre de 2026
+
+- Frame móvil `2258:48812`: se midió la página local a 390 × 1028 en navegador. Marca, título, subtítulo, dos acciones, seis campos y botones quedaron en las mismas coordenadas principales del frame: marca (24, 24), primer campo (24, 268), último campo (24, 788), Buscar (24, 892) y Limpiar (24, 956). Se ocultó la barra superior solo en esta vista móvil y se ajustaron fuente, márgenes y separaciones; el menú lateral permanece disponible en otras páginas.
+- Frames `2447:108630` y `2447:108979`: registro/boleta de préstamo presentan folio, usuario, libro, ejemplar, fechas, disponibilidad y multa diaria obtenidos del préstamo real. Autorizar una solicitud ahora conduce al mismo recibo que el registro directo. Se cotejaron visualmente ambos estados con una vista sintética temporal eliminada; la consulta SQL y el flujo de autorización se probaron con rollback o dobles de la API. No se registró un préstamo real para esa captura.
+- Frames `2483:80899`, `2483:81248`, `2483:81588`, `2483:81913` y `2483:82244`: el envío por correo con PDF adjunto y la entrega por WhatsApp siguen pendientes. Resend está configurado para recuperación de contraseña, pero no existe todavía un servicio de boletas ni una integración de WhatsApp. No se muestran acciones de envío ni éxitos ficticios.
+- Faltan cotejar los otros nueve estados móviles de búsqueda, estados secundarios de acceso/usuarios/compras/circulación y la compatibilidad de claves `B...` de Figma con `L...` de PostgreSQL. La paridad se acredita únicamente para los estados y medidas indicados arriba.
+
 ## Revisión del 13 de noviembre de 2026
 
 ### Acceso
@@ -48,11 +55,11 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
 | 04 Lector (`2044:48055`) | Parcial | Inicio, listado y PDF existen; el conjunto y orden de tarjetas no coincide. |
 | 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda principal tiene seis filtros en dos columnas y los accesos del frame; faltan otros estados de resultado y cotejo móvil completo. |
-| 06 Circulación conservada (`2014:35297`) | Mayormente pendiente | Solo se implementó la solicitud de búsqueda y su autorización; no existen devolución ni espera operativas en la interfaz. |
-| 07 App móvil (`2258:48812`) | Parcial | Existe diseño adaptable, pero falta cotejo con las diez vistas móviles de búsqueda del Figma. |
-| 08 Préstamo (`2447:106950`) | Parcial | Existe bandeja de solicitudes y préstamos del usuario. Faltan registro directo en tres pasos, renovaciones, espera, recibo y envío. |
-| 09 Devolución (`2465:98968`) | Pendiente | Faltan devolución, pérdida, multas, pagos y avisos en interfaz/API. Hay reglas SQL existentes aprovechables. |
-| 10 Asistente (`2483:74914`) | Parcial | FAQ y consulta de catálogo existen; falta cotejo de preguntas y respuestas personales de préstamos, multas y renovación. |
+| 06 Circulación conservada (`2014:35297`) | Parcial | Solicitud, autorización, devolución y espera funcionan; faltan cotejos de estados secundarios. |
+| 07 App móvil (`2258:48812`) | Parcial | Búsqueda inicial medida a 390 px; faltan los otros nueve estados móviles de búsqueda. |
+| 08 Préstamo (`2447:106950`) | Parcial | Registro, renovación, espera y boleta funcionan; faltan envío de boleta por correo/WhatsApp y estados secundarios. |
+| 09 Devolución (`2465:98968`) | Parcial | Devolución, pérdida, multas, pagos y avisos internos funcionan; faltan estados alternos y entregas externas. |
+| 10 Asistente (`2483:74914`) | Parcial | Se cotejaron ocho preguntas generales; los frames revisados no piden respuestas personales de préstamos. Faltan estados móviles. |
 
 La referencia visual mantiene Manrope, colores `#142B45`, `#F5F7FA`, `#DCE3EC`, sidebar de 244 px y contenido con margen de 32 px a 1440 × 960. Los logos locales Ducky y FlowBit coinciden visualmente con las imágenes originales del diseño. Los perfiles y permisos reales siguen validándose en el servidor aunque algunos fotogramas ilustrativos del Figma muestren navegación no autorizada.
 

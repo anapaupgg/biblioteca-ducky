@@ -50,7 +50,7 @@
                                     <div class="field"><label for="prestamo-usuario">Matrícula o nómina</label>
                                         <input id="prestamo-usuario" autocomplete="off" maxlength="6" placeholder="Ej. 621234"></div>
                                     <div class="field"><label for="prestamo-ejemplar">Clave del ejemplar</label>
-                                        <input id="prestamo-ejemplar" autocomplete="off" maxlength="10" placeholder="Ej. B000128-02"></div>
+                                        <input id="prestamo-ejemplar" autocomplete="off" maxlength="10" placeholder="Ej. L000128-02"></div>
                                 </div>
                             </div>
                             <div class="actions">
@@ -71,10 +71,20 @@
                         </div>
                     </section>
                     <section id="panel-recibo" class="hidden">
-                        <div class="card receipt" id="recibo-prestamo"></div>
+                        <div class="card loan-receipt-card" id="recibo-prestamo"></div>
+                        <div class="alert alert-ok" id="aviso-entrega"></div>
                         <div class="actions">
-                            <button class="btn btn-primary" type="button" id="btn-imprimir-recibo">Imprimir recibo</button>
-                            <button class="btn" type="button" id="btn-volver-prestamos">Volver a préstamos</button>
+                            <button class="btn btn-primary" type="button" id="btn-volver-prestamos">Volver a préstamos</button>
+                            <button class="btn" type="button" id="btn-imprimir-recibo">Imprimir boleta</button>
+                            <button class="btn" type="button" id="btn-otro-prestamo">Registrar otro préstamo</button>
+                        </div>
+                    </section>
+                    <section id="panel-boleta" class="hidden">
+                        <div class="card loan-receipt-card" id="boleta-prestamo"></div>
+                        <div class="alert alert-info" id="aviso-boleta"></div>
+                        <div class="actions">
+                            <button class="btn btn-primary" type="button" id="btn-imprimir-boleta">Imprimir</button>
+                            <button class="btn" type="button" id="btn-volver-recibo">Volver al recibo</button>
                         </div>
                     </section>
                     <section id="panel-renovar" class="hidden">

@@ -1587,11 +1587,21 @@ table.table
 
 @media (max-width: 600px)
 {
+    .search-page .topbar
+    {
+        display: none;
+    }
+
+    .search-page .main
+    {
+        padding: var(--space-24);
+    }
+
     .search-mobile-heading
     {
         display: grid;
         gap: var(--space-16);
-        margin-bottom: var(--space-24);
+        margin-bottom: var(--space-16);
     }
 
     .search-mobile-brand
@@ -1606,6 +1616,7 @@ table.table
 
     .search-mobile-heading p
     {
+        font: var(--text-small);
         color: var(--color-muted);
         margin: 0;
     }
@@ -1634,12 +1645,13 @@ table.table
     .search-form-card .grid-2
     {
         grid-template-columns: 1fr;
-        gap: var(--space-24);
+        gap: var(--space-16);
     }
 
     .search-submit-actions
     {
         flex-direction: column;
+        gap: var(--space-16);
     }
 
     .search-submit-actions .btn
@@ -1676,7 +1688,7 @@ table.table
     {
         display: grid;
         gap: var(--space-16);
-        margin-bottom: var(--space-24);
+        margin-bottom: var(--space-16);
     }
 
     .search-mobile-preview .search-mobile-brand
@@ -1691,6 +1703,7 @@ table.table
 
     .search-mobile-preview .search-mobile-heading p
     {
+        font: var(--text-small);
         margin: 0;
     }
 
@@ -1710,12 +1723,13 @@ table.table
     .search-mobile-preview .search-form-card .grid-2
     {
         grid-template-columns: 1fr;
-        gap: var(--space-24);
+        gap: var(--space-16);
     }
 
     .search-mobile-preview .search-submit-actions
     {
         flex-direction: column;
+        gap: var(--space-16);
     }
 }
 
@@ -1725,6 +1739,27 @@ table.table
 .receipt
 {
     max-width: 760px;
+}
+
+.loan-receipt-card
+{
+    max-width: none;
+}
+
+.loan-receipt-card > h2:first-child
+{
+    margin-bottom: var(--space-12);
+}
+
+.loan-receipt-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.loan-receipt-card .grid-2
+{
+    row-gap: var(--space-16);
 }
 
 .receipt dl
@@ -1753,6 +1788,11 @@ table.table
 
 @media print
 {
+
+    body.boleta-imprimible #contenido > :not(.page-header):not(#panel-boleta)
+    {
+        display: none !important;
+    }
 
     .sidebar,
     .topbar,

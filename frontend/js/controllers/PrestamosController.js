@@ -7,7 +7,7 @@
 
 /******************************************************************/
 /* Listing Contents: iniciar, cargar, validar, registrar,         */
-/* autorizar.                                                      */
+/* autorizar, abrir_boleta y volver_recibo.                        */
 /* Reuse Instructions: iniciar una vez; permisos visuales vienen  */
 /* de la sesión, la API los comprueba de nuevo.                    */
 /******************************************************************/
@@ -17,6 +17,7 @@ const prestamos_controller =
     funciones: [],
     datos_pendientes: null,
     renovacion_pendiente: null,
+    prestamo_actual: null,
 
     iniciar: async function ()
     {
@@ -40,7 +41,9 @@ const prestamos_controller =
             abrir_espera: () => this.abrir_espera(),
             abrir_agregar_espera: () => this.abrir_agregar_espera(),
             consultar_espera: (id) => this.consultar_espera(id),
-            registrar_espera: (datos) => this.registrar_espera(datos)
+            registrar_espera: (datos) => this.registrar_espera(datos),
+            abrir_boleta: () => this.abrir_boleta(),
+            volver_recibo: () => this.volver_recibo()
         });
         await this.cargar();
     },
@@ -72,6 +75,7 @@ const prestamos_controller =
     abrir_registro: function ()
     {
         this.datos_pendientes = null;
+        this.prestamo_actual = null;
         prestamos_view.mostrar('registrar');
         prestamos_view.enfocar_registro();
     },
@@ -80,6 +84,7 @@ const prestamos_controller =
     {
         this.datos_pendientes = null;
         this.renovacion_pendiente = null;
+        this.prestamo_actual = null;
         prestamos_view.mostrar('personal');
         await this.cargar();
     },
@@ -113,6 +118,7 @@ const prestamos_controller =
         try
         {
             const resultado = await prestamo_model.renovar(datos);
+            this.prestamo_actual = null;
             prestamos_view.mostrar('recibo');
             prestamos_view.recibo_renovacion(resultado);
         }
@@ -185,8 +191,9 @@ const prestamos_controller =
         try
         {
             const prestamo = await prestamo_model.registrar(datos);
-            prestamos_view.recibo(prestamo);
+            this.prestamo_actual = prestamo;
             prestamos_view.mostrar('recibo');
+            prestamos_view.recibo(prestamo);
         }
         catch (error)
         {
@@ -200,14 +207,32 @@ const prestamos_controller =
         try
         {
             const prestamo = await prestamo_model.autorizar(folio, id_ejemplar);
-            prestamos_view.mensaje('ok', 'Préstamo autorizado',
-                'Préstamo ' + prestamo.id_prestamo + ' · vence ' + ui.fecha(prestamo.fecha_vencimiento));
-            await this.cargar();
+            this.prestamo_actual = prestamo;
+            prestamos_view.mostrar('recibo');
+            prestamos_view.recibo(prestamo);
         }
         catch (error)
         {
             prestamos_view.mensaje('error', 'No se pudo autorizar el préstamo', error.message);
             await this.cargar();
         }
+    },
+
+    abrir_boleta: function ()
+    {
+        if (!this.prestamo_actual)
+        {
+            prestamos_view.imprimir();
+            return;
+        }
+        prestamos_view.mostrar('boleta');
+        prestamos_view.boleta(this.prestamo_actual);
+    },
+
+    volver_recibo: function ()
+    {
+        if (!this.prestamo_actual) return;
+        prestamos_view.mostrar('recibo');
+        prestamos_view.recibo(this.prestamo_actual);
     }
 };

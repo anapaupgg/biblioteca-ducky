@@ -7,7 +7,7 @@
 
 /******************************************************************/
 /* Listing Contents: configurar, enlazar, mostrar, activos,       */
-/* validacion, recibo, mios, pendientes y mensaje.                */
+/* validacion, recibo, boleta, mios, pendientes y mensaje.         */
 /* Reuse Instructions: cargar después de ui; callbacks reciben    */
 /* folio y ejemplar. Todos los datos externos se escapan.        */
 /******************************************************************/
@@ -73,7 +73,10 @@ const prestamos_view =
             acciones.validar(this.datos_registro());
         });
         document.getElementById('btn-confirmar-registro').addEventListener('click', acciones.confirmar);
-        document.getElementById('btn-imprimir-recibo').addEventListener('click', () => window.print());
+        document.getElementById('btn-imprimir-recibo').addEventListener('click', acciones.abrir_boleta);
+        document.getElementById('btn-imprimir-boleta').addEventListener('click', () => this.imprimir());
+        document.getElementById('btn-volver-recibo').addEventListener('click', acciones.volver_recibo);
+        document.getElementById('btn-otro-prestamo').addEventListener('click', acciones.abrir_registro);
     },
 
     datos_registro: function ()
@@ -91,9 +94,10 @@ const prestamos_view =
 
     mostrar: function (modo)
     {
-        ['personal', 'registrar', 'validacion', 'recibo', 'renovar', 'renovacion-validada',
+        ['personal', 'registrar', 'validacion', 'recibo', 'boleta', 'renovar', 'renovacion-validada',
             'espera', 'agregar-espera'].forEach((panel) =>
             document.getElementById('panel-' + panel).classList.toggle('hidden', panel !== modo));
+        document.body.classList.toggle('boleta-imprimible', modo === 'boleta');
         document.getElementById('panel-mios').classList.add('hidden');
         document.getElementById('panel-pendientes').classList.add('hidden');
         const titulos = {
@@ -104,6 +108,8 @@ const prestamos_view =
             validacion: ['Préstamo autorizado',
                 '2. Condiciones verificadas → 3. Confirma el préstamo y entrega el recibo.'],
             recibo: ['Préstamo registrado', 'Entrega el recibo al solicitante.'],
+            boleta: ['Recibo para entrega',
+                'Vista previa de impresión · Biblioteca Universidad Ducky.'],
             renovar: ['Renovar préstamo',
                 'Busca el préstamo activo con la clave del ejemplar y confirma el nuevo vencimiento.'],
             'renovacion-validada': ['Renovación autorizada',
@@ -170,12 +176,54 @@ const prestamos_view =
 
     recibo: function (prestamo)
     {
-        document.getElementById('recibo-prestamo').innerHTML = '<h2>Recibo PRE-' +
-            ui.esc(prestamo.id_prestamo) + '</h2><p><strong>Solicitante:</strong> ' +
-            ui.esc(prestamo.solicitante) + ' (' + ui.esc(prestamo.clave_usuario) +
-            ')</p><p><strong>Libro:</strong> ' + ui.esc(prestamo.titulo) +
-            '</p><p><strong>Ejemplar:</strong> ' + ui.esc(prestamo.id_ejemplar) +
-            '</p><p><strong>Vencimiento:</strong> ' + ui.fecha(prestamo.fecha_vencimiento) + '</p>';
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        const folio = prestamo.folio_prestamo || 'PRE-' + prestamo.id_prestamo;
+        document.getElementById('recibo-prestamo').innerHTML =
+            '<h2>Recibo de préstamo</h2><div class="grid-2">' +
+            campo('Folio', folio) + campo('Solicitante', prestamo.solicitante) +
+            campo('Libro', prestamo.titulo) + campo('Ejemplar', prestamo.id_ejemplar) +
+            campo('Fecha de préstamo', ui.fecha(prestamo.fecha_prestamo)) +
+            campo('Vencimiento', ui.fecha(prestamo.fecha_vencimiento) + ' · ' +
+                prestamo.dias_prestamo + ' días hábiles') + '</div>';
+        document.getElementById('descripcion-prestamos').textContent =
+            'Registro confirmado · ' + ui.fecha(prestamo.fecha_prestamo) +
+            '. La disponibilidad del libro se actualizó.';
+        const disponibles = Number(prestamo.ejemplares_disponibles);
+        const total = Number(prestamo.ejemplares_total);
+        const resumen = Number.isFinite(disponibles) && Number.isFinite(total) &&
+            prestamo.ejemplares_disponibles !== undefined && prestamo.ejemplares_total !== undefined ?
+            ui.esc(prestamo.titulo) + ' queda con ' + disponibles + ' de ' + total +
+                ' ejemplares disponibles. Entrega el recibo al usuario.' :
+            'El préstamo quedó registrado. Entrega el recibo al usuario.';
+        document.getElementById('aviso-entrega').innerHTML =
+            '<strong>Ejemplar entregado</strong><span>' + resumen + '</span>';
+        document.getElementById('aviso-entrega').classList.remove('hidden');
+        document.getElementById('btn-otro-prestamo').classList.remove('hidden');
+        document.getElementById('btn-imprimir-recibo').textContent = 'Imprimir boleta';
+    },
+
+    boleta: function (prestamo)
+    {
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            ui.esc(etiqueta) + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        const folio = prestamo.folio_prestamo || 'PRE-' + prestamo.id_prestamo;
+        document.getElementById('boleta-prestamo').innerHTML =
+            '<h2>Recibo de préstamo</h2><div class="grid-2">' +
+            campo('Folio', folio) + campo('Solicitante', prestamo.solicitante) +
+            campo('Matrícula o nómina', prestamo.clave_usuario) +
+            campo('Libro', prestamo.titulo) + campo('Ejemplar', prestamo.id_ejemplar) +
+            campo('Vencimiento', ui.fecha(prestamo.fecha_vencimiento) + ' · ' +
+                prestamo.dias_prestamo + ' días hábiles') + '</div>';
+        document.getElementById('aviso-boleta').innerHTML =
+            '<strong>Recuerda la fecha de vencimiento</strong><span>Cada día natural de atraso ' +
+            'genera una multa de ' + ui.dinero(prestamo.multa_diaria) +
+            '. Puedes renovar el préstamo antes de que venza.</span>';
+    },
+
+    imprimir: function ()
+    {
+        window.print();
     },
 
     renovacion: function (datos)
@@ -206,6 +254,9 @@ const prestamos_view =
             '</p><p><strong>Libro:</strong> ' + ui.esc(datos.prestamo.titulo) +
             '</p><p><strong>Nuevo vencimiento:</strong> ' +
             ui.fecha(datos.resultado.vencimiento_nuevo) + '</p>';
+        document.getElementById('aviso-entrega').classList.add('hidden');
+        document.getElementById('btn-otro-prestamo').classList.add('hidden');
+        document.getElementById('btn-imprimir-recibo').textContent = 'Imprimir comprobante';
     },
 
     lista_espera: function (datos)
