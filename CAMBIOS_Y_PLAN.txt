@@ -1,3 +1,16 @@
+ACTUALIZACIÓN — GEOMETRÍA DE BÚSQUEDA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- Continuación sobre 64fa6a3 ya subido; origin/main sin commits nuevos.
+  package-lock.json local ajeno queda excluido.
+- Frame 2013:31577 cotejado. Los seis filtros, dos columnas, enlaces móvil y
+  ejemplo ISBN ya existían; se ajustaron separación, alto de tarjeta/campos y
+  acciones a las coordenadas originales de 1440 × 960.
+- Navegador: «Ejemplo por ISBN» devolvió Ingeniería de software con su ficha
+  real; «Limpiar filtros» retiró el resultado. No se modificaron datos.
+- Pendientes: estados secundarios de búsqueda, discrepancia de claves B/L y
+  cotejo móvil integral. git diff --check limpio; no se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — GEOMETRÍA DE ACCESO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 1cd5e8a ya subido; origin/main sin commits nuevos.
   package-lock.json previo permanece fuera de este trabajo.

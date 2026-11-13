@@ -8,6 +8,10 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 - Frames `2006:941` y `2198:48700`: cotejo visual del acceso y el diálogo de perfiles. El selector ya estaba implementado y la API sigue rechazando perfiles ajenos a la cuenta. Se ajustaron las medidas de la página a las coordenadas del frame original de 1440 × 960: logo (48, 48; 504 × 430), encabezado institucional (48, 502), título de acceso (680, 212), campos (680, 308) y acción principal (680, 524). Se verificó el diálogo y una vista móvil de 390 px sin comparar esta última con un frame móvil específico. Las cuentas de ejemplo muestran las claves reales de la base, distintas de las ilustrativas de Figma; no se afirma paridad de todos los estados de acceso.
 
+### Búsqueda
+
+- Frame `2013:31577`: los seis filtros y las acciones ya estaban conectados. La pantalla de 1440 × 960 se ajustó a las coordenadas del prototipo: accesos (276, 176), tarjeta (276, 240; 1132 × 386), campos (301, 305) y acciones (276, 642). Se comprobó en navegador que «Ejemplo por ISBN» encuentra una ficha real y «Limpiar filtros» borra los resultados. La clave ilustrativa `B...` de Figma sigue siendo `L...` en PostgreSQL; los estados secundarios y móviles tienen cotejos separados y no se declaran idénticos en este bloque.
+
 ### Compras y Tesorería
 
 - Frames `2261:48852` y `2261:48856`: recepción con encabezado, orden autorizada, título, ISBN, cantidad, condición inicial y acción de confirmar; resultado con folio/cantidad, siguiente paso y navegación a ficha o catálogo. La app mantiene un selector de ubicación necesario para registrar ejemplares físicos. Se cotejó en navegador el estado vacío real y se compararon la orden y los resultados con datos sintéticos sin modificar la base. Si la orden contiene un título nuevo, la acción abre el formulario de ficha con sus datos; si contiene fichas existentes, enlaza la primera ficha y muestra las etiquetas reales. El prototipo ilustra una sola orden y no representa la selección de ubicación ni órdenes con varios títulos; no se afirma paridad exacta para esos casos.
@@ -43,7 +47,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
 | 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
 | 04 Lector (`2044:48055`) | Parcial | Inicio, listado y PDF existen; el conjunto y orden de tarjetas no coincide. |
-| 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda tiene los seis filtros pero los agrupa en tres columnas; Figma usa dos. Faltan accesos «Ejemplo por ISBN» y «Ver búsqueda en móvil». |
+| 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda principal tiene seis filtros en dos columnas y los accesos del frame; faltan otros estados de resultado y cotejo móvil completo. |
 | 06 Circulación conservada (`2014:35297`) | Mayormente pendiente | Solo se implementó la solicitud de búsqueda y su autorización; no existen devolución ni espera operativas en la interfaz. |
 | 07 App móvil (`2258:48812`) | Parcial | Existe diseño adaptable, pero falta cotejo con las diez vistas móviles de búsqueda del Figma. |
 | 08 Préstamo (`2447:106950`) | Parcial | Existe bandeja de solicitudes y préstamos del usuario. Faltan registro directo en tres pasos, renovaciones, espera, recibo y envío. |

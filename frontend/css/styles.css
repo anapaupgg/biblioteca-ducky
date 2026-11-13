@@ -1463,12 +1463,18 @@ table.table
 
 .search-desktop-heading
 {
-    margin-bottom: var(--space-8);
+    margin-bottom: 14px;
 }
 
 .search-desktop-links
 {
     margin: 0 0 var(--space-16);
+}
+
+.search-desktop-links .btn,
+.search-submit-actions .btn
+{
+    min-height: 48px;
 }
 
 .search-desktop-links .btn:first-child
@@ -1488,7 +1494,18 @@ table.table
 
 .search-form-card .grid-2
 {
-    row-gap: var(--space-24);
+    row-gap: var(--space-16);
+}
+
+.search-form-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.search-form-card > h2:first-child
+{
+    margin-bottom: var(--space-12);
 }
 
 .search-submit-actions .btn-primary
