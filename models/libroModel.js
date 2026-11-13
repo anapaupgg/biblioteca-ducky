@@ -19,6 +19,7 @@
 /*   crear(client, datos) */
 /*   actualizar(client, id, datos) */
 /*   cambiar_estatus(client, id, estatus) */
+/*   registrar_baja(client, id, datos, clave_administrador) */
 /*   agregar_ejemplares(client, datos) */
 /*   actualizar_ejemplar(client, datos) */
 /*   baja_ejemplar(client, datos) */
@@ -77,8 +78,11 @@ const listar = (
 const buscar = async (id) =>
 {
     const libro = await pool.query(
-        `SELECT l.*, e.nombre AS editorial, t.nombre AS tema
+        `SELECT l.*, e.nombre AS editorial, t.nombre AS tema,
+                b.motivo AS motivo_baja, b.descripcion AS descripcion_baja,
+                b.fecha_baja, b.clave_administrador AS responsable_baja
            FROM libros l JOIN editoriales e USING (id_editorial) JOIN temas t USING (id_tema)
+           LEFT JOIN bajas_libro b USING (id_libro)
           WHERE l.id_libro = $1`, [id]);
     if (libro.rows.length === 0) return null;
 
@@ -229,6 +233,28 @@ const cambiar_estatus = (client, id, estatus) =>
 
 /******************************************************************/
 /* Reuse Instructions                                             */
+/* registrar_baja(client, id, datos, clave_administrador)         */
+/* Purpose: Retire once and save its reason in the same transaction. */
+/* Returns: true if retired, false if status/loans changed.       */
+/******************************************************************/
+const registrar_baja = async (client, id, datos, clave_administrador) =>
+{
+    const resultado = await client.query(
+        `UPDATE libros SET estatus = 'Retirado'
+          WHERE id_libro = $1 AND estatus = 'Activo en catálogo'
+            AND NOT EXISTS
+                (SELECT 1 FROM ejemplares WHERE id_libro = $1 AND estatus = 'Prestado')
+          RETURNING id_libro`, [id]);
+    if (!resultado.rowCount) return false;
+    await client.query(
+        `INSERT INTO bajas_libro (id_libro, motivo, descripcion, clave_administrador)
+         VALUES ($1, $2, $3, $4)`, [id, datos.motivo, datos.descripcion,
+            clave_administrador]);
+    return true;
+};
+
+/******************************************************************/
+/* Reuse Instructions                                             */
 /* agregar_ejemplares(client, { id_libro, cantidad, id_ubicacion, */
 /*                              tipo_uso, condicion, digital })   */
 /* Purpose: Label N new copies: L000128-03, L000128-04...         */
@@ -326,6 +352,7 @@ module.exports =
     crear,
     actualizar,
     cambiar_estatus,
+    registrar_baja,
     agregar_ejemplares,
     actualizar_ejemplar,
     baja_ejemplar,

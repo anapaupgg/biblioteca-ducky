@@ -65,10 +65,10 @@ const libro_model =
         return api.post('/libros/' + encodeURIComponent(id) + '/alta');
     },
 
-    /* POST /libros/:id/retirar */
-    retirar: function (id)
+    /* POST /libros/:id/retirar { motivo, descripcion } */
+    retirar: function (id, datos)
     {
-        return api.post('/libros/' + encodeURIComponent(id) + '/retirar');
+        return api.post('/libros/' + encodeURIComponent(id) + '/retirar', datos);
     },
 
     /* POST /libros/:id/ejemplares */

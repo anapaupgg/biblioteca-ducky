@@ -9,6 +9,10 @@
 /* Listing Contents: */
 /*   libro_detalle_view.ficha(filtro, acciones) */
 /*   libro_detalle_view.etiquetado(ficha) */
+/*   libro_detalle_view.edicion_completada(ficha) */
+/*   libro_detalle_view.formulario_baja(ficha, al_continuar) */
+/*   libro_detalle_view.confirmar_baja(ficha, datos, al_confirmar) */
+/*   libro_detalle_view.baja_completada(ficha) */
 /*   libro_detalle_view.mostrar_ejemplares() */
 /*   libro_detalle_view.dialogo_ejemplares(digital, catalogos, al_confirmar) */
 /*   libro_detalle_view.dialogo_condicion(ejemplar, catalogos, digital, al_confirmar) */
@@ -25,6 +29,106 @@
 
 const libro_detalle_view =
 {
+    edicion_completada: function (ficha)
+    {
+        const libro = ficha.libro;
+        const vigentes = ficha.ejemplares.filter((elemento) => elemento.estatus !== 'Baja');
+        const ubicaciones = [...new Set(vigentes.map((elemento) => elemento.estante ?
+            elemento.estante + ' / ' + elemento.fila : 'En línea'))];
+        const ubicacion = ubicaciones.length === 1 ? ubicaciones[0] :
+            ubicaciones.length ? 'Varias ubicaciones' : 'Sin ejemplares';
+        const primer_ejemplar = vigentes[0];
+        document.getElementById('titulo-pagina').textContent = 'Libro modificado exitosamente';
+        document.getElementById('descripcion-pagina').textContent = 'Ubicación vigente: ' + ubicacion;
+        document.getElementById('detalle').innerHTML =
+            '<div class="actions actions-top"><a class="btn btn-primary" href="libros.html">' +
+            'Consultar lista actualizada</a><a class="btn" href="libros.html">Volver a libros</a></div>' +
+            '<div class="alert alert-ok" role="status"><strong>Cambios guardados</strong><span>' +
+            ui.esc(libro.id_libro) + ' · Ubicación ' + ui.esc(ubicacion) +
+            '. Los demás datos se conservaron.</span></div>' +
+            '<div class="card"><h2>Sinopsis y ejemplares</h2><p>' +
+            ui.esc(libro.sinopsis || 'Sin sinopsis') + '</p><p class="libro-copias-registradas">' +
+            '<span class="label">Copias registradas:</span><strong>' + vigentes.length +
+            '</strong></p><p class="small muted">La disponibilidad y ubicación se consultan por ejemplar.</p></div>' +
+            '<div class="ficha-resumen ficha-resumen-edicion"><div class="ficha-resumen-fila">' +
+            'Clave · Título · Ubicación · Condición</div><div class="ficha-resumen-fila">' +
+            ui.esc(libro.id_libro + ' · ' + libro.titulo + ' · ' + ubicacion + ' · ' +
+                (primer_ejemplar ? primer_ejemplar.condicion : '—')) + '</div></div>';
+    },
+
+    formulario_baja: function (ficha, al_continuar)
+    {
+        const libro = ficha.libro;
+        const prestados = ficha.ejemplares.filter((elemento) => elemento.estatus === 'Prestado').length;
+        document.getElementById('titulo-pagina').textContent = 'Dar de baja un libro';
+        document.getElementById('descripcion-pagina').textContent =
+            'Selecciona el motivo. El registro conserva su historial.';
+        document.getElementById('detalle').innerHTML =
+            '<div class="card"><h2>' + ui.esc(libro.id_libro + ' · ' + libro.titulo) +
+            '</h2><div class="grid-2"><div class="field"><label for="motivo-baja-libro">' +
+            'Motivo de baja</label><select id="motivo-baja-libro" required>' +
+            '<option value="">Selecciona un motivo</option>' +
+            ['Perdido', 'Robado', 'Dañado', 'Obsoleto'].map((motivo) =>
+                '<option value="' + motivo + '">' + motivo + '</option>').join('') +
+            '</select></div><div class="field"><label for="descripcion-baja-libro">' +
+            'Descripción</label><input id="descripcion-baja-libro" maxlength="200" ' +
+            'placeholder="Describe el estado del libro"></div></div>' +
+            '<p class="small muted">Motivos permitidos: Perdido · Robado · Dañado · Obsoleto.</p></div>' +
+            (prestados ? '<div class="alert alert-warning" role="status">' +
+                '<strong>No se puede dar de baja todavía</strong><span>Hay ' + prestados +
+                ' ejemplar(es) prestados.</span></div>' : '') +
+            '<div class="actions"><button class="btn btn-danger" id="continuar-baja"' +
+            (prestados ? ' disabled' : '') + '>Continuar baja</button>' +
+            '<a class="btn" href="libro_detalle.html?id=' + encodeURIComponent(libro.id_libro) +
+            '">Cancelar</a></div>';
+        document.getElementById('continuar-baja').addEventListener('click', () =>
+        {
+            const motivo = document.getElementById('motivo-baja-libro');
+            if (!motivo.value)
+            {
+                motivo.focus();
+                this.mensaje('error', 'Selecciona el motivo de baja');
+                return;
+            }
+            ui.alerta('mensaje');
+            al_continuar({ motivo: motivo.value,
+                descripcion: document.getElementById('descripcion-baja-libro').value.trim() });
+        });
+    },
+
+    confirmar_baja: function (ficha, datos, al_confirmar)
+    {
+        return ui.dialogo({
+            titulo: 'Confirmar baja del libro',
+            texto: ficha.libro.id_libro + ' · ' + ficha.libro.titulo + '. Motivo: ' +
+                datos.motivo + '. Quedará fuera del catálogo activo y no podrá prestarse.',
+            cuerpo: '<p class="small muted">El historial y el motivo quedan conservados.</p>',
+            confirmar: 'Dar de baja',
+            peligro: true,
+            principal_primero: true,
+            amplio: true,
+            al_confirmar: al_confirmar
+        });
+    },
+
+    baja_completada: function (ficha)
+    {
+        const libro = ficha.libro;
+        document.getElementById('titulo-pagina').textContent = 'Libro dado de baja';
+        document.getElementById('descripcion-pagina').textContent = '';
+        document.getElementById('detalle').innerHTML =
+            '<div class="alert alert-ok" role="status"><strong>Libro dado de baja</strong>' +
+            '<span>Baja confirmada.</span></div>' +
+            '<div class="card"><h2>Información de la operación</h2>' +
+            '<p>El libro ya no aparece en la consulta activa ni está disponible para préstamo.</p>' +
+            (libro.motivo_baja ? '<p class="small muted">' + ui.esc(libro.id_libro) +
+                ' · Motivo: ' + ui.esc(libro.motivo_baja) +
+                (libro.descripcion_baja ? ' · ' + ui.esc(libro.descripcion_baja) : '') +
+                '</p>' : '') + '</div>' +
+            '<div class="actions"><a class="btn" href="libros.html">Volver</a>' +
+            '<a class="btn" href="inicio.html">Ir al inicio</a></div>';
+    },
+
     etiquetado: function (ficha)
     {
         const libro = ficha.libro;
@@ -81,8 +185,8 @@ const libro_detalle_view =
                 encodeURIComponent(libro.id_libro) + '">Modificar libro</a>') +
             (libro.estatus === 'Ficha creada' ?
                 '<button class="btn" id="btn-alta">Dar de alta en catálogo</button>' : '') +
-            (retirado ? '' :
-                '<button class="btn btn-danger" id="btn-retirar">Dar de baja libro</button>') +
+            (libro.estatus === 'Activo en catálogo' ?
+                '<button class="btn btn-danger" id="btn-retirar">Dar de baja libro</button>' : '') +
             (retirado ? '' :
                 '<button class="btn" id="btn-condicion-global"' +
                 (vigente.length ? '' : ' disabled') + '>Cambiar condición</button>') +

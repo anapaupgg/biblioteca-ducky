@@ -49,6 +49,7 @@ const
 const CAMPOS_FICHA = ['titulo', 'isbn', 'editorial', 'tema', 'autores', 'formato'];
 const TIPOS_USO = ['Préstamo externo', 'Préstamo en sala', 'Reservado'];
 const CONDICIONES = ['Bueno', 'Regular', 'Dañado'];
+const MOTIVOS_BAJA_LIBRO = ['Perdido', 'Robado', 'Dañado', 'Obsoleto'];
 
 /******************************************************************/
 /* Reuse Instructions                                             */
@@ -280,16 +281,26 @@ const retirar = async (solicitud_7, respuesta_7) =>
 {
     try
     {
+        const cuerpo = solicitud_7.body || {};
+        const motivo = String(cuerpo.motivo || '').trim();
+        const descripcion = String(cuerpo.descripcion || '').trim();
+        if (!MOTIVOS_BAJA_LIBRO.includes(motivo)) throw new error_negocio(400,
+            'Selecciona un motivo de baja válido', ['motivo']);
+        if (descripcion.length > 200) throw new error_negocio(400,
+            'La descripción no puede superar 200 caracteres', ['descripcion']);
         const ficha = await obtener(solicitud_7.params.id);
-        if (ficha.libro.estatus === 'Retirado') throw new error_negocio(422,
-            'El libro ya está retirado');
+        if (ficha.libro.estatus !== 'Activo en catálogo') throw new error_negocio(422,
+            'Solo se puede dar de baja un libro activo en catálogo');
         const prestados = ficha.ejemplares.filter((elemento_2) => elemento_2.estatus === 'Prestado')
             .length;
         if (prestados > 0) throw new error_negocio(422, 'No se puede retirar: hay ' + prestados +
             ' ejemplar(es) prestados');
 
-        await con_usuario(solicitud_7.usuario.clave, (client) => libro_model.cambiar_estatus(client,
-            ficha.libro.id_libro, 'Retirado'));
+        const registrada = await con_usuario(solicitud_7.usuario.clave, (client) =>
+            libro_model.registrar_baja(client, ficha.libro.id_libro,
+                { motivo, descripcion: descripcion || null }, solicitud_7.usuario.clave));
+        if (!registrada) throw new error_negocio(422,
+            'El libro cambió de estado o tiene ejemplares prestados; actualiza la ficha');
         respuesta_7.status(200).json(
         {
             mensaje: 'Libro dado de baja del catálogo',

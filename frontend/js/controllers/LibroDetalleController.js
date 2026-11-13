@@ -15,6 +15,7 @@
 /*   libro_detalle_controller.condicion(ejemplar) */
 /*   libro_detalle_controller.baja(ejemplar) */
 /*   libro_detalle_controller.retirar() */
+/*   libro_detalle_controller.confirmar_baja(datos) */
 /******************************************************************/
 
 /******************************************************************/
@@ -31,6 +32,7 @@ const libro_detalle_controller =
     catalogos: null,
     modo: null,
     procesando_alta: false,
+    procesando_baja: false,
 
     iniciar: async function ()
     {
@@ -43,8 +45,6 @@ const libro_detalle_controller =
         if (!usuario) return;
         this.id = ui.param('id');
         this.modo = ui.param('modo');
-        if (ui.param('ok') === 'editado') libro_detalle_view.mensaje('ok',
-            'Libro modificado exitosamente');
         try
         {
             this.catalogos = await libro_model.catalogos();
@@ -63,6 +63,22 @@ const libro_detalle_controller =
             if (this.modo === 'etiquetado')
             {
                 libro_detalle_view.etiquetado(this.ficha);
+                return;
+            }
+            if (this.modo === 'editado' || ui.param('ok') === 'editado')
+            {
+                libro_detalle_view.edicion_completada(this.ficha);
+                return;
+            }
+            if (this.modo === 'retirado' && this.ficha.libro.estatus === 'Retirado')
+            {
+                libro_detalle_view.baja_completada(this.ficha);
+                return;
+            }
+            if (this.modo === 'baja' && this.ficha.libro.estatus !== 'Retirado')
+            {
+                libro_detalle_view.formulario_baja(this.ficha,
+                    (datos) => this.confirmar_baja(datos));
                 return;
             }
             if (this.modo === 'resultado' && this.ficha.libro.estatus === 'Activo en catálogo')
@@ -196,16 +212,30 @@ const libro_detalle_controller =
         }
     },
 
-    retirar: async function ()
+    retirar: function ()
     {
-        const ok = await ui.dialogo(
-        {
-            titulo: 'Confirmar baja del libro',
-            texto: '"' + this.ficha.libro.titulo +
-                '" dejará de aparecer en las búsquedas. El historial se conserva.',
-            confirmar: 'Dar de baja libro',
-            peligro: true
-        });
-        if (ok) this.ejecutar(libro_model.retirar(this.id));
+        window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) +
+            '&modo=baja';
+    },
+
+    confirmar_baja: async function (datos)
+    {
+        if (this.procesando_baja) return;
+        const confirmado = await libro_detalle_view.confirmar_baja(this.ficha, datos,
+            async () =>
+            {
+                if (this.procesando_baja) return;
+                this.procesando_baja = true;
+                try
+                {
+                    await libro_model.retirar(this.id, datos);
+                }
+                finally
+                {
+                    this.procesando_baja = false;
+                }
+            });
+        if (confirmado) window.location.href = 'libro_detalle.html?id=' +
+            encodeURIComponent(this.id) + '&modo=retirado';
     }
 };

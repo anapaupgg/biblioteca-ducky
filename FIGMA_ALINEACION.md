@@ -4,6 +4,12 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 ## Revisión del 13 de noviembre de 2026
 
+### Modificación y baja de libros
+
+- Frames `2010:26016`, `2010:26334`, `2010:26657` y `2010:26667`: se compararon las cuatro vistas con la app en navegador. La edición presenta resultado, ubicación real, sinopsis y copias. La baja muestra motivo y descripción, requiere confirmación reversible y presenta la salida del catálogo. El resultado se cotejó con un libro ya retirado; el diálogo se canceló sin modificar otro libro activo.
+- El motivo y operador ahora se guardan en `bajas_libro` en la misma transacción que cambia el estatus. La migración `002_bajas_libro` es aditiva y se aplicó en local. Los libros retirados antes de ella no tienen motivo histórico registrado; la vista no inventa uno.
+- El frame de modificación enseña una ubicación y condición concretas, mientras un libro real puede tener varias. La app resume los ejemplares reales y conserva la tabla detallada en la ficha. Las claves siguen `L...` por el esquema actual, frente a `B...` del diseño. No se afirma paridad completa.
+
 ### Continuación: éxito de usuario y alta de catálogo
 
 - Frame `2007:5551`: se implementó el encabezado, alerta de alta, tarjeta de datos institucionales, registro de operación y acciones. La contraseña temporal necesaria para el primer acceso aparece en una tarjeta adicional después de las acciones. La base guarda solo fecha (sin hora) y datos institucionales replicados, así que la operación muestra la fecha real y no repite la afirmación del prototipo de que esos datos no se duplican. Se cotejó visualmente con una vista temporal sintética; no se creó un usuario real.

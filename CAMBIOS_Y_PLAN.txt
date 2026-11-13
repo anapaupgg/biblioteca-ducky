@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — MODIFICACIÓN Y BAJA DE LIBROS SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main en 8719c6c, sin commits remotos nuevos
+  (0/0). package-lock.json local ajeno se conservó sin incorporar.
+- Frames 2010:26016, 2010:26334, 2010:26657 y 2010:26667 cotejados.
+  Resultado de edición con datos y ubicaciones reales; formulario de baja con
+  motivo/descripcion, diálogo de confirmación y resultado final. La baja no
+  se ejecuta al abrir la revisión ni al cancelar el diálogo.
+- Migración aditiva 002_bajas_libro aplicada a PostgreSQL local 5433 y repetida
+  sin cambios. La API valida cuatro motivos, no retira fichas aún sin alta ni
+  libros prestados, y guarda motivo, responsable y estatus juntos. Bajas de
+  libros anteriores conservan su estatus, aunque no tienen motivo histórico.
+- Navegador: L000129 activo comparado en formulario, diálogo y resultado de
+  edición; se canceló el diálogo sin dar de baja. L000134 ya retirado sirvió
+  para cotejar la vista de resultado; no se cambió ningún dato por navegador.
+- Ensayo SQL de baja con motivo dentro de una transacción revertida. Suite
+  DUCKY_TEST_DB=1 npm test: 52 aprobadas, cero fallos; git diff --check limpio.
+  No se ejecutó db:init.
+- Pendientes: alinear edición de ejemplares dentro del formulario de libro,
+  diferencia de claves B/L, más estados de error y compra, y revisión móvil.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — FICHA Y ETIQUETADO SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Continuación sobre 465b24b subido y origin/main sincronizado.
   package-lock.json local ajeno sigue excluido.

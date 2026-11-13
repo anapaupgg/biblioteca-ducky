@@ -193,9 +193,12 @@ Una vez revisados respaldo y pruebas, aplicar al origen configurado en `.env`:
 
 ```sh
 node scripts/migrar-compras.js
+node scripts/migrar-bajas-libro.js
 DUCKY_TEST_DB=1 npm test
 PORT=3001 npm start
 ```
 
 La migración se registra una vez, agrega funciones y asignaciones sin reiniciar
 ni eliminar datos. Para desarrollo local se usa PostgreSQL en 5433.
+La segunda migración agrega el registro del motivo de baja de libros en una tabla
+nueva; es repetible y no modifica los libros existentes.

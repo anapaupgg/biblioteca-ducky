@@ -154,7 +154,8 @@ const ui =
     /**************************************************************/
     /* Reuse Instructions                                         */
     /* ui.dialogo({ titulo, texto, cuerpo, confirmar, cancelar,   */
-    /*              peligro, al_confirmar })                      */
+    /*              peligro, amplio, principal_primero,           */
+    /*              al_confirmar })                               */
     /* Purpose: Modal dialog. "cuerpo" is extra HTML (a form).    */
     /*          If al_confirmar(dialog) returns a Promise that     */
     /*          rejects, the dialog stays open showing the error. */
@@ -167,12 +168,14 @@ const ui =
             const overlay = document.createElement('div');
             overlay.className = 'overlay';
             overlay.innerHTML =
-                '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo">' +
+                '<div class="dialog' + (opciones.amplio ? ' dialog-wide' : '') +
+                '" role="dialog" aria-modal="true" aria-labelledby="dialogo-titulo">' +
                 '<h2 id="dialogo-titulo">' + this.esc(opciones.titulo) + '</h2>' +
                 (opciones.texto ? '<p>' + this.esc(opciones.texto) + '</p>' : '') +
                 (opciones.cuerpo || '') +
                 '<div class="dialogo-mensaje"></div>' +
-                '<div class="actions">' +
+                '<div class="actions' + (opciones.principal_primero ?
+                    ' dialog-actions-primary-first' : '') + '">' +
                 (opciones.cancelar === false ? '' :
                     '<button class="btn" data-accion="cancelar">' + this.esc(opciones
                         .cancelar || 'Cancelar') + '</button>') +

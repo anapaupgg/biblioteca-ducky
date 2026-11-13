@@ -168,6 +168,17 @@ CREATE TABLE LIBROS (
     CONSTRAINT ck_libros_alta    CHECK (Estatus = 'Ficha creada' OR Fecha_Alta_Catalogo IS NOT NULL)
 );
 
+-- Baja lógica de la ficha: conserva motivo, descripción y responsable.
+CREATE TABLE BAJAS_LIBRO (
+    ID_Libro             VARCHAR(7) PRIMARY KEY REFERENCES LIBROS (ID_Libro),
+    Motivo               VARCHAR(10) NOT NULL,
+    Descripcion          VARCHAR(200),
+    Fecha_Baja           TIMESTAMPTZ NOT NULL DEFAULT now(),
+    Clave_Administrador  VARCHAR(6) NOT NULL REFERENCES USUARIOS (Clave_Usuario),
+    CONSTRAINT ck_bajas_libro_motivo CHECK (Motivo IN ('Perdido', 'Robado', 'Dañado', 'Obsoleto')),
+    CONSTRAINT ck_bajas_libro_desc CHECK (Descripcion IS NULL OR btrim(Descripcion) <> '')
+);
+
 -- N:M entre LIBROS y AUTORES
 CREATE TABLE LIBRO_AUTOR (
     ID_Libro      VARCHAR(7) NOT NULL REFERENCES LIBROS (ID_Libro) ON DELETE CASCADE,

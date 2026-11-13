@@ -79,7 +79,7 @@ const libro_form_controller =
             {
                 await libro_model.actualizar(this.id, datos);
                 window.location.href = 'libro_detalle.html?id=' + encodeURIComponent(this.id) +
-                    '&ok=editado';
+                    '&modo=editado';
             }
             else
             {
