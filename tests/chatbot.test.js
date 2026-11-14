@@ -100,6 +100,9 @@ test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desc
         assert.match(perfil.data.resultados[0].respuesta, /Chatbot/);
         const buscar = await pedir('¿Cómo encuentro un libro?');
         assert.match(buscar.data.resultados[0].respuesta, /Buscar libros/);
+        assert.match(buscar.data.resultados[0].respuesta, /clave, ISBN o editorial/);
+        assert.equal(buscar.data.resultados[0].accion, 'buscar');
+        assert.equal(objetivo.data.resultados[0].accion, null);
         for (const q of ['',
                 {
                 },

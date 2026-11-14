@@ -2662,6 +2662,13 @@ table.table
     text-align: center;
 }
 
+.chat-search-action
+{
+    width: fit-content;
+    min-height: 48px;
+    margin-bottom: 16px;
+}
+
 /* Listado y PDF del catálogo: frames 2046:48434, 2046:48455 y 2046:48477. */
 .catalog-list-card h2
 {
@@ -2968,6 +2975,12 @@ table.table
     {
         margin: 0;
         gap: 16px;
+    }
+
+    .chatbot-page .chat-search-action
+    {
+        width: 100%;
+        margin: 0;
     }
 
     .chatbot-page .faq-preguntas

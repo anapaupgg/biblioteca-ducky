@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-14 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -52,6 +52,8 @@ const chatbot_view =
     /* respuesta(datos): contrato JSON de /api/chatbot; contenido siempre como texto. */
     respuesta(datos)
     {
+        document.getElementById('chat-buscar-cta').classList.toggle('hidden',
+            !datos.resultados?.some((resultado) => resultado.accion === 'buscar'));
         if (!datos.resultados?.length || datos.libros?.length)
             this.mensaje(datos.mensaje, 'bot');
         datos.resultados.forEach(pregunta => this.mensaje(pregunta.respuesta,

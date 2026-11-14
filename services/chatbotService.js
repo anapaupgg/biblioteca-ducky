@@ -109,12 +109,13 @@ function responder_sistema(texto, usuario)
         'Incluye usuarios y perfiles, fichas y catálogo, búsqueda, solicitudes de compra, préstamos, devoluciones, multas, lista de espera y este asistente.',
         'Es una aplicación web para navegadores de escritorio y móvil. Necesita conexión al servidor de la biblioteca.',
         'Tu perfil tiene estas funciones: ' + (usuario?.funciones?.join(', ') || 'consulta al personal de biblioteca') + '.',
-        'Abre Buscar libros y filtra por título, autor, tema o ISBN. En cada resultado puedes ver la ficha, ubicación y disponibilidad.'
+        'Entra a Buscar libros y filtra por título, autor, tema, clave, ISBN o editorial. La ficha muestra el estante, la fila y cuántos ejemplares están disponibles.'
     ];
     return {
         pregunta: PREGUNTAS_SISTEMA[indice],
         respuesta: respuestas[indice],
-        fuentes: ['Funciones de Biblioteca Ducky']
+        fuentes: ['Funciones de Biblioteca Ducky'],
+        accion: indice === 4 ? 'buscar' : null
     };
 }
 module.exports =

@@ -1,3 +1,23 @@
+ACTUALIZACIÓN — SIETE ESTADOS MÓVILES DEL ASISTENTE (14 DE NOVIEMBRE DE 2026)
+- Continuación sobre 5473006 ya subido. Los frames 2483:78618, 2483:78692,
+  2483:78766, 2483:78916, 2483:78990, 2483:79064 y 2483:79138 se
+  consultaron y cotejaron con las siete respuestas reales a 390 px.
+- «¿Cómo encuentro un libro?» ahora menciona los seis filtros que existen y
+  muestra «Ir a Buscar libros» después de las sugerencias como Figma. El
+  botón se oculta al consultar otra pregunta. No modifica permisos ni datos.
+- Verificación: las siete respuestas se probaron en navegador sin
+  desplazamiento horizontal; la ruta de búsqueda y el cambio de pregunta
+  se comprobaron. npm test: 54 aprobadas, 8 omitidas, 0 fallos.
+- Diferencias conscientes: los frames ilustrativos repiten la pregunta de
+  duración para otras respuestas; la app muestra la pregunta realmente
+  pulsada. La respuesta de plataformas dice «web en escritorio y móvil»
+  porque no hay una app nativa; la de perfiles usa funciones autorizadas del
+  usuario. Los textos de FAQ guardados en BD no se sustituyeron por ejemplos.
+- Pendiente: estados secundarios de otras secciones, recurso real de lectura
+  digital y compatibilidad de claves B.../L.... No db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — LISTADO, PDF E IMPRESIÓN DEL LECTOR (14 DE NOVIEMBRE DE 2026)
 - Al comenzar: git fetch origin correcto, main y origin/main 0/0; no había
   commits remotos nuevos. El cambio local previo en package-lock.json se
