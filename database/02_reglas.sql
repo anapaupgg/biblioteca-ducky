@@ -225,6 +225,15 @@ CREATE OR REPLACE FUNCTION fn_ejemplares_validar() RETURNS TRIGGER LANGUAGE plpg
 DECLARE
     v_formato VARCHAR;
 BEGIN
+    IF NEW.condicion = 'Dañado' AND NEW.estatus = 'Disponible' THEN
+        NEW.estatus := 'En revisión';
+    END IF;
+    IF TG_OP = 'UPDATE' THEN
+        IF OLD.estatus = 'En revisión' AND OLD.condicion = 'Dañado'
+           AND NEW.condicion IN ('Bueno', 'Regular') THEN
+            NEW.estatus := 'Disponible';
+        END IF;
+    END IF;
     SELECT formato INTO v_formato FROM libros WHERE id_libro = NEW.id_libro;
     IF v_formato = 'Digital' THEN
         IF NEW.tipo_uso <> 'Préstamo digital' OR NEW.id_ubicacion IS NOT NULL THEN
@@ -460,10 +469,12 @@ BEGIN
      WHERE id_ejemplar = v_pre.id_ejemplar RETURNING id_libro INTO v_libro;
     PERFORM generar_multa_retraso(NEW.id_prestamo, v_pre.fecha_vencimiento, NEW.fecha_devolucion);
 
-    UPDATE lista_espera SET estatus = 'Notificado'
-     WHERE id_espera = (SELECT id_espera FROM lista_espera
-                         WHERE id_libro = v_libro AND estatus = 'En espera'
-                         ORDER BY fecha_registro, id_espera LIMIT 1);
+    IF NEW.condicion_recibida <> 'Dañado' THEN
+        UPDATE lista_espera SET estatus = 'Notificado'
+         WHERE id_espera = (SELECT id_espera FROM lista_espera
+                             WHERE id_libro = v_libro AND estatus = 'En espera'
+                             ORDER BY fecha_registro, id_espera LIMIT 1);
+    END IF;
     PERFORM registrar_bitacora('Devolución', 'Préstamo ' || NEW.id_prestamo || ' ejemplar ' || v_pre.id_ejemplar);
     RETURN NEW;
 END $$;

@@ -1,12 +1,12 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: SQL para renovación y devolución de préstamos.   */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: buscar_activo, renovar, devolver.            */
+/* Listing Contents: buscar_activo, renovar, devolver y avisos.   */
 /* Reuse Instructions: las mutaciones reciben client transaccional; */
 /* los triggers calculan vencimientos, multas y avisos.            */
 /******************************************************************/
@@ -15,7 +15,7 @@ const { pool } = require('../db');
 
 const DETALLE_ACTIVO =
     `SELECT p.id_prestamo, p.clave_usuario, u.nombre AS solicitante,
-            p.id_ejemplar, l.titulo, p.fecha_prestamo, p.fecha_vencimiento,
+            p.id_ejemplar, e.id_libro, l.titulo, p.fecha_prestamo, p.fecha_vencimiento,
             p.estatus, t.nombre AS tipo_usuario, t.max_renovaciones,
             l.precio_ultima_compra_usd,
             (SELECT count(*) FROM renovaciones r WHERE r.id_prestamo = p.id_prestamo)::int
@@ -47,6 +47,13 @@ const renovar = async (client, id_prestamo, clave_autoriza) =>
 
 const devolver = async (client, id_prestamo, condicion, clave_bibliotecario) =>
 {
+    const siguiente = condicion === 'Dañado' ? { rows: [] } : await client.query(
+        `SELECT w.id_espera, w.clave_usuario, u.nombre
+           FROM lista_espera w JOIN usuarios u USING (clave_usuario)
+          WHERE w.id_libro = (SELECT e.id_libro FROM prestamos p
+             JOIN ejemplares e USING (id_ejemplar) WHERE p.id_prestamo = $1)
+            AND w.estatus = 'En espera'
+          ORDER BY w.fecha_registro, w.id_espera LIMIT 1`, [id_prestamo]);
     const anterior = await client.query(
         'SELECT coalesce(max(id_multa), 0) AS id FROM multas WHERE id_prestamo = $1',
         [id_prestamo]);
@@ -60,7 +67,15 @@ const devolver = async (client, id_prestamo, condicion, clave_bibliotecario) =>
         `SELECT id_multa, tipo, monto, estatus FROM multas
           WHERE id_prestamo = $1 AND id_multa > $2 ORDER BY id_multa DESC LIMIT 1`,
         [id_prestamo, anterior.rows[0].id]);
-    return { ...resultado.rows[0], multa: multa.rows[0] || null };
+    const ejemplar = await client.query(
+        `SELECT e.estatus FROM ejemplares e JOIN prestamos p USING (id_ejemplar)
+          WHERE p.id_prestamo = $1`, [id_prestamo]);
+    const espera = siguiente.rows[0] ? await client.query(
+        'SELECT estatus FROM lista_espera WHERE id_espera = $1',
+        [siguiente.rows[0].id_espera]) : { rows: [] };
+    return { ...resultado.rows[0], multa: multa.rows[0] || null,
+        estatus_ejemplar: ejemplar.rows[0].estatus,
+        espera: espera.rows[0]?.estatus === 'Notificado' ? siguiente.rows[0] : null };
 };
 
 const reportar_perdida = async (client, id_prestamo, tipo_cambio, clave_bibliotecario) =>
@@ -88,6 +103,27 @@ const multas = async () =>
     return resultado.rows;
 };
 
+/* Registra solo una notificación interna; la entrega externa queda pendiente. */
+const aviso_multa = async (client, id_multa, clave_emisor) =>
+{
+    await client.query(
+        `INSERT INTO notificaciones_tesoreria (id_multa, clave_emisor)
+         SELECT m.id_multa, $2 FROM multas m
+          WHERE m.id_multa = $1 AND m.tipo = 'Retraso'
+         ON CONFLICT (id_multa) DO NOTHING`, [id_multa, clave_emisor]);
+    const resultado = await client.query(
+        `SELECT n.id_notificacion, n.fecha_creacion, n.estatus,
+                m.id_multa, m.tipo, m.dias_retraso, m.tarifa_diaria_aplicada,
+                m.monto, m.estatus AS estatus_multa,
+                u.nombre AS usuario, u.clave_usuario
+           FROM notificaciones_tesoreria n
+           JOIN multas m USING (id_multa)
+           JOIN prestamos p USING (id_prestamo)
+           JOIN usuarios u USING (clave_usuario)
+          WHERE n.id_multa = $1 AND m.tipo = 'Retraso'`, [id_multa]);
+    return resultado.rows[0] || null;
+};
+
 const registrar_pago = async (client, id_multa, folio_tesoreria, clave_bibliotecario) =>
 {
     const resultado = await client.query(
@@ -105,4 +141,4 @@ const avisar_adeudos = async (client, clave_bibliotecario) =>
 };
 
 module.exports = { buscar_activo, renovar, devolver, reportar_perdida,
-    multas, registrar_pago, avisar_adeudos };
+    multas, aviso_multa, registrar_pago, avisar_adeudos };

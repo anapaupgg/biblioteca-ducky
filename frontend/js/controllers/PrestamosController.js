@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-30                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Coordina vistas y modelo cliente de préstamos.    */
 /******************************************************************/
 
@@ -54,6 +54,13 @@ const prestamos_controller =
             descargar_boleta: () => this.descargar_boleta()
         });
         await this.cargar();
+        const libro_espera = prestamos_view.entrada_espera();
+        if (libro_espera && this.funciones.includes('Préstamos'))
+        {
+            this.abrir_espera();
+            prestamos_view.prellenar_espera(libro_espera);
+            await this.consultar_espera(libro_espera);
+        }
     },
 
     cargar: async function ()

@@ -1,13 +1,14 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Coordina renovación y devolución.                */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents: buscar, validar_renovacion, renovar,         */
-/* validar_devolucion, devolver, perdida, multas, pago, avisos.   */
+/* validar_devolucion, devolver, perdida, multas, aviso_multa,     */
+/* pago, avisos.                                                   */
 /* Reuse Instructions: exige sesión con permiso Préstamos;         */
 /* simular revierte siempre, confirmar guarda una sola vez.       */
 /******************************************************************/
@@ -111,6 +112,25 @@ const multas = async (solicitud, respuesta) =>
     }
 };
 
+const aviso_multa = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const id_multa = Number(solicitud.params.id);
+        if (!Number.isSafeInteger(id_multa) || id_multa < 1)
+            throw new error_negocio(400, 'Folio de multa inválido');
+        const aviso = await con_usuario(solicitud.usuario.clave, (client) =>
+            circulacion_model.aviso_multa(client, id_multa, solicitud.usuario.clave));
+        if (!aviso) throw new error_negocio(404, 'No se encontró una multa por atraso');
+        respuesta.set('Cache-Control', 'no-store');
+        respuesta.status(201).json(aviso);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'circulacion.aviso_multa');
+    }
+};
+
 const pago = async (solicitud, respuesta) =>
 {
     try
@@ -151,4 +171,4 @@ const avisos = async (solicitud, respuesta) =>
 };
 
 module.exports = { buscar, validar_renovacion, renovar, validar_devolucion, devolver,
-    validar_perdida, confirmar_perdida, multas, pago, avisos };
+    validar_perdida, confirmar_perdida, multas, aviso_multa, pago, avisos };

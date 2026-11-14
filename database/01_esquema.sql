@@ -207,7 +207,7 @@ CREATE TABLE EJEMPLARES (
     Fecha_Ingreso  DATE        NOT NULL DEFAULT CURRENT_DATE,
     CONSTRAINT ck_ejemplares_uso       CHECK (Tipo_Uso IN ('Préstamo externo', 'Préstamo en sala', 'Reservado', 'Préstamo digital')),
     CONSTRAINT ck_ejemplares_condicion CHECK (Condicion IN ('Bueno', 'Regular', 'Dañado')),
-    CONSTRAINT ck_ejemplares_estatus   CHECK (Estatus IN ('Disponible', 'Prestado', 'Perdido', 'Baja'))
+    CONSTRAINT ck_ejemplares_estatus   CHECK (Estatus IN ('Disponible', 'Prestado', 'En revisión', 'Perdido', 'Baja'))
 );
 
 CREATE TABLE BAJAS_EJEMPLAR (

@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Acceso cliente a préstamos y devoluciones.        */
 /******************************************************************/
 
@@ -20,6 +20,7 @@ const circulacion_model =
     validar_perdida: (datos) => api.post('/circulacion/perdidas/validar', datos),
     confirmar_perdida: (datos) => api.post('/circulacion/perdidas', datos),
     multas: () => api.get('/circulacion/multas'),
+    aviso_multa: (id) => api.post('/circulacion/multas/' + encodeURIComponent(id) + '/aviso', {}),
     registrar_pago: (datos) => api.post('/circulacion/multas/pagos', datos),
     avisar_adeudos: () => api.post('/circulacion/multas/avisos', {})
 };

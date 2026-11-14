@@ -2091,6 +2091,53 @@ table.table
     max-width: 760px;
 }
 
+/* Comprobantes de devolución: 2465:100993, 101339, 101690 y 102038. */
+.return-receipt-card
+{
+    max-width: none;
+}
+
+.return-receipt-card > h2:first-child
+{
+    margin-bottom: var(--space-16);
+    line-height: 24px;
+}
+
+.circulation-page #panel-recibo-devolucion
+{
+    padding-top: 6px;
+}
+
+.return-receipt-grid
+{
+    row-gap: var(--space-16);
+}
+
+.return-receipt-grid .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.circulation-page #acciones-recibo-devolucion .btn
+{
+    min-height: 48px;
+}
+
+.circulation-page #acciones-recibo-devolucion .receipt-action-primary
+{
+    order: -1;
+}
+
+.circulation-page #aviso-recibo-devolucion:not(.hidden)
+{
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+}
+
 .loan-receipt-card
 {
     max-width: none;

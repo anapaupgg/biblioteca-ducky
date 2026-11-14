@@ -1,3 +1,33 @@
+ACTUALIZACIÓN — COMPROBANTES DE DEVOLUCIÓN FIGMA (14 DE NOVIEMBRE DE 2026)
+- Al comenzar: git fetch origin y comparación con upstream 0/0; no había
+  commits remotos nuevos. El package-lock.json local previo sigue excluido.
+- Frames 2465:100993, 2465:101339, 2465:101690, 2465:102038,
+  2483:82757 y 2447:114653 consultados. Comprobantes normales, con espera,
+  daño y multa adaptados a tarjetas de dos columnas, alertas y acciones de
+  Figma con datos de la operación real; aviso interno de Tesorería presenta
+  folio, monto y estado. La lista de espera se abre por libro desde el recibo.
+- La migración aditiva 003_devolucion_danados se aplicó en PostgreSQL local
+  5433. Una copia Dañada queda En revisión y no avanza la lista de espera;
+  el administrador del catálogo puede devolverla a Disponible al registrar
+  Bueno/Regular o darla de baja. Antes de migrar no había copias Dañadas
+  marcadas Disponible. No se ejecutó db:init ni se reinició la base.
+- La devolución devuelve estado real de copia, multa y primera persona que
+  pasó a Notificado internamente. Un aviso de multa por atraso se registra
+  una sola vez con permiso Devoluciones y estado Pendiente; no se declara
+  enviado/recibido sin confirmación externa.
+- Verificación: transacciones de PostgreSQL revertidas probaron daño,
+  reparación, espera, multa y aviso idempotente (6/6 pruebas de integración
+  aprobadas). En navegador se cotejaron cuatro recibos y el aviso con datos
+  sintéticos temporales eliminados: tarjeta normal (276,176;1132×386),
+  tarjeta de multa (276,176;1132×282), alerta y acciones sin desbordamiento
+  móvil. npm test general: 55 aprobadas, 10 omitidas, 0 fallos.
+- Diferencias pendientes: Figma ilustra correos y recepción de Tesorería que
+  el proyecto aún no entrega externamente; se muestran estados internos
+  veraces. Claves reales L... frente a B... ilustrativas. Faltan otros
+  estados secundarios y el recurso de lectura digital válido.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — SIETE ESTADOS MÓVILES DEL ASISTENTE (14 DE NOVIEMBRE DE 2026)
 - Continuación sobre 5473006 ya subido. Los frames 2483:78618, 2483:78692,
   2483:78766, 2483:78916, 2483:78990, 2483:79064 y 2483:79138 se

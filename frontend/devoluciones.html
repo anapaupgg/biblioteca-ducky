@@ -2,7 +2,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Devoluciones según el prototipo de Figma.         */
 /******************************************************************/
 -->
@@ -64,8 +64,16 @@
                         </div>
                     </section>
                     <section id="panel-recibo-devolucion" class="hidden">
-                        <div class="card receipt" id="recibo-devolucion"></div>
-                        <div class="actions"><a class="btn btn-primary" href="devoluciones.html">Volver a devoluciones</a></div>
+                        <div class="card return-receipt-card" id="recibo-devolucion"></div>
+                        <div class="alert" id="aviso-recibo-devolucion"></div>
+                        <div class="actions" id="acciones-recibo-devolucion">
+                            <button class="btn btn-primary" type="button" id="btn-registrar-aviso-multa">Registrar aviso a Tesorería</button>
+                            <a class="btn" id="btn-ver-espera-devolucion" href="prestamos.html">Ver lista de espera</a>
+                            <button class="btn" type="button" id="btn-otra-devolucion">Registrar otra devolución</button>
+                            <button class="btn" type="button" id="btn-registrar-pago-aviso">Registrar pago</button>
+                            <button class="btn" type="button" id="btn-ver-multas-aviso">Ver multas</button>
+                            <button class="btn" type="button" id="btn-volver-recibo-devolucion">Volver a devoluciones</button>
+                        </div>
                     </section>
                     <section id="panel-perdida" class="hidden">
                         <form id="form-buscar-perdida" novalidate>

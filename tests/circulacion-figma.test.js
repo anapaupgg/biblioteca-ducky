@@ -1,12 +1,13 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Ciclo de circulación sin alterar datos reales.   */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: préstamo, renovación y devolución con rollback. */
+/* Listing Contents: préstamo, renovación, devolución dañada y    */
+/* aviso interno con rollback.                                    */
 /* Reuse Instructions: DUCKY_TEST_DB=1 habilita PostgreSQL local. */
 /******************************************************************/
 
@@ -39,6 +40,46 @@ test('autorización muestra recibo y conserva sus datos al abrir la boleta', asy
     contexto.controlador.volver_recibo();
     assert.deepEqual(pasos, ['mostrar:recibo', 'recibo:PRE-2026-0071', 'mostrar:boleta',
         'boleta:PRE-2026-0071', 'mostrar:recibo', 'recibo:PRE-2026-0071']);
+});
+
+test('el recibo abre la lista de espera del libro indicado sin omitir permisos', async () =>
+{
+    const pasos = [];
+    const datos = { libro: { titulo: 'Prueba' }, solicitudes: [] };
+    const contexto =
+    {
+        layout: { montar: async () => ({ funciones: ['Préstamos'] }) },
+        prestamos_view:
+        {
+            configurar: () => {}, enlazar: () => {},
+            entrada_espera: () => 'L000128',
+            mostrar: (modo) => pasos.push('mostrar:' + modo),
+            prellenar_espera: (id) => pasos.push('clave:' + id),
+            lista_espera: (respuesta) => pasos.push('lista:' + respuesta.libro.titulo),
+            pendientes: () => {}, aviso_solicitud: () => {}, activos: () => {}
+        },
+        prestamo_model:
+        {
+            pendientes: async () => [], activos: async () => [],
+            espera: async (id) =>
+            {
+                assert.equal(id, 'L000128');
+                return datos;
+            }
+        }
+    };
+    vm.runInNewContext(fs.readFileSync(require.resolve(
+        '../frontend/js/controllers/PrestamosController.js'), 'utf8') +
+        '\nthis.controlador = prestamos_controller;', contexto);
+    await contexto.controlador.iniciar();
+    assert.deepEqual(pasos, ['mostrar:espera', 'clave:L000128', 'lista:Prueba']);
+
+    const vista = { window: { location: { search: '?espera=L000128' } }, URLSearchParams };
+    vm.runInNewContext(fs.readFileSync(require.resolve('../frontend/js/views/PrestamosView.js'),
+        'utf8') + '\nthis.vista = prestamos_view;', vista);
+    assert.equal(vista.vista.entrada_espera(), 'L000128');
+    vista.window.location.search = '?espera=../../otro';
+    assert.equal(vista.vista.entrada_espera(), null);
 });
 
 test('PostgreSQL: registro, renovación y devolución revierten todo en la prueba',
@@ -123,4 +164,67 @@ test('PostgreSQL: pérdida genera multa y pago la liquida sin persistir datos de
     ]);
     assert.equal(prestamos.rows[0].total, 0);
     assert.equal(copias.rows[0].estatus, 'Disponible');
+});
+
+test('PostgreSQL: daño bloquea préstamo y espera; reparación lo libera, todo con rollback',
+    { skip: process.env.DUCKY_TEST_DB !== '1' }, async (t) =>
+{
+    const activo = await pool.query(
+        `SELECT p.id_prestamo, p.id_ejemplar, e.id_libro
+           FROM prestamos p JOIN ejemplares e USING (id_ejemplar)
+          WHERE p.estatus = 'Activo' AND EXISTS
+            (SELECT 1 FROM lista_espera w WHERE w.id_libro = e.id_libro
+             AND w.estatus = 'En espera')
+          ORDER BY p.id_prestamo LIMIT 1`);
+    if (!activo.rows[0]) return t.skip('No hay préstamo activo con lista de espera');
+    const prestamo = activo.rows[0];
+    await simular('100001', async (client) =>
+    {
+        const danado = await circulacion_model.devolver(client, prestamo.id_prestamo,
+            'Dañado', '100001');
+        assert.equal(danado.estatus_ejemplar, 'En revisión');
+        assert.equal(danado.espera, null);
+        const espera = await client.query(
+            `SELECT estatus FROM lista_espera WHERE id_libro=$1
+             AND estatus='En espera' LIMIT 1`, [prestamo.id_libro]);
+        assert.equal(espera.rows[0].estatus, 'En espera');
+        await client.query("UPDATE ejemplares SET condicion='Bueno' WHERE id_ejemplar=$1",
+            [prestamo.id_ejemplar]);
+        const reparado = await client.query('SELECT estatus FROM ejemplares WHERE id_ejemplar=$1',
+            [prestamo.id_ejemplar]);
+        assert.equal(reparado.rows[0].estatus, 'Disponible');
+    });
+    const estado = await pool.query('SELECT estatus, condicion FROM ejemplares WHERE id_ejemplar=$1',
+        [prestamo.id_ejemplar]);
+    assert.equal(estado.rows[0].estatus, 'Prestado');
+});
+
+test('PostgreSQL: devolución avanza la espera y aviso de multa es único y pendiente',
+    { skip: process.env.DUCKY_TEST_DB !== '1' }, async (t) =>
+{
+    const activo = await pool.query(
+        `SELECT p.id_prestamo, e.id_libro FROM prestamos p
+           JOIN ejemplares e USING (id_ejemplar)
+          WHERE p.estatus='Activo' AND EXISTS
+            (SELECT 1 FROM lista_espera w WHERE w.id_libro=e.id_libro
+             AND w.estatus='En espera')
+          ORDER BY p.id_prestamo LIMIT 1`);
+    if (!activo.rows[0]) return t.skip('No hay préstamo activo con lista de espera');
+    const prestamo = activo.rows[0];
+    await simular('100001', async (client) =>
+    {
+        await client.query('UPDATE prestamos SET fecha_vencimiento=CURRENT_DATE-2 WHERE id_prestamo=$1',
+            [prestamo.id_prestamo]);
+        const devuelto = await circulacion_model.devolver(client, prestamo.id_prestamo,
+            'Bueno', '100001');
+        assert.equal(devuelto.estatus_ejemplar, 'Disponible');
+        assert.ok(devuelto.espera?.id_espera);
+        assert.ok(devuelto.multa?.id_multa);
+        const primero = await circulacion_model.aviso_multa(client, devuelto.multa.id_multa,
+            '100001');
+        const segundo = await circulacion_model.aviso_multa(client, devuelto.multa.id_multa,
+            '100001');
+        assert.equal(primero.id_notificacion, segundo.id_notificacion);
+        assert.equal(primero.estatus, 'Pendiente');
+    });
 });

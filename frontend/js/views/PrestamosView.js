@@ -374,6 +374,17 @@ const prestamos_view =
         return document.getElementById('espera-libro').value.trim().toUpperCase();
     },
 
+    entrada_espera: function ()
+    {
+        const id = new URLSearchParams(window.location.search).get('espera');
+        return id && /^[A-Z0-9]{7}$/.test(id) ? id : null;
+    },
+
+    prellenar_espera: function (id_libro)
+    {
+        document.getElementById('espera-libro').value = id_libro;
+    },
+
     preparar_espera: function ()
     {
         document.getElementById('espera-libro-registro').value = this.libro_espera();

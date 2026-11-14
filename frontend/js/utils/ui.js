@@ -39,6 +39,7 @@ const COLOR_ESTATUS =
     'Activo': 'ok',
     'Activa': 'ok',
     'Disponible': 'ok',
+    'En revisión': 'warning',
     'Activo en catálogo': 'ok',
     'Pagada': 'ok',
     'Recibido': 'ok',

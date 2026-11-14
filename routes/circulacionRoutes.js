@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-11                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Rutas protegidas de circulación.                  */
 /******************************************************************/
 
@@ -24,6 +24,7 @@ router.post('/devoluciones', requiere_funcion('Devoluciones'), controller.devolv
 router.post('/perdidas/validar', requiere_funcion('Devoluciones'), controller.validar_perdida);
 router.post('/perdidas', requiere_funcion('Devoluciones'), controller.confirmar_perdida);
 router.get('/multas', requiere_funcion('Devoluciones'), controller.multas);
+router.post('/multas/:id/aviso', requiere_funcion('Devoluciones'), controller.aviso_multa);
 router.post('/multas/pagos', requiere_funcion('Devoluciones'), controller.pago);
 router.post('/multas/avisos', requiere_funcion('Devoluciones'), controller.avisos);
 

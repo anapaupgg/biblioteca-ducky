@@ -106,6 +106,7 @@ const grupos = [
         ['post', '/perdidas/validar'],
         ['post', '/perdidas'],
         ['get', '/multas'],
+        ['post', '/multas/1/aviso'],
         ['post', '/multas/pagos'],
         ['post', '/multas/avisos']
     ]]
