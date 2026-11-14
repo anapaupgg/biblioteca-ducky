@@ -576,6 +576,56 @@ a
     min-width: 140px;
 }
 
+/* Portada del lector: medidas del frame 2044:48055 (1440 × 960). */
+.home-reader #servicios
+{
+    padding-top: 4px;
+}
+
+.home-reader .service
+{
+    align-items: flex-start;
+    gap: 24px;
+}
+
+.home-reader .service svg
+{
+    width: 24px;
+    height: 24px;
+    margin-top: 0;
+}
+
+.home-reader .service-text
+{
+    flex: 0 1 750px;
+    min-width: 0;
+}
+
+.home-reader .service .btn
+{
+    width: 140px;
+    min-height: 48px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px)
+{
+    .home-reader .service
+    {
+        flex-wrap: wrap;
+    }
+
+    .home-reader .service-text
+    {
+        flex: 1 1 220px;
+    }
+
+    .home-reader .service .btn
+    {
+        width: 100%;
+    }
+}
+
 .service-pedidos
 {
     border-color: transparent;

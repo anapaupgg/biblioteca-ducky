@@ -7,6 +7,7 @@
 
 /******************************************************************/
 /* Listing Contents: */
+/*   inicio_view.perfil_lector(es_lector) */
 /*   inicio_view.saludo(usuario) */
 /*   inicio_view.descripcion(texto) */
 /*   inicio_view.servicios(lista) */
@@ -21,6 +22,11 @@
 
 const inicio_view =
 {
+    perfil_lector: function (es_lector)
+    {
+        document.body.classList.toggle('home-reader', es_lector);
+    },
+
     saludo: function (usuario)
     {
         document.getElementById('nombre-usuario').textContent = usuario.nombre;

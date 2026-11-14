@@ -4,6 +4,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 
 ## Cotejo adicional del 14 de noviembre de 2026
 
+- Frame `2044:48055`: la portada real del perfil Lector ya tenía Buscar libros, Asistente Ducky y Listado de libros en el orden de Figma, con la descripción y el nombre reales. Se ajustaron las tarjetas a las coordenadas del frame de 1440 × 960: primera tarjeta `(276,216;1132×102)`, icono `(301,241;24×24)`, texto `(349,241;750×52)` y botón `(1123,241;140×48)`; las otras tarjetas conservan separación de 16 px. Se verificó la navegación visual en 390 px sin desplazamiento horizontal. El menú lateral muestra solo las funciones autorizadas, aunque el frame ilustrativo contiene todas las rutas.
 - Frames `2483:78478`, `2483:78544` y `2483:78843`: el asistente móvil usa marca, título, subtítulo, tarjeta de conversación, campo, botón y dos grupos de sugerencias a 390 px como Figma. El usuario y la respuesta ocupan burbujas separadas; la respuesta no repite la pregunta y las fuentes de reglas compartidas se presentan de forma compacta. Se cotejaron en navegador el estado inicial, una respuesta de préstamos y una pregunta sin coincidencia; esta última ofrece los temas disponibles como el prototipo. Los siete frames móviles restantes reutilizan estos componentes, pero aún falta verificar visualmente sus longitudes de contenido.
 - En móvil, «Volver a Buscar libros» lleva a la búsqueda; en escritorio se mantiene «Volver al inicio». La API y los permisos del asistente siguen siendo los mismos.
 
@@ -62,7 +63,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | 01 Administrador del sistema (`2006:1313`) | Parcial | El shell usa los tokens correctos, pero el contenido estaba a 48 px en vez de 32 px del frame estándar. Orden y textos de servicios difieren. |
 | 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
 | 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
-| 04 Lector (`2044:48055`) | Parcial | Inicio, listado y PDF existen; el conjunto y orden de tarjetas no coincide. |
+| 04 Lector (`2044:48055`) | Parcial | Inicio cotejado a 1440 × 960; tarjetas, orden y acciones coinciden en geometría. Listado y PDF necesitan cotejo por estado. |
 | 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda principal tiene seis filtros en dos columnas y los accesos del frame; faltan otros estados de resultado y cotejo móvil completo. |
 | 06 Circulación conservada (`2014:35297`) | Parcial | Solicitud, autorización, devolución y espera funcionan; faltan cotejos de estados secundarios. |
 | 07 App móvil (`2258:48812`) | Parcial | Los diez estados tienen interfaz y navegación a 390 px. Ubicación usa zonas reales y el lector requiere un PDF/URL válido; no hay paridad de contenido ilustrativo. |

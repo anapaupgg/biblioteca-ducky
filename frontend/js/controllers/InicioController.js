@@ -98,6 +98,7 @@ const inicio_controller =
 
         inicio_view.saludo(usuario);
         const es_lector = usuario.perfil === 'Lector';
+        inicio_view.perfil_lector(es_lector);
         inicio_view.descripcion(es_lector ?
             'Servicios de consulta para alumnos, profesores y colaboradores.' :
             'Selecciona un servicio de tu perfil.');

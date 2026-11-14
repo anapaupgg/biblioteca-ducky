@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — PORTADA DE LECTOR FIGMA (14 DE NOVIEMBRE DE 2026)
+- Continuación sobre 21cf52d ya subido; no había commits remotos nuevos al
+  comenzar la solicitud. package-lock.json local previo sigue excluido.
+- Frame 2044:48055 cotejado con la cuenta Lector de prueba en navegador.
+  El orden Buscar libros / Asistente / Listado ya era correcto; se ajustaron
+  tarjetas, iconos, texto y botones a las coordenadas de Figma a 1440 × 960.
+  Los permisos reales ocultan rutas no autorizadas del menú ilustrativo.
+- Vista de 390 px comprobada sin desplazamiento horizontal ni botones fuera
+  de la tarjeta. No hubo escrituras a PostgreSQL ni se ejecutó db:init.
+- Pendiente: cotejo del listado y PDF de lector, los otros estados móviles
+  del asistente y los flujos secundarios de otras secciones.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ASISTENTE MÓVIL FIGMA (14 DE NOVIEMBRE DE 2026)
 - Antes de editar: git fetch origin correcto, main/origin main 0/0;
   no había commits remotos nuevos. package-lock.json previo se conserva.
