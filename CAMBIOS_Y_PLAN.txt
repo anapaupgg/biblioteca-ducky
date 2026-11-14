@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — LISTA DE ESPERA FIGMA (14 DE NOVIEMBRE DE 2026)
+- Continuación sobre e6d7cd9 ya subido; se cotejaron los frames 2447:114653
+  (lista) y 2447:115298 (alta) con PostgreSQL local y navegador.
+- Tras consultar el libro, la lista inicia en y=176 como Figma, con filas de
+  56 px y fecha sin hora. El filtro queda disponible mediante «Consultar otro
+  libro»; al cancelar un alta se recupera la lista consultada. La tarjeta de
+  alta quedó en (276,176;1132×176) y los botones en y=368 a 1440×960.
+- Se verificó el enlace desde el comprobante, navegación a alta, cancelación
+  y vista de 390 px sin desbordamiento. No se creó ninguna solicitud de prueba
+  ni se modificó PostgreSQL. Las claves L... y usuarios reales difieren de
+  los ejemplos B... del frame.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — COMPROBANTES DE DEVOLUCIÓN FIGMA (14 DE NOVIEMBRE DE 2026)
 - Al comenzar: git fetch origin y comparación con upstream 0/0; no había
   commits remotos nuevos. El package-lock.json local previo sigue excluido.

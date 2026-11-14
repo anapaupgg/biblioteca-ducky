@@ -1,13 +1,13 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-30                                               */
+/* Date: 2026-11-14                                               */
 /* Description: Presentación y eventos de préstamos.              */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents: configurar, enlazar, mostrar, activos,       */
-/* validacion, recibo, boleta, mios, pendientes y mensaje.         */
+/* validacion, recibo, boleta, espera, mios y pendientes.           */
 /* Reuse Instructions: cargar después de ui; callbacks reciben    */
 /* folio y ejemplar. Todos los datos externos se escapan.        */
 /******************************************************************/
@@ -48,6 +48,7 @@ const prestamos_view =
         document.getElementById('btn-confirmar-renovacion').addEventListener('click', acciones.renovar);
         document.getElementById('btn-volver-espera').addEventListener('click', acciones.volver);
         document.getElementById('btn-agregar-espera').addEventListener('click', acciones.abrir_agregar_espera);
+        document.getElementById('btn-cambiar-libro-espera').addEventListener('click', () => this.cambiar_libro_espera());
         document.getElementById('btn-cancelar-espera').addEventListener('click', acciones.abrir_espera);
         document.getElementById('form-consultar-espera').addEventListener('submit', (evento) =>
         {
@@ -118,6 +119,12 @@ const prestamos_view =
         document.body.classList.toggle('boleta-imprimible', modo === 'boleta');
         document.getElementById('panel-mios').classList.add('hidden');
         document.getElementById('panel-pendientes').classList.add('hidden');
+        if (modo === 'espera')
+        {
+            document.getElementById('form-consultar-espera').classList.remove('hidden');
+            document.getElementById('btn-cambiar-libro-espera').classList.add('hidden');
+            document.getElementById('lista-espera').replaceChildren();
+        }
         const titulos = {
             personal: ['Préstamo de libros',
                 'Registra préstamos, renovaciones y solicitudes de lista de espera.'],
@@ -357,6 +364,8 @@ const prestamos_view =
     lista_espera: function (datos)
     {
         const destino = document.getElementById('lista-espera');
+        document.getElementById('form-consultar-espera').classList.add('hidden');
+        document.getElementById('btn-cambiar-libro-espera').classList.remove('hidden');
         document.getElementById('descripcion-prestamos').textContent = datos.libro.titulo + ' · ' +
             datos.libro.id_libro + ' · ' + datos.libro.disponibles + ' de ' + datos.libro.total +
             ' ejemplares disponibles. Se avisa en orden cuando se devuelve un ejemplar.';
@@ -364,7 +373,7 @@ const prestamos_view =
             (datos.solicitudes.length ? datos.solicitudes.map((registro, indice) =>
                 '<div class="circulation-row">' + (indice + 1) + ' · ' +
                 ui.esc(registro.clave_usuario) + ' · ' + ui.esc(registro.nombre) + ' · ' +
-                ui.fecha_hora(registro.fecha_registro) + ' · ' + ui.esc(registro.estatus) +
+                ui.fecha(registro.fecha_registro) + ' · ' + ui.esc(registro.estatus) +
                 '</div>').join('') :
                 '<div class="circulation-row muted">Aún no hay solicitudes en espera.</div>');
     },
@@ -372,6 +381,13 @@ const prestamos_view =
     libro_espera: function ()
     {
         return document.getElementById('espera-libro').value.trim().toUpperCase();
+    },
+
+    cambiar_libro_espera: function ()
+    {
+        document.getElementById('form-consultar-espera').classList.remove('hidden');
+        document.getElementById('btn-cambiar-libro-espera').classList.add('hidden');
+        document.getElementById('espera-libro').focus();
     },
 
     entrada_espera: function ()

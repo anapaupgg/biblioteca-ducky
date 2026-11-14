@@ -418,6 +418,13 @@ a
     cursor: not-allowed;
 }
 
+.btn-link
+{
+    background: transparent;
+    border-color: transparent;
+    text-decoration: underline;
+}
+
 .actions
 {
     display: flex;
@@ -661,6 +668,23 @@ a
     border: 1px solid var(--color-line);
     border-radius: var(--radius-8);
     overflow-wrap: anywhere;
+}
+
+#panel-espera,
+#panel-agregar-espera
+{
+    padding-top: 6px;
+}
+
+#panel-agregar-espera .card
+{
+    min-height: 176px;
+}
+
+#panel-espera .btn,
+#panel-agregar-espera .btn
+{
+    min-height: 48px;
 }
 
 .circulation-actions

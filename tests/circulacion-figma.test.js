@@ -73,6 +73,8 @@ test('el recibo abre la lista de espera del libro indicado sin omitir permisos',
         '\nthis.controlador = prestamos_controller;', contexto);
     await contexto.controlador.iniciar();
     assert.deepEqual(pasos, ['mostrar:espera', 'clave:L000128', 'lista:Prueba']);
+    await contexto.controlador.abrir_espera();
+    assert.deepEqual(pasos.slice(3), ['mostrar:espera', 'clave:L000128', 'lista:Prueba']);
 
     const vista = { window: { location: { search: '?espera=L000128' } }, URLSearchParams };
     vm.runInNewContext(fs.readFileSync(require.resolve('../frontend/js/views/PrestamosView.js'),

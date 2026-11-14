@@ -14,6 +14,7 @@
 
 const prestamos_controller =
 {
+    libro_espera_consultado: null,
     funciones: [],
     datos_pendientes: null,
     renovacion_pendiente: null,
@@ -149,6 +150,11 @@ const prestamos_controller =
     abrir_espera: function ()
     {
         prestamos_view.mostrar('espera');
+        if (this.libro_espera_consultado)
+        {
+            prestamos_view.prellenar_espera(this.libro_espera_consultado);
+            return this.consultar_espera(this.libro_espera_consultado);
+        }
     },
 
     abrir_agregar_espera: function ()
@@ -161,7 +167,9 @@ const prestamos_controller =
     {
         try
         {
-            prestamos_view.lista_espera(await prestamo_model.espera(id_libro));
+            const datos = await prestamo_model.espera(id_libro);
+            this.libro_espera_consultado = id_libro;
+            prestamos_view.lista_espera(datos);
         }
         catch (error)
         {
