@@ -1,97 +1,77 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
-/* Description: Pruebas de regresión y contratos del sistema. */
+/* Date: 2026-11-14 */
+/* Description: Regresión del listado y su PDF descargable. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: */
-/*   Dependencias, configuración y montaje del módulo. */
+/* Listing Contents: fallo de carga y generación del PDF. */
 /******************************************************************/
 
 /******************************************************************/
 /* Reuse Instructions */
-/* Ejecutar con npm test; DUCKY_TEST_DB=1 habilita integración local. */
-/* Las pruebas de datos revierten cambios o usan esquema aislado. */
+/* Ejecutar con npm test, sin modificar BD. */
 /******************************************************************/
 
-const
-{
-    test
-} = require('node:test');
+const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+const { crear_pdf } = require('../services/listadoPdfService');
 
-test('actualización fallida elimina datos anteriores y no anuncia éxito ni permite imprimir', async () =>
+test('una carga fallida vacía el catálogo y bloquea PDF e impresión', async () =>
 {
-    const elementos = Object.fromEntries(['btn-imprimir', 'btn-actualizar', 'tabla', 'generado']
-        .map(id => [id,
-        {
-            textContent: 'datos anteriores',
-            disabled: false,
-            addEventListener(evento, fn)
-            {
-                this[evento] = fn;
-            }
-        }]));
-    const mensajes = [];
     let fallar = false;
+    const eventos = [];
+    const vista =
+    {
+        enlazar: () => {},
+        bloquear: (valor) => eventos.push(['bloquear', valor]),
+        vaciar: () => eventos.push(['vaciar']),
+        mostrar: (modo) => eventos.push(['mostrar', modo]),
+        tabla: (libros) => eventos.push(['tabla', libros.length]),
+        mensaje: (tipo) => eventos.push(['mensaje', tipo])
+    };
     const contexto = vm.createContext(
     {
-        document:
-        {
-            getElementById: id => elementos[id]
-        },
-        window:
-        {
-            print()
-            {}
-        },
-        layout:
-        {
-            montar: async () => (
-            {
-            })
-        },
+        layout: { montar: async () => ({}) },
         busqueda_model:
         {
             listado: async () =>
             {
                 if (fallar) throw new Error('Sin conexión');
-                return [];
+                return [{ titulo: 'Libro' }];
             }
         },
-        lista_libros_view:
-        {
-            tabla()
-            {},
-            mensaje: (...args) => mensajes.push(args)
-        }
+        lista_libros_view: vista
     });
-    vm.runInContext(fs.readFileSync(require.resolve('../frontend/js/views/ListaLibrosView.js'),
-            'utf8') +
-        '\nlista_libros_view.tabla = () => {}; lista_libros_view.mensaje = (...args) => mensajes.push(args);',
-        Object.assign(contexto,
-        {
-            mensajes
-        }));
     vm.runInContext(fs.readFileSync(require.resolve(
         '../frontend/js/controllers/ListaLibrosController.js'), 'utf8'), contexto);
     await vm.runInContext('lista_libros_controller.iniciar()', contexto);
-    await vm.runInContext('lista_libros_controller.cargar()', contexto);
-    assert.equal(elementos['btn-imprimir'].disabled, false);
+    assert.equal(vm.runInContext('lista_libros_controller.disponible', contexto), true);
     fallar = true;
-    await elementos['btn-actualizar'].click();
-    assert.equal(elementos.tabla.textContent, '');
-    assert.equal(elementos.generado.textContent, '');
-    assert.equal(elementos['btn-imprimir'].disabled, true);
-    assert.equal(elementos['btn-actualizar'].disabled, false);
-    assert.equal(mensajes.at(-1)[0], 'error');
-    assert.equal(mensajes.some(m => m[0] === 'ok'), false);
-    fallar = false;
-    await elementos['btn-actualizar'].click();
-    assert.equal(elementos['btn-imprimir'].disabled, false);
-    assert.equal(mensajes.at(-1)[0], 'ok');
+    eventos.length = 0;
+    await vm.runInContext('lista_libros_controller.cargar()', contexto);
+    assert.deepEqual(eventos, [
+        ['bloquear', true], ['vaciar'], ['mostrar', 'listado'],
+        ['mensaje', 'error'], ['bloquear', true]
+    ]);
+    assert.equal(vm.runInContext('lista_libros_controller.disponible', contexto), false);
+    vm.runInContext('lista_libros_controller.vista_pdf(); lista_libros_controller.impresion()',
+        contexto);
+    assert.equal(eventos.filter(evento => evento[0] === 'mostrar').length, 1);
+});
+
+test('el PDF del listado es válido y cabe en una página A4 con un libro', async () =>
+{
+    const archivo = await crear_pdf([
+        { titulo: 'Álgebra lineal', autores: 'Ana Gómez', tema: 'Matemáticas',
+            id_libro: 'L000001', isbn: '9781234567890', editorial: 'Ducky',
+            condicion: 'Bueno' }
+    ], new Date('2026-11-14T12:00:00Z'));
+    const texto = archivo.toString('latin1');
+    assert.equal(archivo.subarray(0, 5).toString(), '%PDF-');
+    assert.equal((texto.match(/\/Type\s*\/Page\b/g) || []).length, 1);
+    assert.ok(archivo.length > 1000);
 });

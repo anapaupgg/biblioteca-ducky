@@ -1,3 +1,27 @@
+ACTUALIZACIÓN — LISTADO, PDF E IMPRESIÓN DEL LECTOR (14 DE NOVIEMBRE DE 2026)
+- Al comenzar: git fetch origin correcto, main y origin/main 0/0; no había
+  commits remotos nuevos. El cambio local previo en package-lock.json se
+  conserva fuera de este avance.
+- Frames 2046:48434, 2046:48455 y 2046:48477 cotejados en Figma y navegador.
+  Listado en filas compactas, vista previa del documento y panel de impresión
+  ajustados a la composición de escritorio; se verificó el flujo a 390 px
+  sin desbordamiento horizontal.
+- El listado consulta los libros activos reales y sus condiciones. La API
+  protegida por Buscar libros genera un PDF A4 con PDFKit, descarga directa
+  y paginación; el navegador descargó cinco registros en una página A4.
+  Imprimir abre el diálogo del sistema para elegir destino y páginas. La
+  interfaz no finge detectar la impresora ni confirmar una impresión física.
+- MVC: SQL en busquedaModel, PDF en servicio, permisos y respuesta en ruta y
+  controlador HTTP, eventos/DOM en vista y coordinación en controlador cliente.
+  npm test: 54 aprobadas, 8 omitidas, 0 fallos; PDF real renderizado e
+  inspeccionado. PostgreSQL no se modificó y no se ejecutó db:init.
+- Diferencias pendientes: Figma ilustra dos libros B... y una impresora
+  simulada; PostgreSQL devuelve cinco libros L... y el destino se elige en
+  el diálogo del sistema. Quedan estados móviles del asistente, flujos
+  secundarios y el recurso real del libro digital.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PORTADA DE LECTOR FIGMA (14 DE NOVIEMBRE DE 2026)
 - Continuación sobre 21cf52d ya subido; no había commits remotos nuevos al
   comenzar la solicitud. package-lock.json local previo sigue excluido.

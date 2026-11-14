@@ -66,6 +66,7 @@ const grupos = [
     ]],
     ['busqueda', 'Buscar libros', [
         ['get', '/listado'],
+        ['get', '/listado/pdf'],
         ['get', '/'],
         ['get', '/L000128'],
         ['post', '/L000128/solicitud']

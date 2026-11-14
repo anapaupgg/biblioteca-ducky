@@ -80,7 +80,11 @@ const ficha = async (id) =>
 
 const listado = () =>
     pool.query(
-        `SELECT id_libro, isbn, titulo, autores, editorial, tema, formato, anio_publicacion, ejemplares, disponibles_total
+        `SELECT id_libro, isbn, titulo, autores, editorial, tema, formato, anio_publicacion,
+                ejemplares, disponibles_total,
+                COALESCE((SELECT string_agg(DISTINCT e.condicion, ', ' ORDER BY e.condicion)
+                    FROM ejemplares e WHERE e.id_libro = v_catalogo.id_libro
+                    AND e.estatus <> 'Baja'), 'Sin ejemplares') AS condicion
            FROM v_catalogo ORDER BY titulo`);
 
 const crear_solicitud = async (client, clave, id_libro) =>

@@ -25,6 +25,7 @@ const
     con_usuario
 } = require('../db');
 const busqueda_model = require('../models/busquedaModel');
+const listado_pdf_servicio = require('../services/listadoPdfService');
 const
 {
     responder_error,
@@ -108,6 +109,23 @@ const listado = async (solicitud_4, respuesta_3) =>
     }
 };
 
+const listado_pdf = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const libros = (await busqueda_model.listado()).rows;
+        const pdf = await listado_pdf_servicio.crear_pdf(libros);
+        respuesta.set('Content-Type', 'application/pdf');
+        respuesta.set('Content-Disposition', 'attachment; filename="Listado-biblioteca.pdf"');
+        respuesta.set('Cache-Control', 'no-store');
+        respuesta.status(200).send(pdf);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'busqueda.listado_pdf');
+    }
+};
+
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* solicitar(req, res)                                            */
@@ -165,5 +183,6 @@ module.exports =
     buscar,
     ficha,
     listado,
+    listado_pdf,
     solicitar
 };

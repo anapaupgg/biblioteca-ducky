@@ -2662,6 +2662,182 @@ table.table
     text-align: center;
 }
 
+/* Listado y PDF del catálogo: frames 2046:48434, 2046:48455 y 2046:48477. */
+.catalog-list-card h2
+{
+    margin-bottom: 16px;
+}
+
+.catalog-list-rows
+{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.catalog-list-row
+{
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    overflow-wrap: anywhere;
+}
+
+.catalog-list-card #generado
+{
+    margin: 16px 0 0;
+}
+
+.catalog-list-actions .btn
+{
+    min-height: 48px;
+}
+
+.catalog-list-actions .btn:nth-child(1)
+{
+    min-width: 226px;
+}
+
+.catalog-list-actions .btn:nth-child(2)
+{
+    min-width: 202px;
+}
+
+.catalog-list-actions .btn:nth-child(3)
+{
+    min-width: 153px;
+}
+
+.catalog-pdf-toolbar
+{
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: var(--radius-8);
+    background: var(--color-blue-soft);
+    color: var(--color-navy);
+    font: var(--text-label);
+}
+
+.catalog-document
+{
+    max-width: 1080px;
+    min-height: 420px;
+}
+
+.catalog-document h2
+{
+    color: var(--color-navy);
+    font: var(--text-heading);
+    margin-bottom: 12px;
+}
+
+.catalog-document > p
+{
+    margin: 0 0 12px;
+}
+
+.catalog-document-book
+{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px;
+    margin: 12px 0;
+    background: var(--color-paper);
+    font: var(--text-small);
+    overflow-wrap: anywhere;
+    break-inside: avoid;
+}
+
+.catalog-document-book strong
+{
+    color: var(--color-ink);
+    font: var(--text-label);
+}
+
+.catalog-document-book span
+{
+    color: var(--color-muted);
+}
+
+.catalog-print-layout
+{
+    display: grid;
+    grid-template-columns: minmax(0, 732px) minmax(0, 376px);
+    gap: 24px;
+}
+
+.catalog-print-options p
+{
+    margin: 0 0 16px;
+}
+
+.catalog-print-options
+{
+    min-height: 522px;
+}
+
+.catalog-print-options > .btn
+{
+    margin-bottom: 16px;
+}
+
+.catalog-print-options .actions
+{
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 0;
+}
+
+@media (max-width: 900px)
+{
+    .catalog-print-layout
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .catalog-pdf-toolbar
+    {
+        flex-wrap: wrap;
+    }
+}
+
+@media print
+{
+    @page { size: A4 portrait; margin: 12mm; }
+
+    body.listado-imprimible #contenido > :not(#panel-impresion),
+    body.listado-imprimible .sidebar,
+    body.listado-imprimible .topbar,
+    body.listado-imprimible .catalog-pdf-toolbar,
+    body.listado-imprimible .catalog-print-options
+    {
+        display: none !important;
+    }
+
+    body.listado-imprimible .catalog-print-layout
+    {
+        display: block;
+    }
+
+    body.listado-imprimible #documento-impresion
+    {
+        width: 100%;
+        max-width: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        min-height: 0;
+    }
+}
+
 .chat-mobile-brand,
 .chat-mobile-subtitle,
 .chat-mobile-return

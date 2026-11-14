@@ -1,62 +1,86 @@
 /******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web */
-/* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
-/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-11-14                                               */
+/* Description: Coordina listado, PDF y preparación de impresión. */
 /******************************************************************/
 
 /******************************************************************/
-/* Listing Contents: */
-/*   lista_libros_controller.iniciar() */
-/*   lista_libros_controller.cargar() */
-/******************************************************************/
-
-/******************************************************************/
-/* Reuse Instructions */
-/* Cargar después de modelos y vista; iniciar() una vez por página. */
-/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
-/* La autorización definitiva se verifica en el servidor. */
+/* Listing Contents: iniciar, cargar, vista_pdf, impresion,       */
+/* descargar.                                                     */
+/* Reuse Instructions: iniciar una vez después de modelo y vista; */
+/* el servidor verifica Buscar libros en cada petición.          */
 /******************************************************************/
 
 const lista_libros_controller =
 {
+    disponible: false,
+    descargando: false,
+
     iniciar: async function ()
     {
-        const usuario = await layout.montar(
-        {
+        const usuario = await layout.montar({
             activo: 'lista',
             migas: 'Lista de libros',
             funciones: ['Buscar libros']
         });
         if (!usuario) return;
-        lista_libros_view.enlazar(async () =>
-        {
-            if (await this.cargar()) lista_libros_view.mensaje('ok',
-                'Lista de libros actualizada');
+        lista_libros_view.enlazar({
+            listado: () => lista_libros_view.mostrar('listado'),
+            vista_pdf: () => this.vista_pdf(),
+            impresion: () => this.impresion(),
+            descargar: () => this.descargar()
         });
-        this.cargar();
+        await this.cargar();
     },
 
     cargar: async function ()
     {
-        let fallo = true;
-        lista_libros_view.bloquear(true, true);
-        lista_libros_view.mensaje();
+        this.disponible = false;
+        lista_libros_view.bloquear(true);
+        lista_libros_view.vaciar();
+        lista_libros_view.mostrar('listado');
         try
         {
-            lista_libros_view.tabla(await busqueda_model.listado());
-            fallo = false;
-            return true;
+            const libros = await busqueda_model.listado();
+            lista_libros_view.tabla(libros);
+            this.disponible = true;
         }
         catch (error)
         {
-            lista_libros_view.vaciar();
-            lista_libros_view.mensaje('error', error.message);
-            return false;
+            lista_libros_view.mensaje('error', 'No se pudo cargar el listado', error.message);
         }
         finally
         {
-            lista_libros_view.bloquear(fallo, false);
+            lista_libros_view.bloquear(!this.disponible);
+        }
+    },
+
+    vista_pdf: function ()
+    {
+        if (this.disponible) lista_libros_view.mostrar('pdf');
+    },
+
+    impresion: function ()
+    {
+        if (this.disponible) lista_libros_view.mostrar('impresion');
+    },
+
+    descargar: async function ()
+    {
+        if (!this.disponible || this.descargando) return;
+        this.descargando = true;
+        try
+        {
+            lista_libros_view.descargar_pdf(await busqueda_model.listado_pdf());
+        }
+        catch (error)
+        {
+            lista_libros_view.mensaje('error', 'No se pudo descargar el PDF', error.message);
+        }
+        finally
+        {
+            this.descargando = false;
         }
     }
 };

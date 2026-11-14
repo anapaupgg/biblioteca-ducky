@@ -26,6 +26,8 @@ const
 } = require('../middleware/auth');
 
 router.get('/listado', requiere_sesion, requiere_funcion('Buscar libros'), busqueda_controller.listado);
+router.get('/listado/pdf', requiere_sesion, requiere_funcion('Buscar libros'),
+    busqueda_controller.listado_pdf);
 router.get('/', requiere_sesion, requiere_funcion('Buscar libros'), busqueda_controller.buscar);
 router.get('/:id', requiere_sesion, requiere_funcion('Buscar libros'), busqueda_controller.ficha);
 router.post('/:id/solicitud', requiere_sesion, requiere_funcion('Buscar libros'), busqueda_controller

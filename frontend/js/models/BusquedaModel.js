@@ -40,6 +40,11 @@ const busqueda_model =
         return api.get('/busqueda/listado');
     },
 
+    listado_pdf: function ()
+    {
+        return api.get_blob('/busqueda/listado/pdf');
+    },
+
     /* POST loan request */
     solicitar: function (id)
     {
