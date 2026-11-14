@@ -54,7 +54,7 @@ const chatbot_view =
     {
         if (!datos.resultados?.length || datos.libros?.length)
             this.mensaje(datos.mensaje, 'bot');
-        datos.resultados.forEach(pregunta => this.mensaje(pregunta.pregunta + '\n' + pregunta.respuesta,
+        datos.resultados.forEach(pregunta => this.mensaje(pregunta.respuesta,
             'bot', pregunta.fuentes));
         (datos.libros || []).forEach(libro => this.mensaje(
             libro.titulo + ' — ' + libro.autores + '\nClave: ' + libro.id_libro + ' · ' + libro
@@ -106,18 +106,25 @@ const chatbot_view =
         const caja = document.getElementById('chat-mensajes');
         const mensaje = document.createElement('div');
         mensaje.className = 'msg ' + (tipo === 'usuario' ? 'msg-user' : 'msg-bot');
-        const autor = document.createElement('strong');
-        autor.textContent = tipo === 'usuario' ? 'Tú' : 'Asistente Ducky';
-        mensaje.appendChild(autor);
+        if (tipo !== 'usuario')
+        {
+            const autor = document.createElement('strong');
+            autor.textContent = 'Asistente Ducky';
+            mensaje.appendChild(autor);
+        }
         const elemento = document.createElement('p');
         elemento.textContent = texto;
         mensaje.appendChild(elemento);
-        fuentes.forEach(filtro_2 =>
+        if (fuentes.length)
         {
             const registro = document.createElement('small');
-            registro.textContent = 'Fuente: ' + filtro_2;
+            const reglas = fuentes.map((fuente) =>
+                /^Requerimientos · (Regla \d+)(?: · versión [\d.]+)?$/.exec(fuente));
+            registro.textContent = 'Fuente: ' + (reglas.every(Boolean) ?
+                'Requerimientos · ' + reglas.map((regla) => regla[1]).join(' y ') :
+                fuentes.join(' · '));
             mensaje.appendChild(registro);
-        });
+        }
         caja.appendChild(mensaje);
         while (caja.children.length > 40) caja.firstElementChild.remove();
         caja.scrollTop = caja.scrollHeight;

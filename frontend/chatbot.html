@@ -17,15 +17,17 @@ Reuse Instructions: servir desde Express; conservar IDs usados por la vista.
         <link rel="stylesheet" href="css/styles.css">
     </head>
 
-    <body>
+    <body class="chatbot-page">
         <div class="app">
             <aside id="sidebar"></aside>
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
+                    <p class="chat-mobile-brand">BIBLIOTECA DUCKY</p>
                     <div class="page-header">
                         <div>
                             <h1>Asistente Ducky</h1>
+                            <p class="chat-mobile-subtitle">Dudas frecuentes de la biblioteca.</p>
                         </div>
                     </div>
                     <section class="card faq-chat" aria-label="Conversación con el asistente">
@@ -40,7 +42,8 @@ Reuse Instructions: servir desde Express; conservar IDs usados por la vista.
                             class="btn btn-primary" type="submit">Enviar</button></form>
                     <div id="chat-sugerencias" class="chatbot-suggestions faq-sugerencias"
                         aria-label="Preguntas sugeridas"></div>
-                    <a class="btn" href="inicio.html">Volver al inicio</a>
+                    <a class="btn chat-desktop-return" href="inicio.html">Volver al inicio</a>
+                    <a class="btn chat-mobile-return" href="buscar.html">Volver a Buscar libros</a>
                 </div>
             </main>
         </div>

@@ -2,6 +2,11 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Cotejo adicional del 14 de noviembre de 2026
+
+- Frames `2483:78478`, `2483:78544` y `2483:78843`: el asistente móvil usa marca, título, subtítulo, tarjeta de conversación, campo, botón y dos grupos de sugerencias a 390 px como Figma. El usuario y la respuesta ocupan burbujas separadas; la respuesta no repite la pregunta y las fuentes de reglas compartidas se presentan de forma compacta. Se cotejaron en navegador el estado inicial, una respuesta de préstamos y una pregunta sin coincidencia; esta última ofrece los temas disponibles como el prototipo. Los siete frames móviles restantes reutilizan estos componentes, pero aún falta verificar visualmente sus longitudes de contenido.
+- En móvil, «Volver a Buscar libros» lleva a la búsqueda; en escritorio se mantiene «Volver al inicio». La API y los permisos del asistente siguen siendo los mismos.
+
 ## Cotejo adicional del 13 de noviembre de 2026
 
 - Frames `2483:80899`, `2483:81248`, `2483:81588`, `2483:81913` y `2483:82244`: la boleta ofrece revisión del correo registrado, envío con PDF y confirmación solo cuando Resend acepta la petición; el PDF se genera desde el préstamo confirmado y el servidor no acepta destinatarios arbitrarios. Se cotejaron en navegador a 1440 × 960 la revisión del correo, la confirmación y el formulario de WhatsApp con datos temporales, que se eliminaron. El servidor consultó un préstamo activo real sin enviar correo ni alterar la BD. El remitente de prueba `onboarding@resend.dev` solo permite entregas a la cuenta autorizada del propietario hasta verificar un dominio.
@@ -11,8 +16,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 - Frames móviles `2258:48816`, `2258:48840` y `2258:48844`: resultados, ausencia de coincidencias y filtros inválidos ahora usan pantallas móviles propias. Las tarjetas de resultados quedaron a (24, 204; 342 × 218) y (24, 438; 342 × 218) a 390 px, como en Figma; «Modificar búsqueda», «Cambiar filtros» y «Corregir búsqueda» vuelven al formulario conservando lo escrito. Se verificaron los tres estados y el retorno en navegador con datos temporales. El texto de ISBN inválido difiere porque la base acepta ISBN de 10 o 13 caracteres y la búsqueda parcial existente no se restringió a 13 dígitos.
 - Frame móvil `2258:48812`: se midió la página local a 390 × 1028 en navegador. Marca, título, subtítulo, dos acciones, seis campos y botones quedaron en las mismas coordenadas principales del frame: marca (24, 24), primer campo (24, 268), último campo (24, 788), Buscar (24, 892) y Limpiar (24, 956). Se ocultó la barra superior solo en esta vista móvil y se ajustaron fuente, márgenes y separaciones; el menú lateral permanece disponible en otras páginas.
 - Frames `2447:108630` y `2447:108979`: registro/boleta de préstamo presentan folio, usuario, libro, ejemplar, fechas, disponibilidad y multa diaria obtenidos del préstamo real. Autorizar una solicitud ahora conduce al mismo recibo que el registro directo. Se cotejaron visualmente ambos estados con una vista sintética temporal eliminada; la consulta SQL y el flujo de autorización se probaron con rollback o dobles de la API. No se registró un préstamo real para esa captura.
-- Frames `2483:80899`, `2483:81248`, `2483:81588`, `2483:81913` y `2483:82244`: el envío por correo con PDF adjunto y la entrega por WhatsApp siguen pendientes. Resend está configurado para recuperación de contraseña, pero no existe todavía un servicio de boletas ni una integración de WhatsApp. No se muestran acciones de envío ni éxitos ficticios.
-- Faltan cotejar los otros nueve estados móviles de búsqueda, estados secundarios de acceso/usuarios/compras/circulación y la compatibilidad de claves `B...` de Figma con `L...` de PostgreSQL. La paridad se acredita únicamente para los estados y medidas indicados arriba.
+- Los diez estados móviles de búsqueda ya tienen cotejo por pantalla. Siguen pendientes estados secundarios de acceso, usuarios, compras y circulación, así como la compatibilidad de claves `B...` de Figma con `L...` de PostgreSQL. La paridad se acredita únicamente para los estados y medidas indicados arriba.
 
 ## Revisión del 13 de noviembre de 2026
 
@@ -62,9 +66,9 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda principal tiene seis filtros en dos columnas y los accesos del frame; faltan otros estados de resultado y cotejo móvil completo. |
 | 06 Circulación conservada (`2014:35297`) | Parcial | Solicitud, autorización, devolución y espera funcionan; faltan cotejos de estados secundarios. |
 | 07 App móvil (`2258:48812`) | Parcial | Los diez estados tienen interfaz y navegación a 390 px. Ubicación usa zonas reales y el lector requiere un PDF/URL válido; no hay paridad de contenido ilustrativo. |
-| 08 Préstamo (`2447:106950`) | Parcial | Registro, renovación, espera y boleta funcionan; faltan envío de boleta por correo/WhatsApp y estados secundarios. |
+| 08 Préstamo (`2447:106950`) | Parcial | Registro, renovación, espera, impresión y envío por correo con PDF funcionan. WhatsApp requiere adjuntar y enviar manualmente; faltan estados secundarios. |
 | 09 Devolución (`2465:98968`) | Parcial | Devolución, pérdida, multas, pagos y avisos internos funcionan; faltan estados alternos y entregas externas. |
-| 10 Asistente (`2483:74914`) | Parcial | Se cotejaron ocho preguntas generales; los frames revisados no piden respuestas personales de préstamos. Faltan estados móviles. |
+| 10 Asistente (`2483:74914`) | Parcial | Se cotejaron ocho preguntas generales y tres estados móviles. Faltan siete respuestas móviles y la entrega visual de búsquedas de catálogo. |
 
 La referencia visual mantiene Manrope, colores `#142B45`, `#F5F7FA`, `#DCE3EC`, sidebar de 244 px y contenido con margen de 32 px a 1440 × 960. Los logos locales Ducky y FlowBit coinciden visualmente con las imágenes originales del diseño. Los perfiles y permisos reales siguen validándose en el servidor aunque algunos fotogramas ilustrativos del Figma muestren navegación no autorizada.
 

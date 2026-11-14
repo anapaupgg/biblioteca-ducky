@@ -85,7 +85,7 @@ async function consultar(solicitud, respuesta)
         {
             resultados,
             mensaje: resultados.length ? 'Estas preguntas frecuentes podrían ayudarte:' :
-                'No encontré una respuesta publicada para esa pregunta. Consulta al personal de la biblioteca.'
+                'No encontré una respuesta para eso. Puedo explicarte el objetivo, el alcance y las plataformas del sistema, o ayudarte con préstamos, multas, renovaciones y búsqueda. Elige una de las preguntas frecuentes.'
         });
     }
     catch (error)

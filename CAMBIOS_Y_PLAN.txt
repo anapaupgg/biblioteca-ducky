@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — ASISTENTE MÓVIL FIGMA (14 DE NOVIEMBRE DE 2026)
+- Antes de editar: git fetch origin correcto, main/origin main 0/0;
+  no había commits remotos nuevos. package-lock.json previo se conserva.
+- Frames 2483:78478, 2483:78544 y 2483:78843 consultados y comparados
+  con la app a 390 px. Se alinearon encabezado móvil, conversación,
+  campo/botón verticales, ocho sugerencias a ancho completo y regreso a
+  Buscar libros. Escritorio conserva regreso al inicio.
+- La burbuja del usuario muestra solo la pregunta; la del asistente solo
+  la respuesta y fuente compacta. El fallback ofrece los temas del Figma.
+  Las respuestas continúan viniendo del servicio de FAQ y PostgreSQL.
+- Navegador: estado inicial, préstamo y pregunta desconocida verificados;
+  a 1440 px se comprobó que la presentación de escritorio sigue íntegra.
+  npm test: 53 aprobadas, 8 omitidas, 0 fallos. No se ejecutó db:init.
+- Pendiente: cotejar visualmente los otros siete estados móviles del chat;
+  flujos secundarios de otras secciones y enlace real de lectura digital.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ENVÍO DE BOLETA SEGÚN FIGMA (13 DE NOVIEMBRE DE 2026)
 - Al comenzar: git fetch origin correcto, main y origin/main 0/0; no había
   commits remotos nuevos. Se preservó la eliminación local previa de
