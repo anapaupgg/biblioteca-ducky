@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-27 */
+/* Date: 2026-11-16 */
 /* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
@@ -133,7 +133,9 @@ const buscar_controller =
             buscar_view.resultados(resultados, filtros,
             {
                 solicitar: (libro_2) => this.solicitar(libro_2),
-                ficha: (libro_3) => this.ficha(libro_3)
+                ficha: (libro_3) => this.ficha(libro_3),
+                modificar: () => this.modificar(),
+                limpiar: () => this.limpiar()
             });
         }
         catch (error)

@@ -2,6 +2,12 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Cotejo de búsqueda de escritorio del 16 de noviembre de 2026
+
+- Frame `2013:32610`: se compararon captura de Figma y búsqueda real «Ingeniería» en navegador a 1440 × 960. La barra de ficha quedó en `(276,176;1132×48)`, la tarjeta física en `(276,240;1132×450)` y la digital en `(276,706;1132×346)`. Los campos físicos muestran clave/ISBN, autor, editorial/formato, estante/fila, disponibles y prestados; la tarjeta digital muestra clave/ISBN, autor/editorial, formato y enlace. «Modificar filtros» recupera el formulario con la consulta escrita. Se conserva acceso a la ficha en tarjetas posteriores. Las claves `L...`, libros y conteos proceden de PostgreSQL, distintos de los ejemplos `B...` del frame. El enlace digital almacenado aún no resuelve.
+- Frame `2013:33925`: «Astronomía avanzada» produjo cero resultados reales. Alerta `(276,176;1132×96)`, filtros conservados `(276,288;1132×386)` y acciones en y=690. Se comprobaron «Modificar filtros» y «Limpiar filtros» sin escritura a la BD. A 390 px la búsqueda con resultados conservó la presentación móvil y ancho de documento de 390 px.
+- Siguen pendientes los estados de todos los ejemplares prestados (`2013:34268`) y filtros inválidos (`2013:34608`), además de los demás estados secundarios de búsqueda. No se declara paridad integral.
+
 ## Cotejo adicional del 14 de noviembre de 2026
 
 - El 16 de noviembre se cotejaron los frames `2447:114973` (alta registrada) y `2447:115623` (datos inválidos). El éxito se probó con datos sintéticos temporales eliminados: alerta `(276,176;1132×96)`, filas de 56 px desde y=288 y acciones en y=540 a 1440×960; el texto comunica la posición obtenida de la lista real sin afirmar correo enviado. Un error real de matrícula inválida respondió 400, dejó los datos escritos y marcó el campo afectado. La vista de éxito a 390 px no desbordó. La aplicación no dispone de envío automático de correo a la persona en espera.

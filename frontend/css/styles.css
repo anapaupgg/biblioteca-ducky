@@ -1607,6 +1607,68 @@ table.table
     min-width: 140px;
 }
 
+@media (min-width: 601px)
+{
+    .search-desktop-results .search-desktop-links,
+    .search-desktop-results #form-buscar,
+    .search-desktop-results #mensaje,
+    .search-desktop-empty .search-desktop-links,
+    .search-desktop-empty #form-buscar,
+    .search-desktop-empty #mensaje
+    {
+        display: none;
+    }
+}
+
+.search-result-toolbar,
+.search-result-actions
+{
+    margin: 0 0 var(--space-16);
+}
+
+.search-result-toolbar .btn
+{
+    min-width: 220px;
+}
+
+.search-result-toolbar .btn,
+.search-result-actions .btn,
+.search-result-card-actions .btn
+{
+    min-height: 48px;
+}
+
+.search-result-desktop > h2:first-child,
+.search-empty-card > h2:first-child
+{
+    margin-bottom: var(--space-12);
+}
+
+.search-result-desktop .field,
+.search-empty-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.search-result-card-actions
+{
+    margin: var(--space-16) 0 0;
+}
+
+.search-empty-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+    color: var(--color-navy);
+}
+
+.search-empty-alert strong,
+.search-empty-alert span
+{
+    display: block;
+}
+
 .login-form .flowbit
 {
     width: 140px;
@@ -1732,7 +1794,9 @@ table.table
     .search-desktop-heading,
     .search-desktop-links,
     .search-form-card h2,
-    .search-desktop-example
+    .search-desktop-example,
+    .search-result-toolbar,
+    .search-result-actions
     {
         display: none;
     }

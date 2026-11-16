@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-27 */
+/* Date: 2026-11-16 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -18,6 +18,7 @@
 /*   buscar_view.estado_movil(tipo, detalle) */
 /*   buscar_view.ejemplo(campo, valor) */
 /*   buscar_view.resultados(lista, filtros, acciones) */
+/*   buscar_view.estado_escritorio(titulo, descripcion, clase) */
 /*   buscar_view.ficha(filtro) */
 /*   buscar_view.solicitud(resultado) */
 /*   buscar_view.mensaje(tipo, titulo, texto) */
@@ -45,6 +46,10 @@ const buscar_view =
     vaciar: function ()
     {
         document.getElementById('resultados').innerHTML = '';
+        document.body.classList.remove('search-desktop-results', 'search-desktop-empty');
+        document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar libros';
+        document.getElementById('descripcion-busqueda-escritorio').textContent =
+            'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
         document.body.classList.remove('search-results-mobile');
         document.body.classList.remove('search-state-mobile', 'search-state-empty',
             'search-state-invalid', 'search-detail-mobile');
@@ -119,29 +124,43 @@ const buscar_view =
             document.getElementById(id).value = '';
         });
         ui.limpiar();
-        document.getElementById('resultados').innerHTML = '';
-        document.body.classList.remove('search-results-mobile');
-        document.body.classList.remove('search-state-mobile', 'search-state-empty',
-            'search-state-invalid', 'search-detail-mobile');
+        this.vaciar();
         ui.alerta('mensaje');
         document.getElementById('titulo').focus();
     },
 
     resultados: function (lista, filtros, acciones)
     {
+        const etiquetas = { titulo: 'Título', autor: 'Autor', tema: 'Tema',
+            clave: 'Clave', isbn: 'ISBN', editorial: 'Editorial' };
         const resumen = Object.entries(filtros).filter(([, valor_2]) => valor_2).map(([clave,
-            valor_3]) => clave + ': ' + valor_3).join(' · ');
+            valor_3]) => etiquetas[clave] + ': ' + valor_3).join(' · ');
         if (lista.length === 0)
         {
-            document.getElementById('resultados').innerHTML = '';
-            document.body.classList.remove('search-results-mobile');
-            ui.alerta('mensaje', 'warning', 'No se encontraron coincidencias',
-                'Revisa los filtros (' + resumen + ') o intenta con menos datos.');
+            this.estado_escritorio('No se encontraron coincidencias',
+                'Se conservaron los filtros de búsqueda.', 'search-desktop-empty');
+            ui.alerta('mensaje');
+            const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+                etiqueta + '</span><div class="readonly">' + ui.esc(valor || '') + '</div></div>';
+            document.getElementById('resultados').innerHTML =
+                '<div class="alert search-empty-alert"><strong>0 resultados</strong>' +
+                '<span>El catálogo activo no contiene libros que coincidan. Los libros dados de baja se excluyen.</span></div>' +
+                '<div class="card search-empty-card"><h2>Filtros conservados</h2>' +
+                '<div class="grid-2">' + FILTROS_BUSQUEDA.map((id) =>
+                    campo(etiquetas[id], filtros[id])).join('') + '</div></div>' +
+                '<div class="actions search-result-actions">' +
+                '<button class="btn btn-primary" id="btn-modificar-filtros-vacio" type="button">Modificar filtros</button>' +
+                '<button class="btn" id="btn-limpiar-filtros-vacio" type="button">Limpiar filtros</button></div>';
+            document.getElementById('btn-modificar-filtros-vacio').addEventListener('click',
+                acciones.modificar);
+            document.getElementById('btn-limpiar-filtros-vacio').addEventListener('click',
+                acciones.limpiar);
             this.estado_movil('empty', 'Prueba con otro título, autor o tema.');
             return;
         }
-        ui.alerta('mensaje', 'info', 'Resultados de búsqueda', resumen + ' · ' + lista.length +
-            ' resultado(s) activos.');
+        this.estado_escritorio('Resultados de búsqueda', resumen + ' · ' + lista.length +
+            ' resultados activos.', 'search-desktop-results');
+        ui.alerta('mensaje');
         document.body.classList.add('search-results-mobile');
         document.body.classList.remove('search-detail-mobile');
         if (window.matchMedia('(max-width: 600px)').matches ||
@@ -166,15 +185,18 @@ const buscar_view =
                     enlace_digital = null;
                 }
             }
-            let acciones_html = '<button class="btn" data-ficha="' + indice +
-                '">Ver ficha bibliográfica</button>';
+            let acciones_html = indice > 0 ? '<button class="btn" data-ficha="' + indice +
+                '">Ver ficha bibliográfica</button>' : '';
             if (digital && enlace_digital) acciones_html =
-                '<a class="btn btn-primary" href="' + ui.esc(enlace_digital) +
-                '" target="_blank" rel="noopener noreferrer">Consultar en línea</a>' +
+                '<a class="btn" href="' + ui.esc(enlace_digital) +
+                '" target="_blank" rel="noopener noreferrer">Abrir recurso en línea</a>' +
                 acciones_html;
             else if (libro.disponibles_prestamo > 0) acciones_html =
                 '<button class="btn btn-primary" data-solicitar="' + indice +
                 '">Solicitar préstamo</button>' + acciones_html;
+            else if (!digital) acciones_html =
+                '<button class="btn" type="button" disabled>Solicitar préstamo</button>' +
+                acciones_html;
 
             const disponibilidad = digital ? 'Digital · Disponible en línea' :
                 libro.ejemplares + (libro.ejemplares === 1 ? ' copia · ' : ' copias · ') +
@@ -186,29 +208,48 @@ const buscar_view =
                 '</p><p class="search-result-availability">' + ui.esc(disponibilidad) +
                 '</p><button class="btn btn-primary" data-ficha="' + indice +
                 '" type="button">Ver ficha</button></div>';
-            return '<div class="card search-result-desktop"><h2>' + ui.esc(libro.titulo) + (digital ?
-                    ' · Recurso en línea' : '') + '</h2><div class="grid-2">' +
-                lectura('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn) + lectura(
-                    'Autor', libro.autores || '—') +
-                lectura('Editorial / formato', libro.editorial + ' / ' + libro.formato) +
-                lectura('Tema', libro.tema) +
-                (digital ? lectura('Enlace', libro.enlace_digital) :
-                    lectura('Ubicación (estante / fila)', libro.ubicaciones || '—') +
-                    lectura('Disponibles para préstamo', libro.disponibles_prestamo + ' de ' +
-                        libro.ejemplares + (libro.prestados ? ' · ' + libro.prestados +
-                            ' prestado(s)' : ''))) +
-                '</div>' + (!digital && libro.disponibles_prestamo === 0 ?
-                    '<div class="alert alert-warning"><strong>Todos los ejemplares están prestados o reservados</strong><span>Consulta la ficha para ver cuándo se devuelve cada ejemplar.</span></div>' :
-                    '') +
-                '<div class="actions" style="margin-bottom:0">' + acciones_html +
-                '</div></div>' + movil;
+            const campos = digital ? [
+                lectura('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn),
+                lectura('Autor / Editorial', (libro.autores || '—') + ' / ' + libro.editorial),
+                lectura('Formato', 'En línea'),
+                lectura('Enlace', libro.enlace_digital || 'No registrado')
+            ] : [
+                lectura('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn),
+                lectura('Autor', libro.autores || '—'),
+                lectura('Editorial / formato', libro.editorial + ' / ' + libro.formato),
+                lectura('Estante / fila', libro.ubicaciones || '—'),
+                lectura('Disponibles', libro.disponibles_prestamo),
+                lectura('Prestados', libro.prestados)
+            ];
+            return '<div class="card search-result-desktop"><h2>' + ui.esc(libro.titulo) +
+                (digital ? ' · Recurso en línea' : '') + '</h2><div class="grid-2">' +
+                campos.join('') + '</div>' + (acciones_html ?
+                    '<div class="actions search-result-card-actions">' + acciones_html +
+                    '</div>' : '') + '</div>' + movil;
         }).join('');
+
+        document.getElementById('resultados').insertAdjacentHTML('afterbegin',
+            '<div class="actions search-result-toolbar"><button class="btn" data-ficha="0" ' +
+            'type="button">Ver ficha bibliográfica</button></div>');
+        document.getElementById('resultados').insertAdjacentHTML('beforeend',
+            '<div class="actions search-result-actions"><button class="btn" ' +
+            'id="btn-modificar-filtros-resultado" type="button">Modificar filtros</button></div>');
+        document.getElementById('btn-modificar-filtros-resultado').addEventListener('click',
+            acciones.modificar);
 
         const en = (attr, accion) => document.querySelectorAll('[' + attr + ']').forEach((boton) =>
             boton.addEventListener('click', () => accion(lista[Number(boton.getAttribute(attr))]))
             );
         en('data-solicitar', acciones.solicitar);
         en('data-ficha', acciones.ficha);
+    },
+
+    estado_escritorio: function (titulo, descripcion, clase)
+    {
+        document.body.classList.remove('search-desktop-results', 'search-desktop-empty');
+        document.body.classList.add(clase);
+        document.getElementById('titulo-busqueda-escritorio').textContent = titulo;
+        document.getElementById('descripcion-busqueda-escritorio').textContent = descripcion;
     },
 
     ficha: function (filtro)

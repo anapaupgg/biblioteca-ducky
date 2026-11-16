@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — RESULTADOS Y BÚSQUEDA VACÍA FIGMA (16 DE NOVIEMBRE DE 2026)
+- Después del commit 0b21a7b se comparó main con origin/main: 0/0 y ningún
+  commit remoto nuevo. El package-lock.json modificado previamente sigue
+  fuera de este trabajo y no se incorporó.
+- Frames 2013:32610 y 2013:33925 consultados antes de editar. Los resultados
+  de escritorio ahora muestran barra de ficha, tarjetas físicas/digitales
+  con los campos del prototipo y acción para modificar filtros. La búsqueda
+  vacía presenta alerta, filtros conservados y acciones para corregir o
+  limpiar; no altera PostgreSQL. DOM y eventos quedan en la vista, coordinación
+  en el controlador y consulta en el modelo MVC existente.
+- Cotejo en navegador con búsquedas reales «Ingeniería» (dos fichas) y
+  «Astronomía avanzada» (ninguna): barra (276,176;1132×48), tarjetas
+  (276,240;1132×450) y (276,706;1132×346), alerta vacía
+  (276,176;1132×96), filtros (276,288;1132×386) y acciones y=690, a
+  1440×960. Modificar conserva el filtro; limpiar lo borra. A 390 px se
+  conservaron las tarjetas móviles sin desbordamiento horizontal.
+- npm test: 57 aprobadas, 10 omitidas y 0 fallos; git diff --check sin errores.
+- Diferencias: Figma usa claves B... y textos ilustrativos; la BD devuelve
+  claves L... y cantidades reales. Se conserva «Ver ficha» en resultados
+  posteriores para acceder a cualquiera. La URL digital registrada aún no
+  resuelve y falta revisar los estados de todos prestados y filtros inválidos.
+- Ducky sigue en 3002; 3001 pertenece a otra app. No se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RESULTADO Y ERROR DE ESPERA FIGMA (16 DE NOVIEMBRE DE 2026)
 - Al retomar: git fetch origin correcto; main y origin/main 0/0, sin commits
   remotos nuevos. Se conservó fuera del trabajo el package-lock.json previo.
