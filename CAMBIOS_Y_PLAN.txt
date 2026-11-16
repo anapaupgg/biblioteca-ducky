@@ -1,3 +1,22 @@
+ACTUALIZACIÓN — USUARIOS, PERFILES Y CHATBOT (16 DE NOVIEMBRE DE 2026)
+- Se ejecutó git fetch origin antes de editar: main y origin/main estaban
+  sincronizadas 0/0, sin commits remotos nuevos que integrar. El cambio local
+  ajeno de package-lock.json se conserva y queda fuera de este bloque.
+- Frames 2007:4863, 2009:19980 y 2483:76334 cotejados con navegador y Figma.
+  Usuarios mantiene la tarjeta a (276,176;1132×430), lista desplazable de
+  236 px y acciones a y=622/682. Perfiles usa filas continuas de 56 px desde
+  y=176 y acciones de 48 px desde y=488; conserva selección y permisos.
+- Chatbot agrupa los cinco títulos reales de «¿Qué libros hay?» en una sola
+  respuesta y muestra su inicio al llegar. Mantiene fuente y acceso a Buscar
+  libros. No se cambió SQL, datos, permisos ni el servicio en 3001.
+- Usuarios, perfiles y chatbot no desbordan el documento a 390 px; perfiles
+  mantiene desplazamiento interno de tabla. Pendientes: estados secundarios,
+  datos de ejemplo diferentes de PostgreSQL, PDF externo y notificaciones
+  que requieren integración. npm test: 61 aprobadas, 10 omitidas y 0 fallos;
+  sintaxis de las dos vistas y git diff --check sin errores. No se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PRÉSTAMOS Y DEVOLUCIONES PRINCIPALES (16 DE NOVIEMBRE DE 2026)
 - Continuación tras 3fcce9b, subido y sincronizado. No hubo commits remotos
   nuevos al inicio de esta solicitud. package-lock.json conserva el cambio

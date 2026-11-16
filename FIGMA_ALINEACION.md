@@ -2,6 +2,33 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Gestión de usuarios, perfiles y catálogo del asistente: 16 de noviembre de 2026
+
+- Frame `2007:4863`: a 1440 × 960 la tarjeta principal de usuarios quedó en
+  `(276,176;1132×430)`, la lista en y=345 con 236 px de alto y las acciones
+  en y=622 y y=682. La lista permite recorrer los nueve registros reales sin
+  empujar los botones fuera de la composición del frame. Se seleccionó una
+  cuenta inactiva y se comprobó que «Reactivar» se habilita, sin ejecutarlo.
+  A 390 px no hay desbordamiento horizontal del documento.
+- Frame `2009:19980`: la lista de perfiles quedó en y=176, con encabezado y
+  cuatro filas de 56 px; las acciones comienzan en y=488 y miden 48 px. Los
+  datos reales se presentan en una línea continua como en el prototipo. La
+  fila sigue seleccionable; editar y eliminar se habilitan según el perfil.
+  Los nombres, funciones y cantidades difieren de los ejemplos de Figma. A
+  390 px la tabla se desplaza horizontalmente dentro de su contenedor.
+- Frame `2483:76334`: se conservó la conversación principal y se cotejó la
+  respuesta con la aplicación. Figma muestra una sola burbuja de respuesta;
+  la consulta real «¿Qué libros hay?» ahora agrupa cinco títulos de
+  PostgreSQL en una sola burbuja y desplaza al inicio de ella. La respuesta
+  mantiene disponibilidad y ubicación reales, más el enlace a Buscar libros.
+  La composición móvil de inicio se revisó a 390 px sin desbordamiento.
+- Las 11 secciones principales tienen al menos un cotejo estructural; esto no
+  equivale a paridad total de las secciones. Los estados secundarios, datos
+  ilustrativos, PDF externo y avisos de servicios pendientes siguen en los
+  apartados inferiores. Estimación de planificación: 85% para el alcance de
+  pantallas principales y 65–70% para todo el prototipo; no es un recuento
+  exacto de frames ni un resultado de pruebas automatizadas.
+
 ## Páginas principales de circulación: cotejo del 16 de noviembre de 2026
 
 - Frames `2447:106950` y `2465:98968`: las acciones superiores de préstamos

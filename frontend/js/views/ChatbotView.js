@@ -16,6 +16,7 @@
 /*   chatbot_view.estado(texto) */
 /*   chatbot_view.sugerencias(lista, preguntar) */
 /*   chatbot_view.mensaje(texto, tipo, fuentes = []) */
+/*   chatbot_view.catalogo(libros) */
 /******************************************************************/
 
 /******************************************************************/
@@ -59,12 +60,7 @@ const chatbot_view =
             this.mensaje(datos.mensaje, 'bot');
         datos.resultados.forEach(pregunta => this.mensaje(pregunta.respuesta,
             'bot', pregunta.fuentes));
-        (datos.libros || []).forEach(libro => this.mensaje(
-            libro.titulo + ' — ' + libro.autores + '\nClave: ' + libro.id_libro + ' · ' + libro
-            .formato +
-            '\nEjemplares disponibles para préstamo: ' + libro.disponibles_prestamo +
-            '\nUbicación: ' + (libro.ubicaciones || 'Consulta la ficha en Buscar libros'), 'bot',
-            ['Catálogo actual de la biblioteca']));
+        if (datos.libros?.length) this.catalogo(datos.libros);
     },
     ocupado(si)
     {
@@ -131,5 +127,36 @@ const chatbot_view =
         caja.appendChild(mensaje);
         while (caja.children.length > 40) caja.firstElementChild.remove();
         caja.scrollTop = caja.scrollHeight;
+    },
+    /* catalogo(libros): resume los registros reales en una sola respuesta legible. */
+    catalogo(libros)
+    {
+        const caja = document.getElementById('chat-mensajes');
+        const mensaje = document.createElement('div');
+        mensaje.className = 'msg msg-bot msg-catalogo';
+        const autor = document.createElement('strong');
+        autor.textContent = 'Asistente Ducky';
+        const resumen = document.createElement('p');
+        resumen.textContent = 'Estos son ' + libros.length + ' libros del catálogo actual:';
+        const lista = document.createElement('ul');
+        libros.forEach((libro) =>
+        {
+            const registro = document.createElement('li');
+            const titulo = document.createElement('b');
+            titulo.textContent = libro.titulo;
+            registro.appendChild(titulo);
+            registro.appendChild(document.createTextNode(' — ' + libro.autores +
+                ' · ' + libro.id_libro + ' · ' + libro.formato +
+                ' · Disponibles: ' + libro.disponibles_prestamo +
+                ' · ' + (libro.ubicaciones || 'Ubicación en la ficha')));
+            lista.appendChild(registro);
+        });
+        const fuente = document.createElement('small');
+        fuente.textContent = 'Fuente: Catálogo actual de la biblioteca';
+        mensaje.append(autor, resumen, lista, fuente);
+        caja.appendChild(mensaje);
+        while (caja.children.length > 40) caja.firstElementChild.remove();
+        caja.scrollTop += mensaje.getBoundingClientRect().top -
+            caja.getBoundingClientRect().top;
     }
 };

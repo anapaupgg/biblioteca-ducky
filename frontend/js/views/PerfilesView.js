@@ -60,22 +60,17 @@ const perfiles_view =
         document.getElementById('tabla').innerHTML =
             '<div class="perfiles-lista" role="listbox" aria-label="Perfiles disponibles">' +
             '<div class="perfiles-fila perfiles-encabezado" aria-hidden="true">' +
-            '<span>Perfil</span><span>Descripción</span><span>Funciones</span>' +
-            '<span>Usuarios</span><span>Estatus</span></div>' +
+            '<span>Perfil · Descripción · Funciones · Usuarios · Estatus</span></div>' +
             perfiles.map((perfil) =>
             {
                 const resumen = perfil.funciones.length > 3 ?
                     perfil.funciones.length + ' funciones' : perfil.funciones.join(', ');
                 const texto = [perfil.nombre, perfil.descripcion || '—', resumen,
                     perfil.usuarios, perfil.estatus].join(' · ');
-                const columnas = [perfil.nombre, perfil.descripcion || '—', resumen,
-                    perfil.usuarios, perfil.estatus].map((valor) =>
-                    '<span title="' + ui.esc(String(valor)) + '">' +
-                    ui.esc(String(valor)) + '</span>').join('');
                 return '<button type="button" role="option" class="perfiles-fila perfiles-registro"' +
                     ' data-perfil="' + perfil.id + '" aria-selected="' +
                     (perfil.id === this.id_seleccionado) + '" title="' + ui.esc(texto) + '">' +
-                    columnas + '</button>';
+                    '<span>' + ui.esc(texto) + '</span></button>';
             }).join('') + '</div>';
         document.querySelectorAll('[data-perfil]').forEach((fila) =>
             fila.addEventListener('click', () =>
