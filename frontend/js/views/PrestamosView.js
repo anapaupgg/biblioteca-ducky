@@ -1,13 +1,13 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-14                                               */
+/* Date: 2026-11-16                                               */
 /* Description: Presentación y eventos de préstamos.              */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents: configurar, enlazar, mostrar, activos,       */
-/* validacion, recibo, boleta, espera, mios y pendientes.           */
+/* validacion, recibo, boleta, espera, mios y pendientes.          */
 /* Reuse Instructions: cargar después de ui; callbacks reciben    */
 /* folio y ejemplar. Todos los datos externos se escapan.        */
 /******************************************************************/
@@ -124,6 +124,12 @@ const prestamos_view =
             document.getElementById('form-consultar-espera').classList.remove('hidden');
             document.getElementById('btn-cambiar-libro-espera').classList.add('hidden');
             document.getElementById('lista-espera').replaceChildren();
+            this.reiniciar_espera();
+        }
+        if (modo === 'agregar-espera')
+        {
+            ui.alerta('aviso-espera-error');
+            ui.limpiar(document.getElementById('form-agregar-espera'));
         }
         const titulos = {
             personal: ['Préstamo de libros',
@@ -363,6 +369,7 @@ const prestamos_view =
 
     lista_espera: function (datos)
     {
+        this.reiniciar_espera();
         const destino = document.getElementById('lista-espera');
         document.getElementById('form-consultar-espera').classList.add('hidden');
         document.getElementById('btn-cambiar-libro-espera').classList.remove('hidden');
@@ -373,9 +380,64 @@ const prestamos_view =
             (datos.solicitudes.length ? datos.solicitudes.map((registro, indice) =>
                 '<div class="circulation-row">' + (indice + 1) + ' · ' +
                 ui.esc(registro.clave_usuario) + ' · ' + ui.esc(registro.nombre) + ' · ' +
-                ui.fecha(registro.fecha_registro) + ' · ' + ui.esc(registro.estatus) +
+                ui.fecha_hora(registro.fecha_registro).split(',')[0] + ' · ' +
+                ui.esc(registro.estatus) +
                 '</div>').join('') :
                 '<div class="circulation-row muted">Aún no hay solicitudes en espera.</div>');
+    },
+
+    reiniciar_espera: function ()
+    {
+        document.getElementById('aviso-espera').classList.add('hidden');
+        document.getElementById('panel-espera').classList.remove('waitlist-success');
+        const agregar = document.getElementById('btn-agregar-espera');
+        agregar.textContent = 'Agregar a la lista';
+        agregar.classList.add('btn-primary');
+        document.getElementById('btn-volver-espera').classList.remove('btn-primary');
+    },
+
+    espera_registrada: function (registro, datos)
+    {
+        const posicion = datos ? datos.solicitudes.findIndex((fila) =>
+            fila.id_espera === registro.id_espera) + 1 : 0;
+        const mensaje = posicion > 0 ?
+            datos.solicitudes[posicion - 1].nombre + ' quedó en la posición ' + posicion +
+                ' de ' + datos.libro.titulo +
+                '. Está en espera en el sistema; el aviso externo aún no se ha enviado.' :
+            'La solicitud quedó registrada en el sistema. Consulta de nuevo la lista para ver su posición; el aviso externo aún no se ha enviado.';
+        const aviso = document.getElementById('aviso-espera');
+        aviso.className = 'alert alert-ok';
+        aviso.innerHTML = '<strong>Solicitud de espera registrada</strong><span>' +
+            ui.esc(mensaje) + '</span>';
+        if (!datos) return;
+        document.getElementById('panel-espera').classList.add('waitlist-success');
+        const agregar = document.getElementById('btn-agregar-espera');
+        agregar.textContent = 'Agregar otra solicitud';
+        agregar.classList.remove('btn-primary');
+        document.getElementById('btn-volver-espera').classList.add('btn-primary');
+    },
+
+    espera_ocupada: function (ocupada)
+    {
+        document.getElementById('btn-confirmar-espera').disabled = ocupada;
+    },
+
+    error_espera: function (error)
+    {
+        const campos = error.campos || [];
+        const formulario = document.getElementById('form-agregar-espera');
+        ui.limpiar(formulario);
+        const ambos = campos.length === 0;
+        if (ambos || campos.includes('clave_usuario'))
+        {
+            document.getElementById('espera-usuario').closest('.field').classList.add('field-error');
+        }
+        if (ambos || campos.includes('id_libro'))
+        {
+            document.getElementById('espera-libro-registro').closest('.field')
+                .classList.add('field-error');
+        }
+        ui.alerta('aviso-espera-error', 'error', 'Verifica los datos de la solicitud', error.message);
     },
 
     libro_espera: function ()

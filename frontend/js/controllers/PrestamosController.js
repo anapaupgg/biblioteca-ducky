@@ -1,13 +1,13 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-14                                               */
+/* Date: 2026-11-16                                               */
 /* Description: Coordina vistas y modelo cliente de préstamos.    */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents: iniciar, cargar, validar, registrar,         */
-/* autorizar, abrir_boleta y volver_recibo.                        */
+/* autorizar, lista de espera y boleta.                            */
 /* Reuse Instructions: iniciar una vez; permisos visuales vienen  */
 /* de la sesión, la API los comprueba de nuevo.                    */
 /******************************************************************/
@@ -15,6 +15,7 @@
 const prestamos_controller =
 {
     libro_espera_consultado: null,
+    registrando_espera: false,
     funciones: [],
     datos_pendientes: null,
     renovacion_pendiente: null,
@@ -163,33 +164,46 @@ const prestamos_controller =
         prestamos_view.mostrar('agregar-espera');
     },
 
-    consultar_espera: async function (id_libro)
+    consultar_espera: async function (id_libro, mostrar_error = true)
     {
         try
         {
             const datos = await prestamo_model.espera(id_libro);
             this.libro_espera_consultado = id_libro;
             prestamos_view.lista_espera(datos);
+            return datos;
         }
         catch (error)
         {
-            prestamos_view.mensaje('error', 'No se pudo consultar la lista de espera', error.message);
+            if (mostrar_error)
+            {
+                prestamos_view.mensaje('error', 'No se pudo consultar la lista de espera', error.message);
+            }
+            return null;
         }
     },
 
     registrar_espera: async function (datos)
     {
+        if (this.registrando_espera) return;
+        this.registrando_espera = true;
+        prestamos_view.espera_ocupada(true);
         try
         {
-            await prestamo_model.registrar_espera(datos);
+            const registro = await prestamo_model.registrar_espera(datos);
             prestamos_view.mostrar('espera');
-            await this.consultar_espera(datos.id_libro);
-            prestamos_view.mensaje('ok', 'Solicitud registrada',
-                'Se avisará al usuario cuando haya un ejemplar disponible.');
+            const listado = await this.consultar_espera(datos.id_libro, false);
+            prestamos_view.espera_registrada(registro, listado);
         }
         catch (error)
         {
-            prestamos_view.mensaje('error', 'No se pudo registrar en la lista', error.message);
+            if ([400, 409, 422].includes(error.status)) prestamos_view.error_espera(error);
+            else prestamos_view.mensaje('error', 'No se pudo registrar en la lista', error.message);
+        }
+        finally
+        {
+            this.registrando_espera = false;
+            prestamos_view.espera_ocupada(false);
         }
     },
 

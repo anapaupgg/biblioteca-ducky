@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — RESULTADO Y ERROR DE ESPERA FIGMA (16 DE NOVIEMBRE DE 2026)
+- Al retomar: git fetch origin correcto; main y origin/main 0/0, sin commits
+  remotos nuevos. Se conservó fuera del trabajo el package-lock.json previo.
+- Frames 2447:114973 y 2447:115623 cotejados. El alta registrada muestra
+  la posición calculada desde la lista real, nombre, libro y acciones del
+  prototipo. El aviso externo se indica pendiente, porque no hay entrega.
+- El error de alta conserva los campos, muestra la causa devuelta por la API
+  y marca los datos afectados. Dos envíos simultáneos se bloquean. Si el alta
+  se confirma pero falla la recarga, se conserva el estado de éxito y se pide
+  volver a consultar la lista; no se reporta falsamente un fallo de guardado.
+- Cotejo en navegador: alerta (276,176;1132×96), filas de 56 px desde y=288,
+  acciones en y=540 a 1440×960. Error de matrícula inválida verificado con
+  respuesta real 400 sin escritura; éxito con datos sintéticos temporales ya
+  eliminados. Móvil a 390 px sin desbordamiento. 3001 lo usa otra app; Ducky
+  se ejecutó en 3002 sin tocarla. No se ejecutó db:init ni se reinició BD.
+- Verificación automatizada: npm test 57 aprobadas, 10 omitidas, 0 fallos;
+  incluye bloqueo de doble envío y éxito conservado si falla la recarga.
+- Pendientes: contacto real a personas en espera, recursos de lectura digital
+  y cotejo de otros estados secundarios. Identificadores L... siguen en BD.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — LISTA DE ESPERA FIGMA (14 DE NOVIEMBRE DE 2026)
 - Continuación sobre e6d7cd9 ya subido; se cotejaron los frames 2447:114653
   (lista) y 2447:115298 (alta) con PostgreSQL local y navegador.

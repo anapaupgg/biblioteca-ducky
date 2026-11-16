@@ -84,6 +84,73 @@ test('el recibo abre la lista de espera del libro indicado sin omitir permisos',
     assert.equal(vista.vista.entrada_espera(), null);
 });
 
+test('el alta de espera presenta la posición real y evita doble envío', async () =>
+{
+    const pasos = [];
+    let resolver;
+    let envios = 0;
+    const contexto =
+    {
+        prestamos_view:
+        {
+            espera_ocupada: (valor) => pasos.push('ocupada:' + valor),
+            mostrar: (modo) => pasos.push('mostrar:' + modo),
+            lista_espera: () => pasos.push('lista'),
+            espera_registrada: (registro, listado) =>
+                pasos.push('posicion:' + (listado.solicitudes.findIndex((x) =>
+                    x.id_espera === registro.id_espera) + 1))
+        },
+        prestamo_model:
+        {
+            registrar_espera: () =>
+            {
+                envios += 1;
+                return new Promise((resolve) => { resolver = resolve; });
+            },
+            espera: async () => ({ libro: { titulo: 'Prueba' },
+                solicitudes: [{ id_espera: 8 }, { id_espera: 9 }] })
+        }
+    };
+    vm.runInNewContext(fs.readFileSync(require.resolve(
+        '../frontend/js/controllers/PrestamosController.js'), 'utf8') +
+        '\nthis.controlador = prestamos_controller;', contexto);
+    const primero = contexto.controlador.registrar_espera(
+        { clave_usuario: '800456', id_libro: 'L000128' });
+    await contexto.controlador.registrar_espera(
+        { clave_usuario: '800456', id_libro: 'L000128' });
+    assert.equal(envios, 1);
+    resolver({ id_espera: 9 });
+    await primero;
+    assert.deepEqual(pasos, ['ocupada:true', 'mostrar:espera', 'lista',
+        'posicion:2', 'ocupada:false']);
+});
+
+test('si falla la recarga, el alta confirmada sigue marcada como registrada', async () =>
+{
+    const pasos = [];
+    const contexto =
+    {
+        prestamos_view:
+        {
+            espera_ocupada: () => {}, mostrar: () => {},
+            espera_registrada: (registro, listado) =>
+                pasos.push('registrada:' + registro.id_espera + ':' + listado),
+            mensaje: () => pasos.push('error')
+        },
+        prestamo_model:
+        {
+            registrar_espera: async () => ({ id_espera: 7 }),
+            espera: async () => { throw new Error('Sin conexión'); }
+        }
+    };
+    vm.runInNewContext(fs.readFileSync(require.resolve(
+        '../frontend/js/controllers/PrestamosController.js'), 'utf8') +
+        '\nthis.controlador = prestamos_controller;', contexto);
+    await contexto.controlador.registrar_espera(
+        { clave_usuario: '800456', id_libro: 'L000128' });
+    assert.deepEqual(pasos, ['registrada:7:null']);
+});
+
 test('PostgreSQL: registro, renovación y devolución revierten todo en la prueba',
     { skip: process.env.DUCKY_TEST_DB !== '1' }, async () =>
 {

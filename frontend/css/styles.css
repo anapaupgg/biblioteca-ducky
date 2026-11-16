@@ -687,6 +687,26 @@ a
     min-height: 48px;
 }
 
+#panel-espera .circulation-row
+{
+    padding: 15px var(--space-16);
+}
+
+#aviso-espera:not(.hidden),
+#aviso-espera-error .alert
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+}
+
+#panel-espera.waitlist-success #btn-volver-espera
+{
+    order: -1;
+}
+
 .circulation-actions
 {
     margin-top: 0;

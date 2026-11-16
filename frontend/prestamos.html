@@ -169,6 +169,7 @@
                         </div>
                     </section>
                     <section id="panel-espera" class="hidden">
+                        <div id="aviso-espera" class="hidden" role="status"></div>
                         <form id="form-consultar-espera" class="actions" novalidate>
                             <div class="field"><label for="espera-libro">Clave del libro</label>
                                 <input id="espera-libro" maxlength="7" autocomplete="off" placeholder="Ej. L000128"></div>
@@ -182,6 +183,7 @@
                         </div>
                     </section>
                     <section id="panel-agregar-espera" class="hidden">
+                        <div id="aviso-espera-error"></div>
                         <form id="form-agregar-espera" novalidate>
                             <div class="card"><h2>Solicitud de espera</h2><div class="grid-2">
                                 <div class="field"><label for="espera-usuario">Matrícula o nómina</label>
@@ -189,7 +191,7 @@
                                 <div class="field"><label for="espera-libro-registro">Clave del libro</label>
                                     <input id="espera-libro-registro" maxlength="7" autocomplete="off" placeholder="Ej. L000128"></div>
                             </div></div>
-                            <div class="actions"><button class="btn btn-primary" type="submit">Registrar en lista de espera</button>
+                            <div class="actions"><button class="btn btn-primary" type="submit" id="btn-confirmar-espera">Registrar en lista de espera</button>
                                 <button class="btn" type="button" id="btn-cancelar-espera">Cancelar</button></div>
                         </form>
                     </section>
