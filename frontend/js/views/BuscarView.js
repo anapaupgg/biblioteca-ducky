@@ -21,6 +21,7 @@
 /*   buscar_view.prestados(libro, acciones) */
 /*   buscar_view.invalidos(filtros, campos, acciones) */
 /*   buscar_view.retirado(ficha) */
+/*   buscar_view.revisar_solicitud(ficha, usuario, acciones) */
 /*   buscar_view.estado_escritorio(titulo, descripcion, clase) */
 /*   buscar_view.ficha(filtro) */
 /*   buscar_view.solicitud(resultado) */
@@ -50,7 +51,8 @@ const buscar_view =
     {
         document.getElementById('resultados').innerHTML = '';
         document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
-            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired');
+            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired',
+            'search-desktop-request', 'search-desktop-requested');
         document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar libros';
         document.getElementById('descripcion-busqueda-escritorio').textContent =
             'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
@@ -331,10 +333,51 @@ const buscar_view =
             'Volver al catálogo</a></div>';
     },
 
+    revisar_solicitud: function (ficha, usuario, acciones)
+    {
+        const libro = ficha.libro;
+        const ubicaciones = [...new Set(ficha.ejemplares.map((ejemplar) =>
+            ejemplar.ubicacion).filter(Boolean))].join(', ');
+        const disponibles = libro.disponibles_prestamo;
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            etiqueta + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        this.estado_escritorio('Solicitud de préstamo',
+            libro.id_libro + ' · ' + libro.titulo + '.', 'search-desktop-request');
+        document.body.classList.remove('search-results-mobile');
+        ui.alerta('mensaje');
+        document.getElementById('resultados').innerHTML =
+            '<div class="alert search-request-alert"><strong>Libro disponible</strong><span>' +
+            ui.esc(disponibles + (disponibles === 1 ? ' ejemplar disponible · ' :
+                ' ejemplares disponibles · ') +
+                (ubicaciones || 'Ubicación no registrada') +
+                '. Confirma la solicitud con tu cuenta.') + '</span></div>' +
+            '<div class="grid-2 search-request-fields">' +
+            campo('Solicitante', usuario.nombre + ' · ' + usuario.clave) +
+            campo('Libro', libro.id_libro + ' · ' + libro.titulo) + '</div>' +
+            '<div class="actions search-request-actions"><button class="btn btn-primary" ' +
+            'id="btn-confirmar-solicitud" type="button">Confirmar solicitud</button>' +
+            '<button class="btn" id="btn-cancelar-solicitud" type="button">Cancelar</button></div>';
+        const confirmar = document.getElementById('btn-confirmar-solicitud');
+        const cancelar = document.getElementById('btn-cancelar-solicitud');
+        confirmar.addEventListener('click', async () =>
+        {
+            confirmar.disabled = true;
+            cancelar.disabled = true;
+            await acciones.confirmar();
+            if (document.body.classList.contains('search-desktop-request'))
+            {
+                confirmar.disabled = false;
+                cancelar.disabled = false;
+            }
+        });
+        cancelar.addEventListener('click', acciones.cancelar);
+    },
+
     estado_escritorio: function (titulo, descripcion, clase)
     {
         document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
-            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired');
+            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired',
+            'search-desktop-request', 'search-desktop-requested');
         document.body.classList.add(clase);
         document.getElementById('titulo-busqueda-escritorio').textContent = titulo;
         document.getElementById('descripcion-busqueda-escritorio').textContent = descripcion;
@@ -378,19 +421,21 @@ const buscar_view =
         return dialogo;
     },
 
-    solicitud: function (resultado)
+    solicitud: function (resultado, usuario, libro, acciones)
     {
-        return ui.dialogo(
-        {
-            titulo: 'Solicitud registrada',
-            texto: resultado.mensaje,
-            cuerpo: '<div class="alert alert-ok"><strong>Folio ' + ui.esc(resultado.folio) +
-                ' · ' + ui.esc(resultado.libro) + '</strong>' +
-                '<span>' + ui.fecha_hora(resultado.fecha) +
-                '. El bibliotecario confirmará tu préstamo al entregarte el libro.</span></div>',
-            confirmar: 'Entendido',
-            cancelar: false
-        });
+        this.estado_escritorio('Solicitud registrada', '', 'search-desktop-requested');
+        document.body.classList.remove('search-results-mobile');
+        ui.alerta('mensaje');
+        document.getElementById('resultados').innerHTML =
+            '<div class="alert alert-ok search-request-alert"><strong>Solicitud registrada</strong>' +
+            '<span>' + ui.esc(usuario.nombre + ' · ' + libro.id_libro +
+                '. La biblioteca recibirá tu solicitud de préstamo. Folio ' + resultado.folio +
+                '.') + '</span></div>' +
+            '<div class="card search-requested-card"><h2>Información de la operación</h2>' +
+            '<p>La entrega del libro se confirma en el mostrador de préstamos.</p></div>' +
+            '<div class="actions search-request-actions"><button class="btn" id="btn-volver-solicitud" ' +
+            'type="button">Volver</button><a class="btn" href="inicio.html">Ir al inicio</a></div>';
+        document.getElementById('btn-volver-solicitud').addEventListener('click', acciones.volver);
     },
 
     mensaje: function (tipo, titulo, texto)

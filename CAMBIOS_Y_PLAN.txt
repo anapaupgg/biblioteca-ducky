@@ -1,3 +1,29 @@
+ACTUALIZACIÓN — SOLICITUD DESDE BÚSQUEDA FIGMA (16 DE NOVIEMBRE DE 2026)
+- Continuación sobre 03d840a, subido y sincronizado 0/0; no hubo commits
+  remotos nuevos durante esta solicitud. package-lock.json local previo
+  continúa fuera del trabajo.
+- Frames 2013:32975 y 2217:51348 consultados antes de editar. En escritorio,
+  «Solicitar préstamo» abre una revisión con solicitante, libro, disponibilidad
+  y ubicaciones actuales de la API. Solo «Confirmar solicitud» hace el POST;
+  el servidor vuelve a comprobar disponibilidad y permisos. Cancelar recupera
+  los resultados. El comprobante presenta el folio real y la instrucción de
+  entrega en mostrador. La navegación móvil existente conserva su ruta.
+- Cotejo a 1440×960 con L000129: alerta de revisión
+  (276,176;1132×96), campos (276,288;1132×88) y botones y=392.
+  Cancelar regresó a resultados sin escritura. El comprobante se verificó
+  con una vista sintética temporal eliminada: alerta (276,136;1132×96),
+  tarjeta (276,248;1132×114), acciones y=378. A 390 px no desbordó.
+- No se confirmó una solicitud real solo para capturar el éxito. Una prueba
+  automatizada comprueba que revisar no envía, que doble confirmación genera
+  una llamada y que se presenta el comprobante. npm test: 59 aprobadas,
+  10 omitidas, 0 fallos. Sintaxis y diff correctos.
+- Diferencias: Figma usa B... y un solicitante ilustrativo; app usa usuario,
+  clave L..., cantidades y ubicaciones reales. El folio se añade al aviso
+  de éxito para que el usuario conserve una referencia de la operación.
+- No se ejecutó db:init ni se modificó PostgreSQL en el cotejo visual.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — COMPROBACIÓN DE BAJA EN BÚSQUEDA FIGMA (16 DE NOVIEMBRE DE 2026)
 - Continuación sobre 9d0df09, subido y sincronizado 0/0. Sin commits remotos
   ajenos en esta solicitud; package-lock.json local anterior excluido.

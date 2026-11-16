@@ -1,8 +1,8 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-13                                               */
-/* Description: Navegación móvil desde ficha hasta solicitud.    */
+/* Date: 2026-11-16                                               */
+/* Description: Navegación de búsqueda hasta solicitud.           */
 /******************************************************************/
 
 /******************************************************************/
@@ -91,4 +91,50 @@ test('dos toques rápidos crean una sola solicitud', async () =>
     completar({ folio: 25 });
     await primera;
     assert.equal(contexto.controlador.solicitud_en_curso, false);
+});
+
+test('escritorio revisa datos vigentes antes de registrar una sola solicitud', async () =>
+{
+    let acciones;
+    let envios = 0;
+    let recibos = 0;
+    let resolver;
+    const pendiente = new Promise((completar) => { resolver = completar; });
+    const libro = { id_libro: 'L000129', disponibles_prestamo: 1 };
+    const ficha = { libro, ejemplares: [{ ubicacion: 'E-01 / F-02' }] };
+    const contexto =
+    {
+        buscar_movil_view: { activo: () => false },
+        buscar_view:
+        {
+            revisar_solicitud: (datos, usuario, botones) =>
+            {
+                assert.equal(datos, ficha);
+                assert.equal(usuario.clave, '100001');
+                acciones = botones;
+            },
+            solicitud: () => { recibos++; }
+        },
+        busqueda_model:
+        {
+            ficha: async () => ficha,
+            solicitar: () =>
+            {
+                envios++;
+                return pendiente;
+            }
+        },
+        ui: { toast: () => assert.fail('No debe anunciar error') }
+    };
+    vm.runInNewContext(fs.readFileSync(require.resolve('../frontend/js/controllers/BuscarController.js'),
+        'utf8') + '\nthis.controlador = buscar_controller;', contexto);
+    contexto.controlador.usuario_actual = { clave: '100001' };
+    await contexto.controlador.solicitar(libro);
+    assert.equal(envios, 0);
+    const primero = acciones.confirmar();
+    await acciones.confirmar();
+    assert.equal(envios, 1);
+    resolver({ folio: 901 });
+    await primero;
+    assert.equal(recibos, 1);
 });

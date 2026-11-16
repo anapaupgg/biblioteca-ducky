@@ -2,6 +2,11 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Solicitud desde búsqueda del 16 de noviembre de 2026
+
+- Frame `2013:32975`: la revisión de escritorio usa una lectura reciente de la ficha antes de mostrar disponibilidad, ubicaciones y solicitante. Con `L000129`, alerta `(276,176;1132×96)`, campos `(276,288;1132×88)` y acciones en y=392 a 1440 × 960. «Cancelar» devolvió resultados sin crear solicitud. El servidor mantiene la validación final al confirmar. El resultado móvil anterior conserva su flujo; este cotejo se refiere al escritorio.
+- Frame `2217:51348`: se verificó visualmente una vista sintética temporal de éxito, eliminada sin escribir en BD. Alerta `(276,136;1132×96)`, tarjeta `(276,248;1132×114)` y acciones en y=378. A 390 px no hay desbordamiento horizontal. El aviso añade el folio real de la API al texto del prototipo, para dar al solicitante una referencia. El identificador `L...`, nombre y ubicaciones reales sustituyen los datos `B...` ilustrativos. No se afirma que se haya confirmado una solicitud real en esta revisión.
+
 ## Comprobación posterior a baja del 16 de noviembre de 2026
 
 - Frame `2013:34951`: el libro real `L000134` retirado se comprobó mediante el detalle administrativo y una búsqueda activa de cero resultados. La barra «Ver ficha bibliográfica» quedó en `(276,176;1132×48)`, el aviso en `(276,240;1132×96)` y las acciones en y=352 a 1440 × 960, como el frame. `L000129` activo no produjo el estado de exclusión. Se recorrió el enlace desde el comprobante de baja de `L000134` hasta esta vista; no se dio de baja ningún libro durante el cotejo.

@@ -1623,7 +1623,13 @@ table.table
     .search-desktop-invalid #mensaje,
     .search-desktop-retired .search-desktop-links,
     .search-desktop-retired #form-buscar,
-    .search-desktop-retired #mensaje
+    .search-desktop-retired #mensaje,
+    .search-desktop-request .search-desktop-links,
+    .search-desktop-request #form-buscar,
+    .search-desktop-request #mensaje,
+    .search-desktop-requested .search-desktop-links,
+    .search-desktop-requested #form-buscar,
+    .search-desktop-requested #mensaje
     {
         display: none;
     }
@@ -1687,6 +1693,60 @@ table.table
     min-height: 96px;
     margin: 0 0 var(--space-16);
     color: var(--color-navy);
+}
+
+.search-request-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+    color: var(--color-navy);
+}
+
+.search-request-alert.alert-ok
+{
+    color: var(--color-green);
+}
+
+.search-request-fields .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.search-request-actions
+{
+    margin: var(--space-16) 0 0;
+}
+
+.search-request-actions .btn
+{
+    min-height: 48px;
+}
+
+.search-requested-card h2
+{
+    margin-bottom: var(--space-16);
+    line-height: 24px;
+}
+
+.search-requested-card p
+{
+    margin: 0;
+}
+
+.search-desktop-requested .search-desktop-heading h1
+{
+    line-height: 24px;
+}
+
+.search-desktop-requested .search-desktop-heading
+{
+    margin-bottom: var(--space-16);
+}
+
+.search-desktop-requested .search-desktop-heading p:empty
+{
+    display: none;
 }
 
 .search-invalid-card .field-error .readonly
@@ -2230,19 +2290,40 @@ table.table
     .search-desktop-retired .search-mobile-heading,
     .search-desktop-retired #form-buscar,
     .search-desktop-retired #mensaje,
-    .search-desktop-retired .search-desktop-links
+    .search-desktop-retired .search-desktop-links,
+    .search-desktop-request .search-mobile-heading,
+    .search-desktop-request #form-buscar,
+    .search-desktop-request #mensaje,
+    .search-desktop-request .search-desktop-links,
+    .search-desktop-requested .search-mobile-heading,
+    .search-desktop-requested #form-buscar,
+    .search-desktop-requested #mensaje,
+    .search-desktop-requested .search-desktop-links
     {
         display: none;
     }
 
     .search-desktop-retired .search-desktop-heading,
     .search-desktop-retired .search-result-toolbar,
-    .search-desktop-retired .search-result-actions
+    .search-desktop-retired .search-result-actions,
+    .search-desktop-request .search-desktop-heading,
+    .search-desktop-requested .search-desktop-heading
     {
         display: flex;
     }
 
     .search-desktop-retired .search-result-actions
+    {
+        flex-direction: column;
+    }
+
+    .search-request-fields
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .search-desktop-request .search-request-actions,
+    .search-desktop-requested .search-request-actions
     {
         flex-direction: column;
     }

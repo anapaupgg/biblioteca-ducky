@@ -14,6 +14,7 @@
 /*   buscar_controller.modificar() */
 /*   buscar_controller.ejemplo(campo, valor) */
 /*   buscar_controller.solicitar(libro) */
+/*   buscar_controller.confirmar_solicitud(libro) */
 /*   buscar_controller.ficha(libro) */
 /*   buscar_controller.volver_ficha_movil() */
 /******************************************************************/
@@ -30,7 +31,9 @@ const buscar_controller =
     // Solo la consulta más reciente puede modificar resultados o errores.
     version_consulta: 0,
     ficha_actual: null,
+    usuario_actual: null,
     solicitud_en_curso: false,
+    revision_en_curso: false,
     iniciar: async function ()
     {
         const usuario = await layout.montar(
@@ -40,6 +43,7 @@ const buscar_controller =
             funciones: ['Buscar libros']
         });
         if (!usuario) return;
+        this.usuario_actual = usuario;
         buscar_view.enlazar(
         {
             buscar: (...argumentos) => this.buscar(...argumentos),
@@ -178,6 +182,39 @@ const buscar_controller =
 
     solicitar: async function (libro)
     {
+        if (buscar_movil_view.activo()) return this.confirmar_solicitud(libro);
+        if (this.revision_en_curso) return;
+        this.revision_en_curso = true;
+        const version = this.version_consulta;
+        try
+        {
+            const ficha = await busqueda_model.ficha(libro.id_libro);
+            if (version !== this.version_consulta) return;
+            if (!ficha.libro.disponibles_prestamo)
+            {
+                ui.toast('warning', 'El libro ya no está disponible',
+                    'Actualiza la búsqueda para ver las copias vigentes.');
+                this.buscar();
+                return;
+            }
+            buscar_view.revisar_solicitud(ficha, this.usuario_actual,
+            {
+                confirmar: () => this.confirmar_solicitud(ficha.libro),
+                cancelar: () => this.buscar()
+            });
+        }
+        catch (error)
+        {
+            ui.toast('error', 'No fue posible revisar la solicitud', error.message);
+        }
+        finally
+        {
+            this.revision_en_curso = false;
+        }
+    },
+
+    confirmar_solicitud: async function (libro)
+    {
         if (this.solicitud_en_curso) return;
         this.solicitud_en_curso = true;
         try
@@ -190,8 +227,10 @@ const buscar_controller =
             }
             else
             {
-                await buscar_view.solicitud(resultado);
-                this.buscar();
+                buscar_view.solicitud(resultado, this.usuario_actual, libro,
+                {
+                    volver: () => this.buscar()
+                });
             }
         }
         catch (error)
