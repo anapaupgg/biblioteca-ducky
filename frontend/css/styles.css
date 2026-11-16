@@ -941,6 +941,51 @@ a
     min-height: 48px;
 }
 
+.libro-form-page .page-header
+{
+    margin-bottom: 14px;
+}
+
+#form-libro > .actions
+{
+    margin-top: 14px;
+}
+
+#form-libro > .actions .btn,
+#form-libro #btn-sinopsis-ejemplo
+{
+    min-height: 48px;
+}
+
+#form-libro > .card > h2:first-child
+{
+    height: 24px;
+}
+
+#form-libro .libro-form-principal .field,
+#form-libro .libro-form-sinopsis > .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+#form-libro .libro-form-edit-only input[readonly]
+{
+    background: var(--color-white);
+}
+
+#form-libro .libro-form-sinopsis .stepper button
+{
+    width: 48px;
+    height: 48px;
+}
+
+#form-libro .libro-form-sinopsis .stepper output
+{
+    min-width: 40px;
+    font: var(--text-heading);
+}
+
 #btn-sinopsis-ejemplo
 {
     margin-top: var(--space-16);
@@ -957,6 +1002,19 @@ a
 .libro-copias .label
 {
     min-width: 180px;
+}
+
+@media (max-width: 600px)
+{
+    .libro-form-page .libro-copias
+    {
+        flex-wrap: wrap;
+    }
+
+    .libro-form-page .libro-copias .label
+    {
+        flex-basis: 100%;
+    }
 }
 
 .libro-copias-registradas

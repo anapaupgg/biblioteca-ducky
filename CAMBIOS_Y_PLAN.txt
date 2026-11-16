@@ -1,3 +1,25 @@
+ACTUALIZACIÓN — FORMULARIOS PRINCIPALES DE LIBROS (16 DE NOVIEMBRE DE 2026)
+- git fetch origin confirmó main sincronizada 0/0 con 876e99b; no llegaron
+  commits remotos nuevos. El cambio previo de package-lock.json sigue ajeno
+  a esta solicitud y no se incluye.
+- Se consultaron en Figma los frames 2010:23633 y 2010:25664 antes de editar.
+  En escritorio a 1440×960, el alta quedó con acciones y=176, tarjeta de
+  datos (276,240;1132×386) y sinopsis y=642. En la edición real de L000129,
+  la tarjeta tiene cuatro filas, mide (276,240;1132×490) y sinopsis y=746.
+- La cuarta fila muestra estante/fila y condición de ejemplares vigentes de
+  la API como valores de lectura. La tarjeta adicional enlaza a la ficha de
+  ejemplares, que se abrió y mostró las dos copias reales. No se editó la BD.
+- El botón de sinopsis y el control de copias se probaron sin guardar. A 390 px
+  se corrigió el desborde del control de copias; alta y edición tienen ancho
+  de documento de 390 px. npm test: 61 aprobadas, 10 omitidas, 0 fallos.
+  No se ejecutó db:init.
+- Pendientes: la edición directa de ejemplares y del número de copias que
+  sugiere Figma requiere integrar las operaciones por copia; el prototipo
+  utiliza claves B... y la BD real L... . Los datos adicionales del acervo
+  permanecen bajo las tarjetas principales para conservar su función.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ASISTENTE PRINCIPAL SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
 - Se hizo git fetch origin: main estaba sincronizada 0/0 con a19369b y no
   había commits remotos nuevos. Se conservó la modificación local ajena de

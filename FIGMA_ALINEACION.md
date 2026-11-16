@@ -2,6 +2,24 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Alta y edición principales de libros: cotejo del 16 de noviembre de 2026
+
+- Frames `2010:23633` y `2010:25664`: a 1440 × 960, el alta quedó con
+  acciones en y=176, tarjeta de datos `(276,240;1132×386)` y tarjeta de
+  sinopsis desde y=642. Las tres filas de campos miden 88 px, los botones
+  48 px y el selector de copias conserva la posición del prototipo.
+- En edición de `L000129`, la tarjeta de cuatro filas quedó en
+  `(276,240;1132×490)` y sinopsis desde y=746. La fila adicional muestra
+  `E-01 / F-02` y `Bueno` de los ejemplares vigentes reales. Son valores de
+  lectura: las copias se gestionan en la ficha, accesible desde la tarjeta
+  adicional; se comprobó que el enlace abre sus ejemplares. No se guardó
+  ningún cambio del libro. Alta y edición no desbordan a 390 px.
+- Figma ilustra una clave `B...` y cambios directos de ubicación/condición
+  desde el formulario. PostgreSQL usa `L...` y operaciones por ejemplar; la
+  equivalencia funcional de esos controles y el recuento editable de copias
+  en edición siguen pendientes. Este cotejo acredita la composición principal,
+  no paridad completa de la pantalla.
+
 ## Asistente principal: cotejo del 16 de noviembre de 2026
 
 - Frames `2483:74914` y `2483:76334`: se compararon la conversación inicial
@@ -152,7 +170,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 - Se consultaron los frames `2007:5205` (registrar usuario), `2007:5551` (registro exitoso), `2009:19980` (perfiles), `2009:20306` (crear perfil), `2010:23633` (registrar ficha) y `2010:25664` (modificar libro), y se compararon con la app local.
 - Registro de usuario: orden y agrupación de Clave/Perfil y datos institucionales, breadcrumb y separación vertical ajustados al frame `2007:5205`. Se comprobó en navegador que la consulta institucional presenta Clave, Nombre, Tipo y Correo en ese orden, y que Lector queda como perfil inicial.
 - Perfiles: la lista usa filas seleccionables de 56 px, cinco columnas y acciones globales bajo la lista; la creación presenta Datos del perfil y seis funciones principales en dos columnas. Se verificaron lista, selección, edición, cancelación y creación en navegador sin guardar cambios de prueba. Otras tres funciones reales permanecen en «Funciones adicionales».
-- **No hay paridad completa.** El éxito del registro `2007:5551` aún presenta la contraseña temporal necesaria para acceder y no coincide exactamente con el frame. Los formularios de libro `2010:23633` y `2010:25664` difieren en orden, campos y acciones; el prototipo supone claves `B...` y ubicación/condición de ejemplar en la edición, mientras PostgreSQL usa claves `L...` y contratos de libro/ejemplar separados. Estas diferencias requieren una decisión de datos y una migración compatible antes de poder afirmar equivalencia funcional y visual.
+- **No hay paridad completa.** El éxito del registro `2007:5551` aún presenta la contraseña temporal necesaria para acceder y no coincide exactamente con el frame. La composición principal de los formularios de libro `2010:23633` y `2010:25664` se cotejó el 16 de noviembre, pero el prototipo supone claves `B...` y edición directa de ubicación/condición, mientras PostgreSQL usa claves `L...` y contratos de libro/ejemplar separados. Estas diferencias requieren una decisión de datos antes de afirmar equivalencia funcional.
 - No se han cotejado todos los estados de error, las compras, las diez vistas móviles ni el resto de fotogramas de las secciones 00–10. La alineación se acredita por pantalla y estado comprobados, no por el prototipo completo.
 - Fichas `2010:23633` y `2010:25664`: se alinearon las acciones superiores, el orden visual de Clave/ISBN/Título/Autor/Tema/Editorial, el bloque «Sinopsis y ejemplares» y el control de copias. La app muestra la clave real `L...` en edición y anuncia que se genera al guardar en creación. Los campos adicionales operativos se mantienen bajo las dos tarjetas del prototipo. Se verificaron creación, sinopsis de ejemplo, cambio a Digital y edición en navegador sin guardar. Sigue pendiente la edición de ubicación y condición de ejemplar tal como aparece en Figma; el formulario actual edita la ficha bibliográfica y la base separa ejemplares.
 

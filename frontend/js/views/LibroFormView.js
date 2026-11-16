@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -87,6 +87,21 @@ const libro_form_view =
         document.getElementById('btn-guardar').textContent = 'Guardar modificación';
         document.getElementById('btn-cancelar').href = 'libro_detalle.html?id=' + encodeURIComponent(
             libro.id_libro);
+        const ejemplares = ficha.ejemplares.filter((ejemplar) => ejemplar.estatus !== 'Baja');
+        const ubicaciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.estante ?
+            ejemplar.estante + ' / ' + ejemplar.fila : 'En línea'))];
+        const condiciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.condicion)
+            .filter(Boolean))];
+        document.getElementById('estante-fila-resumen').value = ubicaciones.length === 1 ?
+            ubicaciones[0] : ubicaciones.length ? 'Varias ubicaciones' : 'Sin ejemplares';
+        document.getElementById('condicion-resumen').value = condiciones.length === 1 ?
+            condiciones[0] : condiciones.length ? 'Varias condiciones' : 'Sin ejemplares';
+        document.querySelectorAll('.libro-form-edit-only').forEach((campo) => campo.classList
+            .remove('hidden'));
+        const editar_ejemplares = document.getElementById('editar-ejemplares');
+        editar_ejemplares.href = 'libro_detalle.html?id=' + encodeURIComponent(libro.id_libro) +
+            '&modo=ejemplares';
+        editar_ejemplares.classList.remove('hidden');
         const valores =
         {
             titulo: libro.titulo,

@@ -1,10 +1,10 @@
 <!--
-/******************************************************************/
-/* Program Assignment: Biblioteca Ducky - Sistema web             */
-/* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Registrar o modificar un libro.                   */
-/******************************************************************/
+Program Assignment: Biblioteca Ducky - Sistema web
+Name: Equipo FlowBit
+Date: 2026-11-16
+Description: Vista HTML para registrar o modificar una ficha bibliográfica.
+Listing Contents: formulario, campos, acciones y scripts MVC.
+Reuse Instructions: servir desde Express; conservar los IDs que usa LibroFormView.
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="css/styles.css">
     </head>
 
-    <body>
+    <body class="libro-form-page">
 
         <div class="app">
             <!-- Sidebar and topbar are drawn by Layout according to the profile -->
@@ -37,7 +37,7 @@
                             <button class="btn btn-primary" type="submit" id="btn-guardar">Guardar ficha</button>
                             <a class="btn" href="libros.html" id="btn-cancelar">Cancelar</a>
                         </div>
-                        <div class="card">
+                        <div class="card libro-form-principal">
                             <h2 id="titulo-datos-libro">Datos obligatorios</h2>
                             <div class="grid-2">
                                 <div class="field"><label for="clave">Clave</label><input id="clave"
@@ -52,9 +52,15 @@
                                         list="lista-temas" placeholder="Ej. Software"></div>
                                 <div class="field"><label for="editorial">Editorial</label><input
                                         id="editorial" list="lista-editoriales" placeholder="Ej. Pearson"></div>
+                                <div class="field libro-form-edit-only hidden"><label
+                                        for="estante-fila-resumen">Estante / fila</label>
+                                    <input id="estante-fila-resumen" readonly></div>
+                                <div class="field libro-form-edit-only hidden"><label
+                                        for="condicion-resumen">Condición</label>
+                                    <input id="condicion-resumen" readonly></div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card libro-form-sinopsis">
                             <h2>Sinopsis y ejemplares</h2>
                             <div class="field"><label for="sinopsis">Sinopsis</label><textarea id="sinopsis"
                                     maxlength="500" placeholder="Resumen del contenido del libro adquirido."></textarea></div>
@@ -66,7 +72,7 @@
                                         type="button" id="mas" aria-label="Agregar copia">+</button></div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card libro-form-adicional">
                             <h2>Datos adicionales del acervo</h2>
                             <div class="grid-3">
                                 <div class="field"><label for="formato">Formato</label><select id="formato">
@@ -88,6 +94,8 @@
                                     <select id="tipo_uso"><option>Préstamo externo</option>
                                         <option>Préstamo en sala</option><option>Reservado</option></select></div>
                             </div>
+                            <a id="editar-ejemplares" class="btn hidden" href="libro_detalle.html">
+                                Gestionar ejemplares de esta ficha</a>
                         </div>
                         <datalist id="lista-autores"></datalist><datalist id="lista-editoriales"></datalist>
                         <datalist id="lista-temas"></datalist>
