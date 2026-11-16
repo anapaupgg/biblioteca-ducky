@@ -108,20 +108,27 @@ const buscar_controller =
         const usados = Object.values(filtros).filter(Boolean);
         if (usados.length === 0)
         {
-            buscar_view.mensaje('error', 'Escribe al menos un filtro de búsqueda');
+            buscar_view.invalidos(filtros, [],
+            {
+                modificar: () => this.modificar(),
+                limpiar: () => this.limpiar()
+            });
             buscar_view.estado_movil('invalid', 'Introduce al menos un filtro. ' +
                 'Los textos requieren 3 caracteres; el ISBN solo admite números, X o guiones.');
             return;
         }
         const cortos = ['titulo', 'autor', 'tema', 'editorial'].filter((campo) => filtros[campo] &&
             filtros[campo].length < 3);
-        if (filtros.isbn && !/^[0-9X-]+$/i.test(filtros.isbn)) cortos.push('isbn');
+        if (filtros.isbn && !/^[0-9X-]+$/.test(filtros.isbn)) cortos.push('isbn');
         if (cortos.length)
         {
             ui.marcar(cortos);
             buscar_view.vaciar();
-            buscar_view.mensaje('error', 'Verifica los filtros marcados',
-                'Los textos requieren al menos 3 caracteres y el ISBN solo números.');
+            buscar_view.invalidos(filtros, cortos,
+            {
+                modificar: () => this.modificar(),
+                limpiar: () => this.limpiar()
+            });
             buscar_view.estado_movil('invalid', 'Corrige los filtros indicados. ' +
                 'Los textos requieren 3 caracteres; el ISBN solo admite números, X o guiones.');
             return;

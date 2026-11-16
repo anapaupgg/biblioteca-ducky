@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
@@ -39,6 +39,9 @@ const buscar = (filtro) =>
                    FROM ejemplares x JOIN ubicaciones u USING (id_ubicacion)
                   WHERE x.id_libro = c.id_libro AND x.estatus <> 'Baja') AS ubicaciones,
                 (SELECT count(*) FROM ejemplares x WHERE x.id_libro = c.id_libro AND x.estatus = 'Prestado')::int AS prestados,
+                (SELECT min(p.fecha_vencimiento)
+                   FROM prestamos p JOIN ejemplares x ON x.id_ejemplar = p.id_ejemplar
+                  WHERE x.id_libro = c.id_libro AND p.estatus = 'Activo') AS devolucion_cercana,
                 (SELECT count(*) FROM lista_espera w WHERE w.id_libro = c.id_libro AND w.estatus = 'En espera')::int AS en_espera
            FROM v_catalogo c JOIN libros l USING (id_libro)
           WHERE ($1::text IS NULL OR unaccent_lower(c.titulo) LIKE '%' || unaccent_lower($1) || '%')

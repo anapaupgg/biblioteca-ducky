@@ -1614,7 +1614,13 @@ table.table
     .search-desktop-results #mensaje,
     .search-desktop-empty .search-desktop-links,
     .search-desktop-empty #form-buscar,
-    .search-desktop-empty #mensaje
+    .search-desktop-empty #mensaje,
+    .search-desktop-loaned .search-desktop-links,
+    .search-desktop-loaned #form-buscar,
+    .search-desktop-loaned #mensaje,
+    .search-desktop-invalid .search-desktop-links,
+    .search-desktop-invalid #form-buscar,
+    .search-desktop-invalid #mensaje
     {
         display: none;
     }
@@ -1639,13 +1645,17 @@ table.table
 }
 
 .search-result-desktop > h2:first-child,
-.search-empty-card > h2:first-child
+.search-empty-card > h2:first-child,
+.search-loaned-card > h2:first-child,
+.search-invalid-card > h2:first-child
 {
     margin-bottom: var(--space-12);
 }
 
 .search-result-desktop .field,
-.search-empty-card .field
+.search-empty-card .field,
+.search-loaned-card .field,
+.search-invalid-card .field
 {
     min-height: 88px;
     padding: var(--space-4);
@@ -1661,6 +1671,19 @@ table.table
     min-height: 96px;
     margin: 0 0 var(--space-16);
     color: var(--color-navy);
+}
+
+.search-invalid-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+}
+
+.search-invalid-card .field-error .readonly
+{
+    background: var(--color-red-soft);
+    border-color: var(--color-red);
+    color: var(--color-red);
 }
 
 .search-empty-alert strong,
@@ -1842,7 +1865,8 @@ table.table
     .search-state-mobile #resultados,
     .search-results-mobile #form-buscar,
     .search-results-mobile #mensaje,
-    .search-results-mobile .search-result-desktop
+    .search-results-mobile .search-result-desktop,
+    .search-results-mobile .search-loaned-card
     {
         display: none;
     }

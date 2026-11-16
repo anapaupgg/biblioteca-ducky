@@ -18,6 +18,8 @@
 /*   buscar_view.estado_movil(tipo, detalle) */
 /*   buscar_view.ejemplo(campo, valor) */
 /*   buscar_view.resultados(lista, filtros, acciones) */
+/*   buscar_view.prestados(libro, acciones) */
+/*   buscar_view.invalidos(filtros, campos, acciones) */
 /*   buscar_view.estado_escritorio(titulo, descripcion, clase) */
 /*   buscar_view.ficha(filtro) */
 /*   buscar_view.solicitud(resultado) */
@@ -46,7 +48,8 @@ const buscar_view =
     vaciar: function ()
     {
         document.getElementById('resultados').innerHTML = '';
-        document.body.classList.remove('search-desktop-results', 'search-desktop-empty');
+        document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
+            'search-desktop-loaned', 'search-desktop-invalid');
         document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar libros';
         document.getElementById('descripcion-busqueda-escritorio').textContent =
             'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
@@ -158,6 +161,12 @@ const buscar_view =
             this.estado_movil('empty', 'Prueba con otro título, autor o tema.');
             return;
         }
+        if (lista.length === 1 && lista[0].formato !== 'Digital' && lista[0].ejemplares > 0 &&
+            lista[0].prestados === lista[0].ejemplares)
+        {
+            this.prestados(lista[0], acciones);
+            return;
+        }
         this.estado_escritorio('Resultados de búsqueda', resumen + ' · ' + lista.length +
             ' resultados activos.', 'search-desktop-results');
         ui.alerta('mensaje');
@@ -244,9 +253,68 @@ const buscar_view =
         en('data-ficha', acciones.ficha);
     },
 
+    prestados: function (libro, acciones)
+    {
+        const campo = (etiqueta, valor) => '<div class="field"><span class="label">' +
+            etiqueta + '</span><div class="readonly">' + ui.esc(valor) + '</div></div>';
+        const fecha = libro.devolucion_cercana ? ui.fecha(libro.devolucion_cercana) :
+            'Sin fecha registrada';
+        this.estado_escritorio('Todos los ejemplares están prestados',
+            libro.id_libro + ' · ' + libro.titulo + '.', 'search-desktop-loaned');
+        ui.alerta('mensaje');
+        document.getElementById('resultados').innerHTML =
+            '<div class="card search-loaned-card"><h2>' + ui.esc(libro.titulo) + '</h2>' +
+            '<div class="grid-2">' +
+            campo('Clave / ISBN', libro.id_libro + ' / ' + libro.isbn) +
+            campo('Autor / Editorial', (libro.autores || '—') + ' / ' + libro.editorial) +
+            campo('Formato / ubicación', libro.formato + ' / ' + (libro.ubicaciones || '—')) +
+            campo('Disponibles / prestados', libro.disponibles_prestamo + ' / ' + libro.prestados) +
+            campo('Devolución más cercana', fecha) +
+            campo('Solicitud de préstamo', 'No disponible') + '</div>' +
+            '<div class="actions search-result-card-actions"><button class="btn" type="button" ' +
+            'disabled>Solicitar préstamo</button></div></div>' +
+            '<div class="actions search-result-actions"><button class="btn btn-primary" ' +
+            'id="btn-modificar-filtros-prestados" type="button">Modificar filtros</button></div>' +
+            '<div class="card search-result-mobile"><h2>' + ui.esc(libro.titulo) +
+            '</h2><p>' + ui.esc(libro.autores || '—') + '</p>' +
+            '<p class="search-result-availability">0 disponibles · ' +
+            ui.esc(libro.prestados) + ' prestados</p>' +
+            '<button class="btn btn-primary" id="btn-ficha-prestados" type="button">Ver ficha</button></div>';
+        document.getElementById('btn-modificar-filtros-prestados').addEventListener('click',
+            acciones.modificar);
+        document.getElementById('btn-ficha-prestados').addEventListener('click', () =>
+            acciones.ficha(libro));
+        document.body.classList.add('search-results-mobile');
+    },
+
+    invalidos: function (filtros, campos, acciones)
+    {
+        const etiquetas = { titulo: 'Título', autor: 'Autor', tema: 'Tema',
+            clave: 'Clave', isbn: 'ISBN', editorial: 'Editorial' };
+        const campo = (id) => '<div class="field' + (campos.includes(id) ?
+            ' field-error' : '') + '"><span class="label">' + etiquetas[id] +
+            '</span><div class="readonly">' + ui.esc(filtros[id] || '') + '</div></div>';
+        this.estado_escritorio('Verifica los filtros marcados',
+            'No se ejecutó la búsqueda. Se conservan los datos.', 'search-desktop-invalid');
+        ui.alerta('mensaje');
+        document.getElementById('resultados').innerHTML =
+            '<div class="alert alert-error search-invalid-alert"><strong>Filtros no válidos</strong>' +
+            '<span>Captura al menos un filtro. Los textos requieren 3 caracteres y el ISBN ' +
+            'solo admite números, X o guiones.</span></div>' +
+            '<div class="card search-invalid-card"><h2>Ejemplo con errores</h2>' +
+            '<div class="grid-2">' + FILTROS_BUSQUEDA.map(campo).join('') + '</div></div>' +
+            '<div class="actions search-result-actions">' +
+            '<button class="btn btn-primary" id="btn-corregir-filtros" ' +
+            'type="button">Corregir filtros</button>' +
+            '<button class="btn" id="btn-limpiar-invalidos" type="button">Limpiar</button></div>';
+        document.getElementById('btn-corregir-filtros').addEventListener('click', acciones.modificar);
+        document.getElementById('btn-limpiar-invalidos').addEventListener('click', acciones.limpiar);
+    },
+
     estado_escritorio: function (titulo, descripcion, clase)
     {
-        document.body.classList.remove('search-desktop-results', 'search-desktop-empty');
+        document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
+            'search-desktop-loaned', 'search-desktop-invalid');
         document.body.classList.add(clase);
         document.getElementById('titulo-busqueda-escritorio').textContent = titulo;
         document.getElementById('descripcion-busqueda-escritorio').textContent = descripcion;

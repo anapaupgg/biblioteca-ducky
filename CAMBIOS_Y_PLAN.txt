@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — PRÉSTAMO AGOTADO Y FILTROS INVÁLIDOS FIGMA (16 DE NOVIEMBRE DE 2026)
+- Continuación sobre 664ed2a, subido y sincronizado 0/0; no apareció un
+  commit remoto nuevo. package-lock.json local previo continúa excluido.
+- Frames 2013:34268 y 2013:34608 consultados antes de editar. Cuando la
+  única ficha física hallada tiene todas sus copias marcadas Prestado, la
+  búsqueda muestra tarjeta de seis campos, préstamo deshabilitado y retorno
+  a filtros. SQL de solo lectura añade el vencimiento activo más cercano.
+  Los filtros inválidos tienen alerta, valores conservados, marcas de error
+  y acciones para corregir o limpiar. No se ejecuta búsqueda inválida.
+- Navegador con PostgreSQL real: «Cálculo de una variable» (L000130) produjo
+  tarjeta (276,176;1132×450) y acción y=642. «In» e ISBN «12@» dieron alerta
+  (276,176;1132×96), tarjeta (276,288;1132×386) y acciones y=690 a
+  1440×960. Corregir devolvió ambos valores al formulario. A 390 px las
+  vistas móviles conservan ancho 390 sin tarjeta de escritorio superpuesta.
+- La copia L000130 consta Prestado pero no tiene préstamo Activo con fecha de
+  vencimiento; la interfaz dice «Sin fecha registrada» en vez de inventar
+  una devolución. Conviene auditar esa inconsistencia de datos antes de
+  editarla. Una clave parcial como «12» permanece válida por el contrato
+  actual de búsqueda, a diferencia del ejemplo de error de Figma.
+- npm test: 57 aprobadas, 10 omitidas, 0 fallos. Se actualizó la prueba de
+  regresión para comprobar el nuevo estado inválido. Sintaxis y diff correctos.
+- No se ejecutó db:init ni se modificaron registros. Ducky en 3002.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RESULTADOS Y BÚSQUEDA VACÍA FIGMA (16 DE NOVIEMBRE DE 2026)
 - Después del commit 0b21a7b se comparó main con origin/main: 0/0 y ningún
   commit remoto nuevo. El package-lock.json modificado previamente sigue

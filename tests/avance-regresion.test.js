@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Casos de error del primer avance. */
 /* Listing Contents: cargar; búsqueda; compra inválida. */
 /* Reuse Instructions: npm test; vistas/modelos simulados sin BD. */
@@ -28,6 +28,7 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
         titulo: 'Bases'
     };
     let errores = 0;
+    let invalidos = 0;
     let estado_movil;
     const controlador = cargar('BuscarController.js', 'buscar_controller',
     {
@@ -40,6 +41,10 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
             },
             mensaje: () =>
             {},
+            invalidos: () =>
+            {
+                invalidos++;
+            },
             estado_movil: (tipo) =>
             {
                 estado_movil = tipo;
@@ -72,6 +77,7 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
     await controlador.buscar();
     assert.equal(resultados.length, 0);
     assert.equal(estado_movil, 'invalid');
+    assert.equal(invalidos, 1);
 });
 test('compras: cantidad fraccionaria y costo infinito no entran al borrador', () =>
 {
