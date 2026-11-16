@@ -1894,6 +1894,102 @@ table.table
     min-width: 140px;
 }
 
+.user-edit-header
+{
+    margin-bottom: 14px;
+}
+
+.user-edit-card
+{
+    padding-bottom: 20px;
+}
+
+.user-edit-page #btn-guardar[hidden],
+.user-edit-page #btn-reactivar[hidden],
+.user-edit-page #formulario-editar[hidden]
+{
+    display: none;
+}
+
+.user-edit-card > h2:first-child
+{
+    margin-bottom: var(--space-16);
+}
+
+.user-edit-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.user-edit-actions
+{
+    margin-top: 0;
+}
+
+.user-edit-actions .btn
+{
+    min-height: 48px;
+}
+
+.user-edit-actions .btn:first-child
+{
+    min-width: 228px;
+}
+
+.user-edit-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+}
+
+.user-edit-operation
+{
+    min-height: 154px;
+}
+
+.user-edit-operation p
+{
+    margin-bottom: 0;
+}
+
+.user-edit-matches
+{
+    margin-top: 0;
+}
+
+.user-edit-match
+{
+    display: block;
+    width: 100%;
+    padding: var(--space-12) var(--space-16);
+    text-align: left;
+    border: 1px solid var(--color-line);
+    background: var(--color-white);
+    color: var(--color-ink);
+    border-radius: var(--radius-8);
+    margin-top: var(--space-4);
+    cursor: pointer;
+}
+
+@media (max-width: 600px)
+{
+    .user-edit-card .grid-2
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .user-edit-actions
+    {
+        flex-direction: column;
+    }
+
+    .user-edit-actions .btn
+    {
+        width: 100%;
+    }
+}
+
 @media (max-width: 600px)
 {
     .user-baja-card .grid-2

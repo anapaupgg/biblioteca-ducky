@@ -2,6 +2,21 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Modificar perfil de usuario: cotejo del 16 de noviembre de 2026
+
+- Frame `2008:15182`: tarjeta de ocho campos y acciones cotejadas en navegador
+  a 1440 × 960 con datos reales de `800456` y `100002`. Tarjeta (276, 176;
+  1132 × 490), acciones y=682. «a» produjo varias coincidencias; la selección
+  abrió el perfil de `100002`. El cambio a Lector mostró la confirmación que
+  avisa del cierre de sesión y se canceló sin modificar la base.
+- Frames `2008:15538` y `2008:15863`: guiaron los resultados de actualización
+  normal y con sesión cerrada. Falta cotejo visual con una operación real
+  confirmada. La app no afirma envío de correo ni fecha/hora de bitácora porque
+  esos datos no llegan en la respuesta de la API. La fuente institucional no
+  proporciona teléfono, así que aparece «No registrado».
+- A 390 px no hubo desbordamiento horizontal; no se reclama paridad móvil
+  porque este flujo no tiene frame móvil específico en el prototipo.
+
 ## Baja de usuario: cotejo del 16 de noviembre de 2026
 
 - Frames `2008:10356`, `2008:10701` y `2008:11028`: formulario completo,

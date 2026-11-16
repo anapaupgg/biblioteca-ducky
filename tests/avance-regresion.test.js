@@ -254,3 +254,48 @@ test('usuarios: la prevalidación bloqueada o cancelada no ejecuta la baja', asy
     assert.equal(escrituras, 1);
     assert.equal(exitos, 1);
 });
+
+test('usuarios: cambio que retira funciones solo se guarda tras confirmar', async () =>
+{
+    let confirmar = false;
+    let escrituras = 0;
+    let exitos = 0;
+    const controlador = cargar('UsuarioEditarController.js', 'usuario_editar_controller',
+    {
+        usuario_model:
+        {
+            cambiar_perfil: async () =>
+            {
+                escrituras++;
+                return { usuario: { clave: '100002', nombre: 'Pamela', perfil: 'Lector' } };
+            }
+        },
+        usuario_editar_view:
+        {
+            perfil_elegido: () => 4,
+            mensaje: () =>
+            {},
+            exito: (datos) =>
+            {
+                exitos++;
+                assert.equal(datos.perfil_anterior, 'Administrador de biblioteca');
+                assert.equal(datos.retira, true);
+            }
+        },
+        ui:
+        {
+            dialogo: async () => confirmar
+        }
+    });
+    controlador.usuario = { clave: '100002', nombre: 'Pamela', estatus: 'Activo',
+        id_perfil: 2, perfil: 'Administrador de biblioteca',
+        funciones: ['Gestionar usuarios'] };
+    controlador.perfiles = [{ id: 4, nombre: 'Lector', asignable: true, funciones: [] }];
+    controlador.administrador = { clave: '100001' };
+    await controlador.guardar();
+    assert.equal(escrituras, 0);
+    confirmar = true;
+    await controlador.guardar();
+    assert.equal(escrituras, 1);
+    assert.equal(exitos, 1);
+});

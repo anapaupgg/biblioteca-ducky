@@ -2,8 +2,8 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-10-20                                               */
-/* Description: Modificar usuario.                                */
+/* Date: 2026-11-16                                               */
+/* Description: Modificar perfil de usuario.                      */
 /******************************************************************/
 -->
 <!DOCTYPE html>
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="css/styles.css">
     </head>
 
-    <body>
+    <body class="user-edit-page">
 
         <div class="app">
             <!-- Sidebar and topbar are drawn by Layout according to the profile -->
@@ -24,22 +24,37 @@
             <main class="main">
                 <header id="topbar" class="topbar"></header>
                 <div id="contenido">
-                    <div class="page-header">
+                    <div class="page-header user-edit-header">
                         <div>
-                            <h1>Modificar perfil del usuario</h1>
-                            <p>Busca por Clave. Los datos institucionales son de solo lectura.</p>
+                            <h1 id="titulo-pagina">Modificar perfil del usuario</h1>
+                            <p id="descripcion-pagina">Busca por Clave o Nombre. Los datos institucionales son de solo lectura.</p>
                         </div>
-
                     </div>
                     <div id="mensaje"></div>
-                    <div class="card">
-                        <div class="filters" style="margin:0">
-                            <div class="field"><label for="buscar-clave">Buscar por Clave</label><input
-                                    id="buscar-clave" maxlength="6" placeholder="Ej. 621234"></div>
-                            <button class="btn" id="btn-buscar" type="button">Consultar</button>
+                    <div id="formulario-editar">
+                        <div class="card user-edit-card">
+                            <h2 id="usuario-titulo">Selecciona un usuario</h2>
+                            <div class="grid-2">
+                                <div class="field"><label for="buscar-clave">Buscar por Clave o Nombre</label>
+                                    <input id="buscar-clave" type="search" autocomplete="off" placeholder="Clave o nombre"></div>
+                                <div class="field"><span class="label">Perfil asignado</span><div class="readonly" id="dato-perfil"></div></div>
+                                <div class="field"><span class="label">Clave</span><div class="readonly" id="dato-clave"></div></div>
+                                <div class="field"><span class="label">Nombre</span><div class="readonly" id="dato-nombre"></div></div>
+                                <div class="field"><span class="label">Tipo de usuario</span><div class="readonly" id="dato-tipo"></div></div>
+                                <div class="field"><span class="label">Correo institucional</span><div class="readonly" id="dato-correo"></div></div>
+                                <div class="field"><span class="label">Teléfono institucional</span><div class="readonly" id="dato-telefono">No registrado</div></div>
+                                <div class="field"><label for="nuevo-perfil">Nuevo perfil</label><select id="nuevo-perfil" disabled>
+                                    <option value="">Elige un perfil</option></select></div>
+                            </div>
+                        </div>
+                        <div id="coincidencias-editar"></div>
+                        <div class="actions user-edit-actions">
+                            <button class="btn btn-primary" id="btn-guardar" type="button" disabled>Guardar cambio de perfil</button>
+                            <button class="btn btn-primary" id="btn-reactivar" type="button" hidden>Reactivar usuario</button>
+                            <a class="btn" href="usuarios.html">Cancelar</a>
                         </div>
                     </div>
-                    <div id="detalle"></div>
+                    <div id="resultado-editar"></div>
                 </div>
             </main>
         </div>

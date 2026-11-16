@@ -1,85 +1,101 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
-/* Description: Controlador cliente: coordina modelo, vista y validaciones. */
+/* Date: 2026-11-16 */
+/* Description: Controlador cliente del cambio de perfil de usuario. */
 /******************************************************************/
 
 /******************************************************************/
 /* Listing Contents: */
 /*   usuario_editar_controller.iniciar() */
-/*   usuario_editar_controller.consultar() */
+/*   usuario_editar_controller.consultar(clave_explicita) */
 /*   usuario_editar_controller.guardar() */
 /*   usuario_editar_controller.reactivar() */
-/*   usuario_editar_controller.consultar_silencioso() */
 /******************************************************************/
 
 /******************************************************************/
 /* Reuse Instructions */
-/* Cargar después de modelos y vista; iniciar() una vez por página. */
-/* Los callbacks reciben datos de la vista; errores se presentan por ella. */
-/* La autorización definitiva se verifica en el servidor. */
+/* Cargar después de UsuarioModel y UsuarioEditarView; iniciar una vez. */
+/* El servidor valida el perfil, la jerarquía y las sesiones al guardar. */
 /******************************************************************/
 
 const usuario_editar_controller =
 {
     perfiles: [],
     usuario: null,
+    administrador: null,
+    version_consulta: 0,
+    guardando: false,
 
     iniciar: async function ()
     {
-        const usuario = await layout.montar(
+        const administrador = await layout.montar(
         {
             activo: 'usuarios',
-            migas: 'Gestión de usuarios / Modificar',
+            migas: 'Gestión de usuarios',
             funciones: ['Gestionar usuarios']
         });
-        if (!usuario) return;
-
+        if (!administrador) return;
+        this.administrador = administrador;
         usuario_editar_view.enlazar(
         {
-            consultar: (...argumentos) => this.consultar(...argumentos)
+            consultar: (clave) => this.consultar(clave),
+            guardar: () => this.guardar(),
+            reactivar: () => this.reactivar()
         });
-
         try
         {
             this.perfiles = (await usuario_model.catalogos()).perfiles;
         }
         catch (error)
         {
-            usuario_editar_view.mensaje('error', error.message);
+            usuario_editar_view.mensaje('error', 'No se cargaron los perfiles', error.message);
         }
-
         const clave = ui.param('clave');
         if (clave)
         {
             usuario_editar_view.poner_clave(clave);
-            this.consultar();
+            this.consultar(clave);
         }
     },
 
-    consultar: async function ()
+    consultar: async function (clave_explicita)
     {
-        const clave = usuario_editar_view.clave();
+        const version = ++this.version_consulta;
+        const termino = String(clave_explicita || usuario_editar_view.clave()).trim();
         usuario_editar_view.mensaje();
-        if (!/^[A-Za-z0-9]{6}$/.test(clave))
+        if (!termino)
         {
+            this.usuario = null;
             usuario_editar_view.vacio();
-            return usuario_editar_view.mensaje('error', 'Verifica la Clave capturada',
-                'La matrícula o nómina tiene 6 caracteres.');
+            usuario_editar_view.mensaje('error', 'Escribe una Clave o Nombre');
+            return;
         }
         try
         {
-            this.usuario = await usuario_model.detalle(clave);
-            usuario_editar_view.detalle(this.usuario, this.perfiles);
-            usuario_editar_view.enlazar_detalle(
+            let clave = clave_explicita || '';
+            if (!clave)
             {
-                guardar: () => this.guardar(),
-                reactivar: () => this.reactivar()
-            });
+                const usuarios = await usuario_model.listar({ q: termino });
+                if (version !== this.version_consulta) return;
+                if (usuarios.length === 0) throw new Error('Usuario no encontrado');
+                if (usuarios.length > 1)
+                {
+                    this.usuario = null;
+                    usuario_editar_view.coincidencias(usuarios);
+                    return;
+                }
+                clave = usuarios[0].clave;
+            }
+            const usuario = await usuario_model.detalle(clave);
+            if (version !== this.version_consulta) return;
+            this.usuario = usuario;
+            usuario_editar_view.detalle(usuario, this.perfiles);
         }
         catch (error)
         {
+            if (version !== this.version_consulta) return;
+            this.usuario = null;
             usuario_editar_view.vacio();
             usuario_editar_view.mensaje('error', error.message);
         }
@@ -87,47 +103,61 @@ const usuario_editar_controller =
 
     guardar: async function ()
     {
+        if (this.guardando || !this.usuario) return;
         const id_perfil = usuario_editar_view.perfil_elegido();
-        const destino = this.perfiles.find((elemento) => elemento.id === id_perfil);
-        const retira = destino && (this.usuario.funciones || []).some((filtro) => !destino.funciones
-            .includes(filtro));
-        if (retira)
+        const destino = this.perfiles.find((perfil) => perfil.id === id_perfil);
+        if (!destino || !destino.asignable || id_perfil === this.usuario.id_perfil)
         {
-            const ok = await ui.dialogo(
-            {
-                titulo: 'El cambio retirará funciones',
-                texto: 'El nuevo perfil quita funciones a ' + this.usuario.nombre +
-                    '. Si tiene una sesión activa, se cerrará.',
-                confirmar: 'Continuar'
-            });
-            if (!ok) return;
+            usuario_editar_view.mensaje('error', 'Elige un perfil nuevo disponible');
+            return;
         }
+        const anterior = this.usuario.perfil;
+        const retira = (this.usuario.funciones || []).some((funcion) =>
+            !destino.funciones.includes(funcion));
+        this.guardando = true;
         try
         {
+            if (retira)
+            {
+                const ok = await ui.dialogo(
+                {
+                    titulo: 'El cambio retirará funciones',
+                    texto: 'El nuevo perfil quita funciones a ' + this.usuario.nombre +
+                        '. Si tiene una sesión activa, se cerrará.',
+                    confirmar: 'Continuar'
+                });
+                if (!ok) return;
+            }
             const resultado = await usuario_model.cambiar_perfil(this.usuario.clave, id_perfil);
-            usuario_editar_view.mensaje('ok', resultado.mensaje, resultado.usuario.nombre +
-                ' ahora tiene el perfil ' + resultado.usuario.perfil + '.');
-            this.consultar_silencioso();
+            usuario_editar_view.mensaje();
+            usuario_editar_view.exito({ usuario: resultado.usuario, perfil_anterior: anterior,
+                administrador: this.administrador, retira });
         }
         catch (error)
         {
             usuario_editar_view.mensaje('error', error.message);
         }
+        finally
+        {
+            this.guardando = false;
+        }
     },
 
     reactivar: async function ()
     {
+        if (!this.usuario || this.usuario.estatus === 'Activo') return;
         try
         {
-            const resultado_2 = await usuario_model.reactivar(this.usuario.clave, usuario_editar_view
-                .perfil_elegido());
-            usuario_editar_view.mensaje('ok', resultado_2.mensaje, resultado_2.usuario.nombre +
-                ' vuelve a estar Activo.');
-            await this.consultar_silencioso();
+            const clave = this.usuario.clave;
+            const resultado = await usuario_model.reactivar(clave,
+                usuario_editar_view.perfil_elegido() || this.usuario.id_perfil);
+            await this.consultar(clave);
+            usuario_editar_view.mensaje('ok', resultado.mensaje,
+                resultado.usuario.nombre + ' vuelve a estar Activo.');
             await ui.dialogo(
             {
                 titulo: 'Nueva contraseña temporal',
-                texto: 'Contraseña temporal: ' + resultado_2.contrasena_temporal +
+                texto: 'Contraseña temporal: ' + resultado.contrasena_temporal +
                     '. Entrégala al usuario por un medio privado. Deberá cambiarla al iniciar sesión. El envío por correo aún no está configurado.',
                 confirmar: 'Entendido',
                 cancelar: false
@@ -137,13 +167,5 @@ const usuario_editar_controller =
         {
             usuario_editar_view.mensaje('error', error.message);
         }
-    },
-
-    /* Reload the user keeping the success message on screen */
-    consultar_silencioso: async function ()
-    {
-        const mensaje = usuario_editar_view.conservar_mensaje();
-        await this.consultar();
-        usuario_editar_view.restaurar_mensaje(mensaje);
     }
 };

@@ -1,3 +1,34 @@
+ACTUALIZACIÓN — MODIFICAR PERFIL DE USUARIO SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
+- Prioridad acordada para el siguiente bloque: cotejar y ajustar las páginas
+  principales de cada sección y sus acciones visibles. Los escenarios de
+  alerta y errores muy específicos quedan después de esa cobertura.
+- Continuación después de b7d7c33, subido y sincronizado 0/0. No hubo
+  commits ajenos nuevos en la comprobación inicial; package-lock.json previo
+  permanece fuera del trabajo.
+- Frames 2008:15182, 2008:15538 y 2008:15863 consultados. La edición ahora
+  usa la tarjeta de ocho campos: búsqueda por Clave o Nombre, perfil asignado,
+  Clave, Nombre, Tipo, Correo, Teléfono y nuevo perfil. La búsqueda por nombre
+  usa el filtro real de la API y permite escoger entre varias coincidencias.
+  El teléfono figura «No registrado» porque la fuente institucional local no
+  tiene ese dato. Los perfiles incompatibles con Alumno/Profesor se excluyen
+  en la vista; el servidor conserva la validación definitiva.
+- El éxito muestra perfil anterior y nuevo, operador y estado de la sesión.
+  Si el cambio retira funciones, aparece una confirmación reversible y el
+  POST cierra la sesión activa del afectado. No se afirma un aviso por correo
+  ni fecha/hora de bitácora que la API no devuelve.
+- En navegador con PostgreSQL real, la tarjeta quedó (276,176;1132×490) y
+  las acciones y=682 a 1440×960. Se buscó «a», se eligió a 100002 y se
+  canceló el cambio a Lector en la confirmación. A 390 px el documento y la
+  tarjeta no desbordaron. No se guardó ningún cambio de perfil real.
+- npm test: 61 aprobadas, 10 omitidas, 0 fallos; incluye cancelación antes
+  del POST. Sintaxis y diff sin errores. No se ejecutó db:init.
+- Pendiente: cotejar visualmente el resultado de un cambio confirmado con
+  datos reales y los estados de error de edición; no se modificó un usuario
+  solo para tomar una captura. Sigue sin existir una fuente institucional de
+  teléfonos ni envío automático del aviso.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BAJA DE USUARIOS SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
 - Al iniciar: git fetch origin y comparación con upstream; main estaba 0/0,
   sin commits remotos nuevos. El package-lock.json ya modificado sigue ajeno
