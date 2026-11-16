@@ -20,6 +20,7 @@
 /*   buscar_view.resultados(lista, filtros, acciones) */
 /*   buscar_view.prestados(libro, acciones) */
 /*   buscar_view.invalidos(filtros, campos, acciones) */
+/*   buscar_view.retirado(ficha) */
 /*   buscar_view.estado_escritorio(titulo, descripcion, clase) */
 /*   buscar_view.ficha(filtro) */
 /*   buscar_view.solicitud(resultado) */
@@ -49,7 +50,7 @@ const buscar_view =
     {
         document.getElementById('resultados').innerHTML = '';
         document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
-            'search-desktop-loaned', 'search-desktop-invalid');
+            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired');
         document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar libros';
         document.getElementById('descripcion-busqueda-escritorio').textContent =
             'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
@@ -311,10 +312,29 @@ const buscar_view =
         document.getElementById('btn-limpiar-invalidos').addEventListener('click', acciones.limpiar);
     },
 
+    retirado: function (ficha)
+    {
+        const libro = ficha.libro;
+        const motivo = libro.motivo_baja ? ' por ' + libro.motivo_baja : '';
+        this.estado_escritorio('Búsqueda en catálogo activo',
+            'Título: ' + libro.titulo + ' · 0 resultados.', 'search-desktop-retired');
+        ui.alerta('mensaje');
+        document.getElementById('resultados').innerHTML =
+            '<div class="actions search-result-toolbar"><a class="btn" href="libro_detalle.html?id=' +
+            encodeURIComponent(libro.id_libro) + '">Ver ficha bibliográfica</a></div>' +
+            '<div class="alert search-retired-alert"><strong>Libro excluido del catálogo activo</strong>' +
+            '<span>' + ui.esc(libro.id_libro + ' fue dado de baja' + motivo +
+                '. No aparece en resultados y no puede solicitarse para préstamo.') +
+            '</span></div>' +
+            '<div class="actions search-result-actions"><a class="btn btn-primary" ' +
+            'href="buscar.html">Nueva búsqueda</a><a class="btn" href="libros.html">' +
+            'Volver al catálogo</a></div>';
+    },
+
     estado_escritorio: function (titulo, descripcion, clase)
     {
         document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
-            'search-desktop-loaned', 'search-desktop-invalid');
+            'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired');
         document.body.classList.add(clase);
         document.getElementById('titulo-busqueda-escritorio').textContent = titulo;
         document.getElementById('descripcion-busqueda-escritorio').textContent = descripcion;

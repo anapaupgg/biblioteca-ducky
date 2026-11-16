@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -125,7 +125,9 @@ const libro_detalle_view =
                 ' · Motivo: ' + ui.esc(libro.motivo_baja) +
                 (libro.descripcion_baja ? ' · ' + ui.esc(libro.descripcion_baja) : '') +
                 '</p>' : '') + '</div>' +
-            '<div class="actions"><a class="btn" href="libros.html">Volver</a>' +
+            '<div class="actions"><a class="btn" href="buscar.html?retirado=' +
+            encodeURIComponent(libro.id_libro) + '">Comprobar exclusión en búsqueda</a>' +
+            '<a class="btn" href="libros.html">Volver</a>' +
             '<a class="btn" href="inicio.html">Ir al inicio</a></div>';
     },
 

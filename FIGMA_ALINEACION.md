@@ -2,6 +2,11 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Comprobación posterior a baja del 16 de noviembre de 2026
+
+- Frame `2013:34951`: el libro real `L000134` retirado se comprobó mediante el detalle administrativo y una búsqueda activa de cero resultados. La barra «Ver ficha bibliográfica» quedó en `(276,176;1132×48)`, el aviso en `(276,240;1132×96)` y las acciones en y=352 a 1440 × 960, como el frame. `L000129` activo no produjo el estado de exclusión. Se recorrió el enlace desde el comprobante de baja de `L000134` hasta esta vista; no se dio de baja ningún libro durante el cotejo.
+- La baja anterior de `L000134` no tiene motivo guardado, así que el aviso omite «por Dañado» del ejemplo. Claves y título provienen de PostgreSQL. El detalle administrativo requiere `Gestionar libros`; un parámetro de URL por sí solo no muestra la afirmación de baja. A 390 px la vista no desborda, sin reclamar paridad móvil porque no hay un frame móvil de este estado.
+
 ## Cotejo de estados de búsqueda del 16 de noviembre de 2026
 
 - Frame `2013:34268`: con la ficha real `L000130`, cuya única copia figura Prestado, la tarjeta quedó en `(276,176;1132×450)` y «Modificar filtros» en y=642 a 1440 × 960. Los seis campos y el botón deshabilitado siguen el frame. Se añadió una consulta de solo lectura para la devolución activa más cercana. En la BD actual esa copia no tiene un préstamo Activo con vencimiento, así que se muestra «Sin fecha registrada»; es una inconsistencia pendiente de auditar, no una fecha estimada. A 390 px se conserva solo la tarjeta móvil, sin desbordamiento horizontal.

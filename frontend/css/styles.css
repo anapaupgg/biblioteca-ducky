@@ -1620,7 +1620,10 @@ table.table
     .search-desktop-loaned #mensaje,
     .search-desktop-invalid .search-desktop-links,
     .search-desktop-invalid #form-buscar,
-    .search-desktop-invalid #mensaje
+    .search-desktop-invalid #mensaje,
+    .search-desktop-retired .search-desktop-links,
+    .search-desktop-retired #form-buscar,
+    .search-desktop-retired #mensaje
     {
         display: none;
     }
@@ -1677,6 +1680,13 @@ table.table
 {
     min-height: 96px;
     margin: 0 0 var(--space-16);
+}
+
+.search-retired-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+    color: var(--color-navy);
 }
 
 .search-invalid-card .field-error .readonly
@@ -2212,6 +2222,29 @@ table.table
     .search-mobile-preview.search-detail-mobile .search-mobile-detail
     {
         display: grid;
+    }
+}
+
+@media (max-width: 600px)
+{
+    .search-desktop-retired .search-mobile-heading,
+    .search-desktop-retired #form-buscar,
+    .search-desktop-retired #mensaje,
+    .search-desktop-retired .search-desktop-links
+    {
+        display: none;
+    }
+
+    .search-desktop-retired .search-desktop-heading,
+    .search-desktop-retired .search-result-toolbar,
+    .search-desktop-retired .search-result-actions
+    {
+        display: flex;
+    }
+
+    .search-desktop-retired .search-result-actions
+    {
+        flex-direction: column;
     }
 }
 

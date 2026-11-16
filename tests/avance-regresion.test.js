@@ -79,6 +79,37 @@ test('búsqueda: error y filtros vacíos retiran resultados anteriores', async (
     assert.equal(estado_movil, 'invalid');
     assert.equal(invalidos, 1);
 });
+test('búsqueda: solo confirma exclusión si la ficha está retirada y ya no aparece activa', async () =>
+{
+    let estado = 'Retirado';
+    let activos = [];
+    let mostrado = 0;
+    const controlador = cargar('BuscarController.js', 'buscar_controller',
+    {
+        libro_model:
+        {
+            detalle: async () => ({ libro: { estatus: estado } })
+        },
+        busqueda_model:
+        {
+            buscar: async () => activos
+        },
+        buscar_view:
+        {
+            retirado: () =>
+            {
+                mostrado++;
+            }
+        }
+    });
+    assert.equal(await controlador.comprobar_retirado('L000134'), true);
+    estado = 'Activo en catálogo';
+    assert.equal(await controlador.comprobar_retirado('L000129'), false);
+    estado = 'Retirado';
+    activos = [{ id_libro: 'L000134' }];
+    assert.equal(await controlador.comprobar_retirado('L000134'), false);
+    assert.equal(mostrado, 1);
+});
 test('compras: cantidad fraccionaria y costo infinito no entran al borrador', () =>
 {
     let linea = {

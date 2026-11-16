@@ -9,6 +9,7 @@
 /* Listing Contents: */
 /*   buscar_controller.iniciar() */
 /*   buscar_controller.buscar() */
+/*   buscar_controller.comprobar_retirado(id) */
 /*   buscar_controller.limpiar() */
 /*   buscar_controller.modificar() */
 /*   buscar_controller.ejemplo(campo, valor) */
@@ -58,6 +59,19 @@ const buscar_controller =
 
         if (ui.param('vista') === 'movil') buscar_view.activar_movil();
 
+        const retirado = ui.param('retirado');
+        if (retirado)
+        {
+            try
+            {
+                if (await this.comprobar_retirado(retirado)) return;
+            }
+            catch (error)
+            {
+                ui.mostrar_error(error, 'mensaje');
+            }
+        }
+
         const consulta = ui.param('q');
         if (consulta)
         {
@@ -65,6 +79,16 @@ const buscar_controller =
             this.buscar();
         }
         else buscar_view.enfocar();
+    },
+
+    comprobar_retirado: async function (id)
+    {
+        const ficha = await libro_model.detalle(id);
+        if (ficha.libro.estatus !== 'Retirado') return false;
+        const activos = await busqueda_model.buscar({ clave: id });
+        if (activos.length !== 0) return false;
+        buscar_view.retirado(ficha);
+        return true;
     },
 
     limpiar: function ()

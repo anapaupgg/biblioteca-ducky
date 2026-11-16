@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — COMPROBACIÓN DE BAJA EN BÚSQUEDA FIGMA (16 DE NOVIEMBRE DE 2026)
+- Continuación sobre 9d0df09, subido y sincronizado 0/0. Sin commits remotos
+  ajenos en esta solicitud; package-lock.json local anterior excluido.
+- Frame 2013:34951 cotejado. El comprobante de baja ofrece comprobar la
+  exclusión. La búsqueda muestra el aviso únicamente tras dos lecturas con
+  permisos: ficha con estatus Retirado y cero resultados en catálogo activo.
+  No se confía en el parámetro de URL para afirmar una baja. La ficha
+  bibliográfica abre el detalle administrativo y las acciones permiten una
+  nueva búsqueda o regresar al catálogo.
+- Con PostgreSQL real, L000134 (Prueba2) retirado produjo barra de ficha
+  (276,176;1132×48), aviso (276,240;1132×96) y acciones y=352 a
+  1440×960. L000129 activo no mostró la exclusión. Se recorrió desde el
+  comprobante de baja de L000134 hasta el aviso de búsqueda. A 390 px el
+  aviso no desbordó; el diseño móvil no tiene frame correspondiente.
+- L000134 es una baja anterior sin motivo registrado; el aviso no inventa
+  motivo. No se ejecutó una baja nueva ni se escribió en la BD. El acceso
+  al detalle sigue protegido por Gestionar libros.
+- npm test: 58 aprobadas, 10 omitidas, 0 fallos; incluye el control de que
+  una ficha activa o un resultado activo no se presenten como baja.
+- Pendiente: comprobar desde una baja recién confirmada cuando exista una
+  operación de prueba autorizada; no se mutó un libro para la captura.
+  No se ejecutó db:init.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PRÉSTAMO AGOTADO Y FILTROS INVÁLIDOS FIGMA (16 DE NOVIEMBRE DE 2026)
 - Continuación sobre 664ed2a, subido y sincronizado 0/0; no apareció un
   commit remoto nuevo. package-lock.json local previo continúa excluido.
