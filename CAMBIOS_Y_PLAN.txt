@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — PORTADA ADMINISTRATIVA SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
+- Continuación del mismo cotejo, tras subir 3de339e. No llegaron commits
+  remotos nuevos al inicio de esta solicitud; package-lock.json local sigue
+  sin incluirse.
+- Frame 2006:1313: se comparó la portada real del administrador del sistema
+  con Figma. A 1440×960, nombre y=176, barra de compras (276,216;1132×80),
+  primera tarjeta (276,312;1132×102), botones de servicios x=1123/140×48.
+  Se ajustaron tamaño y alineación de iconos/textos/botones y la descripción
+  de Gestionar libros. El nombre mostrado sigue el usuario real de la sesión.
+- El estilo se limita a perfiles administrativos; la portada de Lector
+  conserva sus reglas propias. A 390 px la página no desborda y los botones
+  administrativos usan el ancho de sus tarjetas. No se alteraron permisos,
+  rutas ni datos. npm test: 61 aprobadas, 10 omitidas, 0 fallos. No se ejecutó
+  db:init. Pendiente: cotejar portadas de otros perfiles y estados
+  secundarios del prototipo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — FORMULARIOS PRINCIPALES DE LIBROS (16 DE NOVIEMBRE DE 2026)
 - git fetch origin confirmó main sincronizada 0/0 con 876e99b; no llegaron
   commits remotos nuevos. El cambio previo de package-lock.json sigue ajeno

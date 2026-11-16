@@ -2,6 +2,19 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Portada administrativa: cotejo del 16 de noviembre de 2026
+
+- Frame `2006:1313`: a 1440 × 960, nombre en y=176, barra de compras
+  `(276,216;1132×80)` y primera tarjeta de servicios
+  `(276,312;1132×102)`. Las tarjetas mantienen 16 px entre ellas; iconos de
+  24 px, textos desde x=348 y botones de 140 × 48 px en x=1123.
+- Los siete accesos aparecen en el orden del frame para el administrador del
+  sistema; la descripción de «Gestionar libros» se ajustó al texto del
+  prototipo. El nombre proviene de la sesión real (`Diego Ramírez`) en lugar
+  del ejemplo (`Alejandro Elias`). Los permisos siguen filtrando las tarjetas
+  para otros perfiles. A 390 px no hay desbordamiento y los botones caben en
+  las tarjetas. No se declara paridad de todas las portadas por perfil.
+
 ## Alta y edición principales de libros: cotejo del 16 de noviembre de 2026
 
 - Frames `2010:23633` y `2010:25664`: a 1440 × 960, el alta quedó con
@@ -177,7 +190,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | Sección de Figma | Estado antes de esta revisión | Diferencia comprobada |
 | --- | --- | --- |
 | 00 Acceso y sesión (`2006:941`) | Parcial | Acceso y selector de perfil cotejados en escritorio. Faltan estados alternos y contraste con un frame móvil específico. |
-| 01 Administrador del sistema (`2006:1313`) | Parcial | El shell usa los tokens correctos, pero el contenido estaba a 48 px en vez de 32 px del frame estándar. Orden y textos de servicios difieren. |
+| 01 Administrador del sistema (`2006:1313`) | Parcial | Portada principal cotejada a 1440 × 960: barra de compras, siete tarjetas, iconos y botones siguen las coordenadas del frame. Nombre y permisos son datos reales; quedan estados y otros perfiles por revisar. |
 | 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
 | 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
 | 04 Lector (`2044:48055`, `2046:48434`, `2046:48455`, `2046:48477`) | Parcial | Inicio, listado, PDF e impresión cotejados en escritorio; listado y recorrido también a 390 px. Los libros y la impresora simulados en Figma difieren de los datos y el diálogo reales. |

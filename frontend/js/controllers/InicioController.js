@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
@@ -46,7 +46,7 @@ const SERVICIOS = [
 {
     id: 'libros',
     titulo: 'Gestionar libros',
-    texto: 'Recepción, fichas, catálogo y listados.',
+    texto: 'Fichas, catálogo, solicitudes y listados.',
     url: 'libros.html',
     icono: 'book',
     funciones: ['Gestionar libros']

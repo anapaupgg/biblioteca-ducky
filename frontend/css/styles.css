@@ -623,6 +623,83 @@ a
     min-width: 140px;
 }
 
+.home-admin .page-header h1
+{
+    height: 36px;
+}
+
+.home-admin .page-user
+{
+    font: var(--text-heading);
+    height: 24px;
+    margin: 0 0 var(--space-16);
+}
+
+.home-admin .service:not(.service-pedidos)
+{
+    align-items: flex-start;
+    gap: var(--space-24);
+}
+
+.home-admin .service:not(.service-pedidos) svg
+{
+    width: 24px;
+    height: 24px;
+    margin-top: 0;
+}
+
+.home-admin .service:not(.service-pedidos) .service-text
+{
+    flex: 0 1 750px;
+    min-width: 0;
+}
+
+.home-admin .service:not(.service-pedidos) .btn
+{
+    width: 140px;
+    min-height: 48px;
+    flex-shrink: 0;
+}
+
+.home-admin .service-pedidos
+{
+    min-height: 80px;
+    border: 0;
+    padding: var(--space-16);
+}
+
+.home-admin .service-pedidos .service-text
+{
+    flex: 0 1 740px;
+}
+
+.home-admin .service-pedidos .btn
+{
+    width: 172px;
+    min-height: 48px;
+}
+
+@media (max-width: 900px)
+{
+    .home-admin .service:not(.service-pedidos),
+    .home-admin .service-pedidos
+    {
+        flex-wrap: wrap;
+    }
+
+    .home-admin .service:not(.service-pedidos) .service-text,
+    .home-admin .service-pedidos .service-text
+    {
+        flex: 1 1 220px;
+    }
+
+    .home-admin .service:not(.service-pedidos) .btn,
+    .home-admin .service-pedidos .btn
+    {
+        width: 100%;
+    }
+}
+
 /* Portada del lector: medidas del frame 2044:48055 (1440 × 960). */
 .home-reader #servicios
 {
