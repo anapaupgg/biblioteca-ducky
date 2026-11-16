@@ -2,6 +2,25 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Asistente principal: cotejo del 16 de noviembre de 2026
+
+- Frames `2483:74914` y `2483:76334`: se compararon la conversación inicial
+  y la respuesta de búsqueda con Figma y el navegador a 1440 × 960. La tarjeta
+  inicial quedó en `(276,136;1132×212)`, la pregunta en
+  `(276,364;1132×88)`, las sugerencias en `(276,468;1132×172)` y el regreso
+  comienza en y=656 con 48 px de altura. El texto de la burbuja usa cuerpo de
+  16/24 px como el prototipo.
+- «¿Cómo encuentro un libro?» mostró la respuesta y el enlace a Buscar libros.
+  «¿Qué libros hay?» consultó el catálogo real, mostró cinco libros con clave,
+  formato, disponibilidad y ubicación, y ahora deja visible el mismo enlace.
+  Los títulos y existencias provienen de PostgreSQL, no de la maqueta.
+  A 390 px el documento no desbordó horizontalmente.
+- Este cotejo cierra la comparación de estructura de las 11 pantallas
+  principales existentes. No acredita identidad pixel a pixel de todas ellas
+  ni los estados secundarios. Siguen pendientes las diferencias de datos y
+  flujos externos registradas abajo; se priorizan después de la cobertura
+  principal acordada.
+
 ## Solicitud principal de compras: cotejo del 16 de noviembre de 2026
 
 - Frame `2011:28537`: con un libro añadido al borrador local, la fila de
@@ -149,7 +168,7 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | 07 App móvil (`2258:48812`) | Parcial | Los diez estados tienen interfaz y navegación a 390 px. Ubicación usa zonas reales y el lector requiere un PDF/URL válido; no hay paridad de contenido ilustrativo. |
 | 08 Préstamo (`2447:106950`) | Parcial | Registro, renovación, espera, impresión y envío por correo con PDF funcionan. WhatsApp requiere adjuntar y enviar manualmente; faltan estados secundarios. |
 | 09 Devolución (`2465:98968`, `2465:100993`, `2465:101339`, `2465:101690`, `2465:102038`, `2483:82757`) | Parcial | Cuatro comprobantes y el aviso de multa cotejados; la copia dañada queda en revisión. Los correos de espera y el envío/acuse de Tesorería siguen pendientes de integración externa. |
-| 10 Asistente (`2483:74914`) | Parcial | Se cotejaron ocho preguntas generales y diez estados móviles. La respuesta de búsqueda enlaza Buscar libros; falta cotejar visualmente la entrega de resultados del catálogo y estados secundarios. |
+| 10 Asistente (`2483:74914`) | Parcial | Estructura principal y respuesta de búsqueda cotejadas en escritorio; ocho preguntas y diez estados móviles ya revisados. La consulta real de catálogo enlaza Buscar libros; faltan sus detalles visuales y otros estados secundarios. |
 
 La referencia visual mantiene Manrope, colores `#142B45`, `#F5F7FA`, `#DCE3EC`, sidebar de 244 px y contenido con margen de 32 px a 1440 × 960. Los logos locales Ducky y FlowBit coinciden visualmente con las imágenes originales del diseño. Los perfiles y permisos reales siguen validándose en el servidor aunque algunos fotogramas ilustrativos del Figma muestren navegación no autorizada.
 

@@ -3168,6 +3168,16 @@ table.table
     max-width: none;
 }
 
+.chatbot-page .page-header
+{
+    margin-bottom: 2px;
+}
+
+.faq-chat > h2:first-child
+{
+    margin-bottom: var(--space-12);
+}
+
 .faq-chat .chatbot-messages
 {
     min-height: 0;
@@ -3197,6 +3207,11 @@ table.table
     font: 600 14px/20px var(--font);
 }
 
+.faq-chat .msg p
+{
+    font: var(--text-body);
+}
+
 .faq-form
 {
     display: flex;
@@ -3211,6 +3226,8 @@ table.table
 {
     flex: 1;
     min-width: 0;
+    min-height: 88px;
+    padding: var(--space-4);
 }
 
 .faq-form input
@@ -3261,6 +3278,11 @@ table.table
     width: fit-content;
     min-height: 48px;
     margin-bottom: 16px;
+}
+
+.chat-desktop-return
+{
+    min-height: 48px;
 }
 
 /* Listado y PDF del catálogo: frames 2046:48434, 2046:48455 y 2046:48477. */

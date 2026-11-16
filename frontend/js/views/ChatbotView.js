@@ -53,7 +53,8 @@ const chatbot_view =
     respuesta(datos)
     {
         document.getElementById('chat-buscar-cta').classList.toggle('hidden',
-            !datos.resultados?.some((resultado) => resultado.accion === 'buscar'));
+            !datos.resultados?.some((resultado) => resultado.accion === 'buscar') &&
+            !datos.libros?.length);
         if (!datos.resultados?.length || datos.libros?.length)
             this.mensaje(datos.mensaje, 'bot');
         datos.resultados.forEach(pregunta => this.mensaje(pregunta.respuesta,

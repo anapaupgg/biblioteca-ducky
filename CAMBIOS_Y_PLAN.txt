@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — ASISTENTE PRINCIPAL SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
+- Se hizo git fetch origin: main estaba sincronizada 0/0 con a19369b y no
+  había commits remotos nuevos. Se conservó la modificación local ajena de
+  package-lock.json fuera de este avance.
+- Se cotejaron los frames 2483:74914 y 2483:76334. La conversación, el
+  formulario, las ocho sugerencias y el regreso se ajustaron a sus medidas
+  principales en escritorio (1440×960): tarjeta y=136/alto 212, pregunta
+  y=364/alto 88, sugerencias y=468/alto 172 y regreso y=656/alto 48.
+- Se probó «¿Cómo encuentro un libro?» con su enlace a Buscar libros y «¿Qué
+  libros hay?» con cinco resultados reales del catálogo. Esta última respuesta
+  ahora también ofrece el enlace a la búsqueda. A 390 px no hubo desborde
+  horizontal. La API, permisos y datos no se modificaron.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos. La primera ejecución bajo
+  sandbox no pudo abrir 127.0.0.1 para una prueba HTTP; la repetición con
+  permiso local completó la suite. No se ejecutó db:init.
+- Ya existen y se cotejó la estructura principal de 11 pantallas. Aún no hay
+  paridad completa: faltan detalles de los resultados de catálogo del chatbot,
+  estados secundarios y diferencias de datos/servicios documentadas en
+  FIGMA_ALINEACION.md. La prioridad acordada mantiene las páginas principales
+  y deja alertas poco frecuentes para después.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PÁGINA PRINCIPAL DE COMPRAS (16 DE NOVIEMBRE DE 2026)
 - Después de cc02687, main estaba sincronizada 0/0 al comprobar origin;
   no había commits nuevos. package-lock.json local previo sigue excluido.
