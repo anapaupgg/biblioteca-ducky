@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — GESTIÓN Y LISTADO PRINCIPALES DE LIBROS (16 DE NOVIEMBRE DE 2026)
+- git fetch origin confirmó main 0/0 con origin/main, sin commits remotos
+  nuevos. package-lock.json local previo permanece ajeno a este bloque.
+- Frames 2010:23308 y 2046:48434 cotejados en Figma y navegador. Gestión:
+  recepción y=176, lista y=240, acciones y=432/492 a 1440×960; tamaños de
+  botones alineados con el frame. El filtro existente y sus permisos siguen.
+- Listado: tarjeta (276,176;1132×306), filas y=241, acciones y=498. Las cinco
+  fichas reales permanecen en la lista desplazable, y el recuento sigue
+  mostrando cinco. A 390 px se corrigió la compresión de filas largas y no
+  hubo desbordamiento horizontal. npm test: 61 aprobadas, 10 omitidas y 0
+  fallos; git diff --check sin errores. No se cambió la base ni se ejecutó
+  db:init.
+- Pendientes: datos ilustrativos B... frente a L..., estados secundarios de
+  PDF/impresión y el resto de diferencias del prototipo documentadas aparte.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — USUARIOS, PERFILES Y CHATBOT (16 DE NOVIEMBRE DE 2026)
 - Se ejecutó git fetch origin antes de editar: main y origin/main estaban
   sincronizadas 0/0, sin commits remotos nuevos que integrar. El cambio local

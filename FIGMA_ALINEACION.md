@@ -2,6 +2,27 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Gestión y lista principales de libros: cotejo del 16 de noviembre de 2026
+
+- Frame `2010:23308`: la página administrativa quedó con recepción en
+  y=176/48 px, lista en y=240/176 px y acciones en y=432 y y=492 a
+  1440 × 960. Los botones tienen los anchos de 236, 235, 153, 258 y 153 px
+  de la captura. La lista contiene siete fichas reales dentro del área de dos
+  filas visibles; seleccionar `L000129` habilitó «Consultar ficha». El filtro
+  administrativo sigue debajo, aunque no se dibuja en el frame. A 390 px el
+  documento no desborda.
+- Frame `2046:48434`: el listado activo quedó con tarjeta
+  `(276,176;1132×306)`, filas desde y=241 con 176 px visibles y acciones
+  desde y=498. Cinco libros reales permanecen disponibles mediante
+  desplazamiento interno; el recuento dice «5 registros». En móvil las filas
+  largas conservan su altura, el área visible crece a 320 px y la página no
+  desborda. El PDF y la impresión siguen usando el conjunto de datos, no el
+  número de filas visibles en pantalla.
+- Figma ilustra dos títulos con claves `B...` y un Lector; la comprobación
+  usó el administrador y claves `L...` de PostgreSQL. Se acredita la
+  composición de las páginas principales, no la paridad literal de sus datos
+  ni de sus estados de PDF/impresión.
+
 ## Gestión de usuarios, perfiles y catálogo del asistente: 16 de noviembre de 2026
 
 - Frame `2007:4863`: a 1440 × 960 la tarjeta principal de usuarios quedó en

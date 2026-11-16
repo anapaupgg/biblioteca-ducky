@@ -1375,7 +1375,38 @@ a
 
 .catalogo-encabezado
 {
-    margin-bottom: var(--space-8);
+    margin-bottom: 6px;
+}
+
+.catalogo-page .catalogo-encabezado + .actions
+{
+    margin-top: 14px;
+}
+
+.catalogo-page #contenido > .actions .btn
+{
+    min-height: 48px;
+}
+
+.catalogo-page .catalogo-encabezado + .actions .btn
+{
+    min-width: 236px;
+}
+
+.catalogo-page .catalogo-acciones a[href="libro_form.html"]
+{
+    min-width: 235px;
+}
+
+.catalogo-page #accion-ficha,
+.catalogo-page .catalogo-acciones-secundarias .btn
+{
+    min-width: 153px;
+}
+
+.catalogo-page .catalogo-acciones a[href="pedidos.html"]
+{
+    min-width: 258px;
 }
 
 .catalogo-lista
@@ -1390,9 +1421,9 @@ a
 {
     display: block;
     width: 100%;
-    min-height: 56px;
+    height: 56px;
     overflow: hidden;
-    padding: var(--space-16);
+    padding: 15px var(--space-16);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-8);
     background: var(--color-white);
@@ -3540,6 +3571,40 @@ table.table
 .catalog-list-card h2
 {
     margin-bottom: 16px;
+}
+
+.listado-libros .page-header
+{
+    margin-bottom: 14px;
+}
+
+.listado-libros #panel-listado .catalog-list-card h2
+{
+    margin-bottom: 12px;
+}
+
+.listado-libros #panel-listado .catalog-list-rows
+{
+    max-height: 176px;
+    overflow-y: auto;
+}
+
+.listado-libros #panel-listado .catalog-list-row
+{
+    flex: 0 0 auto;
+}
+
+@media (max-width: 600px)
+{
+    .listado-libros #panel-listado .catalog-list-rows
+    {
+        max-height: 320px;
+    }
+}
+
+.listado-libros #panel-listado .catalog-list-card #generado
+{
+    margin-top: 20px;
 }
 
 .catalog-list-rows
