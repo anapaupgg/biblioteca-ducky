@@ -123,6 +123,11 @@ const buscar_controller =
     {
         this.version_consulta++;
         buscar_view.ejemplo(campo, valor);
+        if (campo === 'isbn')
+        {
+            buscar_view.modo_isbn();
+            return;
+        }
         this.buscar();
     },
 

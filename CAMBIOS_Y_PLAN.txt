@@ -1,3 +1,24 @@
+ACTUALIZACIÓN — FILTROS VACÍOS E ISBN FIGMA (16 DE NOVIEMBRE DE 2026)
+- Continuación sobre c5dfead, subido y sincronizado 0/0. Sin commits remotos
+  nuevos al revisar este trabajo; package-lock.json previo sigue excluido.
+- Frames 2013:31922 y 2013:32267 consultados antes de editar. Limpiar en
+  escritorio presenta «Filtros vacíos», quita los accesos superiores y ofrece
+  «Buscar sin filtros» y «Usar ejemplo por título». La primera acción lleva
+  al estado de error sin consultar BD; la segunda busca un título real.
+- «Ejemplo por ISBN» ahora abre el modo «Buscar por ISBN» con un ISBN real
+  precargado y editable; Buscar ejecuta la consulta. Conserva la utilidad del
+  ejemplo, aunque el campo aparece vacío en la captura estática de Figma.
+- Navegador a 1440×960: tarjeta de filtros vacíos (276,176;1132×386),
+  acciones y=578; modo ISBN con tarjeta en y=176. El ISBN de ejemplo encontró
+  L000129 y el ejemplo por título devolvió dos fichas. A 390 px Limpiar
+  conservó «Buscar» y el ancho de 390 sin desbordamiento.
+- Se corrigió el singular «1 resultado activo». No se escribió en la BD ni
+  se ejecutó db:init. «Buscar sin filtros» se verificó en navegador como
+  error sin consulta. npm test: 59 aprobadas, 10 omitidas, 0 fallos; sintaxis
+  y diff correctos. Ducky sigue en 3002 y 3001 pertenece a otra app.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — SOLICITUD DESDE BÚSQUEDA FIGMA (16 DE NOVIEMBRE DE 2026)
 - Continuación sobre 03d840a, subido y sincronizado 0/0; no hubo commits
   remotos nuevos durante esta solicitud. package-lock.json local previo

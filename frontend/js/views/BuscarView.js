@@ -17,6 +17,7 @@
 /*   buscar_view.modificar() */
 /*   buscar_view.estado_movil(tipo, detalle) */
 /*   buscar_view.ejemplo(campo, valor) */
+/*   buscar_view.modo_isbn() */
 /*   buscar_view.resultados(lista, filtros, acciones) */
 /*   buscar_view.prestados(libro, acciones) */
 /*   buscar_view.invalidos(filtros, campos, acciones) */
@@ -52,10 +53,13 @@ const buscar_view =
         document.getElementById('resultados').innerHTML = '';
         document.body.classList.remove('search-desktop-results', 'search-desktop-empty',
             'search-desktop-loaned', 'search-desktop-invalid', 'search-desktop-retired',
-            'search-desktop-request', 'search-desktop-requested');
+            'search-desktop-request', 'search-desktop-requested', 'search-desktop-cleared',
+            'search-desktop-isbn');
         document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar libros';
         document.getElementById('descripcion-busqueda-escritorio').textContent =
             'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
+        document.getElementById('titulo-filtros-busqueda').textContent =
+            'Filtros del catálogo activo';
         document.body.classList.remove('search-results-mobile');
         document.body.classList.remove('search-state-mobile', 'search-state-empty',
             'search-state-invalid', 'search-detail-mobile');
@@ -72,6 +76,8 @@ const buscar_view =
         document.getElementById('btn-limpiar').addEventListener('click', () => acciones.limpiar());
         document.getElementById('btn-ejemplo-isbn').addEventListener('click', () =>
             acciones.ejemplo('isbn', '9786073206037'));
+        document.getElementById('btn-ejemplo-titulo').addEventListener('click', () =>
+            acciones.ejemplo('titulo', 'Ingeniería'));
         document.getElementById('btn-ejemplo-movil').addEventListener('click', () =>
             acciones.ejemplo('titulo', 'software'));
         document.getElementById('btn-modificar-busqueda').addEventListener('click', () =>
@@ -118,6 +124,18 @@ const buscar_view =
         document.getElementById(campo).value = valor;
     },
 
+    modo_isbn: function ()
+    {
+        document.body.classList.remove('search-desktop-cleared');
+        document.body.classList.add('search-desktop-isbn');
+        document.getElementById('titulo-busqueda-escritorio').textContent = 'Buscar por ISBN';
+        document.getElementById('descripcion-busqueda-escritorio').textContent =
+            'Combina uno o varios filtros. Los textos requieren al menos 3 caracteres.';
+        document.getElementById('titulo-filtros-busqueda').textContent =
+            'Filtros del catálogo activo';
+        document.getElementById('isbn').focus();
+    },
+
     filtros: function ()
     {
         return ui.leer(FILTROS_BUSQUEDA);
@@ -131,6 +149,10 @@ const buscar_view =
         });
         ui.limpiar();
         this.vaciar();
+        document.body.classList.add('search-desktop-cleared');
+        document.getElementById('descripcion-busqueda-escritorio').textContent =
+            'Captura al menos un filtro para buscar.';
+        document.getElementById('titulo-filtros-busqueda').textContent = 'Filtros vacíos';
         ui.alerta('mensaje');
         document.getElementById('titulo').focus();
     },
@@ -171,7 +193,8 @@ const buscar_view =
             return;
         }
         this.estado_escritorio('Resultados de búsqueda', resumen + ' · ' + lista.length +
-            ' resultados activos.', 'search-desktop-results');
+            (lista.length === 1 ? ' resultado activo.' : ' resultados activos.'),
+            'search-desktop-results');
         ui.alerta('mensaje');
         document.body.classList.add('search-results-mobile');
         document.body.classList.remove('search-detail-mobile');

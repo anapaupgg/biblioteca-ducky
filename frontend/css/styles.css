@@ -1607,6 +1607,35 @@ table.table
     min-width: 140px;
 }
 
+.search-cleared-submit,
+.search-cleared-example
+{
+    display: none;
+}
+
+@media (min-width: 601px)
+{
+    .search-desktop-cleared .search-desktop-links,
+    .search-desktop-isbn .search-desktop-links,
+    .search-desktop-cleared .search-submit-actions > .btn-primary:first-child,
+    .search-desktop-cleared #btn-ejemplo-isbn,
+    .search-desktop-cleared #btn-limpiar
+    {
+        display: none;
+    }
+
+    .search-desktop-cleared .search-cleared-submit,
+    .search-desktop-cleared .search-cleared-example
+    {
+        display: inline-flex;
+    }
+
+    .search-desktop-cleared .search-cleared-submit
+    {
+        min-width: 178px;
+    }
+}
+
 @media (min-width: 601px)
 {
     .search-desktop-results .search-desktop-links,

@@ -63,7 +63,7 @@
                     </div>
                     <form id="form-buscar" novalidate>
                         <div class="card search-form-card">
-                            <h2>Filtros del catálogo activo</h2>
+                            <h2 id="titulo-filtros-busqueda">Filtros del catálogo activo</h2>
                             <div class="grid-2">
                                 <div class="field"><label for="titulo">Título</label><input id="titulo"
                                         type="search"></div>
@@ -81,7 +81,9 @@
                         </div>
                         <div class="actions search-submit-actions">
                             <button class="btn btn-primary" type="submit">Buscar</button>
+                            <button class="btn btn-primary search-cleared-submit" type="submit">Buscar sin filtros</button>
                             <button class="btn search-desktop-example" type="button" id="btn-ejemplo-isbn">Ejemplo por ISBN</button>
+                            <button class="btn search-cleared-example" type="button" id="btn-ejemplo-titulo">Usar ejemplo por título</button>
                             <button class="btn" type="button" id="btn-limpiar">Limpiar filtros</button>
                         </div>
                     </form>

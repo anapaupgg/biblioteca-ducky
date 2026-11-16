@@ -2,6 +2,11 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Filtros vacíos e ISBN del 16 de noviembre de 2026
+
+- Frame `2013:32267`: al pulsar Limpiar en escritorio, se comparó la tarjeta `(276,176;1132×386)` y las acciones en y=578 a 1440 × 960. Los seis filtros quedan vacíos; «Buscar sin filtros» presenta la validación y «Usar ejemplo por título» busca un título real. A 390 px se conservan los controles móviles con ancho de documento de 390 px.
+- Frame `2013:31922`: «Ejemplo por ISBN» abre «Buscar por ISBN» con tarjeta en y=176 y los seis campos. El ISBN real `9786073206037` queda precargado para consultar o editar; el frame muestra el campo vacío, diferencia funcional explícita. Al pulsar Buscar se encontró `L000129`. La búsqueda pasó de ejemplo de un solo clic a revisión del filtro antes de enviarlo; esta nota reemplaza la descripción anterior de esa acción.
+
 ## Solicitud desde búsqueda del 16 de noviembre de 2026
 
 - Frame `2013:32975`: la revisión de escritorio usa una lectura reciente de la ficha antes de mostrar disponibilidad, ubicaciones y solicitante. Con `L000129`, alerta `(276,176;1132×96)`, campos `(276,288;1132×88)` y acciones en y=392 a 1440 × 960. «Cancelar» devolvió resultados sin crear solicitud. El servidor mantiene la validación final al confirmar. El resultado móvil anterior conserva su flujo; este cotejo se refiere al escritorio.
