@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Rutas HTTP: asocia autorización y acciones del controlador. */
 /******************************************************************/
 
@@ -31,6 +31,8 @@ router.get('/institucion/:clave', requiere_sesion, requiere_funcion('Gestionar u
     .institucion);
 router.get('/', requiere_sesion, requiere_funcion('Gestionar usuarios'), usuario_controller.listar);
 router.get('/:clave', requiere_sesion, requiere_funcion('Gestionar usuarios'), usuario_controller.detalle);
+router.get('/:clave/baja/validacion', requiere_sesion, requiere_funcion('Gestionar usuarios'),
+    usuario_controller.validar_baja);
 router.post('/', requiere_sesion, requiere_funcion('Gestionar usuarios'), usuario_controller.crear);
 router.put('/:clave/perfil', requiere_sesion, requiere_funcion('Gestionar usuarios'), usuario_controller
     .cambiar_perfil);

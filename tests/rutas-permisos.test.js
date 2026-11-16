@@ -38,6 +38,7 @@ const grupos = [
         ['get', '/institucion/123456'],
         ['get', '/'],
         ['get', '/123456'],
+        ['get', '/123456/baja/validacion'],
         ['post', '/'],
         ['put', '/123456/perfil'],
         ['post', '/123456/baja'],

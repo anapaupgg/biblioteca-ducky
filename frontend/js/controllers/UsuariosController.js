@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-27 */
+/* Date: 2026-11-16 */
 /* Description: Controlador cliente: coordina modelo, vista y validaciones. */
 /******************************************************************/
 
@@ -10,7 +10,6 @@
 /*   usuarios_controller.iniciar() */
 /*   usuarios_controller.cargar() */
 /*   usuarios_controller.asegurar_catalogos() */
-/*   usuarios_controller.baja(usuario) */
 /*   usuarios_controller.reactivar(usuario) */
 /******************************************************************/
 
@@ -40,7 +39,6 @@ const usuarios_controller =
         usuarios_view.enlazar(
         {
             cargar: (...argumentos) => this.cargar(...argumentos),
-            baja: (usuario) => this.baja(usuario),
             reactivar: (usuario) => this.reactivar(usuario)
         });
 
@@ -72,7 +70,6 @@ const usuarios_controller =
             if (version !== this.version_consulta) return;
             usuarios_view.tabla(usuarios,
             {
-                baja: (usuario_2) => this.baja(usuario_2),
                 reactivar: (usuario_3) => this.reactivar(usuario_3)
             });
         }
@@ -80,29 +77,6 @@ const usuarios_controller =
         {
             if (version !== this.version_consulta) return;
             usuarios_view.mensaje('error', error.message);
-        }
-    },
-
-    baja: async function (usuario)
-    {
-        usuarios_view.mensaje();
-        if (!await this.asegurar_catalogos()) return;
-        let respuesta = null;
-        const ok = await usuarios_view.dialogo_baja(usuario, this.catalogos.motivos, async (id_motivo,
-            comentario) =>
-        {
-            if (!id_motivo) throw Object.assign(new Error('Selecciona el motivo de baja'),
-            {
-                campos: ['id_motivo']
-            });
-            respuesta = await usuario_model.dar_baja(usuario.clave, Number(id_motivo),
-                comentario);
-        });
-        if (ok)
-        {
-            usuarios_view.mensaje('ok', respuesta.mensaje, usuario.nombre + ' (' + usuario.clave +
-                ') quedó Inactivo y sus sesiones se cerraron.');
-            this.cargar();
         }
     },
 

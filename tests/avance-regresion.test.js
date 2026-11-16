@@ -193,44 +193,64 @@ test('compras HTTP: líneas inválidas y costos vacíos/no finitos responden 400
     }
 });
 
-test('usuarios: fallos de catálogos no abren diálogos incompletos y permiten reintentar', async () =>
+test('usuarios: la prevalidación bloqueada o cancelada no ejecuta la baja', async () =>
 {
-    let llamadas = 0;
-    let dialogos = 0;
-    const controlador = cargar('UsuariosController.js', 'usuarios_controller',
+    let estado = 'prestamos';
+    let confirmar = false;
+    let escrituras = 0;
+    let resultados = 0;
+    let exitos = 0;
+    const controlador = cargar('UsuarioBajaController.js', 'usuario_baja_controller',
     {
         usuario_model:
         {
-            catalogos: async () =>
+            validar_baja: async () => ({ estado, usuario: { clave: '810077', nombre: 'Prueba' } }),
+            dar_baja: async () =>
             {
-                llamadas++;
-                if (llamadas === 1) throw new Error('Sin conexión');
-                return {
-                    motivos: [],
-                    perfiles: []
-                };
+                escrituras++;
+                return { usuario: { clave: '810077', nombre: 'Prueba' } };
             }
         },
-        usuarios_view:
+        usuario_baja_view:
         {
             mensaje: () =>
             {},
-            dialogo_baja: async () =>
+            datos: () => ({ clave: '810077', id_motivo: '1', comentario: '' }),
+            usuario: () =>
+            {},
+            resultado: () =>
             {
-                dialogos++;
-                return false;
+                resultados++;
+            },
+            confirmar: async (_usuario, accion) =>
+            {
+                if (!confirmar) return false;
+                await accion();
+                return true;
+            },
+            exito: () =>
+            {
+                exitos++;
             }
+        },
+        ui:
+        {
+            limpiar: () =>
+            {},
+            marcar: () =>
+            {}
         }
     });
-    await controlador.baja(
-    {
-        clave: '810077'
-    });
-    assert.equal(dialogos, 0);
-    await controlador.baja(
-    {
-        clave: '810077'
-    });
-    assert.equal(dialogos, 1);
-    assert.equal(llamadas, 2);
+    controlador.motivos = [{ id: 1, descripcion: 'Solicitud' }];
+    controlador.administrador = { clave: '100001' };
+    await controlador.validar();
+    assert.equal(resultados, 1);
+    assert.equal(escrituras, 0);
+    estado = 'listo';
+    await controlador.validar();
+    assert.equal(escrituras, 0);
+    confirmar = true;
+    await controlador.validar();
+    assert.equal(escrituras, 1);
+    assert.equal(exitos, 1);
 });

@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Modelo cliente: transporte de datos hacia la API. */
 /******************************************************************/
 
@@ -14,6 +14,7 @@
 /*   usuario_model.crear(clave, id_perfil) */
 /*   usuario_model.cambiar_perfil(clave, id_perfil) */
 /*   usuario_model.dar_baja(clave, id_motivo, comentario) */
+/*   usuario_model.validar_baja(clave) */
 /*   usuario_model.reactivar(clave, id_perfil) */
 /******************************************************************/
 
@@ -67,6 +68,12 @@ const usuario_model =
         {
             id_perfil: id_perfil
         });
+    },
+
+    /* GET /usuarios/:clave/baja/validacion */
+    validar_baja: function (clave)
+    {
+        return api.get('/usuarios/' + encodeURIComponent(clave) + '/baja/validacion');
     },
 
     /* POST /usuarios/:clave/baja */

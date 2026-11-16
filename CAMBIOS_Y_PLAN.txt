@@ -1,3 +1,34 @@
+ACTUALIZACIÓN — BAJA DE USUARIOS SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
+- Al iniciar: git fetch origin y comparación con upstream; main estaba 0/0,
+  sin commits remotos nuevos. El package-lock.json ya modificado sigue ajeno
+  a este avance y queda fuera del commit.
+- Frames 2008:10356, 2008:10701, 2008:10711, 2008:11028 y 2008:11348
+  consultados. La baja dejó de ser un diálogo sobre la lista: ahora tiene
+  formulario completo, motivo, datos institucionales de lectura, confirmación,
+  estados bloqueados y resultado. El motivo SQL «Solicitud» se presenta como
+  «Solicitud del usuario» sin cambiar su id. La Clave conserva seis caracteres
+  porque ese es el contrato de PostgreSQL, frente a los siete del ejemplo.
+- GET /api/usuarios/:clave/baja/validacion es de solo lectura y devuelve el
+  motivo del bloqueo: propia, inactiva, perfil superior, último administrador,
+  préstamos activos o deuda. El POST conserva todas las validaciones definitivas
+  y la baja transaccional; cancelar no escribe. Se deshabilita Validar hasta
+  cargar los motivos. La ruta exige sesión y permiso Gestionar usuarios.
+- Navegador a 1440×960 con PostgreSQL real: formulario (276,176;1132×426),
+  acciones y=618; usuario 800456 llegó a confirmación, que se canceló; usuario
+  100001 quedó bloqueado por baja propia; 621234 mostró el préstamo pendiente
+  L000128 y el acceso a devoluciones. Se compararon el formulario, el diálogo
+  y la página de préstamo bloqueado con sus capturas de Figma.
+- npm test: 60 aprobadas, 10 omitidas, 0 fallos. Incluye prevalidación sin
+  escrituras, cancelación y permiso de ruta. No se ejecutó db:init ni se dio
+  de baja a un usuario real para la verificación. Ducky usa 3002; no se tocó
+  el servicio en 3001.
+- Pendiente: cotejo visual con un adeudo real y con una baja exitosa autorizada;
+  la base local no tiene actualmente un usuario activo con multa pendiente.
+  El correo institucional de la baja no se envía: la salida indica que el
+  aviso está pendiente, a diferencia del texto ilustrativo de Figma.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — FILTROS VACÍOS E ISBN FIGMA (16 DE NOVIEMBRE DE 2026)
 - Continuación sobre c5dfead, subido y sincronizado 0/0. Sin commits remotos
   nuevos al revisar este trabajo; package-lock.json previo sigue excluido.

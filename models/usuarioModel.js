@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Modelo PostgreSQL: consultas y persistencia parametrizadas. */
 /******************************************************************/
 
@@ -17,6 +17,7 @@
 /*   crear(client, datos) */
 /*   cambiar_perfil(client, clave, id_perfil) */
 /*   dar_baja(client, datos) */
+/*   prestamos_para_baja(clave) */
 /*   reactivar(client, datos) */
 /*   adeudos(clave) */
 /*   tipos() */
@@ -194,6 +195,19 @@ const adeudos = async (clave) =>
     return resultado_3.rows[0];
 };
 
+/* prestamos_para_baja(clave): préstamos activos que bloquean la baja;
+ * lectura parametrizada sin modificar ejemplares ni usuarios. */
+const prestamos_para_baja = async (clave) =>
+{
+    const resultado = await pool.query(
+        `SELECT l.id_libro AS clave_libro, l.titulo, p.fecha_vencimiento
+           FROM prestamos p JOIN ejemplares e USING (id_ejemplar)
+                            JOIN libros l USING (id_libro)
+          WHERE p.clave_usuario = $1 AND p.estatus = 'Activo'
+          ORDER BY p.fecha_vencimiento, p.id_prestamo`, [clave]);
+    return resultado.rows;
+};
+
 const tipos = () => pool.query(
     'SELECT id_tipo_usuario AS id, nombre, dias_prestamo, max_renovaciones, max_ejemplares, multa_diaria FROM tipos_usuario ORDER BY id_tipo_usuario'
     );
@@ -225,6 +239,7 @@ module.exports =
     dar_baja,
     reactivar,
     adeudos,
+    prestamos_para_baja,
     tipos,
     motivos,
     administradores_activos

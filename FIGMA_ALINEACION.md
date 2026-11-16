@@ -2,6 +2,25 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Baja de usuario: cotejo del 16 de noviembre de 2026
+
+- Frames `2008:10356`, `2008:10701` y `2008:11028`: formulario completo,
+  diálogo de confirmación y bloqueo por préstamos se compararon en Figma y
+  navegador a 1440 × 960. La tarjeta del formulario mide (276, 176; 1132 ×
+  426) y las acciones comienzan en y=618. El préstamo real de `621234` se
+  mostró con la clave `L000128`, título y vencimiento que devuelve PostgreSQL.
+  Se verificó el bloqueo de la baja propia de `100001` y se canceló la
+  confirmación de `800456` sin modificarla.
+- Frames `2008:10711` y `2008:11348`: se consultaron para construir éxito y
+  bloqueo por deuda, pero no se declara cotejo visual con datos reales. No hay
+  un usuario activo con deuda en la base local y no se creó una baja solo para
+  capturar el resultado. El aviso por correo de la baja sigue pendiente; la
+  interfaz lo dice expresamente aunque Figma lo ilustre como enviado.
+- El selector muestra «Solicitud del usuario» como en Figma; la descripción
+  almacenada sigue siendo «Solicitud». La clave de seis caracteres y los
+  identificadores de libro `L...` se conservan según el esquema actual, frente
+  a los siete caracteres y claves `B...` de la maqueta.
+
 ## Filtros vacíos e ISBN del 16 de noviembre de 2026
 
 - Frame `2013:32267`: al pulsar Limpiar en escritorio, se comparó la tarjeta `(276,176;1132×386)` y las acciones en y=578 a 1440 × 960. Los seis filtros quedan vacíos; «Buscar sin filtros» presenta la validación y «Usar ejemplo por título» busca un título real. A 390 px se conservan los controles móviles con ancho de documento de 390 px.

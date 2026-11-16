@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Controlador HTTP: valida entradas y coordina el modelo. */
 /******************************************************************/
 
@@ -18,6 +18,7 @@
 /*   crear(solicitud_4, respuesta_4) */
 /*   cambiar_perfil(solicitud_5, respuesta_5) */
 /*   dar_baja(solicitud_6, respuesta_6) */
+/*   validar_baja(solicitud_6, respuesta_6) */
 /*   reactivar(solicitud_7, respuesta_7) */
 /*   catalogos(solicitud_8, respuesta_8) */
 /******************************************************************/
@@ -360,6 +361,56 @@ const dar_baja = async (solicitud_6, respuesta_6) =>
     }
 };
 
+/* GET de prevalidación para el formulario de baja. El POST vuelve a
+ * verificar todas las reglas porque el estado puede cambiar entretanto. */
+const validar_baja = async (solicitud_6, respuesta_6) =>
+{
+    try
+    {
+        const clave = String(solicitud_6.params.clave || '').trim();
+        if (!es_clave_usuario(clave)) throw new error_negocio(400,
+            'Verifica la Clave capturada (6 caracteres)', ['clave']);
+        const usuario = await obtener_usuario(clave);
+        const datos =
+        {
+            clave: usuario.clave,
+            nombre: usuario.nombre,
+            correo: usuario.correo,
+            tipo: usuario.tipo,
+            perfil: usuario.perfil,
+            estatus: usuario.estatus
+        };
+        let estado = 'listo';
+        let prestamos = [];
+        let monto = 0;
+        if (usuario.clave === solicitud_6.usuario.clave) estado = 'propio';
+        else if (usuario.estatus === 'Inactivo') estado = 'inactivo';
+        else if (perfil_model.nivel(usuario.funciones) > perfil_model.nivel(solicitud_6.usuario
+            .funciones)) estado = 'superior';
+        else if (perfil_model.nivel(usuario.funciones) === 3 && await usuario_model
+            .administradores_activos() <= 1) estado = 'ultimo_administrador';
+        else
+        {
+            const adeudos = await usuario_model.adeudos(clave);
+            if (adeudos.prestamos_activos > 0)
+            {
+                estado = 'prestamos';
+                prestamos = await usuario_model.prestamos_para_baja(clave);
+            }
+            else if (adeudos.multas_pendientes > 0)
+            {
+                estado = 'deuda';
+                monto = Number(adeudos.monto);
+            }
+        }
+        respuesta_6.status(200).json({ estado, usuario: datos, prestamos, monto });
+    }
+    catch (error)
+    {
+        responder_error(respuesta_6, error, 'usuarios.validar_baja');
+    }
+};
+
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* reactivar(req, res)                                            */
@@ -453,6 +504,7 @@ module.exports =
     crear,
     cambiar_perfil,
     dar_baja,
+    validar_baja,
     reactivar,
     catalogos
 };

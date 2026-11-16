@@ -1,0 +1,72 @@
+<!--
+/******************************************************************/
+/* Program Assignment: Biblioteca Ducky - Sistema web             */
+/* Name: Equipo FlowBit                                           */
+/* Date: 2026-11-16                                               */
+/* Description: Baja de usuarios y sus estados de validación.     */
+/******************************************************************/
+-->
+<!DOCTYPE html>
+<html lang="es">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Biblioteca Ducky · Dar de baja a un usuario</title>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+
+    <body class="user-baja-page">
+        <div class="app">
+            <aside id="sidebar" class="sidebar"></aside>
+            <main class="main">
+                <header id="topbar" class="topbar"></header>
+                <div id="contenido">
+                    <div class="page-header user-baja-header">
+                        <div>
+                            <h1 id="titulo-pagina">Dar de baja a un usuario</h1>
+                            <p id="descripcion-pagina">Conserva su historial y elimina sus credenciales de acceso.</p>
+                        </div>
+                    </div>
+                    <div id="mensaje"></div>
+                    <form id="form-baja-usuario" novalidate>
+                        <div class="card user-baja-card">
+                            <h2>Identificar usuario y motivo</h2>
+                            <div class="grid-2">
+                                <div class="field"><label for="clave">Clave (matrícula o nómina)</label>
+                                    <input id="clave" type="text" maxlength="6" autocomplete="off"
+                                        placeholder="Ej. 100001"></div>
+                                <div class="field"><label for="id_motivo">Motivo de baja</label>
+                                    <select id="id_motivo"><option value="">Selecciona el motivo</option></select></div>
+                                <div class="field"><span class="label">Clave</span><div class="readonly" id="dato-clave"></div></div>
+                                <div class="field"><span class="label">Nombre</span><div class="readonly" id="dato-nombre"></div></div>
+                                <div class="field"><span class="label">Tipo de usuario</span><div class="readonly" id="dato-tipo"></div></div>
+                                <div class="field"><span class="label">Correo institucional</span><div class="readonly" id="dato-correo"></div></div>
+                            </div>
+                            <p class="small muted user-baja-hint" id="motivos-disponibles"></p>
+                            <div class="field user-baja-comentario" id="campo-comentario" hidden>
+                                <label for="comentario">Descripción del motivo</label>
+                                <textarea id="comentario" maxlength="200" placeholder="Describe el motivo"></textarea>
+                            </div>
+                        </div>
+                        <div class="actions user-baja-actions">
+                            <button class="btn btn-primary" type="submit" id="validar-baja" disabled>Validar y continuar</button>
+                            <a class="btn" href="usuarios.html">Cancelar</a>
+                        </div>
+                    </form>
+                    <div id="resultado-baja"></div>
+                </div>
+            </main>
+        </div>
+
+        <script src="js/utils/api.js"></script>
+        <script src="js/utils/session.js"></script>
+        <script src="js/utils/ui.js"></script>
+        <script src="js/utils/layout.js"></script>
+        <script src="js/models/UsuarioModel.js"></script>
+        <script src="js/views/UsuarioBajaView.js"></script>
+        <script src="js/controllers/UsuarioBajaController.js"></script>
+        <script>usuario_baja_controller.iniciar();</script>
+    </body>
+
+</html>

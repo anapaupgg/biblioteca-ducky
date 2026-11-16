@@ -24,6 +24,57 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
+test('prevalidación de baja informa bloqueos y nunca escribe', async () =>
+{
+    const errores = require('../utils/errores');
+    const perfil_model = require('../models/perfilModel');
+    let clave = 'TEST01';
+    let adeudos = { prestamos_activos: 1, multas_pendientes: 0, monto: 0 };
+    let escrituras = 0;
+    const contexto = vm.createContext(
+    {
+        module: { exports: {} },
+        require: nombre =>
+        {
+            if (nombre === 'crypto') return require('node:crypto');
+            if (nombre === '../db') return { con_usuario: async () => { escrituras++; } };
+            if (nombre.includes('usuarioModel')) return {
+                buscar: async () => ({ rows: [{ clave, nombre: 'Prueba', estatus: 'Activo',
+                    funciones: ['Gestionar usuarios'], tipo: 'Colaborador' }] }),
+                adeudos: async () => adeudos,
+                prestamos_para_baja: async () => [{ clave_libro: 'L000128', titulo: 'Libro',
+                    fecha_vencimiento: '2026-10-26' }],
+                administradores_activos: async () => 2
+            };
+            if (nombre.includes('perfilModel')) return { nivel: perfil_model.nivel };
+            if (nombre.includes('errores')) return errores;
+            if (nombre.includes('validators')) return require('../utils/validators');
+            return {};
+        }
+    });
+    vm.runInContext(fs.readFileSync(require.resolve('../controllers/usuarioController'),
+        'utf8'), contexto);
+    const req = { params: { clave }, usuario: { clave: 'ADMIN1',
+        funciones: ['Gestionar usuarios'] } };
+    const res = { status(codigo) { this.code = codigo; return this; },
+        json(datos) { this.body = datos; } };
+    await contexto.module.exports.validar_baja(req, res);
+    assert.equal(res.code, 200);
+    assert.equal(res.body.estado, 'prestamos');
+    assert.equal(res.body.prestamos[0].clave_libro, 'L000128');
+    adeudos = { prestamos_activos: 0, multas_pendientes: 1, monto: 120.5 };
+    await contexto.module.exports.validar_baja(req, res);
+    assert.equal(res.body.estado, 'deuda');
+    assert.equal(res.body.monto, 120.5);
+    adeudos = { prestamos_activos: 0, multas_pendientes: 0, monto: 0 };
+    await contexto.module.exports.validar_baja(req, res);
+    assert.equal(res.body.estado, 'listo');
+    req.usuario.clave = clave;
+    await contexto.module.exports.validar_baja(req, res);
+    assert.equal(res.body.estado, 'propio');
+    assert.equal(escrituras, 0);
+});
+
 test('reactivación rechaza perfil superior aunque no se cambie y valida tipo institucional', async () =>
 {
     const perfilModel = require('../models/perfilModel');

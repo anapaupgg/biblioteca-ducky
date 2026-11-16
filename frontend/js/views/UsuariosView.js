@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
-/* Date: 2026-10-26 */
+/* Date: 2026-11-16 */
 /* Description: Vista: presentación, captura y eventos de la página. */
 /******************************************************************/
 
@@ -10,7 +10,6 @@
 /*   usuarios_view.enlazar(acciones) */
 /*   usuarios_view.filtros() */
 /*   usuarios_view.tabla(usuarios, acciones) */
-/*   usuarios_view.dialogo_baja(usuario, motivos, al_confirmar) */
 /*   usuarios_view.dialogo_reactivar(usuario, perfiles, al_confirmar) */
 /*   usuarios_view.mensaje(tipo, titulo, texto) */
 /******************************************************************/
@@ -41,7 +40,11 @@ const usuarios_view =
                 window.location.href = 'usuario_editar.html?clave=' + encodeURIComponent(usuario.clave);
             }));
         document.getElementById('accion-baja').addEventListener('click', () =>
-            this.con_usuario(acciones.baja));
+            this.con_usuario((usuario) =>
+            {
+                window.location.href = 'usuario_baja.html?clave=' +
+                    encodeURIComponent(usuario.clave);
+            }));
         document.getElementById('accion-reactivar').addEventListener('click', () =>
             this.con_usuario(acciones.reactivar));
     },
@@ -99,25 +102,6 @@ const usuarios_view =
         document.getElementById('accion-reactivar').disabled = !inactivo;
         document.getElementById('accion-reactivar').textContent = inactivo ?
             'Reactivar a ' + usuario.nombre : 'Reactivar usuario';
-    },
-
-    dialogo_baja: function (usuario, motivos, al_confirmar)
-    {
-        return ui.dialogo(
-        {
-            titulo: 'Confirmar baja de ' + usuario.nombre,
-            texto: 'Se conserva su historial y se eliminan sus credenciales de acceso. Clave ' +
-                usuario.clave + ' · ' + usuario.tipo + '.',
-            cuerpo: '<div class="field"><label for="id_motivo">Motivo de baja</label><select id="id_motivo">' +
-                ui.opciones(motivos, 'id', 'descripcion', '', 'Selecciona el motivo') +
-                '</select></div>' +
-                '<div class="field" style="margin-top:12px"><label for="comentario">Comentario</label>' +
-                '<textarea id="comentario" maxlength="200" placeholder="Obligatorio si el motivo es Otro"></textarea></div>',
-            confirmar: 'Dar de baja',
-            peligro: true,
-            al_confirmar: (datos) => al_confirmar(datos.querySelector('#id_motivo').value,
-                datos.querySelector('#comentario').value)
-        });
     },
 
     dialogo_reactivar: function (usuario, perfiles, al_confirmar)

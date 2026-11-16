@@ -1778,6 +1778,142 @@ table.table
     display: none;
 }
 
+.user-baja-card > h2:first-child
+{
+    margin-bottom: var(--space-12);
+}
+
+.user-baja-header
+{
+    margin-bottom: 14px;
+}
+
+.user-baja-card
+{
+    padding-bottom: calc(var(--space-24) + var(--space-4));
+}
+
+.user-baja-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.user-baja-hint
+{
+    margin: var(--space-16) 0 0;
+}
+
+.user-baja-comentario
+{
+    margin-top: var(--space-16);
+}
+
+.user-baja-comentario[hidden],
+.user-baja-page #form-baja-usuario[hidden]
+{
+    display: none;
+}
+
+.user-baja-actions,
+.user-baja-result-actions
+{
+    margin-top: 0;
+}
+
+.user-baja-actions .btn,
+.user-baja-result-actions .btn
+{
+    min-height: 48px;
+}
+
+.user-baja-actions .btn:first-child
+{
+    min-width: 186px;
+}
+
+.user-baja-actions .btn:nth-child(2)
+{
+    min-width: 140px;
+}
+
+.user-baja-result-actions .btn:first-child
+{
+    min-width: 194px;
+}
+
+.user-baja-result-actions .btn:nth-child(2)
+{
+    min-width: 162px;
+}
+
+.user-baja-alert
+{
+    min-height: 96px;
+    margin: 0 0 var(--space-16);
+}
+
+.user-baja-result-card h2
+{
+    margin-bottom: var(--space-16);
+}
+
+.user-baja-result-card p
+{
+    margin: 0 0 var(--space-16);
+}
+
+.user-baja-result-card p:last-child
+{
+    margin-bottom: 0;
+}
+
+.user-baja-loan-row
+{
+    padding: var(--space-16);
+    min-height: 56px;
+    margin-bottom: var(--space-4);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-8);
+    background: var(--color-white);
+}
+
+.user-baja-page .dialog.dialog-wide
+{
+    min-height: 256px;
+    gap: 18px;
+}
+
+.user-baja-page .dialog.dialog-wide [data-accion="confirmar"]
+{
+    min-width: 145px;
+}
+
+.user-baja-page .dialog.dialog-wide [data-accion="cancelar"]
+{
+    min-width: 140px;
+}
+
+@media (max-width: 600px)
+{
+    .user-baja-card .grid-2
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .user-baja-actions,
+    .user-baja-result-actions
+    {
+        flex-direction: column;
+    }
+
+    .user-baja-actions .btn,
+    .user-baja-result-actions .btn
+    {
+        width: 100%;
+    }
+}
+
 .search-invalid-card .field-error .readonly
 {
     background: var(--color-red-soft);
