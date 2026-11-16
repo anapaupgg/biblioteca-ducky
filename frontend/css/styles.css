@@ -1217,6 +1217,37 @@ a
     margin-bottom: 14px;
 }
 
+.usuario-registro-page .page-header
+{
+    margin-bottom: 14px;
+}
+
+.usuario-registro-page #form-usuario > .card h2
+{
+    margin-bottom: 12px;
+}
+
+.usuario-registro-page #form-usuario .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.usuario-registro-page #form-usuario > .actions .btn
+{
+    min-height: 48px;
+}
+
+.usuario-registro-page #form-usuario > .actions .btn-primary
+{
+    min-width: 170px;
+}
+
+.usuario-registro-page #form-usuario > .actions a.btn
+{
+    min-width: 139px;
+}
+
 .perfiles-page .perfiles-fila
 {
     display: flex;

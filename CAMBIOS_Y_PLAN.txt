@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — REGISTRO PRINCIPAL DE USUARIO (16 DE NOVIEMBRE DE 2026)
+- Continuación tras 817eb61, subido y sincronizado 0/0. No llegaron commits
+  remotos nuevos al inicio de esta solicitud; package-lock.json local previo
+  permanece fuera de este avance.
+- Frame 2007:5205 cotejado con la app real. Tarjetas a (276,176;1132×178) y
+  (276,370;1132×282), acciones en y=668 y botones de 48 px/170–139 px.
+  Se mantuvieron la consulta institucional real y el perfil Lector por defecto.
+  A 390 px no hubo desbordamiento horizontal. No se creó usuario ni se
+  ejecutó db:init. npm test: 61 aprobadas, 10 omitidas y 0 fallos; git diff
+  --check sin errores. Queda pendiente cotejar el alta con datos reales y sus
+  estados secundarios; las claves A... del frame no coinciden con la BD.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — GESTIÓN Y LISTADO PRINCIPALES DE LIBROS (16 DE NOVIEMBRE DE 2026)
 - git fetch origin confirmó main 0/0 con origin/main, sin commits remotos
   nuevos. package-lock.json local previo permanece ajeno a este bloque.

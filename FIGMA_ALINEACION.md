@@ -2,6 +2,19 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Registro principal de usuario: cotejo del 16 de noviembre de 2026
+
+- Frame `2007:5205`: a 1440 × 960 las tarjetas quedaron en
+  `(276,176;1132×178)` y `(276,370;1132×282)`; las acciones empiezan en
+  y=668, miden 48 px y sus botones 170/139 px. El orden Clave/Perfil y
+  Clave/Nombre/Tipo/Correo conserva el prototipo. A 390 px el formulario no
+  desborda. El selector cargó los perfiles reales y dejó Lector seleccionado.
+- La captura de Figma ilustra una clave `A...` y datos personales ya
+  consultados. El formulario inicia vacío y espera una clave válida de seis
+  caracteres para consultar la institución; no se insertaron datos de ejemplo
+  ni se registró un usuario durante esta comprobación. Se acredita la
+  composición principal, no el resultado de alta.
+
 ## Gestión y lista principales de libros: cotejo del 16 de noviembre de 2026
 
 - Frame `2010:23308`: la página administrativa quedó con recepción en
