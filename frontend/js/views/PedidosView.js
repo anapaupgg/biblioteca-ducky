@@ -200,11 +200,11 @@ const pedidos_view =
             linea.cantidad + '</div>').join('') :
             '<p class="small muted">Aún no has agregado libros. Selecciona «Ver solicitud / agregar más» para comenzar.</p>';
         document.getElementById('panel').innerHTML =
-            '<div class="actions actions-top"><button class="btn" id="btn-ver-solicitud">' +
+            '<div class="actions actions-top purchase-main-actions"><button class="btn" id="btn-ver-solicitud">' +
             'Ver solicitud / agregar más</button><button class="btn btn-primary" id="btn-revisar-top"' +
             '>Revisar solicitud</button>' +
             '<button class="btn" id="btn-cancelar-top">Cancelar</button></div>' +
-            '<div class="card"><h2>Solicitud en preparación</h2><div class="grid-2">' +
+            '<div class="card purchase-main-card"><h2>Solicitud en preparación</h2><div class="grid-2">' +
             '<div class="field"><span class="label">Destinatario</span><div class="readonly">Tesorería</div></div>' +
             '<div class="field"><span class="label">Presupuesto mensual</span><div class="readonly">' +
             (presupuesto ? ui.esc(presupuesto.periodo) + ' · ' +

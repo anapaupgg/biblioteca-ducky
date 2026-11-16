@@ -448,6 +448,46 @@ a
     margin-top: var(--space-16);
 }
 
+.purchase-page .page-header
+{
+    margin-bottom: 14px;
+}
+
+.purchase-main-actions .btn
+{
+    min-height: 48px;
+}
+
+.purchase-main-actions .btn:first-child
+{
+    min-width: 290px;
+}
+
+.purchase-main-actions .btn:nth-child(2)
+{
+    min-width: 178px;
+}
+
+.purchase-main-actions .btn:nth-child(3)
+{
+    min-width: 140px;
+}
+
+.purchase-main-card
+{
+    min-height: 414px;
+}
+
+.purchase-main-card .field
+{
+    min-height: 88px;
+}
+
+.purchase-main-card .purchase-summary-row
+{
+    min-height: 56px;
+}
+
 .purchase-summary-row
 {
     min-height: 42px;

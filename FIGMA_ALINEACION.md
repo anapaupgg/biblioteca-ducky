@@ -2,6 +2,18 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Solicitud principal de compras: cotejo del 16 de noviembre de 2026
+
+- Frame `2011:28537`: con un libro añadido al borrador local, la fila de
+  acciones empieza en y=176 y la tarjeta mide (276, 240; 1132 × 414) a
+  1440 × 960, como el prototipo. A 390 px no hay desbordamiento horizontal.
+- El ejemplo de Figma presenta un folio, presupuesto y datos ilustrativos.
+  La app deja «Solicitud en preparación» y «Sin registrar» hasta que existan
+  un envío y presupuesto reales. La petición de usuario y el libro muestran
+  claves y título existentes; los campos de edición están en el panel inferior.
+  La ruta conserva el encabezado veraz «Solicitudes a Tesorería». Este cotejo
+  acredita la distribución principal, no paridad literal de datos.
+
 ## Modificar perfil de usuario: cotejo del 16 de noviembre de 2026
 
 - Frame `2008:15182`: tarjeta de ocho campos y acciones cotejadas en navegador

@@ -1,3 +1,22 @@
+ACTUALIZACIÓN — PÁGINA PRINCIPAL DE COMPRAS (16 DE NOVIEMBRE DE 2026)
+- Después de cc02687, main estaba sincronizada 0/0 al comprobar origin;
+  no había commits nuevos. package-lock.json local previo sigue excluido.
+- Frame principal 2011:28537 cotejado con `pedidos.html` y un borrador local
+  de una línea. Se ajustaron la fila de acciones y la tarjeta a 1440×960:
+  acciones y=176, tarjeta (276,240;1132×414). Se ampliaron filas y botones
+  con CSS específico de compras; no cambió el modelo ni el POST.
+- La petición de ejemplo se cargó en el formulario y se añadió solo al
+  borrador en memoria. El presupuesto del mes figura «Sin registrar» según
+  la BD; la solicitud aún no tiene folio porque no se ha enviado. La clave
+  real del peticionario sustituye el nombre ilustrativo del frame. Los
+  campos resumidos permanecen de lectura, y el editor funcional está debajo.
+- A 390 px el documento y la tarjeta no desbordaron. No se envió una
+  solicitud ni se ejecutó db:init. npm test: 61 aprobadas, 10 omitidas y
+  0 fallos. Pendiente: seguir con las otras páginas
+  principales; los estados de alerta específicos quedan para después.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — MODIFICAR PERFIL DE USUARIO SEGÚN FIGMA (16 DE NOVIEMBRE DE 2026)
 - Prioridad acordada para el siguiente bloque: cotejar y ajustar las páginas
   principales de cada sección y sus acciones visibles. Los escenarios de
