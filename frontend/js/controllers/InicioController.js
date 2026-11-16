@@ -25,7 +25,7 @@ const SERVICIOS = [
     url: 'pedidos.html',
     icono: 'cart',
     boton: 'Abrir solicitudes',
-    funciones: ['Solicitar compras', 'Autorizar compras', 'Gestionar libros']
+    funciones: ['Solicitar compras', 'Autorizar compras']
 },
 {
     id: 'usuarios',
@@ -98,14 +98,21 @@ const inicio_controller =
 
         inicio_view.saludo(usuario);
         const es_lector = usuario.perfil === 'Lector';
+        const es_catalogo = usuario.perfil === 'Administrador del catálogo';
         inicio_view.perfil_lector(es_lector);
         inicio_view.descripcion(es_lector ?
             'Servicios de consulta para alumnos, profesores y colaboradores.' :
             'Selecciona un servicio de tu perfil.');
-        inicio_view.servicios(SERVICIOS.filter((registro) =>
+        const servicios_visibles = SERVICIOS.filter((registro) =>
             (!registro.solo_lector || es_lector) &&
             registro.funciones.some((filtro) => usuario.funciones.includes(filtro)) &&
-            !(usuario.perfil === 'Administrador del catálogo' && registro.id === 'chatbot')));
+            !(es_catalogo && registro.id === 'chatbot')).map((registro) => (
+        {
+            ...registro,
+            texto: es_catalogo && registro.id === 'libros' ?
+                'Recepción, fichas, catálogo y listados.' : registro.texto
+        }));
+        inicio_view.servicios(servicios_visibles);
 
     }
 };

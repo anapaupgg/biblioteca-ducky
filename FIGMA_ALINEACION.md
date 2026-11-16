@@ -2,7 +2,7 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
-## Portada administrativa: cotejo del 16 de noviembre de 2026
+## Portadas administrativas: cotejo del 16 de noviembre de 2026
 
 - Frame `2006:1313`: a 1440 × 960, nombre en y=176, barra de compras
   `(276,216;1132×80)` y primera tarjeta de servicios
@@ -11,9 +11,19 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 - Los siete accesos aparecen en el orden del frame para el administrador del
   sistema; la descripción de «Gestionar libros» se ajustó al texto del
   prototipo. El nombre proviene de la sesión real (`Diego Ramírez`) en lugar
-  del ejemplo (`Alejandro Elias`). Los permisos siguen filtrando las tarjetas
-  para otros perfiles. A 390 px no hay desbordamiento y los botones caben en
-  las tarjetas. No se declara paridad de todas las portadas por perfil.
+  del ejemplo (`Alejandro Elias`). A 390 px no hay desbordamiento y los
+  botones caben en las tarjetas.
+- Frame `2043:46958`: la cuenta de Administrador de biblioteca `100002`
+  mostró compras en y=216 y cinco servicios: usuarios, búsqueda, préstamos y
+  asistente desde y=312, 430, 548 y 666. Coinciden orden y geometría del
+  frame; el nombre `Pamela Torres` procede de la sesión.
+- Frame `2043:47677`: la cuenta de Administrador del catálogo `100003`
+  mostró solo Gestionar libros en y=216 y Buscar libros en y=334, como Figma.
+  Antes aparecía una barra de compras porque la portada confundía acceso de
+  lectura a órdenes de recepción con autorización para solicitar compras. Se
+  retiró esa tarjeta para este perfil; el permiso de recepción y sus rutas se
+  conservan. La descripción de libros de este perfil sigue el texto propio
+  del frame. Su nombre real es `Katya Hernández`.
 
 ## Alta y edición principales de libros: cotejo del 16 de noviembre de 2026
 
@@ -190,9 +200,9 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
 | Sección de Figma | Estado antes de esta revisión | Diferencia comprobada |
 | --- | --- | --- |
 | 00 Acceso y sesión (`2006:941`) | Parcial | Acceso y selector de perfil cotejados en escritorio. Faltan estados alternos y contraste con un frame móvil específico. |
-| 01 Administrador del sistema (`2006:1313`) | Parcial | Portada principal cotejada a 1440 × 960: barra de compras, siete tarjetas, iconos y botones siguen las coordenadas del frame. Nombre y permisos son datos reales; quedan estados y otros perfiles por revisar. |
-| 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | CRUD y compras existen; faltan cotejos visuales por estado y acciones de prototipo. |
-| 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Fichas y catálogo existen; faltan cotejos de cada estado. |
+| 01 Administrador del sistema (`2006:1313`) | Parcial | Portada principal cotejada a 1440 × 960: barra de compras, siete tarjetas, iconos y botones siguen las coordenadas del frame. Nombre y permisos son datos reales; quedan estados secundarios. |
+| 02 Biblioteca: usuarios y compras (`2043:46958`, `2007:4863`, `2011:28537`) | Parcial | Portada de biblioteca, gestión principal de usuarios y compra principal cotejadas. Quedan diferencias de estados y acciones secundarias. |
+| 03 Catálogo (`2043:47677`, `2010:23308`) | Parcial | Portada de catálogo con dos tarjetas cotejada; fichas y catálogo principales revisados. Quedan estados y edición de ejemplares. |
 | 04 Lector (`2044:48055`, `2046:48434`, `2046:48455`, `2046:48477`) | Parcial | Inicio, listado, PDF e impresión cotejados en escritorio; listado y recorrido también a 390 px. Los libros y la impresora simulados en Figma difieren de los datos y el diálogo reales. |
 | 05 Consulta compartida (`2013:31577`) | Parcial | La búsqueda principal tiene seis filtros en dos columnas y los accesos del frame; faltan otros estados de resultado y cotejo móvil completo. |
 | 06 Circulación conservada (`2014:35297`) | Parcial | Solicitud, autorización, devolución y espera funcionan; faltan cotejos de estados secundarios. |
