@@ -16,6 +16,7 @@ const prestamos_view =
 {
     configurar: function (ver_mios, ver_pendientes, ver_devoluciones)
     {
+        document.body.classList.toggle('circulation-main', ver_pendientes);
         document.getElementById('panel-mios').classList.toggle('hidden', !ver_mios || ver_pendientes);
         document.getElementById('panel-personal').classList.toggle('hidden', !ver_pendientes);
         document.getElementById('panel-pendientes').classList.add('hidden');
@@ -112,6 +113,7 @@ const prestamos_view =
 
     mostrar: function (modo)
     {
+        document.body.classList.toggle('circulation-main', modo === 'personal');
         ['personal', 'registrar', 'validacion', 'recibo', 'boleta', 'correo', 'correo-enviado',
             'whatsapp', 'whatsapp-preparado', 'renovar', 'renovacion-validada',
             'espera', 'agregar-espera'].forEach((panel) =>

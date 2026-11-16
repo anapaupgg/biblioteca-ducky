@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-14                                               */
+/* Date: 2026-11-16                                               */
 /* Description: Coordina consulta y devolución de ejemplares.    */
 /******************************************************************/
 
@@ -37,6 +37,7 @@ const devoluciones_controller =
             registrar_pago: (datos) => this.registrar_pago(datos),
             avisar_adeudos: () => this.avisar_adeudos()
         });
+        devoluciones_view.mostrar('devoluciones');
         await this.cargar();
     },
 

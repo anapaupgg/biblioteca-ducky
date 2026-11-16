@@ -2,6 +2,21 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Páginas principales de circulación: cotejo del 16 de noviembre de 2026
+
+- Frames `2447:106950` y `2465:98968`: las acciones superiores de préstamos
+  y devoluciones empiezan en y=176 y sus botones miden 48 px a 1440 × 960.
+  Las filas principales miden 56 px como en Figma. En devoluciones, el aviso
+  por un préstamo vencido real quedó en `(276,240;1132×96)`, el título en
+  y=352 y la primera fila en y=396.
+- En la BD local no hay solicitud pendiente de préstamo, por lo que la página
+  de préstamos omite el aviso azul ilustrativo del frame. Con los tres
+  préstamos activos reales, el título está en y=240 y la primera fila en
+  y=284. El cambio de tamaño se aplica solo a las páginas base; al abrir
+  «Registrar préstamo», el formulario conserva su separación previa.
+  Préstamos y devoluciones no desbordan a 390 px. Claves `L...`, fechas y
+  solicitantes reales sustituyen los ejemplos `B...` del prototipo.
+
 ## Portadas administrativas: cotejo del 16 de noviembre de 2026
 
 - Frame `2006:1313`: a 1440 × 960, nombre en y=176, barra de compras

@@ -1,3 +1,22 @@
+ACTUALIZACIÓN — PRÉSTAMOS Y DEVOLUCIONES PRINCIPALES (16 DE NOVIEMBRE DE 2026)
+- Continuación tras 3fcce9b, subido y sincronizado. No hubo commits remotos
+  nuevos al inicio de esta solicitud. package-lock.json conserva el cambio
+  local previo y queda fuera de este avance.
+- Frames 2447:106950 y 2465:98968 cotejados con las páginas reales usando el
+  perfil de biblioteca. En las vistas principales se ajustaron acciones a
+  y=176/48 px y filas a 56 px. El aviso de préstamo vencido de devoluciones
+  quedó (276,240;1132×96), título y=352 y primera fila y=396 a 1440×960.
+- Préstamos no muestra el aviso de solicitud del ejemplo porque la BD local no
+  tiene ninguna pendiente. El título está en y=240 y la primera fila en y=284
+  con datos reales. «Registrar préstamo» quita el estilo de portada; Cancelar
+  lo recupera. Las dos páginas tuvieron ancho de documento de 390 px en móvil.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos. No se registró, devolvió
+  ni modificó ningún préstamo; no se ejecutó db:init.
+  Pendientes: los estados secundarios y los datos ilustrativos del prototipo
+  siguen distinguiéndose de las operaciones reales.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PORTADAS DE BIBLIOTECA Y CATÁLOGO (16 DE NOVIEMBRE DE 2026)
 - Continuación tras 0c173c7, subido y sincronizado 0/0. Al inicio de esta
   solicitud no hubo commits remotos nuevos; el cambio local ajeno de

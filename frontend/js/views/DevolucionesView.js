@@ -1,7 +1,7 @@
 /******************************************************************/
 /* Program Assignment: Biblioteca Ducky - Sistema web             */
 /* Name: Equipo FlowBit                                           */
-/* Date: 2026-11-14                                               */
+/* Date: 2026-11-16                                               */
 /* Description: Presentación y eventos de devoluciones.           */
 /******************************************************************/
 
@@ -70,6 +70,7 @@ const devoluciones_view =
 
     mostrar: function (modo)
     {
+        document.body.classList.toggle('circulation-main', modo === 'devoluciones');
         ['devoluciones', 'buscar-devolucion', 'revisar-devolucion', 'recibo-devolucion',
             'perdida', 'revisar-perdida', 'multas', 'pago']
             .forEach((panel) => document.getElementById('panel-' + panel)

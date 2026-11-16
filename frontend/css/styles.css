@@ -834,6 +834,29 @@ a
     margin-bottom: var(--space-8);
 }
 
+.circulation-main .page-header
+{
+    margin-bottom: 14px;
+}
+
+.circulation-main #panel-personal > .actions .btn,
+.circulation-main #panel-devoluciones > .actions .btn
+{
+    min-height: 48px;
+}
+
+.circulation-main #aviso-solicitud .alert,
+.circulation-main #aviso-vencido .alert
+{
+    min-height: 96px;
+}
+
+.circulation-main #prestamos-activos .circulation-row,
+.circulation-main #prestamos-por-devolver .circulation-row
+{
+    padding: 15px var(--space-16);
+}
+
 .circulation-page #form-consultar-espera
 {
     align-items: flex-end;
