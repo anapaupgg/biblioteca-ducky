@@ -2394,6 +2394,16 @@ table.table
     min-width: 228px;
 }
 
+.user-edit-actions #btn-explicar-retiro
+{
+    min-width: 250px;
+}
+
+.user-edit-actions a.btn
+{
+    min-width: 140px;
+}
+
 .user-edit-alert
 {
     min-height: 96px;

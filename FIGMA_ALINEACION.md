@@ -2,6 +2,22 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Modificación principal del perfil de usuario: cotejo del 16 de noviembre de 2026
+
+- Frame `2008:15182`: con el usuario real `100002`, la ficha ocupa
+  `(276,176;1132×490)` a 1440 × 960; las acciones comienzan en y=682 y
+  miden 48 px. Se incorporó la tercera acción visible «Cambio que retira
+  funciones» entre Guardar y Cancelar, con anchos 228/250/140 px.
+- La acción muestra una vista previa de las funciones efectivamente retiradas
+  por el perfil seleccionado. Con Administrador de biblioteca → Lector indicó
+  cinco funciones y aclaró que no aplica el cambio hasta Guardar. Se cerró la
+  vista previa sin modificar al usuario. La confirmación al guardar continúa
+  bajo el controlador y la validación final del servidor.
+- Los datos de Pamela Torres, clave `100002` y correo proceden de PostgreSQL;
+  difieren del ejemplo Sofía Torres / `A001234` del frame. El estado inicial
+  vacío y los estados de reactivación siguen como variantes, no como paridad
+  literal de esta captura.
+
 ## Creación principal de perfil: cotejo del 16 de noviembre de 2026
 
 - Frame `2009:20306`: a 1440 × 960, Datos del perfil quedó en

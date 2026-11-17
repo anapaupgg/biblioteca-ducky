@@ -48,6 +48,8 @@ const usuario_editar_view =
             this.actualizar_acciones());
         document.getElementById('btn-guardar').addEventListener('click', () => acciones.guardar());
         document.getElementById('btn-reactivar').addEventListener('click', () => acciones.reactivar());
+        document.getElementById('btn-explicar-retiro').addEventListener('click', () =>
+            acciones.explicar_retiro());
     },
 
     poner_clave: function (clave)

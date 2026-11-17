@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — MODIFICAR PERFIL PRINCIPAL (16 DE NOVIEMBRE DE 2026)
+- Al comenzar se ejecutó git fetch origin y se comparó main con origin/main:
+  0/0, sin commits remotos nuevos. El cambio local previo en package-lock.json
+  se conservó y permanece ajeno a este avance.
+- Frame 2008:15182 cotejado con la app en 1440×960. La ficha ya coincidía en
+  (276,176;1132×490); se incorporó la acción «Cambio que retira funciones»
+  para igualar las acciones en y=682. Calcula las funciones que se retirarían
+  al seleccionar un perfil y solo muestra una vista previa; no guarda datos.
+  Con 100002 y perfil Lector enumeró cinco funciones. No se cambió la BD ni se
+  ejecutó db:init. Los datos reales difieren de los ilustrados en Figma.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos; comprobación de sintaxis de
+  la vista y el controlador y git diff --check sin errores.
+- Pendientes: variantes de reactivación, confirmaciones y otros estados
+  secundarios del prototipo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CREACIÓN PRINCIPAL DE PERFIL (16 DE NOVIEMBRE DE 2026)
 - Tras subir 0a9f5eb, main quedó 0/0 con origin/main. No hubo commits
   remotos nuevos al iniciar; package-lock.json local sigue fuera del trabajo.

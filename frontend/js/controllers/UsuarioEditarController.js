@@ -10,6 +10,7 @@
 /*   usuario_editar_controller.iniciar() */
 /*   usuario_editar_controller.consultar(clave_explicita) */
 /*   usuario_editar_controller.guardar() */
+/*   usuario_editar_controller.explicar_retiro() */
 /*   usuario_editar_controller.reactivar() */
 /******************************************************************/
 
@@ -41,6 +42,7 @@ const usuario_editar_controller =
         {
             consultar: (clave) => this.consultar(clave),
             guardar: () => this.guardar(),
+            explicar_retiro: () => this.explicar_retiro(),
             reactivar: () => this.reactivar()
         });
         try
@@ -141,6 +143,24 @@ const usuario_editar_controller =
         {
             this.guardando = false;
         }
+    },
+
+    explicar_retiro: async function ()
+    {
+        const id_perfil = usuario_editar_view.perfil_elegido();
+        const destino = this.perfiles.find((perfil) => perfil.id === id_perfil);
+        const funciones_actuales = this.usuario?.funciones || [];
+        const retiradas = destino ? funciones_actuales.filter((funcion) =>
+            !destino.funciones.includes(funcion)) : [];
+        const texto = !this.usuario || !destino ?
+            'Busca un usuario y elige un nuevo perfil para ver qué funciones perdería.' :
+            retiradas.length ?
+                'El perfil ' + destino.nombre + ' retiraría estas funciones: ' +
+                retiradas.join(', ') + '. El cambio solo se aplicará al guardar.' :
+                'El perfil ' + destino.nombre + ' no retira funciones a ' +
+                this.usuario.nombre + '. El cambio solo se aplicará al guardar.';
+        await ui.dialogo({ titulo: 'Cambio que retira funciones', texto,
+            confirmar: 'Entendido', cancelar: false });
     },
 
     reactivar: async function ()
