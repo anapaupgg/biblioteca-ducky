@@ -1,3 +1,39 @@
+VERIFICACIÓN FUNCIONAL — RUTAS Y RECORRIDOS (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main sincronizados en c46ae38; no había
+  commits remotos nuevos. Ese commit solo aclara el directorio ficticio y no
+  cambia la lógica revisada. Se conservó la modificación local ajena de
+  package-lock.json fuera de este avance.
+- npm run db:check confirmó conexión a PostgreSQL local en 5433. Suite
+  DUCKY_TEST_DB=1 npm test: 75 aprobadas, 0 fallos, 0 omitidas; incluye
+  préstamos, devoluciones, pérdida, multas, pagos, recuperación, usuarios,
+  catálogo, compras concurrentes, chatbot, permisos y prioridad de espera.
+- Instancia existente en localhost:3002: 39 comprobaciones HTTP satisfactorias
+  con los cuatro perfiles de prueba. Incluyen login, sesión, cierre, permisos
+  401/403, usuarios, perfiles, catálogo, búsqueda, PDF válido, solicitudes,
+  presupuestos, préstamos activos, espera, multas y chatbot. Validación de
+  préstamo 800456/L000129-01 aprobada sin guardar; 621234 fue rechazado por
+  préstamo vencido (422), según la regla. Prevalidación de devolución aprobada.
+- En navegador: acceso como 100001 y cierre; filtro por clave 100002; lista
+  de libros; búsqueda «Ingeniería» con dos resultados; formulario de préstamo
+  y revisión autorizada sin confirmar; rechazo visible por atraso; cálculo
+  previo de multa de $410.00 para L000130-01 sin devolver; lista de multas y
+  respuesta del asistente con dos libros del catálogo. No se registraron
+  préstamos, devoluciones, bajas ni compras permanentes. Se cerraron las
+  sesiones de prueba; el acceso y cierre sí dejan bitácora normal.
+- Estado de datos: no hay presupuesto para el mes actual y los tres préstamos
+  activos están vencidos. Por tanto, no se pudo completar una compra nueva o
+  una renovación exitosa desde la interfaz con los datos actuales. Sus reglas
+  se probaron en transacciones/entorno aislado; eso no equivale a un recorrido
+  HTTP completo hoy. Resend y boleta por correo están configurados, pero no se
+  envió un correo de prueba en esta revisión.
+- Pendientes funcionales: entrega automática de avisos a lista de espera,
+  Tesorería y Servicios Escolares; WhatsApp con adjunto automático; recorrer
+  los estados secundarios y probar compras/renovaciones positivas con datos
+  vigentes en un entorno aislado. La universidad es ficticia y no requiere
+  ninguna base institucional externa.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACLARACIÓN — UNIVERSIDAD FICTICIA Y DATOS PROPIOS (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main sincronizados en 2e34ba3, sin commits
   remotos nuevos. El último commit es la prioridad de lista de espera y no

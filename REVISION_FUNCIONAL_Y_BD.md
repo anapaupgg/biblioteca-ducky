@@ -1,5 +1,23 @@
 # Revisión funcional y de datos — 21 de octubre de 2026
 
+## Prueba de recorridos — 17 de noviembre de 2026
+
+PostgreSQL respondió; 75 pruebas automatizadas con BD pasaron sin fallos ni
+omisiones. La instancia de `localhost:3002` pasó 39 comprobaciones HTTP con
+cuatro perfiles, PDF, permisos y prevalidaciones de préstamo y devolución.
+En navegador se comprobaron acceso, filtro de usuarios, catálogo, búsqueda,
+préstamo permitido/bloqueado, cálculo previo de multa, lista de multas,
+chatbot y cierre. No se confirmaron operaciones de negocio durante el paseo
+por la interfaz.
+
+Los datos actuales limitan la demostración: no hay presupuesto del mes y los
+tres préstamos activos están vencidos. Compras y renovaciones positivas
+cuentan con pruebas transaccionales, pero no con un recorrido HTTP positivo
+con esos datos actuales. Resend está configurado; esta revisión no envió
+correos ni WhatsApp. Los avisos externos a Tesorería, Servicios Escolares y
+lista de espera siguen pendientes. La verificación no certifica que todos
+los escenarios de las 17 historias estén terminados.
+
 ## Aclaración de alcance — 17 de noviembre de 2026
 
 La universidad del proyecto es ficticia. No existe ni se requiere una base
