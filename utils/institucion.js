@@ -2,7 +2,7 @@
 /* Program Assignment: Biblioteca Ducky - Sistema web */
 /* Name: Equipo FlowBit */
 /* Date: 2026-10-26 */
-/* Description: Directorio de alumnos y empleados (simulado). */
+/* Description: Directorio local ficticio de alumnos y empleados. */
 /******************************************************************/
 
 /******************************************************************/
@@ -119,8 +119,8 @@ const DIRECTORIO = [
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* consultar(clave)                                               */
-/* Purpose: Return the institutional record of a clave or null if */
-/*          it does not exist in the institution.                 */
+/* Purpose: Return the local Ducky record of a clave or null if   */
+/*          it does not exist in this test directory.             */
 /* Returns: Promise resolving to { clave, nombre, correo, tipo,   */
 /*          vigente } | null                                      */
 /******************************************************************/

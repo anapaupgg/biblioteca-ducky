@@ -108,8 +108,8 @@ Claves de la institución simulada para registrar usuarios nuevos:
 
 ## Notas
 
-- **Correo:** no hay servidor de correo. La contraseña temporal se muestra al administrador al registrar al usuario. La recuperación y el restablecimiento públicos están deshabilitados (HTTP 503): no generan tokens, revelan cuentas ni aceptan enlaces antiguos de demostración. El cambio de contraseña autenticado sigue disponible. Para habilitar recuperación se requiere entrega por correo verificado, revocar tokens antiguos y probar expiración, uso único y límites de solicitudes.
-- **Directorio institucional:** los datos personales al registrar un usuario se leen de un directorio simulado en `utils/institucion.js`. En producción, ese módulo llamaría al servicio de la universidad.
+- **Correo:** la contraseña temporal de un alta se muestra al administrador para entrega privada. La recuperación por Resend funciona cuando se configuran las variables indicadas abajo; sin ellas responde HTTP 503. El cambio de contraseña autenticado sigue disponible.
+- **Directorio de prueba de Ducky:** la universidad del proyecto es ficticia. Los datos para validar una matrícula o nómina nueva se mantienen en `utils/institucion.js`; las cuentas, perfiles, préstamos y demás operaciones se guardan en PostgreSQL local. No se necesita una base ni un servicio de una universidad externa.
 
 ## Baja y reactivación de usuarios
 

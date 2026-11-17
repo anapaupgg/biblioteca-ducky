@@ -1,5 +1,15 @@
 # Revisión funcional y de datos — 21 de octubre de 2026
 
+## Aclaración de alcance — 17 de noviembre de 2026
+
+La universidad del proyecto es ficticia. No existe ni se requiere una base
+institucional externa. `utils/institucion.js` es el directorio local de datos
+de prueba para altas y reactivaciones; PostgreSQL local almacena las cuentas
+y operaciones de Biblioteca Ducky. Las menciones anteriores a «fuente
+institucional real» son hipótesis de la revisión inicial y no representan
+un pendiente del proyecto. Si se quiere dar de alta a más personas, el
+pendiente pertinente es administrar ese directorio con datos propios.
+
 ## Contraste con hoja final de historias — 17 de noviembre de 2026
 
 La hoja XLSX enlazada por Diego contiene 17 historias: HUGU01–05, HUBL01,
@@ -9,8 +19,8 @@ completa de todos sus escenarios. La brecha HUPL03/HUDL01 de prioridad de la
 lista de espera se corrigió con la migración aditiva 004 y una prueba de
 devolución y préstamo reversible.
 
-Pendientes funcionales principales: fuente institucional real y entrega de
-credenciales/avisos a correos institucionales; transporte y acuse externos
+Pendientes funcionales principales: ampliar o administrar el directorio
+local y entregar credenciales/avisos por correo; transporte y acuse externos
 de Tesorería y Servicios Escolares; envío automático de WhatsApp; correo a
 la persona en espera; validación completa de los escenarios secundarios y
 de los roles. La app web responsiva no demuestra por sí sola una app móvil
@@ -25,7 +35,7 @@ La exposición pública del token se mitigó deshabilitando emisión y canje de 
 
 ## Actualización de bajas y reactivaciones
 
-Corregido el ciclo en la aplicación: baja elimina credenciales y revoca sesiones/tokens; reactivación genera credencial temporal, valida jerarquía y tipo incluso al conservar perfil, conserva historial y registra la acción. Probado contra PostgreSQL con rollback. No se migraron datos históricos ni se modificó el esquema. La entrega de credenciales es manual al administrador autorizado; correo y fuente institucional real siguen pendientes. Las observaciones originales de la tabla siguiente describen la revisión inicial.
+Corregido el ciclo en la aplicación: baja elimina credenciales y revoca sesiones/tokens; reactivación genera credencial temporal, valida jerarquía y tipo incluso al conservar perfil, conserva historial y registra la acción. Probado contra PostgreSQL con rollback. No se migraron datos históricos ni se modificó el esquema. La entrega de credenciales es manual al administrador autorizado; su envío por correo sigue pendiente. Las observaciones originales de la tabla siguiente describen la revisión inicial.
 
 ## Actualización de compras concurrentes
 
@@ -61,7 +71,7 @@ ISBN incorporado en consulta y tabla. Impresión/PDF sigue usando el diálogo de
 ## Prioridades para aplicación y BD
 
 1. **P0 — Recuperación de contraseña:** `controllers/authController.js` devuelve `enlace_demo` y `correo_demo` desde una ruta pública. Quien conoce una clave puede obtener un token de restablecimiento sin controlar el correo. Corregir antes de compartir la app; no basta cambiar el texto del diálogo. Comportamiento confirmado por lectura de código, sin ejecutar un cambio de contraseña.
-2. **P1 — Ciclo de credenciales e institución:** alinear alta, baja, reactivación y vigencia con las historias. Definir una fuente institucional real o una simulación separada explícita y verificable. Cualquier cambio del esquema debe hacerse mediante migración conservadora, nunca con reinicialización.
+2. **P1 — Ciclo de credenciales y directorio local:** alinear alta, baja, reactivación y vigencia con las historias usando datos propios de Ducky. Ampliar o administrar el directorio local cuando se necesiten más personas. Cualquier cambio del esquema debe hacerse mediante migración conservadora, nunca con reinicialización.
 3. **P1 — Integridad con concurrencia:** `fn_detalle_pedido_presupuesto` suma compromisos sin bloquear el presupuesto compartido; dos pedidos simultáneos pueden superar el monto. En recepción, `controllers/pedidoController.js` comprueba estado antes de la transacción: revisar doble recepción y creación duplicada de ejemplares. Son riesgos identificados por inspección; faltan pruebas concurrentes aisladas.
 4. **P1 — Permisos y auditoría:** registrar rechazos relevantes, separar compras de préstamos y comprobar acceso directo por API, además de botones visibles. Revisar cambios de privilegios y usuarios inactivos asignados a perfiles.
 5. **P2 — Listado y navegación:** añadir ISBN, definir exportación PDF y comprobar visualmente escritorio/móvil, estados vacíos, formularios y navegación sin pantallas en blanco.

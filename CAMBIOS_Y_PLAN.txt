@@ -1,3 +1,21 @@
+ACLARACIÓN — UNIVERSIDAD FICTICIA Y DATOS PROPIOS (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main sincronizados en 2e34ba3, sin commits
+  remotos nuevos. El último commit es la prioridad de lista de espera y no
+  afecta esta aclaración. Se conserva fuera del commit el cambio local ajeno
+  de package-lock.json.
+- Diego aclaró que la universidad del proyecto no existe. El directorio de
+  utils/institucion.js ya es local y ficticio; PostgreSQL local guarda las
+  cuentas y operaciones. No se requiere ninguna BD institucional externa.
+- README y revisión funcional corregidos para quitar esa supuesta dependencia;
+  README también aclara que Resend funciona si está configurado, en vez de
+  afirmar que la recuperación siempre está deshabilitada.
+  Sin cambio de lógica, esquema o datos; no se ejecutó db:init.
+- Pendiente pertinente: hacer administrable el directorio propio si se desea
+  registrar personas fuera del conjunto de prueba; siguen los pendientes de
+  entrega de correo y avisos definidos por los flujos.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — PRIORIDAD FUNCIONAL DE LISTA DE ESPERA (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main sincronizados en fb281f2; no había
   commits remotos nuevos. El commit anterior, de edición de acervo, se revisó
