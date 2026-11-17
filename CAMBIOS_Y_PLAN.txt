@@ -1,3 +1,33 @@
+ACTUALIZACIÓN — PRIORIDAD FUNCIONAL DE LISTA DE ESPERA (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main sincronizados en fb281f2; no había
+  commits remotos nuevos. El commit anterior, de edición de acervo, se revisó
+  y es compatible con este cambio. Se conserva fuera de este avance la
+  modificación local ajena de package-lock.json.
+- Se leyó la hoja XLSX «Entrega Final (Historias de Usuario para Sprint
+  seleccionado)», proporcionada como enlace de Google Sheets. Contiene 17
+  historias: HUGU01–05, HUBL01, HUGL01–04, HUCB02, HUPL01–03 y HUDL01–03.
+  El foco inmediato es HUPL03/HUDL01: al devolver se notificaba internamente
+  al primero de la fila, pero otra persona podía tomar la copia disponible.
+- Frames Figma 2465:101339 y 2447:114653 consultados antes del cambio. La
+  regla PostgreSQL ahora reserva por cantidad las copias disponibles para
+  usuarios Notificados; un tercero no puede consumir la última copia apartada.
+  El bloqueo por libro serializa préstamos concurrentes. El préstamo del
+  usuario Notificado marca su espera como Atendida mediante el trigger previo.
+- v_catalogo, solicitudes pendientes y consulta de lista de espera cuentan
+  copias libres después de restar las apartadas. Migración aditiva 004 aplicada
+  en PostgreSQL local 5433: redefine función y vista, sin borrar registros.
+  Se validó primero en transacción revertida; no se ejecutó db:init.
+- Prueba completa con ROLLBACK: devolución, usuario primero Notificado,
+  catálogo en cero libres, préstamo ajeno rechazado, préstamo prioritario
+  aceptado y espera Atendida. Suite DUCKY_TEST_DB=1: 75 aprobadas, 0 fallos,
+  0 omitidas. Las consultas de solicitudes y espera también devolvieron datos.
+- Pendiente: el aviso es interno; no se envía correo real ni se asigna una
+  clave de ejemplar específica a la espera. Tesorería/Servicios Escolares
+  siguen sin transporte externo y WhatsApp requiere entrega manual. La paridad
+  visual completa y los demás escenarios secundarios siguen pendientes.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — EDICIÓN DE ACERVO EN FORMULARIO DE LIBRO (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main 0/0, sin commits remotos nuevos; se
   conserva y excluye la modificación local ajena de package-lock.json.

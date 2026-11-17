@@ -1,5 +1,22 @@
 # Revisión funcional y de datos — 21 de octubre de 2026
 
+## Contraste con hoja final de historias — 17 de noviembre de 2026
+
+La hoja XLSX enlazada por Diego contiene 17 historias: HUGU01–05, HUBL01,
+HUGL01–04, HUCB02, HUPL01–03 y HUDL01–03. Los flujos internos principales
+ya tienen rutas, modelos, vistas y pruebas; esto no equivale a aceptación
+completa de todos sus escenarios. La brecha HUPL03/HUDL01 de prioridad de la
+lista de espera se corrigió con la migración aditiva 004 y una prueba de
+devolución y préstamo reversible.
+
+Pendientes funcionales principales: fuente institucional real y entrega de
+credenciales/avisos a correos institucionales; transporte y acuse externos
+de Tesorería y Servicios Escolares; envío automático de WhatsApp; correo a
+la persona en espera; validación completa de los escenarios secundarios y
+de los roles. La app web responsiva no demuestra por sí sola una app móvil
+nativa. Para la rúbrica, presentar como terminados solo los recorridos que
+se hayan ejecutado con datos y permisos reales.
+
 Alcance: aplicación funcional y PostgreSQL. Figma y documentos se usan como referencia; presentación, videos, cartas y otros entregables académicos quedan fuera por indicación de Diego. Esta es una revisión de brechas, no una certificación de cumplimiento ni una calificación.
 
 ## Actualización de recuperación

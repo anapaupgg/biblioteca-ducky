@@ -2,6 +2,21 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Prioridad de la lista de espera: revisión del 17 de noviembre de 2026
+
+- Consultados los frames `2465:101339` (devolución con espera) y
+  `2447:114653` (lista de espera), que presentan aviso al primero y
+  prioridad sobre la copia devuelta. La vista ya mostraba el estado
+  `Notificado`, pero la regla de préstamo permitía que otro usuario tomara
+  la única copia libre.
+- La base ahora protege la cantidad de copias apartadas para usuarios
+  `Notificado`, y el catálogo y la lista muestran solo las copias libres.
+  Una prueba transaccional confirmó rechazo al tercero y préstamo al primero.
+  No se alteró la composición visual de las pantallas ni se repitió una
+  comparación de píxeles en este cambio; el cotejo visual previo sigue siendo
+  parcial. El correo al usuario y la asignación de una clave específica de
+  ejemplar siguen pendientes.
+
 ## Edición directa de acervo: cotejo del 17 de noviembre de 2026
 
 - Frame `2010:25664`: con `L000129`, la tarjeta principal mantiene

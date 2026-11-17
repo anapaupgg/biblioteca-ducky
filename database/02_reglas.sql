@@ -315,9 +315,14 @@ DECLARE
     v_tipo    tipos_usuario%ROWTYPE;
     v_ej      ejemplares%ROWTYPE;
     v_activos INTEGER;
+    v_libro   VARCHAR(7);
+    v_libres  INTEGER;
+    v_avisados INTEGER;
 BEGIN
     SELECT * INTO v_usr  FROM usuarios WHERE clave_usuario = NEW.clave_usuario;
     SELECT * INTO v_tipo FROM tipos_usuario WHERE id_tipo_usuario = v_usr.id_tipo_usuario;
+    SELECT id_libro INTO v_libro FROM ejemplares WHERE id_ejemplar = NEW.id_ejemplar;
+    PERFORM 1 FROM libros WHERE id_libro = v_libro FOR UPDATE;
     SELECT * INTO v_ej   FROM ejemplares WHERE id_ejemplar = NEW.id_ejemplar FOR UPDATE;
 
     IF NOT tiene_funcion(NEW.clave_bibliotecario, 'Préstamos') THEN
@@ -346,6 +351,18 @@ BEGIN
     END IF;
     IF v_ej.tipo_uso NOT IN ('Préstamo externo', 'Préstamo digital') THEN
         RAISE EXCEPTION 'Préstamo no autorizado: el ejemplar % es de uso "%"', NEW.id_ejemplar, v_ej.tipo_uso;
+    END IF;
+    IF v_ej.tipo_uso = 'Préstamo externo' THEN
+        SELECT count(*) INTO v_libres FROM ejemplares
+         WHERE id_libro = v_libro AND estatus = 'Disponible'
+           AND tipo_uso = 'Préstamo externo';
+        SELECT count(*) INTO v_avisados FROM lista_espera
+         WHERE id_libro = v_libro AND estatus = 'Notificado';
+        IF v_libres <= v_avisados AND NOT EXISTS (
+            SELECT 1 FROM lista_espera WHERE id_libro = v_libro
+              AND clave_usuario = NEW.clave_usuario AND estatus = 'Notificado') THEN
+            RAISE EXCEPTION 'Préstamo no autorizado: los ejemplares disponibles están apartados para la lista de espera';
+        END IF;
     END IF;
     IF NOT EXISTS (SELECT 1 FROM libros WHERE id_libro = v_ej.id_libro AND estatus = 'Activo en catálogo') THEN
         RAISE EXCEPTION 'Préstamo no autorizado: el libro % no está activo en el catálogo', v_ej.id_libro;
@@ -590,8 +607,12 @@ SELECT l.id_libro, l.titulo, l.isbn, l.formato,
          WHERE la.id_libro = l.id_libro)                                   AS autores,
        e.nombre AS editorial, t.nombre AS tema, l.anio_publicacion,
        count(x.id_ejemplar) FILTER (WHERE x.estatus <> 'Baja')             AS ejemplares,
+       greatest(count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Disponible'
+                                    AND x.tipo_uso = 'Préstamo externo') -
+           (SELECT count(*) FROM lista_espera w WHERE w.id_libro = l.id_libro
+              AND w.estatus = 'Notificado'), 0) +
        count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Disponible'
-                                    AND x.tipo_uso IN ('Préstamo externo', 'Préstamo digital')) AS disponibles_prestamo,
+                                    AND x.tipo_uso = 'Préstamo digital') AS disponibles_prestamo,
        count(x.id_ejemplar) FILTER (WHERE x.estatus = 'Disponible')        AS disponibles_total
   FROM libros l
   JOIN editoriales e ON e.id_editorial = l.id_editorial

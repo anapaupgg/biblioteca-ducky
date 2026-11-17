@@ -50,7 +50,13 @@ const pendientes = async () =>
                     'id_ejemplar', e.id_ejemplar, 'tipo_uso', e.tipo_uso)
                     ORDER BY e.id_ejemplar)
                     FROM ejemplares e WHERE e.id_libro = s.id_libro
-                    AND e.estatus = 'Disponible' AND e.tipo_uso = 'Préstamo externo'), '[]'::json)
+                    AND e.estatus = 'Disponible' AND e.tipo_uso = 'Préstamo externo'
+                    AND (EXISTS (SELECT 1 FROM lista_espera w WHERE w.id_libro = s.id_libro
+                        AND w.clave_usuario = s.clave_usuario AND w.estatus = 'Notificado')
+                        OR (SELECT count(*) FROM ejemplares x WHERE x.id_libro = s.id_libro
+                            AND x.estatus = 'Disponible' AND x.tipo_uso = 'Préstamo externo') >
+                           (SELECT count(*) FROM lista_espera w WHERE w.id_libro = s.id_libro
+                            AND w.estatus = 'Notificado'))), '[]'::json)
                     AS ejemplares
            FROM solicitudes_prestamo s JOIN libros l ON l.id_libro = s.id_libro
                                       JOIN usuarios u ON u.clave_usuario = s.clave_usuario
@@ -99,8 +105,10 @@ const detalle = async (client, id_prestamo) =>
                 t.dias_prestamo, t.max_ejemplares, t.multa_diaria, e.tipo_uso,
                 (SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
                     AND x.tipo_uso = 'Préstamo externo') AS ejemplares_total,
-                (SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
-                    AND x.tipo_uso = 'Préstamo externo' AND x.estatus = 'Disponible')
+                greatest((SELECT count(*)::int FROM ejemplares x WHERE x.id_libro = e.id_libro
+                    AND x.tipo_uso = 'Préstamo externo' AND x.estatus = 'Disponible') -
+                    (SELECT count(*)::int FROM lista_espera w WHERE w.id_libro = e.id_libro
+                    AND w.estatus = 'Notificado'), 0)
                     AS ejemplares_disponibles,
                 concat_ws(' / ', ub.estante, ub.fila) AS ubicacion
            FROM prestamos p JOIN ejemplares e ON e.id_ejemplar = p.id_ejemplar
@@ -133,8 +141,10 @@ const espera = async (id_libro) =>
 {
     const libro = await pool.query(
         `SELECT l.id_libro, l.titulo, l.estatus,
-                count(e.id_ejemplar) FILTER (WHERE e.estatus = 'Disponible'
-                    AND e.tipo_uso = 'Préstamo externo')::int AS disponibles,
+                greatest(count(e.id_ejemplar) FILTER (WHERE e.estatus = 'Disponible'
+                    AND e.tipo_uso = 'Préstamo externo') -
+                    (SELECT count(*) FROM lista_espera w WHERE w.id_libro = l.id_libro
+                        AND w.estatus = 'Notificado'), 0)::int AS disponibles,
                 count(e.id_ejemplar) FILTER (WHERE e.tipo_uso = 'Préstamo externo')::int AS total
            FROM libros l LEFT JOIN ejemplares e ON e.id_libro = l.id_libro
           WHERE l.id_libro = $1 GROUP BY l.id_libro`, [id_libro]);
@@ -163,8 +173,10 @@ const contexto_espera = async (client, clave_usuario, id_libro) =>
     const libro = await client.query(
         'SELECT estatus FROM libros WHERE id_libro = $1 FOR UPDATE', [id_libro]);
     const disponibles = await client.query(
-        `SELECT count(*)::int AS total FROM ejemplares
-          WHERE id_libro = $1 AND estatus = 'Disponible' AND tipo_uso = 'Préstamo externo'`,
+        `SELECT greatest((SELECT count(*) FROM ejemplares
+          WHERE id_libro = $1 AND estatus = 'Disponible' AND tipo_uso = 'Préstamo externo') -
+          (SELECT count(*) FROM lista_espera WHERE id_libro = $1
+            AND estatus = 'Notificado'), 0)::int AS total`,
         [id_libro]);
     return { usuario: usuario.rows[0], libro: libro.rows[0],
         disponibles: disponibles.rows[0].total };
