@@ -1480,6 +1480,39 @@ a
     min-width: 139px;
 }
 
+.perfiles-page.perfil-error-duplicado .page-header
+{
+    margin-bottom: 10px;
+}
+
+.perfiles-page.perfil-error-duplicado #mensaje .alert
+{
+    min-height: 96px;
+    padding: 16px;
+    margin-top: 14px;
+}
+
+.perfiles-page.perfil-error-duplicado #mensaje .alert strong
+{
+    font: 600 13px/20px var(--font);
+    margin-bottom: 8px;
+}
+
+.perfiles-page.perfil-error-duplicado #mensaje .alert span
+{
+    font: 400 13px/20px var(--font);
+}
+
+.perfiles-page.perfil-error-duplicado #formulario form > .actions .btn-primary
+{
+    min-width: 154px;
+}
+
+.perfiles-page.perfil-error-duplicado #formulario #btn-cancelar
+{
+    min-width: 140px;
+}
+
 @media (max-width: 900px)
 {
     .perfiles-page .perfiles-formulario .checks

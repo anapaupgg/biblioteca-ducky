@@ -10,9 +10,12 @@
 /*   perfiles_view.enlazar(acciones) */
 /*   perfiles_view.enlazar_formulario(guardar) */
 /*   perfiles_view.tabla(perfiles) */
+/*   perfiles_view.funciones_disponibles(si) */
 /*   perfiles_view.formulario(funciones, perfil) */
 /*   perfiles_view.datos() */
 /*   perfiles_view.marcar_funciones(si) */
+/*   perfiles_view.nombre_duplicado(nombre) */
+/*   perfiles_view.corregir_perfil() */
 /*   perfiles_view.cerrar_formulario() */
 /*   perfiles_view.mensaje(tipo, titulo, texto) */
 /******************************************************************/
@@ -42,12 +45,19 @@ const perfiles_view =
         const perfil = this.perfiles?.find((registro) => registro.id === this.id_seleccionado);
         if (perfil) accion(perfil);
     },
+    funciones_disponibles: function (si)
+    {
+        this.catalogo_disponible = si;
+        document.getElementById('btn-nuevo').disabled = !si;
+        this.actualizar_acciones();
+    },
     enlazar_formulario: function (guardar)
     {
         document.getElementById('form-perfil').addEventListener('submit', evento =>
         {
             evento.preventDefault();
-            guardar();
+            if (this.duplicado) this.corregir_perfil();
+            else guardar();
         });
         document.getElementById('btn-cancelar').addEventListener('click', () => this
             .cerrar_formulario());
@@ -89,7 +99,8 @@ const perfiles_view =
         const editable = perfil && perfil.id !== 1;
         const activo = editable && perfil.estatus === 'Activo';
         const reactivar = document.getElementById('btn-reactivar-perfil');
-        document.getElementById('btn-editar-perfil').disabled = !activo;
+        document.getElementById('btn-editar-perfil').disabled = !activo ||
+            !this.catalogo_disponible;
         document.getElementById('btn-eliminar-perfil').disabled = !activo;
         document.getElementById('btn-eliminar-perfil').textContent = activo ?
             'Eliminar ' + perfil.nombre : 'Eliminar perfil';
@@ -99,6 +110,8 @@ const perfiles_view =
 
     formulario: function (funciones, perfil)
     {
+        this.duplicado = false;
+        document.body.classList.remove('perfil-error-duplicado');
         const nombres_figma = ['Gestionar usuarios', 'Gestionar libros', 'Buscar libros',
             'Préstamos', 'Devoluciones', 'Chatbot'];
         const principales = nombres_figma.flatMap((nombre) =>
@@ -156,8 +169,48 @@ const perfiles_view =
             'var(--color-red)' : '';
     },
 
+    nombre_duplicado: function (nombre)
+    {
+        this.duplicado = true;
+        document.body.classList.add('perfil-error-duplicado');
+        document.getElementById('perfiles-titulo').textContent = 'Nombre de perfil duplicado';
+        document.getElementById('perfiles-descripcion').textContent =
+            'Corrige el campo marcado antes de guardar.';
+        document.querySelector('#form-perfil > .card h2').textContent = 'Datos conservados';
+        document.querySelector('#form-perfil .perfiles-formulario').hidden = true;
+        const adicionales = document.querySelector('#form-perfil .perfiles-adicionales');
+        if (adicionales) adicionales.hidden = true;
+        document.getElementById('descripcion').readOnly = true;
+        document.querySelector('#form-perfil button[type="submit"]').textContent =
+            'Corregir perfil';
+        this.mensaje('error', 'Perfil no registrado', 'Ya existe ' + nombre +
+            '. Cambia el nombre; se conservan descripción y funciones.');
+    },
+
+    corregir_perfil: function ()
+    {
+        this.duplicado = false;
+        document.body.classList.remove('perfil-error-duplicado');
+        document.getElementById('perfiles-titulo').textContent = 'Crear perfil';
+        document.getElementById('perfiles-descripcion').textContent =
+            'Selecciona al menos una función. El nombre debe ser único.';
+        document.querySelector('#form-perfil > .card h2').textContent = 'Datos del perfil';
+        document.querySelector('#form-perfil .perfiles-formulario').hidden = false;
+        const adicionales = document.querySelector('#form-perfil .perfiles-adicionales');
+        if (adicionales) adicionales.hidden = false;
+        document.getElementById('descripcion').readOnly = false;
+        document.querySelector('#form-perfil button[type="submit"]').textContent =
+            'Guardar perfil';
+        this.mensaje();
+        ui.limpiar();
+        document.getElementById('nombre').focus();
+    },
+
     cerrar_formulario: function ()
     {
+        this.duplicado = false;
+        document.body.classList.remove('perfil-error-duplicado');
+        this.mensaje();
         const panel = document.getElementById('formulario');
         panel.classList.add('hidden');
         panel.innerHTML = '';

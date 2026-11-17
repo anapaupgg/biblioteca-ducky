@@ -44,9 +44,11 @@ const perfiles_controller =
         try
         {
             this.funciones = await perfil_model.funciones();
+            perfiles_view.funciones_disponibles(this.funciones.length > 0);
         }
         catch (error)
         {
+            perfiles_view.funciones_disponibles(false);
             perfiles_view.mensaje('error', error.message);
         }
         this.cargar();
@@ -99,7 +101,9 @@ const perfiles_controller =
         catch (error)
         {
             ui.marcar(error.campos);
-            perfiles_view.mensaje('error', error.message);
+            if (!perfil && error.message === 'Nombre de perfil duplicado')
+                perfiles_view.nombre_duplicado(datos.nombre);
+            else perfiles_view.mensaje('error', error.message);
         }
     },
 

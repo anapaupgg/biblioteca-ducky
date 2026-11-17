@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — ERROR DE PERFIL DUPLICADO (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main 0/0, sin commits remotos nuevos; el
+  cambio local ajeno de package-lock.json permanece excluido.
+- Frame 2009:22255 comparado con el resultado real de registrar «Lector».
+  El error ahora conserva los datos en la tarjeta compacta, con aviso de
+  96 px y acciones de corrección/cancelación en y=482. Al corregir regresan
+  todas las funciones seleccionadas; cancelar vuelve a la lista. Se probó a
+  1440×960 y 390 px sin desbordamiento. La API rechazó el duplicado y no se
+  escribió en PostgreSQL; no se ejecutó db:init.
+- Se corrigió la carga inicial: Crear perfil solo se habilita después de
+  recibir el catálogo de funciones, para evitar un formulario vacío. Editar
+  funciones también espera ese catálogo. npm test: 61 aprobadas, 10 omitidas,
+  0 fallos; sintaxis y git diff --check sin errores.
+- Pendientes: cotejar los otros errores y resultados secundarios de perfiles,
+  además de los estados restantes de otras secciones del prototipo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — MODIFICAR PERFIL PRINCIPAL (16 DE NOVIEMBRE DE 2026)
 - Al comenzar se ejecutó git fetch origin y se comparó main con origin/main:
   0/0, sin commits remotos nuevos. El cambio local previo en package-lock.json

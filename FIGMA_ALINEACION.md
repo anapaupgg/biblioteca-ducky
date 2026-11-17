@@ -2,6 +2,23 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Nombre de perfil duplicado: cotejo del 17 de noviembre de 2026
+
+- Frame `2009:22255`: el intento real de registrar «Lector» volvió con error
+  409, sin crear otro perfil. La app presenta el título y subtítulo del frame,
+  aviso en `(276,176;1132×96)`, «Datos conservados» en
+  `(276,288;1132×178)` y acciones en y=482 a 1440 × 960. El campo de nombre
+  sigue marcado, la descripción se muestra de solo lectura y el control
+  «Corregir perfil» recupera el formulario completo.
+- Se comprobó que al corregir permanecen nombre, descripción y «Buscar libros»
+  seleccionado. «Cancelar» vuelve a la lista sin dejar el aviso; a 390 px no
+  hay desbordamiento horizontal. Los datos reales y la leyenda de sesión
+  sustituyen los ilustrativos del frame.
+- Al recargar se detectó una carrera: «Crear perfil» podía abrirse antes de
+  recibir las funciones. Ahora Crear y Editar funciones se habilitan solo
+  cuando el catálogo real se ha cargado; si falla la consulta permanecen
+  deshabilitados.
+
 ## Modificación principal del perfil de usuario: cotejo del 16 de noviembre de 2026
 
 - Frame `2008:15182`: con el usuario real `100002`, la ficha ocupa
