@@ -106,12 +106,12 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
   PostgreSQL en una sola burbuja y desplaza al inicio de ella. La respuesta
   mantiene disponibilidad y ubicación reales, más el enlace a Buscar libros.
   La composición móvil de inicio se revisó a 390 px sin desbordamiento.
-- Las 11 secciones principales tienen al menos un cotejo estructural; esto no
-  equivale a paridad total de las secciones. Los estados secundarios, datos
-  ilustrativos, PDF externo y avisos de servicios pendientes siguen en los
-  apartados inferiores. Estimación de planificación: 85% para el alcance de
-  pantallas principales y 65–70% para todo el prototipo; no es un recuento
-  exacto de frames ni un resultado de pruebas automatizadas.
+- Las 11 secciones principales tienen al menos un cotejo estructural y las
+  composiciones principales de escritorio quedaron alineadas con sus frames.
+  Este es el cierre del alcance visual principal acordado; no acredita
+  coincidencia literal de los datos, estados secundarios ni integración con
+  servicios externos. Las estimaciones porcentuales anteriores eran de
+  planificación y no sustituyen un inventario completo frame por frame.
 
 ## Páginas principales de circulación: cotejo del 16 de noviembre de 2026
 

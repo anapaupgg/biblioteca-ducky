@@ -12,6 +12,10 @@ ACTUALIZACIÓN — MODIFICAR PERFIL PRINCIPAL (16 DE NOVIEMBRE DE 2026)
   la vista y el controlador y git diff --check sin errores.
 - Pendientes: variantes de reactivación, confirmaciones y otros estados
   secundarios del prototipo.
+- Con este cotejo se cierra el bloque acordado de composición visual de las
+  pantallas principales de escritorio de las secciones 00–10. Continúan
+  abiertos los estados secundarios y las diferencias de datos/integraciones
+  documentadas en FIGMA_ALINEACION.md; no se declara paridad literal total.
 
 ---------------- REGISTRO ANTERIOR ----------------
 
