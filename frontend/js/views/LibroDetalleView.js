@@ -182,7 +182,7 @@ const libro_detalle_view =
         const resumen = [libro.formato, ubicacion, disponibles, prestados, condicion];
 
         document.getElementById('detalle').innerHTML =
-            '<div class="actions">' +
+            '<div class="actions ficha-main-acciones">' +
             (retirado ? '' : '<a class="btn btn-primary" href="libro_form.html?id=' +
                 encodeURIComponent(libro.id_libro) + '">Modificar libro</a>') +
             (libro.estatus === 'Ficha creada' ?
@@ -193,14 +193,18 @@ const libro_detalle_view =
                 '<button class="btn" id="btn-condicion-global"' +
                 (vigente.length ? '' : ' disabled') + '>Cambiar condición</button>') +
             '</div>' +
-            '<div class="card"><h2>' + ui.esc(libro.titulo) +
+            (libro.estatus === 'Activo en catálogo' ?
+                '<div class="actions ficha-main-acciones-secundarias"><button class="btn" ' +
+                'id="btn-disponibilidad-externa" type="button">Disponibilidad en otra biblioteca' +
+                '</button></div>' : '') +
+            '<div class="card ficha-main-card"><h2>' + ui.esc(libro.titulo) +
             '</h2><div class="grid-2">' +
             lectura('Clave', libro.id_libro) + lectura('ISBN', libro.isbn) +
             lectura('Título', libro.titulo) +
             lectura('Autor', filtro.autores.map((autor) => autor.nombre).join(', ')) +
             lectura('Tema', libro.tema) + lectura('Editorial', libro.editorial) +
             '</div></div>' +
-            '<div class="card"><h2>Sinopsis y ejemplares</h2><p>' +
+            '<div class="card ficha-main-sinopsis"><h2>Sinopsis y ejemplares</h2><p>' +
             ui.esc(libro.sinopsis || 'Sin sinopsis') +
             '</p><p class="libro-copias-registradas"><span class="label">Copias registradas:</span>' +
             '<strong>' + vigente.length + '</strong></p>' +
@@ -277,6 +281,9 @@ const libro_detalle_view =
         enlazar('btn-alta', acciones.alta);
         enlazar('btn-ejemplares', acciones.ejemplares);
         enlazar('btn-retirar', acciones.retirar);
+        enlazar('btn-disponibilidad-externa', () => this.mensaje('info',
+            'Disponibilidad en otra biblioteca',
+            'Aún no hay un catálogo externo conectado. Consulta aquí la disponibilidad de Biblioteca Ducky.'));
         enlazar('btn-condicion-global', () =>
         {
             this.mostrar_ejemplares();

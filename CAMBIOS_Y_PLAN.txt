@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — CONSULTA PRINCIPAL DE LIBRO (16 DE NOVIEMBRE DE 2026)
+- git fetch origin confirmó main sincronizada 0/0 con 97f03b4; sin commits
+  remotos nuevos. package-lock.json sigue modificado localmente y ajeno al
+  trabajo de esta solicitud.
+- Frame 2010:25317 cotejado con L000129. Acciones y=176/240, tarjeta
+  (276,304;1132×386), sinopsis (276,706;1132×194) y resumen y=916 a
+  1440×960. La acción de disponibilidad externa ahora ocupa el cuarto lugar
+  y responde sin fingir datos: todavía no hay fuente externa conectada.
+  Se verificó el mensaje en navegador, así como el ancho de 390 px sin
+  desbordamiento. npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis y
+  git diff --check sin errores. No se cambió la base ni se ejecutó db:init.
+- Pendientes: integración con acervos externos y cotejo de los estados de
+  ficha creada/retirada y ejemplares; la ficha activa conserva claves y
+  datos reales diferentes del ejemplo de Figma.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — REGISTRO PRINCIPAL DE USUARIO (16 DE NOVIEMBRE DE 2026)
 - Continuación tras 817eb61, subido y sincronizado 0/0. No llegaron commits
   remotos nuevos al inicio de esta solicitud; package-lock.json local previo

@@ -2,6 +2,22 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Consulta principal de libro activo: cotejo del 16 de noviembre de 2026
+
+- Frame `2010:25317`: con el libro real `L000129`, las dos filas de acciones
+  empiezan en y=176 y y=240. La tarjeta bibliográfica quedó en
+  `(276,304;1132×386)`, la sinopsis en `(276,706;1132×194)` y el resumen
+  en y=916 a 1440 × 960. Los seis datos de lectura y el conteo de dos copias
+  proceden de PostgreSQL. A 390 px la ficha no desborda horizontalmente.
+- «Disponibilidad en otra biblioteca» ocupa el lugar del cuarto botón del
+  prototipo y, al pulsarlo, informa que no existe un catálogo externo
+  conectado. No se afirma disponibilidad de otra institución. Cambiar
+  condición continúa abriendo los ejemplares reales; las claves `L...`, el
+  tema, la sinopsis y el número de copias difieren del ejemplo `B...`.
+- Esta comparación corresponde a la ficha activa. Los estados de ficha
+  creada, libro retirado y flujo de ejemplares conservan sus operaciones
+  anteriores y no se declaran idénticos a este frame.
+
 ## Registro principal de usuario: cotejo del 16 de noviembre de 2026
 
 - Frame `2007:5205`: a 1440 × 960 las tarjetas quedaron en

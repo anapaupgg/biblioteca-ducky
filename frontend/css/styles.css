@@ -1187,6 +1187,58 @@ a
     margin: var(--space-16) 0 0;
 }
 
+.libro-detalle-page .page-header
+{
+    margin-bottom: 14px;
+}
+
+.ficha-main-acciones
+{
+    margin-top: 14px;
+}
+
+.ficha-main-acciones .btn,
+.ficha-main-acciones-secundarias .btn
+{
+    min-height: 48px;
+}
+
+.ficha-main-acciones a[href^="libro_form.html"]
+{
+    min-width: 154px;
+}
+
+.ficha-main-acciones #btn-retirar
+{
+    min-width: 169px;
+}
+
+.ficha-main-acciones #btn-condicion-global
+{
+    min-width: 291px;
+}
+
+.ficha-main-acciones-secundarias .btn
+{
+    min-width: 300px;
+}
+
+.ficha-main-card > h2:first-child
+{
+    margin-bottom: 12px;
+}
+
+.ficha-main-card .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.ficha-main-sinopsis .small:last-child
+{
+    margin-bottom: 4px;
+}
+
 .filters
 {
     display: flex;
