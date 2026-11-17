@@ -14,6 +14,7 @@
 /*   libro_form_view.datos() */
 /*   libro_form_view.ajustar_formato() */
 /*   libro_form_view.copias(delta) */
+/*   libro_form_view.cambio_pendiente() */
 /*   libro_form_view.mensaje(tipo, titulo, texto) */
 /*   libro_form_view.creado(resultado, datos, preparar_alta) */
 /*   libro_form_view.confirmar_alta(ficha, confirmar, cancelar) */
@@ -50,6 +51,8 @@ const libro_form_view =
             .ajustar_formato());
         document.getElementById('menos').addEventListener('click', () => libro_form_view.copias(-1));
         document.getElementById('mas').addEventListener('click', () => libro_form_view.copias(1));
+        ['estante-fila-resumen', 'condicion-resumen'].forEach((id) => document.getElementById(id)
+            .addEventListener('change', () => this.cambio_pendiente()));
         document.getElementById('btn-sinopsis-ejemplo').addEventListener('click', () =>
         {
             document.getElementById('sinopsis').value =
@@ -64,6 +67,7 @@ const libro_form_view =
 
     catalogos: function (campo_2)
     {
+        this.ubicaciones = campo_2.ubicaciones;
         const lista = (id, items) =>
         {
             document.getElementById(id).innerHTML = items.map((indice) => '<option value="' + ui
@@ -74,6 +78,8 @@ const libro_form_view =
         lista('lista-temas', campo_2.temas);
         document.getElementById('id_ubicacion').innerHTML = ui.opciones(campo_2.ubicaciones, 'id',
             'etiqueta', '', 'Selecciona la ubicación');
+        document.getElementById('estante-fila-resumen').innerHTML = ui.opciones(campo_2.ubicaciones,
+            'id', 'etiqueta', '', 'Selecciona la ubicación');
     },
 
     modo_edicion: function (ficha)
@@ -88,14 +94,45 @@ const libro_form_view =
         document.getElementById('btn-cancelar').href = 'libro_detalle.html?id=' + encodeURIComponent(
             libro.id_libro);
         const ejemplares = ficha.ejemplares.filter((ejemplar) => ejemplar.estatus !== 'Baja');
-        const ubicaciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.estante ?
-            ejemplar.estante + ' / ' + ejemplar.fila : 'En línea'))];
+        const ubicaciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.id_ubicacion))];
         const condiciones = [...new Set(ejemplares.map((ejemplar) => ejemplar.condicion)
             .filter(Boolean))];
-        document.getElementById('estante-fila-resumen').value = ubicaciones.length === 1 ?
-            ubicaciones[0] : ubicaciones.length ? 'Varias ubicaciones' : 'Sin ejemplares';
-        document.getElementById('condicion-resumen').value = condiciones.length === 1 ?
-            condiciones[0] : condiciones.length ? 'Varias condiciones' : 'Sin ejemplares';
+        this.copias_base = ejemplares.length;
+        this.edicion_conjunta = libro.formato === 'Físico' &&
+            ejemplares.every((ejemplar) => ejemplar.estatus === 'Disponible') &&
+            ubicaciones.length <= 1 && condiciones.length <= 1 &&
+            (ejemplares.length === 0 || Number.isInteger(ubicaciones[0]));
+        this.ubicacion_base = ubicaciones[0] || null;
+        this.condicion_base = condiciones[0] || null;
+        this.ubicacion_base_texto = this.ubicaciones.find((item) => item.id ===
+            this.ubicacion_base)?.etiqueta || 'Sin ubicación';
+        const ubicacion = document.getElementById('estante-fila-resumen');
+        const condicion = document.getElementById('condicion-resumen');
+        if (this.edicion_conjunta)
+        {
+            ubicacion.disabled = false;
+            condicion.disabled = false;
+            ubicacion.value = ubicaciones[0] || '';
+            condicion.value = condiciones[0] || 'Bueno';
+        }
+        else
+        {
+            const resumen_ubicacion = ubicaciones.length > 1 ? 'Varias ubicaciones' :
+                libro.formato === 'Digital' ? 'En línea' : ubicaciones.length ?
+                    this.ubicaciones.find((item) => item.id === ubicaciones[0])?.etiqueta ||
+                        'Ubicación no disponible' : 'Sin ejemplares';
+            ubicacion.innerHTML = '<option>' + ui.esc(resumen_ubicacion) + '</option>';
+            condicion.innerHTML = '<option>' + ui.esc(condiciones.length > 1 ?
+                'Varias condiciones' : condiciones[0] || 'Sin ejemplares') + '</option>';
+        }
+        document.getElementById('copias').value = ejemplares.length;
+        document.getElementById('menos').disabled = true;
+        document.getElementById('mas').disabled = !this.edicion_conjunta;
+        const ayuda = document.getElementById('ayuda-copias');
+        ayuda.classList.remove('hidden');
+        ayuda.textContent = this.edicion_conjunta ?
+            'Para retirar una copia existente, gestiona el ejemplar e indica el motivo de baja.' :
+            'Las copias tienen ubicaciones, condiciones o préstamos distintos; gestiónalas por ejemplar.';
         document.querySelectorAll('.libro-form-edit-only').forEach((campo) => campo.classList
             .remove('hidden'));
         const editar_ejemplares = document.getElementById('editar-ejemplares');
@@ -124,9 +161,10 @@ const libro_form_view =
         });
         document.getElementById('isbn').readOnly = true;
         document.getElementById('formato').disabled = true;
-        document.getElementById('card-copias').classList.add('hidden');
         document.getElementById('campo-ubicacion').classList.add('hidden');
-        document.getElementById('campo-uso').classList.add('hidden');
+        document.getElementById('campo-uso').classList.toggle('hidden', !this.edicion_conjunta);
+        document.querySelector('#campo-uso label').textContent =
+            'Tipo de uso para copias nuevas';
         this.ajustar_formato();
     },
 
@@ -134,6 +172,19 @@ const libro_form_view =
     {
         const datos = ui.leer(CAMPOS_LIBRO);
         datos.copias = Number(document.getElementById('copias').value);
+        if (this.copias_base !== undefined)
+        {
+            datos.copias_base = this.copias_base;
+            if (this.edicion_conjunta && (this.copias_base > 0 ||
+                datos.copias > this.copias_base))
+            {
+                datos.id_ubicacion_edicion = Number(document.getElementById(
+                    'estante-fila-resumen').value) || null;
+                datos.condicion_edicion = document.getElementById('condicion-resumen').value;
+                datos.id_ubicacion_base = this.ubicacion_base;
+                datos.condicion_base = this.condicion_base;
+            }
+        }
         return datos;
     },
 
@@ -148,7 +199,34 @@ const libro_form_view =
     copias: function (delta)
     {
         const out = document.getElementById('copias');
-        out.value = Math.min(50, Math.max(0, Number(out.value) + delta));
+        const minimo = this.copias_base === undefined ? 0 : this.copias_base;
+        out.value = Math.min(minimo + 50, Math.max(minimo, Number(out.value) + delta));
+        document.getElementById('menos').disabled = Number(out.value) <= minimo;
+        document.getElementById('mas').disabled = this.copias_base !== undefined &&
+            (!this.edicion_conjunta || Number(out.value) >= minimo + 50);
+        this.cambio_pendiente();
+    },
+
+    cambio_pendiente: function ()
+    {
+        if (this.copias_base === undefined) return;
+        const destino = 'cambio-pendiente';
+        if (!this.edicion_conjunta) return ui.alerta(destino);
+        const ubicacion = document.getElementById('estante-fila-resumen');
+        const condicion = document.getElementById('condicion-resumen').value;
+        const copias = Number(document.getElementById('copias').value);
+        let detalle = '';
+        if (Number(ubicacion.value) !== Number(this.ubicacion_base))
+        {
+            detalle = 'Ubicación anterior: ' + this.ubicacion_base_texto + ' → Nueva: ' +
+                ubicacion.selectedOptions[0]?.textContent + '.';
+        }
+        else if (condicion !== this.condicion_base)
+            detalle = 'Condición anterior: ' + (this.condicion_base || 'Sin condición') +
+                ' → Nueva: ' + condicion + '.';
+        else if (copias !== this.copias_base)
+            detalle = 'Copias actuales: ' + this.copias_base + ' → Al guardar: ' + copias + '.';
+        ui.alerta(destino, detalle ? 'info' : '', detalle ? 'Cambio pendiente' : '', detalle);
     },
 
     mensaje: function (tipo, titulo, texto)

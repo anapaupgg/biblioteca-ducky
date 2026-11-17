@@ -18,6 +18,9 @@
 /*   guardar_autores(client, id_libro, autores) */
 /*   crear(client, datos) */
 /*   actualizar(client, id, datos) */
+/*   bloquear_acervo(client, id) */
+/*   ubicacion_existe(client, id) */
+/*   actualizar_copias_uniformes(client, id, datos) */
 /*   cambiar_estatus(client, id, estatus) */
 /*   registrar_baja(client, id, datos, clave_administrador) */
 /*   agregar_ejemplares(client, datos) */
@@ -218,6 +221,31 @@ const actualizar = async (client, id, datos) =>
     await guardar_autores(client, id, datos.autores);
 };
 
+/* Lock the book and its active copies before editing shared copy fields. */
+const bloquear_acervo = async (client, id) =>
+{
+    const libro = await client.query('SELECT estatus, formato FROM libros WHERE id_libro = $1 FOR UPDATE',
+        [id]);
+    const ejemplares = await client.query(
+        `SELECT id_ejemplar, id_ubicacion, condicion, tipo_uso, estatus
+           FROM ejemplares WHERE id_libro = $1 AND estatus <> 'Baja'
+          ORDER BY id_ejemplar FOR UPDATE`, [id]);
+    return (
+    {
+        libro: libro.rows[0],
+        ejemplares: ejemplares.rows
+    });
+};
+
+const ubicacion_existe = async (client, id) =>
+    (await client.query('SELECT 1 FROM ubicaciones WHERE id_ubicacion = $1', [id])).rowCount > 0;
+
+/* Used only after the controller verifies all active copies are available. */
+const actualizar_copias_uniformes = (client, id, datos) => client.query(
+    `UPDATE ejemplares SET id_ubicacion = $2, condicion = $3
+      WHERE id_libro = $1 AND estatus = 'Disponible'`,
+    [id, datos.id_ubicacion, datos.condicion]);
+
 /******************************************************************/
 /* Reuse Instructions                                             */
 /* cambiar_estatus(client, id, estatus)                           */
@@ -351,6 +379,9 @@ module.exports =
     id_por_nombre,
     crear,
     actualizar,
+    bloquear_acervo,
+    ubicacion_existe,
+    actualizar_copias_uniformes,
     cambiar_estatus,
     registrar_baja,
     agregar_ejemplares,

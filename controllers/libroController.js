@@ -222,8 +222,75 @@ const actualizar = async (solicitud_5, respuesta_5) =>
             formato: ficha.libro.formato
         }, 'actualizar');
 
-        await con_usuario(solicitud_5.usuario.clave, (client) => libro_model.actualizar(client, ficha
-            .libro.id_libro, datos));
+        const cuerpo = solicitud_5.body || {};
+        const editar_acervo = cuerpo.copias_base !== undefined;
+        const base = Number(cuerpo.copias_base);
+        const objetivo = Number(cuerpo.copias);
+        if (editar_acervo && (!Number.isInteger(base) || base < 0 ||
+            !Number.isInteger(objetivo) || objetivo < base || objetivo - base > 50))
+        {
+            throw new error_negocio(400,
+                'El número de copias solo puede aumentar hasta 50 por modificación', ['copias']);
+        }
+        await con_usuario(solicitud_5.usuario.clave, async (client) =>
+        {
+            if (editar_acervo)
+            {
+                const acervo = await libro_model.bloquear_acervo(client, ficha.libro.id_libro);
+                if (!acervo.libro) throw new error_negocio(404, 'Libro no encontrado');
+                if (acervo.libro.estatus === 'Retirado') throw new error_negocio(422,
+                    'El libro está retirado y no se puede modificar');
+                if (acervo.ejemplares.length !== base) throw new error_negocio(409,
+                    'El número de copias cambió; actualiza el formulario antes de guardar');
+                const edita_campos = cuerpo.id_ubicacion_edicion !== undefined ||
+                    cuerpo.condicion_edicion !== undefined;
+                if (edita_campos || objetivo > base)
+                {
+                    const uniformes = acervo.libro.formato === 'Físico' &&
+                        acervo.ejemplares.every((ejemplar) => ejemplar.estatus === 'Disponible') &&
+                        new Set(acervo.ejemplares.map((ejemplar) => ejemplar.id_ubicacion)).size <= 1 &&
+                        new Set(acervo.ejemplares.map((ejemplar) => ejemplar.condicion)).size <= 1;
+                    if (!uniformes) throw new error_negocio(422,
+                        'Gestiona los ejemplares con préstamos o datos distintos por separado');
+                    if (acervo.ejemplares.length &&
+                        (Number(cuerpo.id_ubicacion_base) !== Number(acervo.ejemplares[0]
+                            .id_ubicacion) || cuerpo.condicion_base !== acervo.ejemplares[0]
+                            .condicion))
+                    {
+                        throw new error_negocio(409,
+                            'La ubicación o condición cambió; actualiza el formulario');
+                    }
+                    const id_ubicacion = Number(cuerpo.id_ubicacion_edicion);
+                    const condicion = String(cuerpo.condicion_edicion || '');
+                    if (!Number.isInteger(id_ubicacion) || id_ubicacion < 1 ||
+                        !await libro_model.ubicacion_existe(client, id_ubicacion))
+                    {
+                        throw new error_negocio(400, 'Elige una ubicación válida',
+                            ['id_ubicacion_edicion']);
+                    }
+                    if (!CONDICIONES.includes(condicion)) throw new error_negocio(400,
+                        'Condición no válida', ['condicion_edicion']);
+                    if (acervo.ejemplares.some((ejemplar) => ejemplar.id_ubicacion !==
+                        id_ubicacion || ejemplar.condicion !== condicion))
+                    {
+                        await libro_model.actualizar_copias_uniformes(client, ficha.libro.id_libro,
+                            { id_ubicacion, condicion });
+                    }
+                    if (objetivo > base && !TIPOS_USO.includes(cuerpo.tipo_uso))
+                        throw new error_negocio(400, 'Tipo de uso no válido', ['tipo_uso']);
+                    if (objetivo > base) await libro_model.agregar_ejemplares(client,
+                    {
+                        id_libro: ficha.libro.id_libro,
+                        cantidad: objetivo - base,
+                        id_ubicacion,
+                        condicion,
+                        digital: false,
+                        tipo_uso: cuerpo.tipo_uso
+                    });
+                }
+            }
+            await libro_model.actualizar(client, ficha.libro.id_libro, datos);
+        });
         respuesta_5.status(200).json(
         {
             mensaje: 'Libro modificado exitosamente',

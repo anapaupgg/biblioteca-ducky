@@ -54,10 +54,12 @@ Reuse Instructions: servir desde Express; conservar los IDs que usa LibroFormVie
                                         id="editorial" list="lista-editoriales" placeholder="Ej. Pearson"></div>
                                 <div class="field libro-form-edit-only hidden"><label
                                         for="estante-fila-resumen">Estante / fila</label>
-                                    <input id="estante-fila-resumen" readonly></div>
+                                    <select id="estante-fila-resumen" disabled></select></div>
                                 <div class="field libro-form-edit-only hidden"><label
                                         for="condicion-resumen">Condición</label>
-                                    <input id="condicion-resumen" readonly></div>
+                                    <select id="condicion-resumen" disabled>
+                                        <option>Bueno</option><option>Regular</option><option>Dañado</option>
+                                    </select></div>
                             </div>
                         </div>
                         <div class="card libro-form-sinopsis">
@@ -71,7 +73,9 @@ Reuse Instructions: servir desde Express; conservar los IDs que usa LibroFormVie
                                         aria-label="Quitar copia">−</button><output id="copias">3</output><button
                                         type="button" id="mas" aria-label="Agregar copia">+</button></div>
                             </div>
+                            <p class="small muted hidden" id="ayuda-copias"></p>
                         </div>
+                        <div id="cambio-pendiente"></div>
                         <div class="card libro-form-adicional">
                             <h2>Datos adicionales del acervo</h2>
                             <div class="grid-3">

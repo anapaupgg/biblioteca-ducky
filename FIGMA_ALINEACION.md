@@ -2,6 +2,27 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Edición directa de acervo: cotejo del 17 de noviembre de 2026
+
+- Frame `2010:25664`: con `L000129`, la tarjeta principal mantiene
+  `(276,240;1132×490)` y la sinopsis comienza en y=746 a 1440 × 960.
+  «Estante / fila», «Condición» y «Número de copias» aparecen en sus lugares
+  y operan sobre los ejemplares reales. Se comprobó el aviso «Cambio
+  pendiente» al seleccionar otra ubicación y el paso de 2 a 3 copias y vuelta
+  a 2 sin guardar. A 390 px no hay desbordamiento horizontal.
+- La app permite cambios conjuntos solo si las copias físicas activas están
+  disponibles y comparten ubicación y condición. `L000129` cumple aunque sus
+  tipos de uso difieren: estos se conservan y se elige uno para copias nuevas.
+  `L000128` tiene préstamos y condiciones distintas, por lo que el formulario
+  muestra el resumen de solo lectura y enlaza a la gestión individual. Si no
+  hay copias, se puede elegir ubicación para añadir la primera.
+- El control menos no retira copias ya registradas: la baja de un ejemplar
+  requiere motivo y conserva historial. El servidor valida de nuevo el estado
+  y guarda ficha, cambios conjuntos y altas nuevas en una transacción. La
+  prueba PostgreSQL de este recorrido se revirtió. El ejemplo de Figma usa
+  clave `B...`; PostgreSQL conserva `L...`. Falta probar un guardado HTTP real
+  en un entorno de prueba y no se declara paridad literal de todos los datos.
+
 ## Baja exitosa de perfil: cotejo del 17 de noviembre de 2026
 
 - Frame `2009:21611`: el diálogo de confirmación quedó en 700×280 px y
@@ -274,17 +295,13 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
   acciones en y=176, tarjeta de datos `(276,240;1132×386)` y tarjeta de
   sinopsis desde y=642. Las tres filas de campos miden 88 px, los botones
   48 px y el selector de copias conserva la posición del prototipo.
-- En edición de `L000129`, la tarjeta de cuatro filas quedó en
+- En el cotejo inicial de edición de `L000129`, la tarjeta de cuatro filas quedó en
   `(276,240;1132×490)` y sinopsis desde y=746. La fila adicional muestra
-  `E-01 / F-02` y `Bueno` de los ejemplares vigentes reales. Son valores de
-  lectura: las copias se gestionan en la ficha, accesible desde la tarjeta
-  adicional; se comprobó que el enlace abre sus ejemplares. No se guardó
-  ningún cambio del libro. Alta y edición no desbordan a 390 px.
-- Figma ilustra una clave `B...` y cambios directos de ubicación/condición
-  desde el formulario. PostgreSQL usa `L...` y operaciones por ejemplar; la
-  equivalencia funcional de esos controles y el recuento editable de copias
-  en edición siguen pendientes. Este cotejo acredita la composición principal,
-  no paridad completa de la pantalla.
+  `E-01 / F-02` y `Bueno` de los ejemplares vigentes reales. En esa revisión
+  eran valores de lectura; la actualización posterior del 17 de noviembre
+  habilitó su edición conjunta segura y el número de copias. No se guardó
+  ningún cambio del libro en el cotejo visual. Alta y edición no desbordan a
+  390 px. Las excepciones y la diferencia de claves se detallan arriba.
 
 ## Asistente principal: cotejo del 16 de noviembre de 2026
 

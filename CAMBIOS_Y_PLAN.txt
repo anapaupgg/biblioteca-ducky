@@ -1,3 +1,28 @@
+ACTUALIZACIÓN — EDICIÓN DE ACERVO EN FORMULARIO DE LIBRO (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main 0/0, sin commits remotos nuevos; se
+  conserva y excluye la modificación local ajena de package-lock.json.
+- Frame 2010:25664: la ubicación, condición y el número de copias ahora se
+  muestran y editan en el formulario cuando las copias físicas vigentes son
+  disponibles y comparten ubicación/condición. Las copias existentes conservan
+  cada una su tipo de uso; al añadir se elige el tipo para las nuevas.
+- El guardado de ficha, cambio conjunto de ejemplares y nuevas copias ocurre
+  en una transacción con bloqueo y detección de recuento/datos obsoletos. Las
+  copias prestadas o con ubicaciones/condiciones distintas siguen en gestión
+  individual. El botón menos solo deshace incrementos pendientes; la baja
+  real exige el motivo del flujo por ejemplar.
+- Cotejo en navegador: L000129 mantuvo tarjeta (276,240;1132×490) y sinopsis
+  desde y=746 a 1440×960; ubicación/condición y + quedaron operables. El
+  aviso de cambio pendiente mostró la ubicación anterior y nueva. L000128
+  bloqueó la edición conjunta por préstamos y diversidad; L000133 sin copias
+  permitió preparar la primera. A 390 px no hubo desbordamiento.
+- Pruebas: 74 aprobadas, 0 fallos y 0 omitidas con DUCKY_TEST_DB=1; la prueba
+  nueva de PostgreSQL revirtió condición y copia adicional con ROLLBACK.
+  No se guardaron cambios de prueba ni se ejecutó db:init.
+- Pendientes: comprobar un guardado HTTP real en ambiente de prueba y los
+  demás estados visuales de catálogo; las claves B/L siguen distintas.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BAJA EXITOSA DE PERFIL (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main 0/0, sin commits remotos nuevos. Se
   conserva la modificación local ajena de package-lock.json.
