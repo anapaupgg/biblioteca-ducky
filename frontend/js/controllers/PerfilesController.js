@@ -12,6 +12,7 @@
 /*   perfiles_controller.abrir(perfil) */
 /*   perfiles_controller.guardar(perfil) */
 /*   perfiles_controller.eliminar(perfil) */
+/*   perfiles_controller.volver_lista() */
 /*   perfiles_controller.reactivar(perfil) */
 /******************************************************************/
 
@@ -25,6 +26,7 @@
 const perfiles_controller =
 {
     funciones: [],
+    puede_gestionar_usuarios: false,
 
     iniciar: async function ()
     {
@@ -35,6 +37,7 @@ const perfiles_controller =
             funciones: ['Gestionar perfiles']
         });
         if (!usuario) return;
+        this.puede_gestionar_usuarios = usuario.funciones.includes('Gestionar usuarios');
         perfiles_view.enlazar({
             crear: () => this.abrir(null),
             editar: (perfil) => this.abrir(perfil),
@@ -112,10 +115,22 @@ const perfiles_controller =
         perfiles_view.mensaje();
         if (perfil.usuarios > 0)
         {
-            return perfiles_view.mensaje('error',
-                'No puede eliminarse un perfil con usuarios asignados',
-                'El perfil ' + perfil.nombre + ' tiene ' + perfil.usuarios +
-                ' usuario(s) activo(s). Reasígnalos primero.');
+            let usuarios = null;
+            if (this.puede_gestionar_usuarios)
+            {
+                try
+                {
+                    const activos = await usuario_model.listar({ estatus: 'Activo' });
+                    usuarios = activos.filter((usuario) => usuario.id_perfil === perfil.id);
+                }
+                catch (error)
+                {
+                    usuarios = null;
+                }
+            }
+            perfiles_view.bloqueo_eliminacion(perfil, usuarios,
+                this.puede_gestionar_usuarios, () => this.volver_lista());
+            return;
         }
         const ok = await ui.dialogo(
         {
@@ -135,6 +150,11 @@ const perfiles_controller =
         {
             perfiles_view.mensaje('error', error.message);
         }
+    },
+
+    volver_lista: function ()
+    {
+        perfiles_view.volver_lista();
     },
 
     reactivar: async function (perfil)

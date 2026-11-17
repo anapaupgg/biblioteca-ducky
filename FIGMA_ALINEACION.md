@@ -2,6 +2,21 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Baja bloqueada de perfil: cotejo del 17 de noviembre de 2026
+
+- Frame `2009:21287`: al intentar eliminar Lector, que tiene cinco usuarios
+  activos reales, la app presenta el encabezado y el aviso en
+  `(276,176;1132×96)`, cinco filas de 56 px desde y=288 y acciones en y=600
+  a 1440 × 960. Las primeras tres filas contienen usuarios reales y la última
+  resume dos adicionales. «Volver a perfiles» restaura la lista; «Modificar
+  usuarios» abre Gestión de usuarios.
+- El prototipo ilustra 124 usuarios y tres nombres distintos. La app usa el
+  conteo y las identidades de PostgreSQL; el bloqueo no ejecuta la baja. Solo
+  consulta nombres mediante el permiso existente «Gestionar usuarios». Un
+  administrador con «Gestionar perfiles» sin ese permiso ve el conteo, pero
+  no recibe nombres ni el acceso a Gestión de usuarios. A 390 px no hay
+  desbordamiento horizontal.
+
 ## Nombre y funciones obligatorios: cotejo del 17 de noviembre de 2026
 
 - Frames `2009:22905` y `2009:22580`: los dos errores de validación local

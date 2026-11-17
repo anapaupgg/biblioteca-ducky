@@ -17,6 +17,8 @@
 /*   perfiles_view.nombre_duplicado(nombre) */
 /*   perfiles_view.nombre_obligatorio() */
 /*   perfiles_view.funciones_obligatorias() */
+/*   perfiles_view.bloqueo_eliminacion(perfil, usuarios, puede_editar, volver) */
+/*   perfiles_view.volver_lista() */
 /*   perfiles_view.corregir_perfil() */
 /*   perfiles_view.cerrar_formulario() */
 /*   perfiles_view.mensaje(tipo, titulo, texto) */
@@ -253,6 +255,51 @@ const perfiles_view =
         document.getElementById('perfiles-titulo').textContent = 'Perfiles y permisos';
         document.getElementById('perfiles-descripcion').textContent =
             'Asigna funciones a cada perfil y controla su disponibilidad.';
+    },
+
+    bloqueo_eliminacion: function (perfil, usuarios, puede_editar, volver)
+    {
+        document.body.classList.add('perfil-baja-bloqueada');
+        document.getElementById('tabla').classList.add('hidden');
+        document.getElementById('acciones-perfiles').classList.add('hidden');
+        document.getElementById('perfiles-titulo').textContent =
+            'No puede eliminarse un perfil con usuarios asignados';
+        const total = usuarios ? usuarios.length : perfil.usuarios;
+        document.getElementById('perfiles-descripcion').textContent = perfil.nombre +
+            ' tiene ' + total + ' usuarios asignados.';
+        this.mensaje('warning', 'Eliminación bloqueada',
+            'El perfil permanece Activo. Cambia primero los perfiles de sus usuarios.');
+        const filas = usuarios ? usuarios.slice(0, 3).map((usuario) =>
+            '<div class="perfiles-fila">' + ui.esc(usuario.clave + ' · ' + usuario.nombre +
+                ' · ' + perfil.nombre) + '</div>').join('') +
+            (usuarios.length > 3 ? '<div class="perfiles-fila">' +
+                ui.esc('... · ' + (usuarios.length - 3) + ' usuarios adicionales · ' +
+                    perfil.nombre) + '</div>' : '') :
+            '<div class="perfiles-fila">' + ui.esc(total +
+                ' usuarios asignados · Consulta los detalles desde Gestión de usuarios') +
+                '</div>';
+        const panel = document.getElementById('formulario');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="perfiles-bloqueo-lista">' +
+            '<div class="perfiles-fila">Clave · Nombre · Perfil</div>' + filas + '</div>' +
+            '<div class="actions perfiles-bloqueo-acciones">' +
+            (puede_editar ? '<a class="btn btn-primary" href="usuarios.html">Modificar usuarios</a>' : '') +
+            '<button class="btn" type="button" id="volver-perfiles">Volver a perfiles</button>' +
+            '</div>';
+        document.getElementById('volver-perfiles').addEventListener('click', volver);
+    },
+
+    volver_lista: function ()
+    {
+        document.body.classList.remove('perfil-baja-bloqueada');
+        document.getElementById('formulario').classList.add('hidden');
+        document.getElementById('formulario').innerHTML = '';
+        document.getElementById('tabla').classList.remove('hidden');
+        document.getElementById('acciones-perfiles').classList.remove('hidden');
+        document.getElementById('perfiles-titulo').textContent = 'Perfiles y permisos';
+        document.getElementById('perfiles-descripcion').textContent =
+            'Asigna funciones a cada perfil y controla su disponibilidad.';
+        this.mensaje();
     },
 
     mensaje: function (tipo, titulo, texto)

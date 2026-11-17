@@ -1,3 +1,19 @@
+ACTUALIZACIÓN — BAJA BLOQUEADA DE PERFIL (17 DE NOVIEMBRE DE 2026)
+- Tras subir ae42c8c, se cotejó el frame 2009:21287 con Lector y sus cinco
+  usuarios activos reales. Aviso y=176/96 px, filas y=288–584, acciones y=600.
+  Se usó la lectura existente de usuarios solo con su permiso; quien solo
+  gestione perfiles ve el conteo sin nombres. Volver a perfiles restauró la
+  lista y a 390 px no hubo desbordamiento. La baja quedó bloqueada antes de
+  cualquier escritura; no se ejecutó db:init. Los 124 usuarios de Figma son
+  ilustrativos, no se insertaron en la base.
+- npm test: 61 aprobadas, 10 omitidas, 0 fallos; sintaxis de las dos capas
+  cliente y git diff --check sin errores.
+- Pendientes: resultado de alta/baja de perfil con operaciones reales,
+  confirmación de baja sin usuarios y otros estados secundarios.
+- package-lock.json conserva su modificación local ajena a este trabajo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — VALIDACIONES DE PERFIL (17 DE NOVIEMBRE DE 2026)
 - Después de subir 2ce7dd5, se cotejaron los frames 2009:22905 y
   2009:22580. El nombre obligatorio y la ausencia de funciones muestran el

@@ -1525,6 +1525,50 @@ a
     display: none;
 }
 
+.perfiles-page.perfil-baja-bloqueada .page-header
+{
+    margin-bottom: 10px;
+}
+
+.perfiles-page.perfil-baja-bloqueada #mensaje .alert
+{
+    min-height: 96px;
+    padding: 16px;
+    margin-top: 14px;
+}
+
+.perfiles-page.perfil-baja-bloqueada #mensaje .alert strong
+{
+    font: 600 13px/20px var(--font);
+    margin-bottom: 8px;
+}
+
+.perfiles-page.perfil-baja-bloqueada #mensaje .alert span
+{
+    font: 400 13px/20px var(--font);
+}
+
+.perfiles-bloqueo-lista
+{
+    display: grid;
+    gap: 4px;
+}
+
+.perfiles-bloqueo-acciones .btn
+{
+    min-height: 48px;
+}
+
+.perfiles-bloqueo-acciones .btn-primary
+{
+    min-width: 178px;
+}
+
+.perfiles-bloqueo-acciones #volver-perfiles
+{
+    min-width: 170px;
+}
+
 @media (max-width: 900px)
 {
     .perfiles-page .perfiles-formulario .checks
