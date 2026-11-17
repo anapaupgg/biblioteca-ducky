@@ -60,6 +60,40 @@ test('compras: solo autorización abre historial y no formulario de solicitud', 
     assert.equal(controlador.puede_recibir, false);
     assert.deepEqual(ocultas, ['nueva']);
 });
+test('compras: presupuesto requiere permiso, monto válido y confirmación', async () =>
+{
+    let registrar, capturado = '8000.00', confirmacion = false;
+    let escrituras = 0;
+    const controlador = cargar({
+        ui: {
+            hoy: () => '2026-11-17',
+            dinero: valor => '$' + valor,
+            dialogo: async () => confirmacion
+        },
+        pedidos_view: {
+            presupuesto_formulario: (_periodo, acciones) => { registrar = acciones.guardar; },
+            monto_presupuesto: () => capturado,
+            bloquear_presupuesto: () => {},
+            mensaje: () => {}
+        },
+        pedido_model: {
+            crear_presupuesto: async () => { escrituras++; }
+        }
+    });
+    controlador.abrir_presupuesto();
+    assert.equal(registrar, undefined);
+    controlador.puede_autorizar = true;
+    controlador.abrir_presupuesto();
+    capturado = '0';
+    await registrar();
+    capturado = '8000.00';
+    await registrar();
+    assert.equal(escrituras, 0);
+    confirmacion = true;
+    controlador.mostrar = async () => {};
+    await registrar();
+    assert.equal(escrituras, 1);
+});
 test('compras: solicitar por sí solo no habilita autorización en historial', async () =>
 {
     let autorizacion;

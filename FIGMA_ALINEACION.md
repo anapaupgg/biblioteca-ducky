@@ -2,6 +2,19 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Presupuesto mensual: revisión del 17 de noviembre de 2026
+
+- Se consultó el frame `2011:28537` (Solicitar libros a Tesorería). La tarjeta
+  principal muestra el presupuesto como dato de solo lectura. La aplicación
+  mantiene esa composición cuando hay presupuesto vigente.
+- Si falta la asignación del mes, un administrador con `Autorizar compras`
+  ve una acción para registrarla antes de solicitar libros. También puede
+  abrirla desde el historial cuando carece del permiso de solicitar.
+- El formulario de registro es una pantalla operativa adicional sin frame
+  equivalente en Figma. Se comprobó en navegador el aviso, el formulario y
+  la cancelación con 100002, sin guardar monto. No se afirma paridad visual
+  de este estado ni de la pantalla de compras completa.
+
 ## Prioridad de la lista de espera: revisión del 17 de noviembre de 2026
 
 - Consultados los frames `2465:101339` (devolución con espera) y

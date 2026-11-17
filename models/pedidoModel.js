@@ -9,6 +9,7 @@
 /* Listing Contents: */
 /*   presupuestos() */
 /*   presupuesto_del_mes(periodo) */
+/*   crear_presupuesto(client, periodo, monto, clave_responsable) */
 /*   listar(client = pool, id = null) */
 /*   buscar(id, client = pool) */
 /*   crear(client, datos) */
@@ -42,6 +43,27 @@ const presupuesto_del_mes = async (periodo) =>
         periodo
     ]);
     return resultado.rows[0] || null;
+};
+
+/* Inserta el presupuesto del mes una sola vez y deja bitácora en la misma transacción. */
+const crear_presupuesto = async (client, periodo, monto, clave_responsable) =>
+{
+    const insercion = await client.query(
+        `INSERT INTO presupuestos_mensuales (periodo, monto_autorizado, clave_responsable)
+         VALUES ($1, $2, $3) ON CONFLICT (periodo) DO NOTHING
+         RETURNING id_presupuesto`, [periodo, monto, clave_responsable]);
+    if (!insercion.rows[0])
+    {
+        throw new error_negocio(409, 'Ya existe un presupuesto para ' + periodo);
+    }
+    await client.query(
+        `INSERT INTO bitacora (clave_usuario, accion, detalle)
+         VALUES ($1, 'Presupuesto mensual', $2)`,
+        [clave_responsable, periodo + ' · ' + monto.toFixed(2) + ' MXN']);
+    const resultado = await client.query(
+        'SELECT * FROM v_presupuesto_saldo WHERE id_presupuesto = $1',
+        [insercion.rows[0].id_presupuesto]);
+    return resultado.rows[0];
 };
 
 /******************************************************************/
@@ -201,6 +223,7 @@ module.exports =
 {
     presupuestos,
     presupuesto_del_mes,
+    crear_presupuesto,
     listar,
     buscar,
     crear,

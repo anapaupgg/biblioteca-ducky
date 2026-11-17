@@ -1,5 +1,15 @@
 # Revisión funcional y de datos — 21 de octubre de 2026
 
+## Alta de presupuesto mensual — 17 de noviembre de 2026
+
+La aplicación ahora permite que un perfil con `Autorizar compras` registre
+el presupuesto del mes actual desde Compras. El servidor valida el monto,
+PostgreSQL garantiza un solo presupuesto por periodo y la operación deja
+bitácora. La prueba de alta, saldo, duplicado y bitácora se revirtió por
+completo; la suite alcanzó 77 pruebas aprobadas. El mes actual sigue sin
+monto registrado, porque no se inventó una asignación. Por ello, el recorrido
+positivo de compra aún necesita un monto autorizado antes de probarse en vivo.
+
 ## Prueba de recorridos — 17 de noviembre de 2026
 
 PostgreSQL respondió; 75 pruebas automatizadas con BD pasaron sin fallos ni

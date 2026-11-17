@@ -11,7 +11,8 @@
 /*   pedidos_view.activar(tab) */
 /*   pedidos_view.ocultar_tabs(tabs) */
 /*   pedidos_view.estadisticas(elemento_4) */
-/*   pedidos_view.nueva(catalogo, lineas, saldo, acciones) */
+/*   pedidos_view.presupuesto_formulario(periodo, acciones) */
+/*   pedidos_view.nueva(catalogo, lineas, saldo, puede_autorizar, acciones) */
 /*   pedidos_view.linea() */
 /*   pedidos_view.llenar_linea(valores) */
 /*   pedidos_view.historial(lista, puede_responder, acciones) */
@@ -173,7 +174,7 @@ const pedidos_view =
         });
     },
 
-    estadisticas: function (elemento_4)
+    estadisticas: function (elemento_4, puede_autorizar, registrar)
     {
         document.getElementById('stats').innerHTML = elemento_4 ?
             '<div class="stat"><span>Presupuesto ' + ui.esc(elemento_4.periodo) + '</span><strong>' +
@@ -182,10 +183,49 @@ const pedidos_view =
             .comprometido) + '</strong></div>' +
             '<div class="stat"><span>Saldo disponible</span><strong>' + ui.dinero(elemento_4.saldo) +
             '</strong></div>' :
-            '<div class="stat"><span>Presupuesto del mes</span><strong>Sin registrar</strong></div>';
+            '<div class="stat"><span>Presupuesto del mes</span><strong>Sin registrar</strong>' +
+            (puede_autorizar ? '<button class="btn btn-sm" id="registrar-presupuesto-historial">' +
+                'Registrar presupuesto</button>' : '') + '</div>';
+        const boton = document.getElementById('registrar-presupuesto-historial');
+        if (boton) boton.addEventListener('click', registrar);
     },
 
-    nueva: function (catalogo, lineas, presupuesto, acciones)
+    presupuesto_formulario: function (periodo, acciones)
+    {
+        this.pagina('Registrar presupuesto mensual',
+            'Captura la asignación autorizada para poder solicitar libros a Tesorería.');
+        document.getElementById('panel').innerHTML =
+            '<div class="card"><h2>Presupuesto de ' + ui.esc(periodo) + '</h2>' +
+            '<p class="small muted">Solo se puede registrar una asignación por mes. ' +
+            'Las compras posteriores descontarán el saldo disponible.</p>' +
+            '<form id="form-presupuesto"><div class="field"><label for="monto-presupuesto">' +
+            'Monto autorizado (MXN)</label><input id="monto-presupuesto" type="number" ' +
+            'min="0.01" max="9999999999.99" step="0.01" required inputmode="decimal" ' +
+            'placeholder="Ej. 8000.00"></div><div class="actions">' +
+            '<button class="btn btn-primary" id="guardar-presupuesto" type="submit">' +
+            'Registrar presupuesto</button><button class="btn" id="cancelar-presupuesto" ' +
+            'type="button">Cancelar</button></div></form></div>';
+        document.getElementById('form-presupuesto').addEventListener('submit', (evento) =>
+        {
+            evento.preventDefault();
+            acciones.guardar();
+        });
+        document.getElementById('cancelar-presupuesto').addEventListener('click', acciones.cancelar);
+        document.getElementById('monto-presupuesto').focus();
+    },
+
+    monto_presupuesto: function ()
+    {
+        return document.getElementById('monto-presupuesto').value.trim();
+    },
+
+    bloquear_presupuesto: function (bloqueado)
+    {
+        const boton = document.getElementById('guardar-presupuesto');
+        if (boton) boton.disabled = bloqueado;
+    },
+
+    nueva: function (catalogo, lineas, presupuesto, puede_autorizar, acciones)
     {
         document.querySelector('.page-header h1').textContent = 'Solicitar libros a Tesorería';
         document.querySelector('.page-header p').textContent =
@@ -200,6 +240,10 @@ const pedidos_view =
             linea.cantidad + '</div>').join('') :
             '<p class="small muted">Aún no has agregado libros. Selecciona «Ver solicitud / agregar más» para comenzar.</p>';
         document.getElementById('panel').innerHTML =
+            (!presupuesto && puede_autorizar ?
+                '<div class="alert alert-warning purchase-budget-alert" role="status"><strong>Presupuesto del mes sin registrar</strong>' +
+                '<span>Registra el monto autorizado antes de enviar solicitudes.</span>' +
+                '<button class="btn btn-sm" id="registrar-presupuesto-nueva">Registrar presupuesto</button></div>' : '') +
             '<div class="actions actions-top purchase-main-actions"><button class="btn" id="btn-ver-solicitud">' +
             'Ver solicitud / agregar más</button><button class="btn btn-primary" id="btn-revisar-top"' +
             '>Revisar solicitud</button>' +
@@ -305,6 +349,8 @@ const pedidos_view =
             document.getElementById('titulo').focus();
         });
         document.getElementById('btn-revisar-top').addEventListener('click', acciones.enviar);
+        const registrar = document.getElementById('registrar-presupuesto-nueva');
+        if (registrar) registrar.addEventListener('click', acciones.registrar_presupuesto);
         document.getElementById('btn-cancelar-top').addEventListener('click', acciones.vaciar);
         document.getElementById('btn-historial').addEventListener('click', () => acciones.mostrar('historial'));
         document.getElementById('btn-recepcion').addEventListener('click', () => acciones.mostrar('recepcion'));

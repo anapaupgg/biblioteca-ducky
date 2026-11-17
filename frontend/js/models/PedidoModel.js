@@ -8,6 +8,7 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   pedido_model.presupuestos() */
+/*   pedido_model.crear_presupuesto(monto_autorizado) */
 /*   pedido_model.listar() */
 /*   pedido_model.detalle(id) */
 /*   pedido_model.crear(lineas) */
@@ -28,6 +29,15 @@ const pedido_model =
     presupuestos: function ()
     {
         return api.get('/pedidos/presupuestos');
+    },
+
+    /* POST budget for the server's current month */
+    crear_presupuesto: function (monto_autorizado)
+    {
+        return api.post('/pedidos/presupuestos',
+        {
+            monto_autorizado: monto_autorizado
+        });
     },
 
     /* GET orders */

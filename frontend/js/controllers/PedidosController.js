@@ -9,6 +9,8 @@
 /* Listing Contents: */
 /*   pedidos_controller.iniciar() */
 /*   pedidos_controller.cargar_presupuesto() */
+/*   pedidos_controller.abrir_presupuesto() */
+/*   pedidos_controller.guardar_presupuesto() */
 /*   pedidos_controller.mostrar(tab) */
 /*   pedidos_controller.dibujar_nueva() */
 /*   pedidos_controller.agregar() */
@@ -37,6 +39,8 @@ const pedidos_controller =
     puede_recibir: false,
     procesando_envio: false,
     procesando_recepcion: false,
+    procesando_presupuesto: false,
+    tab_actual: 'historial',
     parcial: null,
 
     iniciar: async function ()
@@ -98,12 +102,14 @@ const pedidos_controller =
         const lista = await pedido_model.presupuestos();
         const mes = ui.hoy().slice(0, 7);
         this.presupuesto = lista.find((elemento) => elemento.periodo === mes) || null;
-        pedidos_view.estadisticas(this.presupuesto);
+        pedidos_view.estadisticas(this.presupuesto, this.puede_autorizar,
+            () => this.abrir_presupuesto());
         return lista;
     },
 
     mostrar: async function (tab)
     {
+        this.tab_actual = tab;
         pedidos_view.activar(tab);
         try
         {
@@ -138,7 +144,9 @@ const pedidos_controller =
     dibujar_nueva: function ()
     {
         pedidos_view.nueva(this.catalogo, this.lineas, this.presupuesto,
+            this.puede_autorizar,
             {
+                registrar_presupuesto: () => this.abrir_presupuesto(),
                 agregar: () => this.agregar(),
                 mostrar: (tab) => this.mostrar(tab),
                 quitar: (indice) =>
@@ -177,6 +185,53 @@ const pedidos_controller =
                     });
                 }
             });
+    },
+
+    abrir_presupuesto: function ()
+    {
+        if (!this.puede_autorizar || this.presupuesto) return;
+        pedidos_view.presupuesto_formulario(ui.hoy().slice(0, 7),
+        {
+            guardar: () => this.guardar_presupuesto(),
+            cancelar: () => this.mostrar(this.tab_actual)
+        });
+    },
+
+    guardar_presupuesto: async function ()
+    {
+        if (this.procesando_presupuesto || !this.puede_autorizar || this.presupuesto) return;
+        const entrada = pedidos_view.monto_presupuesto();
+        if (!/^(?:0|[1-9][0-9]{0,9})(?:\.[0-9]{1,2})?$/.test(entrada) ||
+            Number(entrada) <= 0)
+        {
+            return pedidos_view.mensaje('error',
+                'Captura un monto mayor a cero con máximo dos decimales');
+        }
+        const confirmado = await ui.dialogo(
+        {
+            titulo: 'Registrar presupuesto mensual',
+            texto: 'Se registrarán ' + ui.dinero(Number(entrada)) +
+                ' para el mes actual. Este monto no se podrá reemplazar desde esta pantalla.',
+            confirmar: 'Registrar presupuesto'
+        });
+        if (!confirmado) return;
+        this.procesando_presupuesto = true;
+        pedidos_view.bloquear_presupuesto(true);
+        try
+        {
+            await pedido_model.crear_presupuesto(entrada);
+            await this.mostrar(this.tab_actual);
+            pedidos_view.mensaje('ok', 'Presupuesto mensual registrado');
+        }
+        catch (error)
+        {
+            pedidos_view.mensaje('error', error.message);
+            pedidos_view.bloquear_presupuesto(false);
+        }
+        finally
+        {
+            this.procesando_presupuesto = false;
+        }
     },
 
     agregar: function ()

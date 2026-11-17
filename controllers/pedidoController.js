@@ -9,6 +9,7 @@
 /* Listing Contents: */
 /*   periodo_actual() */
 /*   presupuestos(solicitud, respuesta) */
+/*   crear_presupuesto(solicitud, respuesta) */
 /*   listar(solicitud_2, respuesta_2) */
 /*   detalle(solicitud_3, respuesta_3) */
 /*   crear(solicitud_4, respuesta_4) */
@@ -50,6 +51,30 @@ const presupuestos = async (solicitud, respuesta) =>
     catch (error)
     {
         responder_error(respuesta, error, 'pedidos.presupuestos');
+    }
+};
+
+/* Registra una sola asignación para el mes actual; nunca reemplaza el saldo. */
+const crear_presupuesto = async (solicitud, respuesta) =>
+{
+    try
+    {
+        const entrada = String(solicitud.body?.monto_autorizado ?? '').trim();
+        if (!/^(?:0|[1-9][0-9]{0,9})(?:\.[0-9]{1,2})?$/.test(entrada) ||
+            Number(entrada) <= 0)
+        {
+            throw new error_negocio(400,
+                'Captura un monto mayor a cero con máximo dos decimales', ['monto_autorizado']);
+        }
+        const periodo = periodo_actual();
+        const presupuesto = await con_usuario(solicitud.usuario.clave, (client) =>
+            pedido_model.crear_presupuesto(client, periodo, Number(entrada),
+                solicitud.usuario.clave));
+        respuesta.status(201).json(presupuesto);
+    }
+    catch (error)
+    {
+        responder_error(respuesta, error, 'pedidos.crear_presupuesto');
     }
 };
 
@@ -211,6 +236,7 @@ const recibir = async (solicitud_6, respuesta_6) =>
 module.exports =
 {
     presupuestos,
+    crear_presupuesto,
     listar,
     detalle,
     crear,

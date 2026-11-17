@@ -27,6 +27,8 @@ const
 
 router.get('/presupuestos', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'),
     pedido_controller.presupuestos);
+router.post('/presupuestos', requiere_sesion, requiere_funcion('Autorizar compras'),
+    pedido_controller.crear_presupuesto);
 router.get('/', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'), pedido_controller.listar);
 router.get('/:id', requiere_sesion, requiere_funcion('Solicitar compras', 'Autorizar compras', 'Gestionar libros'), pedido_controller
     .detalle);

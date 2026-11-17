@@ -80,7 +80,10 @@ const grupos = [
         ]
     ],
     ['pedidos', 'Solicitar compras', [['post', '/']]],
-    ['pedidos', 'Autorizar compras', [['put', '/1/estatus']]],
+    ['pedidos', 'Autorizar compras', [
+        ['post', '/presupuestos'],
+        ['put', '/1/estatus']
+    ]],
     ['pedidos', 'Gestionar libros', [
         ['post', '/1/recepcion']
     ]],

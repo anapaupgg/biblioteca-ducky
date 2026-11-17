@@ -1983,6 +1983,12 @@ table.table
     color: var(--color-amber);
 }
 
+.purchase-budget-alert .btn
+{
+    display: block;
+    margin-top: var(--space-12);
+}
+
 /******************************************************************/
 /* COMPONENTS · Dialog                                            */
 /******************************************************************/

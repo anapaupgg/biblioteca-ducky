@@ -1,3 +1,29 @@
+REGISTRO DE PRESUPUESTO MENSUAL — 17 DE NOVIEMBRE DE 2026
+- git fetch origin: main y origin/main sincronizados en 61dbf7c; no llegaron
+  commits remotos nuevos. El commit anterior solo documentó la revisión
+  funcional. Se conserva y excluye package-lock.json, cambio local ajeno.
+- Figma, frame 2011:28537: el presupuesto de la solicitud aparece como dato
+  de solo lectura. Se conservó esa tarjeta y se agregó una acción separada
+  únicamente cuando falta el presupuesto del mes.
+- Quienes tienen Autorizar compras pueden registrar el monto del mes actual.
+  La API valida monto y permiso; PostgreSQL impide duplicar el periodo y
+  registra bitácora en la misma transacción. No existe opción de reemplazar
+  presupuestos ya registrados. SQL está en modelo, DOM en vista y coordinación
+  en controlador.
+- DUCKY_TEST_DB=1 npm test: 77 aprobadas, 0 fallos, 0 omitidas. Se probó
+  alta, saldo y bitácora con rollback; duplicado, permisos, validación y
+  confirmación. No se registró ningún presupuesto real ni se ejecutó db:init.
+- En localhost:3003 se verificaron con 100002 el aviso sin presupuesto, la
+  apertura del formulario, el periodo 2026-11 y la cancelación sin guardar.
+  Se corrigió el espacio visual del botón en el aviso y se cerraron la sesión
+  y el servidor temporal. El frame de Figma no tiene formulario de alta;
+  esta extensión no se declara idéntica al prototipo.
+- Pendiente inmediato: ingresar un monto autorizado por un administrador y
+  recorrer solicitud/compra positiva desde la interfaz; nunca inventar ese
+  monto. Siguen pendientes avisos externos y estados secundarios de Figma.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 VERIFICACIÓN FUNCIONAL — RUTAS Y RECORRIDOS (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main sincronizados en c46ae38; no había
   commits remotos nuevos. Ese commit solo aclara el directorio ficticio y no
