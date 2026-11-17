@@ -2,6 +2,16 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Excepción de acceso: cotejo del 17 de noviembre de 2026
+
+- Los frames `2006:2999` (campos vacíos) y `2006:2024` (credenciales
+  incorrectas) sitúan ambos errores dentro de `Ducky/Shell` con la leyenda
+  «Administrador del sistema · Sesión activa». En la aplicación, estos errores
+  ocurren antes de autenticar y permanecen en el formulario de acceso, cuyo
+  frame principal `2006:941` sí fue cotejado. Copiar literalmente el shell
+  afirmaría una sesión que no existe. Se registra esta diferencia de flujo;
+  no se declara paridad de esos estados ni se habilita navegación protegida.
+
 ## Baja bloqueada de perfil: cotejo del 17 de noviembre de 2026
 
 - Frame `2009:21287`: al intentar eliminar Lector, que tiene cinco usuarios

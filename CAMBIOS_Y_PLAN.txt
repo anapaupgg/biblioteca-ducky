@@ -1,3 +1,12 @@
+REVISIÓN — ERRORES DE ACCESO EN FIGMA (17 DE NOVIEMBRE DE 2026)
+- Los frames 2006:2999 y 2006:2024 muestran errores de login bajo un shell
+  de administrador con sesión activa. La app conserva esos errores antes de
+  autenticar, en el formulario de acceso, para no fingir sesión ni exponer
+  navegación protegida. Queda registrada la discrepancia; no se modificó la
+  autenticación ni la BD. La portada de login mantiene el cotejo previo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — BAJA BLOQUEADA DE PERFIL (17 DE NOVIEMBRE DE 2026)
 - Tras subir ae42c8c, se cotejó el frame 2009:21287 con Lector y sus cinco
   usuarios activos reales. Aviso y=176/96 px, filas y=288–584, acciones y=600.
