@@ -1,3 +1,18 @@
+ACTUALIZACIÓN — RECHAZO DE PERFIL PROPIO (17 DE NOVIEMBRE DE 2026)
+- Frame 2008:17155 cotejado en vista temporal con el método real de
+  UsuarioEditarView. Aviso y=136/96 px, tarjeta y=248/114 px y acciones
+  y=378. A 390 px no desborda. La vista temporal se eliminó. En la app real
+  se canceló la confirmación antes de enviar la operación de permisos; el
+  servidor conserva la regla que rechaza la edición propia. No se cambió la
+  cuenta ni PostgreSQL, y no se ejecutó db:init.
+- La tarjeta usa la clave real y no afirma bitácora de rechazo sin evidencia.
+  Pendientes: cotejo de otros rechazos de perfil y resultados de modificación.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis de vista y
+  controlador y git diff --check sin errores.
+- package-lock.json local permanece ajeno a este avance.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 REVISIÓN — ERRORES DE ACCESO EN FIGMA (17 DE NOVIEMBRE DE 2026)
 - Los frames 2006:2999 y 2006:2024 muestran errores de login bajo un shell
   de administrador con sesión activa. La app conserva esos errores antes de

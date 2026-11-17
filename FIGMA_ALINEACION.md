@@ -2,6 +2,21 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Rechazo del cambio de perfil propio: cotejo del 17 de noviembre de 2026
+
+- Frame `2008:17155`: la salida de error usa título en y=96, aviso
+  `(276,136;1132×96)`, tarjeta de operación `(276,248;1132×114)` y
+  acciones en y=378 a 1440 × 960. El contenido muestra la clave real de la
+  sesión y aclara que el perfil se conservó. «Volver» regresa a la consulta;
+  «Ir al inicio» mantiene la navegación autorizada. A 390 px no hubo
+  desbordamiento horizontal.
+- La vista se comprobó con una página temporal que llamó al mismo método de
+  vista y se eliminó después. En la app real se canceló la confirmación antes
+  de intentar cambiar permisos; no se modificó la cuenta ni la base. El
+  servidor ya rechaza el cambio de perfil propio. A diferencia de Figma, la
+  tarjeta no afirma un registro de bitácora porque ese dato no llega en la
+  respuesta del error.
+
 ## Excepción de acceso: cotejo del 17 de noviembre de 2026
 
 - Los frames `2006:2999` (campos vacíos) y `2006:2024` (credenciales

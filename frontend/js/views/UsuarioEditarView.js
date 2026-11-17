@@ -15,6 +15,7 @@
 /*   usuario_editar_view.perfil_elegido() */
 /*   usuario_editar_view.vacio() */
 /*   usuario_editar_view.exito(datos) */
+/*   usuario_editar_view.error_propio(usuario) */
 /*   usuario_editar_view.mensaje(tipo, titulo, texto) */
 /******************************************************************/
 
@@ -153,6 +154,26 @@ const usuario_editar_view =
                 ' · Administrador ' + datos.administrador.clave) + '</p></div>' +
             '<div class="actions user-edit-actions"><a class="btn btn-primary" ' +
             'href="usuarios.html">Volver a usuarios</a></div>';
+        window.scrollTo(0, 0);
+    },
+
+    error_propio: function (usuario)
+    {
+        document.body.classList.add('user-edit-self-error');
+        document.getElementById('formulario-editar').hidden = true;
+        document.getElementById('titulo-pagina').textContent =
+            'No puede modificar su propio perfil';
+        document.getElementById('descripcion-pagina').textContent = '';
+        this.mensaje('error', 'No puede modificar su propio perfil',
+            'La cuenta de la sesión debe conservar sus privilegios.');
+        document.getElementById('resultado-editar').innerHTML =
+            '<div class="card user-edit-self-card"><h2>Información de la operación</h2>' +
+            '<p>' + ui.esc('Búsqueda: ' + usuario.clave +
+                ' · Perfil seleccionado conservado. No se aplicó el cambio.') + '</p></div>' +
+            '<div class="actions user-edit-self-actions">' +
+            '<a class="btn" href="usuario_editar.html?clave=' +
+                encodeURIComponent(usuario.clave) + '">Volver</a>' +
+            '<a class="btn" href="inicio.html">Ir al inicio</a></div>';
         window.scrollTo(0, 0);
     },
 

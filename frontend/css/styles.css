@@ -2499,6 +2499,55 @@ table.table
     margin: 0 0 var(--space-16);
 }
 
+.user-edit-page.user-edit-self-error .page-header
+{
+    margin-bottom: 2px;
+}
+
+.user-edit-page.user-edit-self-error #descripcion-pagina
+{
+    display: none;
+}
+
+.user-edit-page.user-edit-self-error #mensaje .alert
+{
+    min-height: 96px;
+    padding: 16px;
+    margin-top: 2px;
+}
+
+.user-edit-page.user-edit-self-error #mensaje .alert strong
+{
+    font: 600 13px/20px var(--font);
+    margin-bottom: 8px;
+}
+
+.user-edit-page.user-edit-self-error #mensaje .alert span
+{
+    font: 400 13px/20px var(--font);
+}
+
+.user-edit-self-card
+{
+    min-height: 114px;
+}
+
+.user-edit-self-card > h2:first-child
+{
+    margin-bottom: 8px;
+}
+
+.user-edit-self-card p
+{
+    margin: 0;
+}
+
+.user-edit-self-actions .btn
+{
+    min-width: 140px;
+    min-height: 48px;
+}
+
 .user-edit-operation
 {
     min-height: 154px;

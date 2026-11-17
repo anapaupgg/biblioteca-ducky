@@ -137,7 +137,9 @@ const usuario_editar_controller =
         }
         catch (error)
         {
-            usuario_editar_view.mensaje('error', error.message);
+            if (error.message === 'No puede modificar su propio perfil')
+                usuario_editar_view.error_propio(this.usuario);
+            else usuario_editar_view.mensaje('error', error.message);
         }
         finally
         {
