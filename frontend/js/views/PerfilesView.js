@@ -108,7 +108,7 @@ const perfiles_view =
         const casillas = (lista) => lista.map((funcion) =>
             '<label class="check"><input type="checkbox" value="' + funcion.id + '"' +
             (perfil && perfil.ids_funciones.includes(funcion.id) ? ' checked' : '') + '>' +
-            ui.esc(funcion.nombre) + '</label>').join('');
+            '<span>' + ui.esc(funcion.nombre) + '</span></label>').join('');
         document.getElementById('tabla').classList.add('hidden');
         document.getElementById('acciones-perfiles').classList.add('hidden');
         document.getElementById('perfiles-titulo').textContent = perfil ?
@@ -123,18 +123,19 @@ const perfiles_view =
             '<div class="card"><h2>' + (perfil ? 'Editar perfil ' + ui.esc(perfil.nombre) :
                 'Datos del perfil') + '</h2>' +
             '<div class="grid-2">' +
-            '<div class="field"><label for="nombre">Nombre del perfil</label><input id="nombre" maxlength="50" placeholder="Ej. Investigador"' +
+            '<div class="field"><label for="nombre">Nombre del perfil</label><input id="nombre" maxlength="50" placeholder="Ej. Alumno"' +
             (perfil ? ' value="' + ui.esc(perfil.nombre) + '" readonly' : '') + '></div>' +
             '<div class="field"><label for="descripcion">Descripción</label><input id="descripcion" maxlength="200" placeholder="Ej. Consulta avanzada del acervo" value="' +
             ui.esc(perfil ? perfil.descripcion || '' : '') + '"></div></div></div>' +
             '<div class="card perfiles-formulario"><h2>Funciones autorizadas</h2><div id="funciones">' +
             '<div class="checks">' + casillas(principales) + '</div>' +
             '<p class="small muted">Préstamos, Devoluciones y Chatbot pertenecen al sistema completo; su selección configura el perfil. La cuota de libros se define como política general.</p>' +
-            (adicionales.length ? '<details class="perfiles-adicionales"><summary>Funciones adicionales</summary>' +
-                '<div class="checks">' + casillas(adicionales) + '</div></details>' : '') +
             '</div></div>' +
             '<div class="actions"><button class="btn btn-primary" type="submit">Guardar perfil</button>' +
-            '<button class="btn" type="button" id="btn-cancelar">Cancelar</button></div></form>';
+            '<button class="btn" type="button" id="btn-cancelar">Cancelar</button></div>' +
+            (adicionales.length ? '<details class="perfiles-adicionales"><summary>Funciones adicionales</summary>' +
+                '<div class="checks">' + casillas(adicionales) + '</div></details>' : '') +
+            '</form>';
         document.getElementById(perfil ? 'descripcion' : 'nombre').focus();
     },
 
@@ -144,7 +145,7 @@ const perfiles_view =
         {
             nombre: document.getElementById('nombre').value.trim(),
             descripcion: document.getElementById('descripcion').value.trim(),
-            funciones: [...document.querySelectorAll('#funciones input:checked')].map((campo) =>
+            funciones: [...document.querySelectorAll('#form-perfil input[type="checkbox"]:checked')].map((campo) =>
                 Number(campo.value))
         });
     },

@@ -1424,6 +1424,70 @@ a
     padding: var(--space-12);
 }
 
+.perfiles-page #formulario .card:first-child > h2:first-child
+{
+    margin-bottom: 12px;
+}
+
+.perfiles-page #formulario .card:first-child .field
+{
+    min-height: 88px;
+    padding: var(--space-4);
+}
+
+.perfiles-page .perfiles-formulario
+{
+    min-height: 306px;
+}
+
+.perfiles-page .perfiles-formulario .checks
+{
+    grid-template-columns: minmax(0, 480px) minmax(0, 1fr);
+}
+
+.perfiles-page .perfiles-formulario .check input
+{
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+.perfiles-page .perfiles-formulario .check:hover,
+.perfiles-page .perfiles-formulario .check:has(input:checked)
+{
+    background: var(--color-blue-soft);
+}
+
+.perfiles-page .perfiles-formulario .check input:focus-visible + span
+{
+    outline: 2px solid var(--color-navy);
+    outline-offset: 2px;
+}
+
+.perfiles-page #formulario form > .actions .btn
+{
+    min-height: 48px;
+}
+
+.perfiles-page #formulario form > .actions .btn-primary
+{
+    min-width: 145px;
+}
+
+.perfiles-page #formulario #btn-cancelar
+{
+    min-width: 139px;
+}
+
+@media (max-width: 900px)
+{
+    .perfiles-page .perfiles-formulario .checks
+    {
+        grid-template-columns: 1fr;
+    }
+}
+
 .perfiles-fila
 {
     display: grid;

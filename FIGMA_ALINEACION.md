@@ -2,6 +2,24 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Creación principal de perfil: cotejo del 16 de noviembre de 2026
+
+- Frame `2009:20306`: a 1440 × 960, Datos del perfil quedó en
+  `(276,176;1132×178)`, Funciones autorizadas en `(276,370;1132×306)` y
+  Guardar/Cancelar en y=692 con 48 px de altura. Las seis funciones ocupan
+  dos columnas; las etiquetas comienzan en x=313 y x=817. La selección usa
+  casillas accesibles sin el cuadro visible que no aparece en la captura;
+  una selección se resalta con el fondo azul del sistema.
+- Las tres funciones reales adicionales siguen disponibles en un desplegable
+  bajo las acciones. Se marcaron «Gestionar usuarios» y «Gestionar perfiles»
+  sin guardar, y ambas casillas permanecieron seleccionadas. El formulario
+  recoge también las selecciones adicionales. A 390 px no hubo desbordamiento
+  horizontal. El ejemplo de nombre se alineó con «Ej. Alumno» de Figma.
+- La solicitud principal de Tesorería (`2011:28537`) se volvió a cotejar con
+  un libro en el borrador local: acciones y=176, tarjeta y=240/414 px.
+  Presupuesto, folio y peticionario ilustrativos no se sustituyen por datos
+  ficticios; el editor y el historial operativos permanecen bajo la vista.
+
 ## Consulta principal de libro activo: cotejo del 16 de noviembre de 2026
 
 - Frame `2010:25317`: con el libro real `L000129`, las dos filas de acciones

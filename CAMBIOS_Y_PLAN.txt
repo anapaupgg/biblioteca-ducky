@@ -1,3 +1,21 @@
+ACTUALIZACIÓN — CREACIÓN PRINCIPAL DE PERFIL (16 DE NOVIEMBRE DE 2026)
+- Tras subir 0a9f5eb, main quedó 0/0 con origin/main. No hubo commits
+  remotos nuevos al iniciar; package-lock.json local sigue fuera del trabajo.
+- Frame 2009:20306 cotejado con la app. Tarjetas a (276,176;1132×178) y
+  (276,370;1132×306), acciones y=692. Las seis funciones se muestran en dos
+  columnas como Figma y conservan casillas accesibles; funciones adicionales
+  se movieron bajo los botones sin perder su selección al guardar. Se marcaron
+  una principal y una adicional sin crear perfil. A 390 px no desborda.
+- Frame 2011:28537 de compras también revalidado con un libro de ejemplo en
+  borrador, sin envío: acciones y=176 y tarjeta y=240/414 px. Los datos de
+  presupuesto/folio siguen siendo reales; editor e historial permanecen.
+  npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis y git diff --check
+  sin errores. No se cambió la base ni se ejecutó db:init.
+- Pendientes: otros estados de perfiles y compras, servicios externos y los
+  datos ilustrativos distintos del prototipo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — CONSULTA PRINCIPAL DE LIBRO (16 DE NOVIEMBRE DE 2026)
 - git fetch origin confirmó main sincronizada 0/0 con 97f03b4; sin commits
   remotos nuevos. package-lock.json sigue modificado localmente y ajeno al
