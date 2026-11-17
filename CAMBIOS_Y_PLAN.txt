@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — OTROS RECHAZOS DE MODIFICACIÓN (17 DE NOVIEMBRE DE 2026)
+- Los frames 2008:16840, 2008:17470 y 2008:17785 se cotejaron mediante
+  vistas temporales eliminadas tras probar. Aviso y=136/96 px, tarjeta
+  y=248/114 px y acciones y=378; 390 px sin desbordamiento. El controlador
+  presenta la causa del servidor para perfil no disponible, jerarquía superior
+  o incompatibilidad con el tipo institucional. No se enviaron cambios de
+  permisos ni se alteró PostgreSQL; no se ejecutó db:init.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis de vista y
+  controlador y git diff --check sin errores.
+- Pendientes: resultados de modificación confirmada y otros estados de
+  usuarios; package-lock.json local sigue excluido del trabajo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — RECHAZO DE PERFIL PROPIO (17 DE NOVIEMBRE DE 2026)
 - Frame 2008:17155 cotejado en vista temporal con el método real de
   UsuarioEditarView. Aviso y=136/96 px, tarjeta y=248/114 px y acciones

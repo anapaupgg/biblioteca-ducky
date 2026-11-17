@@ -2,6 +2,20 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Otros rechazos al modificar perfil: cotejo del 17 de noviembre de 2026
+
+- Frames `2008:16840`, `2008:17470` y `2008:17785`: perfil inactivo o
+  inexistente, jerarquía superior y tipo institucional incompatible comparten
+  aviso `(276,136;1132×96)`, operación `(276,248;1132×114)` y acciones en
+  y=378 a 1440 × 960. La vista de rechazo usa esa estructura y la causa
+  correspondiente del servidor; el tipo y perfil incompatibles se describen
+  con los datos realmente elegidos. A 390 px no hay desbordamiento horizontal.
+- Se cotejaron en páginas temporales que invocaron el mismo método de vista,
+  eliminadas después. El formulario real impide normalmente elegir perfiles
+  inactivos o superiores; no se enviaron operaciones de permisos para forzar
+  esos errores. El servidor conserva la validación. Igual que el rechazo de
+  perfil propio, la tarjeta no afirma una bitácora de intentos no confirmada.
+
 ## Rechazo del cambio de perfil propio: cotejo del 17 de noviembre de 2026
 
 - Frame `2008:17155`: la salida de error usa título en y=96, aviso

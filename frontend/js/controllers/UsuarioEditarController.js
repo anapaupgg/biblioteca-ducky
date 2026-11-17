@@ -139,6 +139,21 @@ const usuario_editar_controller =
         {
             if (error.message === 'No puede modificar su propio perfil')
                 usuario_editar_view.error_propio(this.usuario);
+            else if (error.message === 'El perfil seleccionado no está disponible')
+                usuario_editar_view.error_cambio(error.message,
+                    'El perfil no existe o está inactivo; no se guardó el cambio.', this.usuario);
+            else if (error.message === 'No puede modificar ni asignar un perfil superior' ||
+                error.message === 'No puede modificar a un usuario con un perfil superior')
+                usuario_editar_view.error_cambio('No puede modificar ni asignar un perfil superior',
+                    'Los privilegios del usuario o del nuevo perfil superan a los del administrador.',
+                    this.usuario);
+            else if (error.message.startsWith('El perfil no corresponde al tipo de usuario'))
+            {
+                const destino = this.perfiles.find((perfil) => perfil.id === id_perfil);
+                usuario_editar_view.error_cambio('El perfil no corresponde al tipo de usuario',
+                    'El tipo institucional ' + this.usuario.tipo + ' no admite ' +
+                    (destino?.nombre || 'el perfil elegido') + '.', this.usuario);
+            }
             else usuario_editar_view.mensaje('error', error.message);
         }
         finally

@@ -2499,50 +2499,50 @@ table.table
     margin: 0 0 var(--space-16);
 }
 
-.user-edit-page.user-edit-self-error .page-header
+.user-edit-page.user-edit-rejection .page-header
 {
     margin-bottom: 2px;
 }
 
-.user-edit-page.user-edit-self-error #descripcion-pagina
+.user-edit-page.user-edit-rejection #descripcion-pagina
 {
     display: none;
 }
 
-.user-edit-page.user-edit-self-error #mensaje .alert
+.user-edit-page.user-edit-rejection #mensaje .alert
 {
     min-height: 96px;
     padding: 16px;
     margin-top: 2px;
 }
 
-.user-edit-page.user-edit-self-error #mensaje .alert strong
+.user-edit-page.user-edit-rejection #mensaje .alert strong
 {
     font: 600 13px/20px var(--font);
     margin-bottom: 8px;
 }
 
-.user-edit-page.user-edit-self-error #mensaje .alert span
+.user-edit-page.user-edit-rejection #mensaje .alert span
 {
     font: 400 13px/20px var(--font);
 }
 
-.user-edit-self-card
+.user-edit-rejection-card
 {
     min-height: 114px;
 }
 
-.user-edit-self-card > h2:first-child
+.user-edit-rejection-card > h2:first-child
 {
     margin-bottom: 8px;
 }
 
-.user-edit-self-card p
+.user-edit-rejection-card p
 {
     margin: 0;
 }
 
-.user-edit-self-actions .btn
+.user-edit-rejection-actions .btn
 {
     min-width: 140px;
     min-height: 48px;
