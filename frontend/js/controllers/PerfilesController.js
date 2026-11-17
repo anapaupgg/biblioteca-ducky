@@ -81,12 +81,12 @@ const perfiles_controller =
         if (!datos.nombre)
         {
             ui.marcar(['nombre']);
-            return perfiles_view.mensaje('error', 'El nombre del perfil es obligatorio');
+            return perfiles_view.nombre_obligatorio();
         }
         if (datos.funciones.length === 0)
         {
             perfiles_view.marcar_funciones(true);
-            return perfiles_view.mensaje('error', 'Selecciona al menos una función');
+            return perfiles_view.funciones_obligatorias();
         }
         try
         {

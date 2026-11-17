@@ -1480,37 +1480,49 @@ a
     min-width: 139px;
 }
 
-.perfiles-page.perfil-error-duplicado .page-header
+.perfiles-page.perfil-error-resumen .page-header
 {
     margin-bottom: 10px;
 }
 
-.perfiles-page.perfil-error-duplicado #mensaje .alert
+.perfiles-page.perfil-error-resumen #mensaje .alert
 {
     min-height: 96px;
     padding: 16px;
     margin-top: 14px;
 }
 
-.perfiles-page.perfil-error-duplicado #mensaje .alert strong
+.perfiles-page.perfil-error-resumen #mensaje .alert strong
 {
     font: 600 13px/20px var(--font);
     margin-bottom: 8px;
 }
 
-.perfiles-page.perfil-error-duplicado #mensaje .alert span
+.perfiles-page.perfil-error-resumen #mensaje .alert span
 {
     font: 400 13px/20px var(--font);
 }
 
-.perfiles-page.perfil-error-duplicado #formulario form > .actions .btn-primary
+.perfiles-page.perfil-error-resumen #formulario form > .actions .btn-primary
 {
     min-width: 154px;
 }
 
-.perfiles-page.perfil-error-duplicado #formulario #btn-cancelar
+.perfiles-page.perfil-error-resumen #formulario #btn-cancelar
 {
     min-width: 140px;
+}
+
+.perfiles-page.perfil-error-funciones #perfil-funciones-vacias .readonly
+{
+    background: var(--color-red-soft);
+    border-color: var(--color-red);
+    color: var(--color-red);
+}
+
+.perfiles-page .field[hidden]
+{
+    display: none;
 }
 
 @media (max-width: 900px)

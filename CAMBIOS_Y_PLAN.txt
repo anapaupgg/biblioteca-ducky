@@ -1,3 +1,17 @@
+ACTUALIZACIÓN — VALIDACIONES DE PERFIL (17 DE NOVIEMBRE DE 2026)
+- Después de subir 2ce7dd5, se cotejaron los frames 2009:22905 y
+  2009:22580. El nombre obligatorio y la ausencia de funciones muestran el
+  aviso y la tarjeta Datos conservados en y=176/288, con acciones en y=482.
+  Corregir perfil recupera los campos y selecciones; cancelar vuelve a la
+  lista. Ambas validaciones se probaron sin escritura a PostgreSQL ni db:init.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis de la vista y el
+  controlador y git diff --check sin errores.
+- Pendientes: estados de alta y baja de perfiles, permisos denegados y otras
+  variantes del prototipo. El cambio local ajeno de package-lock.json sigue
+  excluido del trabajo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ERROR DE PERFIL DUPLICADO (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main 0/0, sin commits remotos nuevos; el
   cambio local ajeno de package-lock.json permanece excluido.

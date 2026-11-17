@@ -2,6 +2,19 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Nombre y funciones obligatorios: cotejo del 17 de noviembre de 2026
+
+- Frames `2009:22905` y `2009:22580`: los dos errores de validación local
+  reutilizan el resumen del perfil. En escritorio el aviso está en
+  `(276,176;1132×96)`, la tarjeta en `(276,288;1132×178)` y las acciones en
+  y=482, como ambos frames. El primero marca Nombre vacío y conserva la
+  descripción y las funciones; el segundo muestra «Funciones / Ninguna
+  seleccionada» y conserva internamente el nombre y la descripción.
+- «Corregir perfil» devuelve el formulario completo sin perder los valores;
+  se probó con nombre temporal y descripción, y luego se canceló sin guardar.
+  Estas validaciones ocurren antes de la API. La captura utiliza el
+  administrador y datos locales, no los valores ilustrativos del prototipo.
+
 ## Nombre de perfil duplicado: cotejo del 17 de noviembre de 2026
 
 - Frame `2009:22255`: el intento real de registrar «Lector» volvió con error

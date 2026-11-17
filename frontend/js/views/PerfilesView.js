@@ -15,6 +15,8 @@
 /*   perfiles_view.datos() */
 /*   perfiles_view.marcar_funciones(si) */
 /*   perfiles_view.nombre_duplicado(nombre) */
+/*   perfiles_view.nombre_obligatorio() */
+/*   perfiles_view.funciones_obligatorias() */
 /*   perfiles_view.corregir_perfil() */
 /*   perfiles_view.cerrar_formulario() */
 /*   perfiles_view.mensaje(tipo, titulo, texto) */
@@ -56,7 +58,7 @@ const perfiles_view =
         document.getElementById('form-perfil').addEventListener('submit', evento =>
         {
             evento.preventDefault();
-            if (this.duplicado) this.corregir_perfil();
+            if (this.error_resumen_activo) this.corregir_perfil();
             else guardar();
         });
         document.getElementById('btn-cancelar').addEventListener('click', () => this
@@ -110,8 +112,8 @@ const perfiles_view =
 
     formulario: function (funciones, perfil)
     {
-        this.duplicado = false;
-        document.body.classList.remove('perfil-error-duplicado');
+        this.error_resumen_activo = false;
+        document.body.classList.remove('perfil-error-resumen', 'perfil-error-funciones');
         const nombres_figma = ['Gestionar usuarios', 'Gestionar libros', 'Buscar libros',
             'Préstamos', 'Devoluciones', 'Chatbot'];
         const principales = nombres_figma.flatMap((nombre) =>
@@ -171,26 +173,56 @@ const perfiles_view =
 
     nombre_duplicado: function (nombre)
     {
-        this.duplicado = true;
-        document.body.classList.add('perfil-error-duplicado');
-        document.getElementById('perfiles-titulo').textContent = 'Nombre de perfil duplicado';
+        this.error_resumen('Nombre de perfil duplicado', 'Ya existe ' + nombre +
+            '. Cambia el nombre; se conservan descripción y funciones.');
+    },
+
+    nombre_obligatorio: function ()
+    {
+        this.error_resumen('El nombre del perfil es obligatorio',
+            'Se conservan descripción y funciones seleccionadas.');
+    },
+
+    funciones_obligatorias: function ()
+    {
+        this.error_resumen('Selecciona al menos una función',
+            'No puede registrarse un perfil sin funciones. Se conserva nombre y descripción.',
+            true);
+    },
+
+    error_resumen: function (titulo, texto, sin_funciones)
+    {
+        this.error_resumen_activo = true;
+        document.body.classList.add('perfil-error-resumen');
+        if (sin_funciones)
+        {
+            document.body.classList.add('perfil-error-funciones');
+            const nombre = document.getElementById('nombre').closest('.field');
+            nombre.hidden = true;
+            nombre.insertAdjacentHTML('beforebegin',
+                '<div id="perfil-funciones-vacias" class="field"><span class="label">' +
+                'Funciones</span><div class="readonly">Ninguna seleccionada</div></div>');
+        }
+        document.getElementById('perfiles-titulo').textContent = titulo;
         document.getElementById('perfiles-descripcion').textContent =
             'Corrige el campo marcado antes de guardar.';
         document.querySelector('#form-perfil > .card h2').textContent = 'Datos conservados';
         document.querySelector('#form-perfil .perfiles-formulario').hidden = true;
         const adicionales = document.querySelector('#form-perfil .perfiles-adicionales');
         if (adicionales) adicionales.hidden = true;
+        document.getElementById('nombre').placeholder = '';
         document.getElementById('descripcion').readOnly = true;
         document.querySelector('#form-perfil button[type="submit"]').textContent =
             'Corregir perfil';
-        this.mensaje('error', 'Perfil no registrado', 'Ya existe ' + nombre +
-            '. Cambia el nombre; se conservan descripción y funciones.');
+        this.mensaje('error', 'Perfil no registrado', texto);
     },
 
     corregir_perfil: function ()
     {
-        this.duplicado = false;
-        document.body.classList.remove('perfil-error-duplicado');
+        this.error_resumen_activo = false;
+        document.body.classList.remove('perfil-error-resumen', 'perfil-error-funciones');
+        document.getElementById('perfil-funciones-vacias')?.remove();
+        document.getElementById('nombre').closest('.field').hidden = false;
         document.getElementById('perfiles-titulo').textContent = 'Crear perfil';
         document.getElementById('perfiles-descripcion').textContent =
             'Selecciona al menos una función. El nombre debe ser único.';
@@ -198,18 +230,20 @@ const perfiles_view =
         document.querySelector('#form-perfil .perfiles-formulario').hidden = false;
         const adicionales = document.querySelector('#form-perfil .perfiles-adicionales');
         if (adicionales) adicionales.hidden = false;
+        document.getElementById('nombre').placeholder = 'Ej. Alumno';
         document.getElementById('descripcion').readOnly = false;
         document.querySelector('#form-perfil button[type="submit"]').textContent =
             'Guardar perfil';
         this.mensaje();
         ui.limpiar();
+        this.marcar_funciones(false);
         document.getElementById('nombre').focus();
     },
 
     cerrar_formulario: function ()
     {
-        this.duplicado = false;
-        document.body.classList.remove('perfil-error-duplicado');
+        this.error_resumen_activo = false;
+        document.body.classList.remove('perfil-error-resumen', 'perfil-error-funciones');
         this.mensaje();
         const panel = document.getElementById('formulario');
         panel.classList.add('hidden');
