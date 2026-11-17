@@ -2,6 +2,19 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Alta exitosa de perfil: cotejo del 17 de noviembre de 2026
+
+- Frame `2009:20649`: después del alta, la aplicación muestra encabezado,
+  aviso «Nuevo perfil disponible» `(276,176;1132×96)`, tarjeta «Registro de
+  la operación» `(276,288;1132×154)` y acciones en y=458 a 1440 × 960.
+  «Asignar a usuario» abre el formulario correspondiente y «Volver a perfiles»
+  restaura la lista. Se comprobó la disposición con una vista temporal que
+  invocó el método real, sin crear registros en PostgreSQL.
+- El nombre, estatus, funciones, fecha y clave del administrador provienen de
+  la operación y la sesión. La base guarda fecha, pero no hora de alta; se
+  muestra solo la fecha, distinta de la hora ilustrativa del frame. Falta
+  verificar este resultado con una operación de alta real.
+
 ## Otros rechazos al modificar perfil: cotejo del 17 de noviembre de 2026
 
 - Frames `2008:16840`, `2008:17470` y `2008:17785`: perfil inactivo o

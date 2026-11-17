@@ -1,3 +1,20 @@
+ACTUALIZACIÓN — ALTA EXITOSA DE PERFIL (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main 0/0, sin commits remotos nuevos. El
+  cambio local ajeno de package-lock.json permanece excluido.
+- Frame 2009:20649: después de crear un perfil, la vista muestra resultado de
+  alta, resumen de la operación y acciones para asignarlo o volver a perfiles.
+  Usa el nombre, estatus, funciones, fecha y clave del administrador reales.
+  PostgreSQL guarda fecha sin hora; no se muestra la hora ilustrativa de Figma.
+- Cotejo visual con vista temporal sin alta en la base: aviso y=176/96 px,
+  tarjeta y=288/154 px y acciones y=458 a 1440×960. Volver restauró la lista.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos. La prueba HTTP requirió
+  permiso de loopback; sintaxis de vista/controlador y git diff --check sin
+  errores. La vista temporal se eliminó; no se ejecutó db:init.
+- Pendientes: comprobar el flujo con una alta real, resultado de modificación
+  confirmada y otros estados secundarios del prototipo.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — OTROS RECHAZOS DE MODIFICACIÓN (17 DE NOVIEMBRE DE 2026)
 - Los frames 2008:16840, 2008:17470 y 2008:17785 se cotejaron mediante
   vistas temporales eliminadas tras probar. Aviso y=136/96 px, tarjeta

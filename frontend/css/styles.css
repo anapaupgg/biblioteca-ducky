@@ -1569,6 +1569,49 @@ a
     min-width: 170px;
 }
 
+.perfiles-page.perfil-creado .page-header
+{
+    margin-bottom: 10px;
+}
+
+.perfiles-page.perfil-creado #mensaje .alert
+{
+    min-height: 96px;
+    padding: 16px;
+    margin-top: 14px;
+}
+
+.perfiles-page.perfil-creado #mensaje .alert strong
+{
+    font: 600 13px/20px var(--font);
+    margin-bottom: 8px;
+}
+
+.perfiles-page.perfil-creado #mensaje .alert span
+{
+    font: 400 13px/20px var(--font);
+}
+
+.perfil-creado-operacion
+{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 154px;
+}
+
+.perfiles-page #formulario .card.perfil-creado-operacion:first-child > h2:first-child,
+.perfil-creado-operacion p
+{
+    margin: 0;
+}
+
+.perfil-creado-acciones .btn
+{
+    min-width: 170px;
+    min-height: 48px;
+}
+
 @media (max-width: 900px)
 {
     .perfiles-page .perfiles-formulario .checks

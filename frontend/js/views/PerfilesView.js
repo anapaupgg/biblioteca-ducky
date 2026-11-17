@@ -18,6 +18,7 @@
 /*   perfiles_view.nombre_obligatorio() */
 /*   perfiles_view.funciones_obligatorias() */
 /*   perfiles_view.bloqueo_eliminacion(perfil, usuarios, puede_editar, volver) */
+/*   perfiles_view.exito_creacion(perfil, administrador, volver) */
 /*   perfiles_view.volver_lista() */
 /*   perfiles_view.corregir_perfil() */
 /*   perfiles_view.cerrar_formulario() */
@@ -289,9 +290,37 @@ const perfiles_view =
         document.getElementById('volver-perfiles').addEventListener('click', volver);
     },
 
+    exito_creacion: function (perfil, administrador, volver)
+    {
+        document.body.classList.remove('perfil-error-resumen', 'perfil-error-funciones');
+        document.body.classList.add('perfil-creado');
+        document.getElementById('tabla').classList.add('hidden');
+        document.getElementById('acciones-perfiles').classList.add('hidden');
+        document.getElementById('perfiles-titulo').textContent =
+            'Perfil registrado exitosamente';
+        document.getElementById('perfiles-descripcion').textContent = perfil.nombre +
+            ' está ' + perfil.estatus + ' y disponible al asignar usuarios.';
+        const funciones = perfil.funciones.join(', ');
+        this.mensaje('ok', 'Nuevo perfil disponible',
+            'Alta de perfil ' + perfil.nombre + ' · Funciones: ' + funciones);
+        const panel = document.getElementById('formulario');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="card perfil-creado-operacion">' +
+            '<h2>Registro de la operación</h2>' +
+            '<p class="small muted">' + ui.esc(ui.fecha(perfil.fecha_alta) +
+                ' · Administrador ' + administrador.clave) + '</p>' +
+            '<p>' + ui.esc('Alta de perfil ' + perfil.nombre + ' · Funciones: ' +
+                funciones) + '</p></div>' +
+            '<div class="actions perfil-creado-acciones">' +
+            '<a class="btn btn-primary" href="usuario_editar.html">Asignar a usuario</a>' +
+            '<button class="btn" type="button" id="volver-perfiles">Volver a perfiles</button>' +
+            '</div>';
+        document.getElementById('volver-perfiles').addEventListener('click', volver);
+    },
+
     volver_lista: function ()
     {
-        document.body.classList.remove('perfil-baja-bloqueada');
+        document.body.classList.remove('perfil-baja-bloqueada', 'perfil-creado');
         document.getElementById('formulario').classList.add('hidden');
         document.getElementById('formulario').innerHTML = '';
         document.getElementById('tabla').classList.remove('hidden');

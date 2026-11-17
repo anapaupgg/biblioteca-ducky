@@ -27,6 +27,7 @@ const perfiles_controller =
 {
     funciones: [],
     puede_gestionar_usuarios: false,
+    administrador: null,
 
     iniciar: async function ()
     {
@@ -37,6 +38,7 @@ const perfiles_controller =
             funciones: ['Gestionar perfiles']
         });
         if (!usuario) return;
+        this.administrador = usuario;
         this.puede_gestionar_usuarios = usuario.funciones.includes('Gestionar usuarios');
         perfiles_view.enlazar({
             crear: () => this.abrir(null),
@@ -95,11 +97,16 @@ const perfiles_controller =
         {
             const resultado = perfil ? await perfil_model.actualizar(perfil.id, datos) :
                 await perfil_model.crear(datos);
-            perfiles_view.cerrar_formulario();
-            perfiles_view.mensaje('ok', resultado.mensaje, 'Funciones: ' + resultado.perfil.funciones
-                .join(', ') +
-                '. Ya puedes asignarlo en Gestión de usuarios.');
-            this.cargar();
+            if (perfil)
+            {
+                perfiles_view.cerrar_formulario();
+                perfiles_view.mensaje('ok', resultado.mensaje, 'Funciones: ' +
+                    resultado.perfil.funciones.join(', ') +
+                    '. Ya puedes asignarlo en Gestión de usuarios.');
+                this.cargar();
+            }
+            else perfiles_view.exito_creacion(resultado.perfil, this.administrador,
+                () => this.volver_lista());
         }
         catch (error)
         {
@@ -155,6 +162,7 @@ const perfiles_controller =
     volver_lista: function ()
     {
         perfiles_view.volver_lista();
+        this.cargar();
     },
 
     reactivar: async function (perfil)
