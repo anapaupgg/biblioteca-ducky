@@ -142,16 +142,20 @@ const perfiles_controller =
         const ok = await ui.dialogo(
         {
             titulo: 'Eliminar el perfil ' + perfil.nombre,
-            texto: 'El perfil quedará Inactivo y no podrá asignarse a nuevos usuarios.',
+            texto: 'No tiene usuarios asignados (0). El perfil dejará de estar disponible ' +
+                'para futuras asignaciones.',
+            cuerpo: '<p class="small muted">La eliminación queda registrada en bitácora.</p>',
             confirmar: 'Eliminar perfil',
-            peligro: true
+            peligro: true,
+            amplio: true,
+            principal_primero: true
         });
         if (!ok) return;
         try
         {
-            const resultado_2 = await perfil_model.dar_baja(perfil.id);
-            perfiles_view.mensaje('ok', resultado_2.mensaje);
-            this.cargar();
+            await perfil_model.dar_baja(perfil.id);
+            perfiles_view.exito_eliminacion(perfil, this.administrador,
+                () => this.volver_lista());
         }
         catch (error)
         {

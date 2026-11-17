@@ -2,6 +2,26 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Baja exitosa de perfil: cotejo del 17 de noviembre de 2026
+
+- Frame `2009:21611`: el diálogo de confirmación quedó en 700×280 px y
+  presenta la advertencia de cero usuarios, la nota de bitácora y los botones
+  Eliminar perfil/Cancelar de 154/140×48 px en ese orden. El trigger
+  `trg_bit_perfiles` registra la modificación. Se abrió en una vista temporal
+  y se comprobó Cancelar sin llamar a la API de baja.
+- Frame `2009:21621`: el resultado tiene título y=96, aviso
+  `(276,136;1132×96)`, tarjeta «Información de la operación»
+  `(276,248;1132×114)` y acciones en y=378 a 1440 × 960. La pantalla se
+  comprobó con una vista temporal que llama al mismo método de presentación.
+  A 390 px no hubo desbordamiento y «Volver» restauró la lista mediante el
+  controlador. No se dio de baja ningún perfil durante la prueba.
+- Figma dice que el perfil desaparece de la lista y muestra una bitácora con
+  fecha y hora. La app conserva los perfiles inactivos en la lista para
+  permitir su reactivación. Aunque el trigger registra el cambio, la respuesta
+  de baja no devuelve esa entrada ni su fecha y hora; el resultado muestra
+  solo nombre, funciones y administrador conocidos. Falta comprobar el flujo
+  con una baja real de un perfil sin usuarios.
+
 ## Alta exitosa de perfil: cotejo del 17 de noviembre de 2026
 
 - Frame `2009:20649`: después del alta, la aplicación muestra encabezado,

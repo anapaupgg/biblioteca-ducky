@@ -1,3 +1,26 @@
+ACTUALIZACIÓN — BAJA EXITOSA DE PERFIL (17 DE NOVIEMBRE DE 2026)
+- git fetch origin: main y origin/main 0/0, sin commits remotos nuevos. Se
+  conserva la modificación local ajena de package-lock.json.
+- Frame 2009:21621: tras una baja confirmada se muestra resultado, aviso,
+  información de la operación y acciones Volver/Ir al inicio. La tarjeta usa
+  nombre, funciones y administrador conocidos; no afirma que exista una
+  bitácora o una hora que la respuesta HTTP no confirma. El aviso indica que
+  el perfil no admite nuevas asignaciones, aunque sigue visible como Inactivo
+  en la lista de administración.
+- Cotejo con vista temporal sin baja real: aviso (276,136;1132×96), tarjeta
+  (276,248;1132×114) y acciones y=378 a 1440×960. A 390 px no desborda;
+  Volver restaura la lista mediante el controlador. No se ejecutó db:init.
+- Frame 2009:21611: confirmación de baja ajustada a 700×280 px, con aviso de
+  cero usuarios, botones Eliminar perfil/Cancelar de 154/140×48 px y nota de
+  bitácora respaldada por trg_bit_perfiles. Cancelar cerró el diálogo sin
+  llamar al modelo de baja. La vista temporal se eliminó.
+- npm test: 61 aprobadas, 10 omitidas y 0 fallos; sintaxis de vista y
+  controlador y git diff --check sin errores. La vista temporal se eliminó.
+- Pendientes: probar una baja real de perfil sin usuarios y completar otros
+  estados secundarios.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ACTUALIZACIÓN — ALTA EXITOSA DE PERFIL (17 DE NOVIEMBRE DE 2026)
 - git fetch origin: main y origin/main 0/0, sin commits remotos nuevos. El
   cambio local ajeno de package-lock.json permanece excluido.

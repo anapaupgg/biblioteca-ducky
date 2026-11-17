@@ -1612,6 +1612,83 @@ a
     min-height: 48px;
 }
 
+.perfiles-page.perfil-eliminado #perfiles-descripcion
+{
+    display: none;
+}
+
+.perfiles-page.perfil-eliminado #perfiles-titulo
+{
+    font: 700 20px/24px var(--font);
+}
+
+.perfiles-page.perfil-eliminado .page-header
+{
+    margin-bottom: 10px;
+}
+
+.perfiles-page.perfil-eliminado #mensaje .alert
+{
+    min-height: 96px;
+    padding: 16px;
+}
+
+.perfiles-page.perfil-eliminado #mensaje .alert strong
+{
+    font: 600 13px/20px var(--font);
+    margin-bottom: 8px;
+}
+
+.perfiles-page.perfil-eliminado #mensaje .alert span
+{
+    font: 400 13px/20px var(--font);
+}
+
+.perfil-eliminado-operacion
+{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 114px;
+}
+
+.perfil-eliminado-operacion h2
+{
+    font: 700 18px/24px var(--font);
+}
+
+.perfiles-page #formulario .card.perfil-eliminado-operacion:first-child > h2:first-child,
+.perfil-eliminado-operacion p
+{
+    margin: 0;
+}
+
+.perfil-eliminado-acciones .btn
+{
+    min-width: 140px;
+    min-height: 48px;
+}
+
+.perfiles-page .dialog.dialog-wide .dialogo-mensaje:empty
+{
+    display: none;
+}
+
+.perfiles-page .dialog.dialog-wide .actions .btn
+{
+    min-height: 48px;
+}
+
+.perfiles-page .dialog.dialog-wide [data-accion="confirmar"]
+{
+    min-width: 154px;
+}
+
+.perfiles-page .dialog.dialog-wide [data-accion="cancelar"]
+{
+    min-width: 140px;
+}
+
 @media (max-width: 900px)
 {
     .perfiles-page .perfiles-formulario .checks

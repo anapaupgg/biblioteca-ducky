@@ -19,6 +19,7 @@
 /*   perfiles_view.funciones_obligatorias() */
 /*   perfiles_view.bloqueo_eliminacion(perfil, usuarios, puede_editar, volver) */
 /*   perfiles_view.exito_creacion(perfil, administrador, volver) */
+/*   perfiles_view.exito_eliminacion(perfil, administrador, volver) */
 /*   perfiles_view.volver_lista() */
 /*   perfiles_view.corregir_perfil() */
 /*   perfiles_view.cerrar_formulario() */
@@ -318,9 +319,33 @@ const perfiles_view =
         document.getElementById('volver-perfiles').addEventListener('click', volver);
     },
 
+    exito_eliminacion: function (perfil, administrador, volver)
+    {
+        document.body.classList.add('perfil-eliminado');
+        document.getElementById('tabla').classList.add('hidden');
+        document.getElementById('acciones-perfiles').classList.add('hidden');
+        document.getElementById('perfiles-titulo').textContent =
+            'Perfil eliminado exitosamente';
+        document.getElementById('perfiles-descripcion').textContent = '';
+        this.mensaje('ok', 'Perfil eliminado exitosamente', perfil.nombre +
+            ' ya no está disponible para nuevas asignaciones.');
+        const panel = document.getElementById('formulario');
+        panel.classList.remove('hidden');
+        panel.innerHTML = '<div class="card perfil-eliminado-operacion">' +
+            '<h2>Información de la operación</h2>' +
+            '<p>' + ui.esc('Perfil ' + perfil.nombre + ' · Funciones: ' +
+                perfil.funciones.join(', ') + ' · Administrador ' +
+                administrador.clave) + '</p></div>' +
+            '<div class="actions perfil-eliminado-acciones">' +
+            '<button class="btn" type="button" id="volver-perfiles">Volver</button>' +
+            '<a class="btn" href="inicio.html">Ir al inicio</a></div>';
+        document.getElementById('volver-perfiles').addEventListener('click', volver);
+    },
+
     volver_lista: function ()
     {
-        document.body.classList.remove('perfil-baja-bloqueada', 'perfil-creado');
+        document.body.classList.remove('perfil-baja-bloqueada', 'perfil-creado',
+            'perfil-eliminado');
         document.getElementById('formulario').classList.add('hidden');
         document.getElementById('formulario').innerHTML = '';
         document.getElementById('tabla').classList.remove('hidden');
