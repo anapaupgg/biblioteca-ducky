@@ -1,3 +1,28 @@
+ENSAYO PARA LA PRESENTACIÓN DEL 20 DE NOVIEMBRE — 19 DE NOVIEMBRE DE 2026
+- git fetch origin: main y origin/main sincronizados en 0baa42b, sin commits
+  remotos nuevos. Ese commit habilita el presupuesto mensual que se probó
+  en este ensayo. Se excluye el cambio local ajeno de package-lock.json.
+- Se prepararon dos bases locales nuevas con los datos ficticios del repositorio,
+  en puertos de aplicación 3003 (ensayo) y 3004 (demo). Se aplicaron las
+  migraciones a ambas copias. La preparación no requirió db:init. El arranque
+  local y el PDF de ejemplo quedaron en .local-validation, fuera de Git.
+- DUCKY_TEST_DB=1 npm test: 77 aprobadas, 0 fallos, 0 omitidas. 18
+  comprobaciones HTTP incluyeron perfiles, ciclo de usuario, permisos y PDF.
+- Navegador, copia 3003: se probó presupuesto de $8,000 MXN, solicitud de
+  $950 MXN (NOV-2026-002), autorización, recepción y etiqueta L000131-02.
+  Se guardó, activó, modificó y retiró una ficha ficticia; se comprobó su
+  exclusión del catálogo activo. Se revisaron búsqueda y ubicación física,
+  vista previa PDF e impresión, respuesta de Asistente Ducky y pantalla de
+  acceso denegado para el lector. Se descargó y revisó el PDF A4 de cinco
+  títulos con sus ISBN.
+- GUIA_PRESENTACION.md contiene el guion de ocho minutos, los datos y
+  atajos de la Persona 2, y los módulos adicionales si hay preguntas.
+  Quedan pendientes el acervo externo, la entrega externa de avisos y el
+  cotejo visual integral con Figma. Se revisó la vista previa de impresión
+  en pantalla. La copia 3004 quedó con presupuesto del mes por registrar.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 REGISTRO DE PRESUPUESTO MENSUAL — 17 DE NOVIEMBRE DE 2026
 - git fetch origin: main y origin/main sincronizados en 61dbf7c; no llegaron
   commits remotos nuevos. El commit anterior solo documentó la revisión
