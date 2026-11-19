@@ -250,16 +250,18 @@ const buscar_controller =
 
     ficha: async function (libro)
     {
+        const version = ++this.version_consulta;
         try
         {
             const datos = await busqueda_model.ficha(libro.id_libro);
+            if (version !== this.version_consulta) return;
             this.ficha_actual = datos;
             if (buscar_movil_view.activo()) buscar_movil_view.ficha(datos);
             else buscar_view.ficha(datos);
         }
         catch (error)
         {
-            ui.toast('error', error.message);
+            if (version === this.version_consulta) ui.toast('error', error.message);
         }
     }
 };

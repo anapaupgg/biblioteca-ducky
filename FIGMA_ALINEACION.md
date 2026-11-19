@@ -2,6 +2,17 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Borrador de compras: verificación del 19 de noviembre de 2026
+
+- Se consultaron `2011:28537` (formulario y resumen), `2011:28878` (agregar
+  más libros) y `2011:29860` (revisión sin libros). La navegación conserva
+  el formulario operativo abierto al agregar o quitar y ahora restaura todos
+  los campos al volver desde la revisión vacía.
+- «Limpiar campos» permite descartar una captura aún no agregada sin vaciar
+  los renglones confirmados del borrador. Se verificaron en navegador el
+  regreso al formulario, dos renglones consecutivos y el envío con su folio.
+  Este cotejo cubre el comportamiento del recorrido de compras en escritorio.
+
 ## Presupuesto mensual: revisión del 17 de noviembre de 2026
 
 - Se consultó el frame `2011:28537` (Solicitar libros a Tesorería). La tarjeta

@@ -148,7 +148,7 @@ test('compras: cantidad fraccionaria y costo infinito no entran al borrador', ()
     assert.ok(marcados.includes('costo_unitario'));
     assert.equal(controlador.lineas.length, 0);
 });
-test('compras HTTP: líneas inválidas y costos vacíos/no finitos responden 400 antes de consultar BD', async () =>
+test('compras HTTP: datos inválidos responden 400 antes de consultar BD', async () =>
 {
     const controlador = require('../controllers/pedidoController');
     for (const linea of [null, [],
@@ -166,7 +166,11 @@ test('compras HTTP: líneas inválidas y costos vacíos/no finitos responden 400
             titulo: 'Libro',
             cantidad: 1,
             costo_unitario: 'Infinity'
-        }])
+        },
+        { titulo: 'Libro', cantidad: 1, costo_unitario: 0.335 },
+        { titulo: 'Libro', cantidad: 2147483648, costo_unitario: 100 },
+        { titulo: 'x'.repeat(151), cantidad: 1, costo_unitario: 100 },
+        { titulo: 'Libro', autores: ['x'.repeat(101)], cantidad: 1, costo_unitario: 100 }])
     {
         let estado;
         const respuesta = {
@@ -191,6 +195,34 @@ test('compras HTTP: líneas inválidas y costos vacíos/no finitos responden 400
         }, respuesta);
         assert.equal(estado, 400);
     }
+});
+
+test('perfiles: dos clics mientras guarda generan una sola creación y confirmación', async () =>
+{
+    let solicitudes = 0;
+    let confirmaciones = 0;
+    let confirmar;
+    const controlador = cargar('PerfilesController.js', 'perfiles_controller', {
+        perfiles_view: {
+            datos: () => ({ nombre: 'Perfil de prueba', funciones: [1] }),
+            marcar_funciones: () => {},
+            exito_creacion: () => { confirmaciones++; }
+        },
+        perfil_model: {
+            crear: () =>
+            {
+                solicitudes++;
+                return new Promise(resolve => { confirmar = resolve; });
+            }
+        },
+        ui: { limpiar: () => {} }
+    });
+    const primera = controlador.guardar(null);
+    await controlador.guardar(null);
+    assert.equal(solicitudes, 1);
+    confirmar({ perfil: { id: 1 } });
+    await primera;
+    assert.equal(confirmaciones, 1);
 });
 
 test('usuarios: la prevalidación bloqueada o cancelada no ejecuta la baja', async () =>

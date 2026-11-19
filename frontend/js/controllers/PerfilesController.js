@@ -28,6 +28,7 @@ const perfiles_controller =
     funciones: [],
     puede_gestionar_usuarios: false,
     administrador: null,
+    guardando: false,
 
     iniciar: async function ()
     {
@@ -80,6 +81,7 @@ const perfiles_controller =
 
     guardar: async function (perfil)
     {
+        if (this.guardando) return;
         const datos = perfiles_view.datos();
         ui.limpiar();
         perfiles_view.marcar_funciones(false);
@@ -93,6 +95,7 @@ const perfiles_controller =
             perfiles_view.marcar_funciones(true);
             return perfiles_view.funciones_obligatorias();
         }
+        this.guardando = true;
         try
         {
             const resultado = perfil ? await perfil_model.actualizar(perfil.id, datos) :
@@ -114,6 +117,10 @@ const perfiles_controller =
             if (!perfil && error.message === 'Nombre de perfil duplicado')
                 perfiles_view.nombre_duplicado(datos.nombre);
             else perfiles_view.mensaje('error', error.message);
+        }
+        finally
+        {
+            this.guardando = false;
         }
     },
 

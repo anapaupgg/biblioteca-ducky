@@ -49,6 +49,7 @@ function preparar(nombre)
             limpiezas++;
         },
         resultados: datos => tablas.push(datos),
+        ficha: datos => tablas.push(datos),
         tabla: datos => tablas.push(datos),
         estadisticas: () =>
         {}
@@ -56,11 +57,13 @@ function preparar(nombre)
     const contexto = vm.createContext(
     {
         buscar_view: vista,
+        buscar_movil_view: { activo: () => false },
         usuarios_view: vista,
         libros_view: vista,
         busqueda_model:
         {
-            buscar: consultar
+            buscar: consultar,
+            ficha: consultar
         },
         usuario_model:
         {
@@ -147,3 +150,14 @@ for (const falla of [false, true])
         assert.equal(prueba.errores.length, 0);
     });
 }
+
+test('Buscar: limpiar invalida una ficha pendiente y su respuesta no la vuelve a abrir', async () =>
+{
+    const prueba = preparar('Buscar');
+    const ficha = prueba.controlador.ficha({ id_libro: 'L000129' });
+    prueba.controlador.limpiar();
+    prueba.pendientes[0].resolver({ libro: { id_libro: 'L000129' } });
+    await ficha;
+    assert.equal(prueba.tablas.length, 0);
+    assert.equal(prueba.errores.length, 0);
+});

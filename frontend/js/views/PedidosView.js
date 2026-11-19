@@ -12,14 +12,14 @@
 /*   pedidos_view.ocultar_tabs(tabs) */
 /*   pedidos_view.estadisticas(elemento_4) */
 /*   pedidos_view.presupuesto_formulario(periodo, acciones) */
-/*   pedidos_view.nueva(catalogo, lineas, saldo, puede_autorizar, acciones) */
+/*   pedidos_view.nueva(catalogo, lineas, saldo, puede_autorizar, acciones, total_centavos) */
 /*   pedidos_view.linea() */
 /*   pedidos_view.llenar_linea(valores) */
 /*   pedidos_view.historial(lista, puede_responder, acciones) */
 /*   pedidos_view.detalle(datos_2) */
 /*   pedidos_view.enviada(datos, puede_solicitar) */
 /*   pedidos_view.consulta(datos, puede_solicitar) */
-/*   pedidos_view.revision(lineas, presupuesto, acciones) */
+/*   pedidos_view.revision(lineas, presupuesto, acciones, total_centavos) */
 /*   pedidos_view.vacia(presupuesto, parcial, acciones) */
 /*   pedidos_view.borrador_parcial() */
 /*   pedidos_view.recepcion(pendientes, ubicaciones, puede_recibir, recibir) */
@@ -85,11 +85,10 @@ const pedidos_view =
                 '<a class="btn" href="pedidos.html">Volver a solicitudes</a>') + '</div>';
     },
 
-    revision: function (lineas, presupuesto, acciones)
+    revision: function (lineas, presupuesto, acciones, total_centavos)
     {
-        const total = lineas.reduce((suma, linea) => suma + linea.cantidad *
-            linea.costo_unitario, 0);
-        const hay_presupuesto = Boolean(presupuesto && total <= presupuesto.saldo);
+        const hay_presupuesto = Boolean(presupuesto &&
+            total_centavos <= Math.round(presupuesto.saldo * 100));
         this.pagina('Revisar solicitud de compra',
             'Verifica los títulos y cantidades antes de enviar la solicitud a Tesorería.');
         document.getElementById('panel').innerHTML =
@@ -105,11 +104,13 @@ const pedidos_view =
             lineas.map((linea) => '<p>' + ui.esc(linea.titulo) + ' · ' +
                 ui.esc(linea.autores || '—') + ' · ' + linea.cantidad +
                 ' ejemplar(es) · ' + ui.dinero(linea.cantidad * linea.costo_unitario) +
-                '</p>').join('') + '<p><strong>Total estimado: ' + ui.dinero(total) +
+                '</p>').join('') + '<p><strong>Total estimado: ' + ui.dinero(total_centavos / 100) +
             '</strong></p></div>' +
             (hay_presupuesto ? '' : '<div class="alert alert-warning" role="status">' +
-                '<strong>Presupuesto no disponible</strong><span>Registra presupuesto mensual ' +
-                'suficiente antes de enviar.</span></div>');
+                (presupuesto ? '<strong>Saldo insuficiente</strong><span>Saldo disponible: ' +
+                    ui.dinero(presupuesto.saldo) + '. Edita la solicitud para ajustar el total.' :
+                    '<strong>Presupuesto sin registrar</strong><span>Registra la asignación del mes antes de enviar.') +
+                '</span></div>');
         document.getElementById('editar-solicitud').addEventListener('click', acciones.editar);
         document.getElementById('confirmar-envio').addEventListener('click', acciones.confirmar);
     },
@@ -138,10 +139,8 @@ const pedidos_view =
 
     borrador_parcial: function ()
     {
-        return {
-            titulo: document.getElementById('titulo')?.value || '',
-            peticionario: document.getElementById('peticionario')?.value || ''
-        };
+        return ui.leer(['id_libro', 'titulo', 'autores', 'isbn', 'editorial', 'cantidad',
+            'costo_unitario', 'peticionario']);
     },
 
     abrir_formulario: function ()
@@ -225,14 +224,12 @@ const pedidos_view =
         if (boton) boton.disabled = bloqueado;
     },
 
-    nueva: function (catalogo, lineas, presupuesto, puede_autorizar, acciones)
+    nueva: function (catalogo, lineas, presupuesto, puede_autorizar, acciones, total_centavos)
     {
         document.querySelector('.page-header h1').textContent = 'Solicitar libros a Tesorería';
         document.querySelector('.page-header p').textContent =
             'Consolida las peticiones de usuarios dentro del presupuesto mensual.';
         const saldo = presupuesto ? presupuesto.saldo : null;
-        const total = lineas.reduce((registro, linea) => registro + linea.cantidad * linea
-            .costo_unitario, 0);
         const primera = lineas[0];
         const resumen = lineas.length ? lineas.map((linea) =>
             '<div class="purchase-summary-row">' + ui.esc(linea.titulo) + ' · ' +
@@ -269,18 +266,19 @@ const pedidos_view =
             ui.opciones(catalogo, 'id_libro', (linea_2) => linea_2.id_libro + ' · ' + linea_2.titulo,
                 '', 'Título nuevo (no está en el catálogo)') + '</select></div>' +
             '<div class="field"><label for="peticionario">Petición de usuario (clave)</label><input id="peticionario" maxlength="6" placeholder="Ej. 700123"></div>' +
-            '<div class="field"><label for="titulo">Título</label><input id="titulo" placeholder="Ej. Diseño de bases de datos"></div>' +
+            '<div class="field"><label for="titulo">Título</label><input id="titulo" maxlength="150" placeholder="Ej. Diseño de bases de datos"></div>' +
             '<div class="field"><label for="autores">Autor(es)</label><input id="autores" placeholder="Ej. Carlos Coronel"></div>' +
             '<div class="field"><label for="isbn">ISBN</label><input id="isbn" maxlength="17" placeholder="Ej. 9786074818785"></div>' +
             '<div class="field"><label for="editorial">Editorial</label><input id="editorial" placeholder="Ej. Cengage Learning"></div>' +
             '<div class="field"><label for="cantidad">Cantidad</label><input id="cantidad" type="number" min="1" value="1"></div>' +
             '<div class="field"><label for="costo_unitario">Costo unitario estimado (MXN)</label><input id="costo_unitario" type="number" min="0" step="0.01" placeholder="Ej. 950"></div>' +
-            '</div><div class="actions" style="margin-bottom:0"><button class="btn" type="submit">Agregar libro</button></div></form>' +
+            '</div><div class="actions" style="margin-bottom:0"><button class="btn" type="submit">Agregar libro</button>' +
+            '<button class="btn" type="reset">Limpiar campos</button></div></form>' +
 
             '<div class="card"><h2>Solicitud a Tesorería · ' + lineas.length +
             ' libro(s)</h2><div id="tabla-lineas"></div>' +
-            '<p style="margin-top:12px"><strong>Total estimado: ' + ui.dinero(total) + '</strong>' +
-            (saldo !== null ? ' · Saldo del mes: ' + ui.dinero(saldo) + (total > saldo ?
+            '<p style="margin-top:12px"><strong>Total estimado: ' + ui.dinero(total_centavos / 100) + '</strong>' +
+            (saldo !== null ? ' · Saldo del mes: ' + ui.dinero(saldo) + (total_centavos > Math.round(saldo * 100) ?
                 ' <span class="badge badge-error">Rebasa el presupuesto</span>' : '') : '') + '</p>' +
             '<div class="actions" style="margin-bottom:0"><button class="btn btn-primary" id="btn-enviar"' +
             '>Revisar y enviar a Tesorería</button>' +
@@ -337,6 +335,11 @@ const pedidos_view =
             elemento_5.preventDefault();
             acciones.agregar();
         });
+        document.getElementById('form-linea').addEventListener('reset', () =>
+        {
+            ui.limpiar();
+            this.mensaje();
+        });
         document.getElementById('btn-ejemplo').addEventListener('click', () =>
         {
             document.getElementById('detalle-solicitud').open = true;
@@ -364,9 +367,7 @@ const pedidos_view =
 
     linea: function ()
     {
-        const datos = ui.leer(['id_libro', 'titulo', 'autores', 'isbn', 'editorial', 'cantidad',
-            'costo_unitario', 'peticionario'
-        ]);
+        const datos = this.borrador_parcial();
         datos.cantidad = Number(datos.cantidad);
         datos.costo_unitario = datos.costo_unitario === '' ? NaN : Number(datos.costo_unitario);
         return datos;

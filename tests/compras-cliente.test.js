@@ -144,6 +144,7 @@ test('compras: abrir revisión y cancelar respuesta conserva borrador sin escrit
         },
         pedidos_view:
         {
+            borrador_parcial: () => ({}),
             revision: () => {}
         }
     });
@@ -158,16 +159,22 @@ test('compras: abrir revisión y cancelar respuesta conserva borrador sin escrit
     assert.equal(controlador.lineas.length, 1);
 });
 
-test('compras: solo la confirmación de revisión crea la solicitud una vez', async () =>
+test('compras: el saldo exacto $0.30 permite enviar dos líneas una sola vez', async () =>
 {
     let confirmar;
+    let total;
     let resolver;
     let escrituras = 0;
     const destino = { href: '' };
     const controlador = cargar({
         window: { location: destino },
         pedidos_view: {
-            revision: (_lineas, _presupuesto, acciones) => { confirmar = acciones.confirmar; },
+            borrador_parcial: () => ({ cantidad: '1', costo_unitario: '' }),
+            revision: (_lineas, _presupuesto, acciones, centavos) =>
+            {
+                confirmar = acciones.confirmar;
+                total = centavos;
+            },
             mensaje: () => {}
         },
         pedido_model: {
@@ -179,9 +186,13 @@ test('compras: solo la confirmación de revisión crea la solicitud una vez', as
         },
         encodeURIComponent
     });
-    controlador.lineas = [{ titulo: 'Libro', cantidad: 1, costo_unitario: 100 }];
-    controlador.presupuesto = { saldo: 500 };
+    controlador.lineas = [
+        { titulo: 'Primero', cantidad: 1, costo_unitario: 0.10 },
+        { titulo: 'Segundo', cantidad: 1, costo_unitario: 0.20 }
+    ];
+    controlador.presupuesto = { saldo: 0.30 };
     await controlador.enviar();
+    assert.equal(total, 30);
     assert.equal(escrituras, 0);
     const primero = confirmar();
     const segundo = confirmar();
@@ -200,21 +211,82 @@ test('compras: solicitud vacía conserva campos y vuelve al formulario sin crear
     let abierto = false;
     const controlador = cargar({
         pedidos_view: {
-            borrador_parcial: () => ({ titulo: 'Álgebra lineal', peticionario: '700123' }),
+            borrador_parcial: () => (
+                { titulo: 'Álgebra lineal', peticionario: '700123', cantidad: '3', costo_unitario: '12.50' }),
             vacia: (_presupuesto, _parcial, callbacks) => { acciones = callbacks; },
             activar: () => {},
+            nueva: () => {},
             llenar_linea: (datos) => { parcial_restaurado = datos; },
             abrir_formulario: () => { abierto = true; }
         },
         pedido_model: { crear: () => { escrituras++; } }
     });
-    controlador.dibujar_nueva = () => {};
     await controlador.enviar();
     assert.equal(escrituras, 0);
     assert.equal(controlador.parcial.titulo, 'Álgebra lineal');
     acciones.anadir();
     assert.equal(parcial_restaurado.peticionario, '700123');
+    assert.equal(parcial_restaurado.cantidad, '3');
+    assert.equal(parcial_restaurado.costo_unitario, '12.50');
     assert.equal(abierto, true);
+});
+
+test('compras: quitar otro libro conserva la captura y revisar avisa que falta agregarla', async () =>
+{
+    const captura = { id_libro: 'L000131', titulo: 'Clean Code', cantidad: '2', costo_unitario: '950' };
+    let acciones, restaurada, aviso, revisiones = 0;
+    const controlador = cargar({
+        pedidos_view: {
+            nueva: (_catalogo, _lineas, _presupuesto, _permiso, callbacks) => { acciones = callbacks; },
+            borrador_parcial: () => captura,
+            llenar_linea: datos => { restaurada = datos; },
+            abrir_formulario: () => {},
+            mensaje: (_tipo, texto) => { aviso = texto; },
+            revision: () => { revisiones++; }
+        }
+    });
+    controlador.lineas = [
+        { titulo: 'Libro A', cantidad: 1, costo_unitario: 10 },
+        { titulo: 'Libro B', cantidad: 1, costo_unitario: 20 }
+    ];
+    controlador.dibujar_nueva();
+    acciones.quitar(0);
+    assert.equal(controlador.lineas[0].titulo, 'Libro B');
+    assert.deepEqual(restaurada, captura);
+    await controlador.enviar();
+    assert.equal(revisiones, 0);
+    assert.match(aviso, /sin agregar/);
+});
+
+test('compras: un historial tardío no cubre el formulario de una solicitud nueva', async () =>
+{
+    let resolver_historial;
+    const pantallas = [];
+    let historial_iniciado;
+    const inicio = new Promise(resolve => { historial_iniciado = resolve; });
+    const controlador = cargar({
+        ui: { hoy: () => '2026-11-19' },
+        pedido_model: {
+            presupuestos: async () => [],
+            listar: () => new Promise(resolve =>
+            {
+                resolver_historial = resolve;
+                historial_iniciado();
+            })
+        },
+        pedidos_view: {
+            activar: () => {},
+            estadisticas: () => {},
+            historial: () => pantallas.push('historial'),
+            nueva: () => pantallas.push('nueva')
+        }
+    });
+    const historial = controlador.mostrar('historial');
+    await inicio;
+    await controlador.mostrar('nueva');
+    resolver_historial([]);
+    await historial;
+    assert.deepEqual(pantallas, ['nueva']);
 });
 
 test('compras: recepción consulta la orden y registra una sola vez el resultado', async () =>

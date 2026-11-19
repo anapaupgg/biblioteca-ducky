@@ -1,3 +1,30 @@
+REGRESIÓN DEL BORRADOR DE COMPRAS — 19 DE NOVIEMBRE DE 2026
+- git fetch origin: main y origin/main sincronizados en 05d28fb; sin commits
+  nuevos. Ese commit documentó el ensayo. Se excluye package-lock.json.
+- Se reprodujo que Agregar libro cerraba el formulario. Ahora permite seguir
+  capturando. Quitar un renglón y volver desde la revisión vacía conservan la
+  captura pendiente; seleccionar un título del catálogo llena su ISBN.
+  Si se intenta revisar con un renglón pendiente, se avisa cómo agregarlo o
+  limpiar sus campos. Los totales se comparan en centavos y el mes utiliza
+  la zona de Monterrey. Se validan rangos y precisión antes de guardar.
+- Dos regresiones de interacción quedaron corregidas: la respuesta tardía
+  de búsqueda o historial no reemplaza la pantalla posterior y dos clics
+  en Guardar perfil solo crean una petición mientras se procesa.
+- Navegador y PostgreSQL, copia 3003: dos libros de $0.10 y $0.20, captura
+  conservada al quitar, costo de 0.335 rechazado, doble clic con un solo folio
+  NOV-2026-003, autorización y recepción con etiquetas L000129-03 y L000131-03.
+  Se verificaron los ISBN persistidos. La copia 3004 conserva su estado inicial.
+- Suite final con PostgreSQL: 81 aprobadas, cero fallos y cero omitidas.
+  La corrida adicional en ensayo pasó 80 y omitió un caso dependiente de
+  sus datos de prueba. El corte de mes se verificó a medianoche de Monterrey.
+- Los subagentes comprobaron aparte saldo exacto, rechazo y liberación de saldo,
+  rollback al excederlo y recepción normal de ejemplares físicos y digitales.
+  Pendiente de datos: la etiqueta a partir de D10 para un título digital no
+  cabe en el esquema actual. Los enlaces de ejemplo y avisos externos también
+  siguen pendientes.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 ENSAYO PARA LA PRESENTACIÓN DEL 20 DE NOVIEMBRE — 19 DE NOVIEMBRE DE 2026
 - git fetch origin: main y origin/main sincronizados en 0baa42b, sin commits
   remotos nuevos. Ese commit habilita el presupuesto mensual que se probó

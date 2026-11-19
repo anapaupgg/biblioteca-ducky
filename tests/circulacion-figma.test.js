@@ -282,7 +282,8 @@ test('PostgreSQL: devolución avanza la espera y aviso de multa es único y pend
     const prestamo = activo.rows[0];
     await simular('100001', async (client) =>
     {
-        await client.query('UPDATE prestamos SET fecha_vencimiento=CURRENT_DATE-2 WHERE id_prestamo=$1',
+        await client.query(`UPDATE prestamos SET fecha_prestamo=LEAST(fecha_prestamo, CURRENT_DATE-3),
+            fecha_vencimiento=CURRENT_DATE-2 WHERE id_prestamo=$1`,
             [prestamo.id_prestamo]);
         const devuelto = await circulacion_model.devolver(client, prestamo.id_prestamo,
             'Bueno', '100001');

@@ -40,7 +40,9 @@ const
     entero_positivo
 } = require('../utils/validators');
 
-const periodo_actual = () => new Date().toISOString().slice(0, 7);
+const formato_periodo = new Intl.DateTimeFormat('sv-SE',
+    { timeZone: 'America/Monterrey', year: 'numeric', month: '2-digit' });
+const periodo_actual = () => formato_periodo.format(new Date());
 
 const presupuestos = async (solicitud, respuesta) =>
 {
@@ -126,7 +128,7 @@ const crear = async (solicitud_4, respuesta_4) =>
             const linea =
             {
                 id_libro: String(linea_2.id_libro || '').trim().toUpperCase() || null,
-                isbn: String(linea_2.isbn || '').replace(/[-\s]/g, '') || null,
+                isbn: String(linea_2.isbn || '').replace(/[-\s]/g, '').toUpperCase() || null,
                 titulo: String(linea_2.titulo || '').trim(),
                 editorial: String(linea_2.editorial || '').trim() || null,
                 autores: (Array.isArray(linea_2.autores) ? linea_2.autores : String(
@@ -138,23 +140,33 @@ const crear = async (solicitud_4, respuesta_4) =>
             };
             if (!linea.titulo) throw new error_negocio(400, 'Línea ' + (indice + 1) +
                 ': escribe el título');
+            if (linea.titulo.length > 150) throw new error_negocio(400, 'Línea ' + (indice + 1) +
+                ': el título admite hasta 150 caracteres');
+            if ((linea.editorial && linea.editorial.length > 100) ||
+                linea.autores.some((autor) => autor.length > 100))
+                throw new error_negocio(400, 'Línea ' + (indice + 1) +
+                    ': cada autor y la editorial admiten hasta 100 caracteres');
             if (linea.isbn && !es_isbn(linea.isbn)) throw new error_negocio(400, 'Línea ' + (
                 indice + 1) + ': el ISBN debe tener 10 o 13 dígitos');
-            if (!entero_positivo(linea.cantidad)) throw new error_negocio(400, 'Línea ' + (
-                indice + 1) + ': la cantidad debe ser mayor a cero');
+            if (!entero_positivo(linea.cantidad) || linea.cantidad > 2147483647)
+                throw new error_negocio(400, 'Línea ' + (indice + 1) + ': cantidad fuera de rango');
             if (linea_2.costo_unitario === null || linea_2.costo_unitario === undefined ||
                 String(linea_2.costo_unitario).trim() === '' ||
-                !Number.isFinite(linea.costo_unitario) || linea.costo_unitario < 0) throw new error_negocio(400, 'Línea ' + (
-                indice + 1) + ': captura el costo estimado');
+                !Number.isFinite(linea.costo_unitario) || linea.costo_unitario < 0 ||
+                linea.costo_unitario > 9999999999.99 ||
+                Number(linea.costo_unitario.toFixed(2)) !== linea.costo_unitario)
+                throw new error_negocio(400, 'Línea ' + (indice + 1) +
+                    ': captura un costo válido con máximo dos decimales');
             return linea;
         });
 
         let id_presupuesto = Number(solicitud_4.body.id_presupuesto) || null;
         if (!id_presupuesto)
         {
-            const presupuesto = await pedido_model.presupuesto_del_mes(periodo_actual());
+            const periodo = periodo_actual();
+            const presupuesto = await pedido_model.presupuesto_del_mes(periodo);
             if (!presupuesto) throw new error_negocio(422, 'No hay presupuesto autorizado para ' +
-                periodo_actual() + '. Regístralo primero.');
+                periodo + '. Regístralo primero.');
             id_presupuesto = presupuesto.id_presupuesto;
         }
 

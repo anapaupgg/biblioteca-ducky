@@ -8,11 +8,13 @@
 /******************************************************************/
 /* Listing Contents: */
 /*   pedidos_controller.iniciar() */
-/*   pedidos_controller.cargar_presupuesto() */
+/*   pedidos_controller.periodo_actual() */
+/*   pedidos_controller.cargar_presupuesto(version) */
 /*   pedidos_controller.abrir_presupuesto() */
 /*   pedidos_controller.guardar_presupuesto() */
 /*   pedidos_controller.mostrar(tab) */
-/*   pedidos_controller.dibujar_nueva() */
+/*   pedidos_controller.dibujar_nueva(abrir) */
+/*   pedidos_controller.total_centavos() */
 /*   pedidos_controller.agregar() */
 /*   pedidos_controller.enviar() */
 /*   pedidos_controller.ver(id) */
@@ -41,7 +43,10 @@ const pedidos_controller =
     procesando_recepcion: false,
     procesando_presupuesto: false,
     tab_actual: 'historial',
+    version_vista: 0,
     parcial: null,
+    formato_periodo: new Intl.DateTimeFormat('sv-SE',
+        { timeZone: 'America/Monterrey', year: 'numeric', month: '2-digit' }),
 
     iniciar: async function ()
     {
@@ -97,10 +102,16 @@ const pedidos_controller =
         }
     },
 
-    cargar_presupuesto: async function ()
+    periodo_actual: function ()
+    {
+        return this.formato_periodo.format(new Date());
+    },
+
+    cargar_presupuesto: async function (version)
     {
         const lista = await pedido_model.presupuestos();
-        const mes = ui.hoy().slice(0, 7);
+        if (version !== this.version_vista) return;
+        const mes = this.periodo_actual();
         this.presupuesto = lista.find((elemento) => elemento.periodo === mes) || null;
         pedidos_view.estadisticas(this.presupuesto, this.puede_autorizar,
             () => this.abrir_presupuesto());
@@ -109,15 +120,19 @@ const pedidos_controller =
 
     mostrar: async function (tab)
     {
+        const version = ++this.version_vista;
         this.tab_actual = tab;
         pedidos_view.activar(tab);
         try
         {
-            await this.cargar_presupuesto();
+            await this.cargar_presupuesto(version);
+            if (version !== this.version_vista) return;
             if (tab === 'nueva') this.dibujar_nueva();
             if (tab === 'historial')
             {
-                pedidos_view.historial(await pedido_model.listar(), this.puede_autorizar,
+                const pedidos = await pedido_model.listar();
+                if (version !== this.version_vista) return;
+                pedidos_view.historial(pedidos, this.puede_autorizar,
                 {
                     ver: (id) => this.ver(id),
                     responder: (id, elemento_2) => this.responder(id, elemento_2)
@@ -131,32 +146,40 @@ const pedidos_controller =
                     .detalle(elemento_4.id_pedido)));
                 const ubicaciones = this.puede_recibir ? (await libro_model.catalogos()).ubicaciones :
                     [];
+                if (version !== this.version_vista) return;
                 pedidos_view.recepcion(detalles, ubicaciones, this.puede_recibir, (id, usuario_2) =>
                     this.recibir(id, usuario_2));
             }
         }
         catch (error)
         {
-            pedidos_view.mensaje('error', error.message);
+            if (version === this.version_vista) pedidos_view.mensaje('error', error.message);
         }
     },
 
-    dibujar_nueva: function ()
+    /* Redibuja la solicitud y restaura una captura que todavía no es un renglón. */
+    dibujar_nueva: function (abrir = false)
     {
         pedidos_view.nueva(this.catalogo, this.lineas, this.presupuesto,
             this.puede_autorizar,
             {
                 registrar_presupuesto: () => this.abrir_presupuesto(),
                 agregar: () => this.agregar(),
-                mostrar: (tab) => this.mostrar(tab),
+                mostrar: (tab) =>
+                {
+                    this.parcial = pedidos_view.borrador_parcial();
+                    this.mostrar(tab);
+                },
                 quitar: (indice) =>
                 {
+                    this.parcial = pedidos_view.borrador_parcial();
                     this.lineas.splice(indice, 1);
-                    this.dibujar_nueva();
+                    this.dibujar_nueva(true);
                 },
                 vaciar: () =>
                 {
                     this.lineas = [];
+                    this.parcial = null;
                     this.dibujar_nueva();
                     pedidos_view.mensaje('info',
                         'Solicitud cancelada: no se realizaron cambios');
@@ -176,21 +199,31 @@ const pedidos_controller =
                 elegir_libro: (id) =>
                 {
                     const libro = this.catalogo.find((linea) => linea.id_libro === id);
-                    if (libro) pedidos_view.llenar_linea(
+                    pedidos_view.llenar_linea(
                     {
-                        titulo: libro.titulo,
-                        autores: libro.autores || '',
-                        editorial: libro.editorial,
-                        isbn: ''
+                        titulo: libro?.titulo || '',
+                        autores: libro?.autores || '',
+                        editorial: libro?.editorial || '',
+                        isbn: libro?.isbn || ''
                     });
                 }
-            });
+            }, this.total_centavos());
+        if (this.parcial) pedidos_view.llenar_linea(this.parcial);
+        if (abrir || this.parcial) pedidos_view.abrir_formulario();
+        this.parcial = null;
+    },
+
+    total_centavos: function ()
+    {
+        return this.lineas.reduce((suma, linea) =>
+            suma + linea.cantidad * Math.round(linea.costo_unitario * 100), 0);
     },
 
     abrir_presupuesto: function ()
     {
         if (!this.puede_autorizar || this.presupuesto) return;
-        pedidos_view.presupuesto_formulario(ui.hoy().slice(0, 7),
+        if (this.tab_actual === 'nueva') this.parcial = pedidos_view.borrador_parcial();
+        pedidos_view.presupuesto_formulario(this.periodo_actual(),
         {
             guardar: () => this.guardar_presupuesto(),
             cancelar: () => this.mostrar(this.tab_actual)
@@ -238,21 +271,30 @@ const pedidos_controller =
     {
         const linea_2 = pedidos_view.linea();
         ui.limpiar();
-        const vacios = [];
-        if (!linea_2.titulo) vacios.push('titulo');
-        if (!Number.isInteger(linea_2.cantidad) || linea_2.cantidad <= 0) vacios.push('cantidad');
-        if (!Number.isFinite(linea_2.costo_unitario) || linea_2.costo_unitario < 0) vacios.push('costo_unitario');
-        if (linea_2.isbn && !/^([0-9]{9}[0-9X]|[0-9]{13})$/.test(linea_2.isbn.replace(/-/g, '')))
-            vacios.push('isbn');
-        if (vacios.length)
+        const invalidos = [];
+        if (!linea_2.titulo || linea_2.titulo.length > 150) invalidos.push('titulo');
+        if (linea_2.editorial?.length > 100) invalidos.push('editorial');
+        if (linea_2.autores?.split(',').some((autor) => autor.trim().length > 100))
+            invalidos.push('autores');
+        if (!Number.isInteger(linea_2.cantidad) || linea_2.cantidad <= 0 ||
+            linea_2.cantidad > 2147483647) invalidos.push('cantidad');
+        const costo = linea_2.costo_unitario;
+        if (!Number.isFinite(costo) || costo < 0 || costo > 9999999999.99 ||
+            Number(costo.toFixed(2)) !== costo) invalidos.push('costo_unitario');
+        linea_2.isbn = (linea_2.isbn || '').replace(/[-\s]/g, '').toUpperCase();
+        if (linea_2.isbn && !/^([0-9]{9}[0-9X]|[0-9]{13})$/.test(linea_2.isbn))
+            invalidos.push('isbn');
+        if (invalidos.length)
         {
-            ui.marcar(vacios);
-            return pedidos_view.mensaje('error', 'Completa los campos obligatorios',
-                'Título, cantidad y costo estimado; el ISBN debe tener 10 o 13 dígitos.');
+            ui.marcar(invalidos);
+            return pedidos_view.mensaje('error', 'Revisa los campos marcados',
+                'Indica un título de hasta 150 caracteres, una cantidad entera positiva y un costo ' +
+                'con hasta dos decimales. Cada autor y la editorial admiten 100 caracteres. ' +
+                'El ISBN opcional debe ser de 10 o 13 caracteres.');
         }
         pedidos_view.mensaje();
         this.lineas.push(linea_2);
-        this.dibujar_nueva();
+        this.dibujar_nueva(true);
     },
 
     enviar: async function ()
@@ -265,9 +307,7 @@ const pedidos_controller =
                 anadir: () =>
                 {
                     pedidos_view.activar('nueva');
-                    this.dibujar_nueva();
-                    pedidos_view.llenar_linea(this.parcial);
-                    pedidos_view.abrir_formulario();
+                    this.dibujar_nueva(true);
                 },
                 cancelar: () =>
                 {
@@ -278,19 +318,27 @@ const pedidos_controller =
             });
             return;
         }
+        const captura = pedidos_view.borrador_parcial();
+        const pendiente = Object.entries(captura).some(([campo, valor]) =>
+            campo === 'cantidad' ? valor !== '1' : Boolean(valor));
+        if (pendiente)
+        {
+            pedidos_view.abrir_formulario();
+            return pedidos_view.mensaje('warning', 'Hay un libro sin agregar',
+                'Agrega el libro a la solicitud o limpia los campos antes de revisar.');
+        }
         pedidos_view.revision(this.lineas, this.presupuesto,
         {
             editar: () => this.mostrar('nueva'),
             confirmar: () => this.confirmar_envio()
-        });
+        }, this.total_centavos());
     },
 
     confirmar_envio: async function ()
     {
         if (this.procesando_envio) return;
-        const total = this.lineas.reduce((suma, linea) => suma + linea.cantidad *
-            linea.costo_unitario, 0);
-        if (!this.lineas.length || !this.presupuesto || total > this.presupuesto.saldo)
+        if (!this.lineas.length || !this.presupuesto ||
+            this.total_centavos() > Math.round(this.presupuesto.saldo * 100))
             return pedidos_view.mensaje('error', 'No hay presupuesto suficiente para enviar');
         this.procesando_envio = true;
         try
