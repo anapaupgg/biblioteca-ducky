@@ -1,3 +1,13 @@
+GUION PDF PARA LA PRESENTACIÓN — 20 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 9218559, sin commits remotos nuevos.
+- Se generó output/pdf/Biblioteca-Ducky-Guion-de-presentacion.pdf a partir
+  del guion y del ensayo. Las dos primeras páginas son el recorrido de Diego.
+  La tercera contiene el arranque de la demo y el recorrido de la Persona 1.
+- Se renderizaron y revisaron las tres páginas A4 y se verificaron los datos
+  de captura y el texto extraíble.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 REGRESIÓN DEL BORRADOR DE COMPRAS — 19 DE NOVIEMBRE DE 2026
 - git fetch origin: main y origin/main sincronizados en 05d28fb; sin commits
   nuevos. Ese commit documentó el ensayo. Se excluye package-lock.json.
