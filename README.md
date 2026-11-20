@@ -111,6 +111,20 @@ Claves de la institución simulada para registrar usuarios nuevos:
 - **Correo:** la contraseña temporal de un alta se muestra al administrador para entrega privada. La recuperación por Resend funciona cuando se configuran las variables indicadas abajo; sin ellas responde HTTP 503. El cambio de contraseña autenticado sigue disponible.
 - **Directorio de prueba de Ducky:** la universidad del proyecto es ficticia. Los datos para validar una matrícula o nómina nueva se mantienen en `utils/institucion.js`; las cuentas, perfiles, préstamos y demás operaciones se guardan en PostgreSQL local. No se necesita una base ni un servicio de una universidad externa.
 
+## Asistente Ducky y Claude
+
+El asistente responde con las reglas y funciones del proyecto, el catálogo y
+los préstamos activos de la cuenta iniciada. Para activar respuestas abiertas
+con Claude, configura `ANTHROPIC_API_KEY` en el archivo local `.env` y reinicia
+el servidor. Puedes ajustar `ANTHROPIC_MODEL` para usar otro modelo disponible
+en tu cuenta de Anthropic. La clave se lee únicamente en el servidor.
+
+Cuando Claude está habilitado, las preguntas generales se envían a Anthropic
+con el contexto público del proyecto y las FAQ publicadas. Los resultados de
+préstamos personales y las búsquedas de catálogo se procesan localmente. Si
+Claude no está configurado o la solicitud falla, la app responde con sus
+fuentes locales. Evita compartir contraseñas u otros secretos en el asistente.
+
 ## Baja y reactivación de usuarios
 
 La baja conserva el usuario y su historial, elimina su credencial y revoca sesiones y enlaces de recuperación. La reactivación exige vigencia institucional y un perfil activo autorizado; genera una contraseña temporal nueva que debe cambiarse al entrar. En este prototipo, el administrador autorizado recibe la contraseña en un diálogo para entregarla por un medio privado; todavía no se envía por correo. Las operaciones se ejecutan en una transacción y registran la acción sin guardar la contraseña en bitácora. No requieren cambios de esquema ni `db:init`.

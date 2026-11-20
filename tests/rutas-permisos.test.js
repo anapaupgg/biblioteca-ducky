@@ -31,7 +31,8 @@ const auth = require('../middleware/auth');
 // Controladores sustituidos: ninguna ruta ejecuta escrituras ni lee datos personales.
 const grupos = [
     ['chatbot', 'Chatbot', [
-        ['get', '/']
+        ['get', '/'],
+        ['post', '/']
     ]],
     ['usuarios', 'Gestionar usuarios', [
         ['get', '/catalogos'],

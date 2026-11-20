@@ -46,7 +46,7 @@ async function buscar_libros(terminos, disponibles, client = pool)
          WHERE x.id_libro=c.id_libro AND x.estatus <> 'Baja') AS ubicaciones
         FROM v_catalogo c
         WHERE NOT EXISTS (SELECT 1 FROM unnest($1::text[]) t
-          WHERE strpos(unaccent_lower(concat_ws(' ',c.titulo,c.autores,c.tema,c.id_libro,c.isbn,c.editorial)), t)=0)
+          WHERE strpos(unaccent_lower(concat_ws(' ',c.titulo,c.autores,c.tema,c.id_libro,c.isbn,c.editorial,c.formato)), t)=0)
           AND (NOT $2::boolean OR c.disponibles_prestamo > 0)
         ORDER BY c.titulo, c.id_libro LIMIT 6`, [terminos, disponibles]);
     return resultado_2.rows;

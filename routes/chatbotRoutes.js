@@ -22,6 +22,7 @@ const
     requiere_sesion,
     requiere_funcion
 } = require('../middleware/auth');
-router.get('/', requiere_sesion, requiere_funcion('Chatbot'), require('../controllers/chatbotController')
-    .consultar);
+const { consultar } = require('../controllers/chatbotController');
+router.get('/', requiere_sesion, requiere_funcion('Chatbot'), consultar);
+router.post('/', requiere_sesion, requiere_funcion('Chatbot'), consultar);
 module.exports = router;

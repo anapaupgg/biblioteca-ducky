@@ -19,13 +19,22 @@
 /* Reuse Instructions */
 /* texto: string de 3 a 300 caracteres ya validado por controlador. */
 /* lista: FAQ activas con fuentes; buscar_faq devuelve hasta 3 registros. */
-/* intencion devuelve tipo y términos; no obtiene préstamos personales. */
+/* intencion devuelve tipo y términos; el controlador consulta datos. */
 /******************************************************************/
 
 const normalizar = texto => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(
     /[^a-z0-9\s]/g, ' ');
 const PALABRAS_IGNORADAS = new Set(
     'que cuanto cuanta cuantos cuantas como cual cuales el la los las un una de del al por para con en y o es se me mi puedo puede son tengo hola'
+    .split(' '));
+const PALABRAS_CATALOGO = new Set(
+    ('que cual cuales cuanto cuantos cuantas libro libros ejemplar ejemplares tienen tiene hay ' +
+    'alguno algun algunos alguna alguna busca buscar busco buscas catalogo acervo recomienda recomiendas recomendar recomendarias ' +
+    'muestra muestrame dime sugieres sugerir encuentras encontrar podria puedo pueda disponible disponibles ' +
+    'disponibilidad prestado prestados prestamo prestar prestan pedir sacar ' +
+    'quiero necesito me mi por favor de del sobre para con el la los las un una ' +
+    'en biblioteca hoy esta estan sean y o relacionado relacionados tema autor titulos titulo ' +
+    'principiante principiantes empezar iniciarme introduccion cosas temas algo realmente')
     .split(' '));
 const SINONIMOS =
 {
@@ -49,21 +58,22 @@ const palabras = texto => [...new Set(normalizar(texto).split(/\s+/).filter(elem
 function intencion(texto)
 {
     const consulta_2 = normalizar(texto).trim().replace(/\s+/g, ' ');
-    if (/\b(mis prestamos|mis libros|tengo prestad[oa]s?|debo devolver|tengo que devolver)\b/.test(
+    if (/\b(mis prestamos|mis libros|tengo prestad[oa]s?|debo devolver|tengo que devolver|me toca devolver|que\s+he\s+pedido\s+prestado|vence mi prestamo|vencimiento de mi prestamo)\b/.test(
         consulta_2) || /\bque libros tengo\b/.test(consulta_2)) return (
         {
         tipo: 'personal'
     });
-    if (!/^(que libros|tienen\b|hay libros|busca\b|buscar\b|busco\b|libros\b|catalogo\b)/.test(consulta_2))
+    if (/\b(venta|ventas|venden|vender|certificacion|iso\s*9001|cuanto dura|cuantas veces|como encuentro|lista de espera|tramitar|registrar)\b/.test(consulta_2) ||
+        !(/^(que libros|tienen\b|hay (?:un |una |algun |alguna )?(?:libros?|ejemplares?)|busca\b|buscar\b|busco\b|libros\b|catalogo\b)/.test(consulta_2) ||
+        /\b(recomiendas|recomendarias|recomienda|sugieres|muestrame|quiero|necesito|hay|puedo (?:pedir|sacar)|disponibles?)\b/.test(consulta_2) &&
+        /\b(libros?|titulos?|ejemplar(?:es)?|catalogo|acervo)\b/.test(consulta_2)))
         return (
         {
             tipo: 'faq'
         });
-    const disponibles = /\bdisponibles\b/.test(consulta_2);
-    const quitar = new Set(
-        'que libros libro tienen hay busca buscar busco catalogo disponibles de del sobre por el la los las un una en biblioteca favor'
-        .split(' '));
-    const terminos = consulta_2.split(' ').filter(elemento_3 => elemento_3 && !quitar.has(elemento_3));
+    const disponibles = /\b(disponibles?|prestados?|pedir|prestan)\b/.test(consulta_2);
+    const terminos = consulta_2.split(' ').filter((palabra) => !PALABRAS_CATALOGO.has(palabra))
+        .map((palabra) => ({ digitales: 'digital', fisicos: 'fisico', fisicas: 'fisico' }[palabra] || palabra));
     return (
     {
         tipo: 'catalogo',

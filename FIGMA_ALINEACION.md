@@ -2,6 +2,17 @@
 
 Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy2YReNXevKvL4fUI/Prototipo-AES?node-id=0-1). Revisado el 11 de noviembre de 2026. La página contiene secciones `00` a `10`, además de selectores y escenarios de error. Cada pantalla nueva se implementa desde su nodo concreto y se verifica contra su captura.
 
+## Preguntas abiertas en Asistente Ducky
+
+- Frame `2483:74914` consultado como referencia. Se conserva la estructura de
+  conversación, el formulario de texto libre y las ocho sugerencias. El saludo
+  actualizado menciona temas de la biblioteca, el proyecto y los préstamos
+  de la sesión.
+- La API amplía respuestas con datos locales y puede usar Claude para redactar
+  respuestas abiertas desde contexto público. Las preguntas personales y de
+  catálogo se resuelven con datos de la aplicación. El prototipo ilustra
+  respuestas de ejemplo y no define integración con un proveedor.
+
 ## Borrador de compras: verificación del 19 de noviembre de 2026
 
 - Se consultaron `2011:28537` (formulario y resumen), `2011:28878` (agregar

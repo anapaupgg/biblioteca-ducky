@@ -21,7 +21,7 @@
 const chatbot_model =
 {
     sugerencias: () => api.get('/chatbot'),
-    preguntar: consulta => api.get('/chatbot',
+    preguntar: consulta => api.post('/chatbot',
     {
         q: consulta
     })

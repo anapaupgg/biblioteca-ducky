@@ -1,3 +1,19 @@
+PREGUNTAS ABIERTAS Y CLAUDE EN ASISTENTE DUCKY — 20 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 1337ac5, sin commits remotos nuevos.
+  Ese commit documentó la presentación. Se excluye package-lock.json.
+- Se consultó el frame de Figma 2483:74914 y se conservó el recorrido
+  visible del asistente. Se agregó Claude en servidor con contexto público,
+  FAQ y reglas para distinguir datos verificados de información general.
+- Se ampliaron las respuestas locales sobre ventas, compras, ISO 9001,
+  circulación, acceso y desarrollo. El catálogo se consulta en PostgreSQL;
+  los préstamos personales se obtienen únicamente de la sesión autorizada.
+- Verificación: 83 pruebas aprobadas con PostgreSQL, siete preguntas por
+  HTTP en ensayo y tres respuestas reales de Claude en localhost:3004
+  (venta, certificación y programación). También pasaron catálogo y
+  préstamos personales en 3004. La demo usa configuración privada local.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 VERIFICACIÓN DEL PRIMER BLOQUE EN NAVEGADOR — 20 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en b07da93, sin commits remotos nuevos.
   Los dos commits desde la suite de 81 pruebas modificaron solo el guion.

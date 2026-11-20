@@ -22,6 +22,8 @@ const
 } = require('node:test');
 const assert = require('node:assert/strict');
 const modelo = require('../models/chatbotModel');
+const prestamo_model = require('../models/prestamoModel');
+const claude = require('../services/claudeService');
 const
 {
     consultar
@@ -45,7 +47,7 @@ const filas = [
     respuesta: '2 veces',
     fuentes: ['Regla 6']
 }];
-async function pedir(q, funciones = ['Chatbot', 'Buscar libros'])
+async function pedir(q, funciones = ['Chatbot', 'Buscar libros'], desde_formulario = false)
 {
     const res =
     {
@@ -64,7 +66,9 @@ async function pedir(q, funciones = ['Chatbot', 'Buscar libros'])
     };
     await consultar(
     {
-        query: q === undefined ?
+        method: desde_formulario ? 'POST' : 'GET',
+        body: desde_formulario ? { q } : undefined,
+        query: q === undefined || desde_formulario ?
         {
         } :
         {
@@ -72,6 +76,7 @@ async function pedir(q, funciones = ['Chatbot', 'Buscar libros'])
         },
         usuario:
         {
+            clave: '621234',
             funciones
         }
     }, res);
@@ -137,7 +142,14 @@ test('Catálogo: intención, permisos, límite y separación de préstamos perso
     ]);
     assert.equal(intencion('¿Cuánto dura el préstamo?').tipo, 'faq');
     const original = modelo.buscar_libros;
+    const original_prestamos = prestamo_model.mis_prestamos;
     let llamadas = 0;
+    const claves_prestamos = [];
+    prestamo_model.mis_prestamos = async (clave) =>
+    {
+        claves_prestamos.push(clave);
+        return [{ titulo: 'Ejemplo', id_ejemplar: 'L000128-01', fecha_vencimiento: '2026-11-28' }];
+    };
     modelo.buscar_libros = async () =>
     {
         llamadas++;
@@ -153,10 +165,12 @@ test('Catálogo: intención, permisos, límite y separación de préstamos perso
     {
         assert.equal((await pedir('¿Qué libros hay?', ['Chatbot'])).code, 403);
         assert.equal(llamadas, 0);
+        assert.equal((await pedir('Mis préstamos', ['Chatbot'])).code, 403);
         for (const q of ['¿Qué libros tengo prestados?', 'Mis préstamos', '¿Qué libros tengo?'])
         {
-            assert.match((await pedir(q)).data.mensaje, /préstamos personales/);
+            assert.match((await pedir(q)).data.resultados[0].respuesta, /Ejemplo.*2026-11-28/);
         }
+        assert.deepEqual(claves_prestamos, Array(3).fill('621234'));
         assert.equal(llamadas, 0);
         const respuesta = await pedir('¿Qué libros hay?');
         assert.equal(respuesta.data.libros.length, 5);
@@ -167,7 +181,64 @@ test('Catálogo: intención, permisos, límite y separación de préstamos perso
     finally
     {
         modelo.buscar_libros = original;
+        prestamo_model.mis_prestamos = original_prestamos;
     }
+});
+
+test('Preguntas abiertas por POST responden ventas, certificación, préstamos y otros flujos sin Claude', async () =>
+{
+    const original = modelo.listar;
+    const original_claude = claude.responder;
+    modelo.listar = async () => filas;
+    claude.responder = async () => null;
+    try
+    {
+        for (const [pregunta, respuesta] of [
+            ['¿La aplicación permite venta de libros?', /no vende libros al público/],
+            ['que certificacion esta persiguiendo esta aplicación', /ISO 9001:2015/],
+            ['¿Puede vender libros o qué norma ISO busca?', /no vende libros al público/],
+            ['¿Cómo se registra un préstamo desde el mostrador?', /Valid|valida y confirma/],
+            ['¿Qué pasa si devuelvo el libro?', /Registrar devolución/],
+            ['Perdí mi ejemplar', /registra la pérdida/],
+            ['Olvidé mi contraseña, qué hago', /Olvidaste tu contraseña/],
+            ['¿Con qué tecnologías hicieron la app?', /PostgreSQL/],
+            ['¿Cómo saco un PDF del acervo?', /Listado de libros/]
+        ])
+        {
+            const r = await pedir(pregunta, undefined, true);
+            assert.ok(r.data.resultados.some((fila) => respuesta.test(fila.respuesta)), pregunta);
+        }
+        assert.equal((await pedir(undefined, undefined, true)).code, 400);
+    }
+    finally
+    {
+        modelo.listar = original;
+        claude.responder = original_claude;
+    }
+});
+
+test('Claude recibe contexto público y una consulta redactada; devuelve respuesta o fallback', async () =>
+{
+    const entorno = { ANTHROPIC_API_KEY: 'clave-ficticia', ANTHROPIC_MODEL: 'modelo-de-prueba' };
+    let llamadas = 0;
+    const enviar = async (url, opciones) =>
+    {
+        llamadas++;
+        assert.equal(url, 'https://api.anthropic.com/v1/messages');
+        const cuerpo = JSON.parse(opciones.body);
+        assert.equal(cuerpo.model, 'modelo-de-prueba');
+        assert.equal(cuerpo.max_tokens, 320);
+        assert.match(cuerpo.system, /ISO 9001:2015/);
+        assert.match(cuerpo.system, /5 días/);
+        assert.doesNotMatch(opciones.body, /alumno@|654321|clave-ficticia/);
+        return { ok: true, json: async () => ({ content: [{ type: 'text', text: 'Respuesta abierta' }] }) };
+    };
+    assert.equal(await claude.responder('¿Sirve el correo alumno@example.test o la matrícula 654321?',
+        filas, enviar, entorno), 'Respuesta abierta');
+    assert.equal(await claude.responder('Mi contraseña es secreto-de-prueba', filas, enviar, entorno), null);
+    assert.equal(await claude.responder('Una pregunta', filas, enviar, {}), null);
+    assert.equal(llamadas, 1);
+    assert.equal(await claude.responder('Una pregunta', filas, async () => ({ ok: false }), entorno), null);
 });
 test('PostgreSQL: FAQ desaparece con fuente inactiva, sin fuentes o pregunta inactiva; rollback',
 {
