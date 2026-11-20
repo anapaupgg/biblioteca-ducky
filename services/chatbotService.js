@@ -23,7 +23,7 @@
 /******************************************************************/
 
 const normalizar = texto => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(
-    /[^a-z0-9\s]/g, ' ');
+    /[^a-z0-9\s]/g, ' ').trim().replace(/\s+/g, ' ');
 const PALABRAS_IGNORADAS = new Set(
     'que cuanto cuanta cuantos cuantas como cual cuales el la los las un una de del al por para con en y o es se me mi puedo puede son tengo hola'
     .split(' '));
@@ -57,7 +57,7 @@ const palabras = texto => [...new Set(normalizar(texto).split(/\s+/).filter(elem
 // Reglas explícitas: no inferir datos personales ni tratar cualquier pregunta como catálogo.
 function intencion(texto)
 {
-    const consulta_2 = normalizar(texto).trim().replace(/\s+/g, ' ');
+    const consulta_2 = normalizar(texto);
     if (/\b(mis prestamos|mis libros|tengo prestad[oa]s?|debo devolver|tengo que devolver|me toca devolver|que\s+he\s+pedido\s+prestado|vence mi prestamo|vencimiento de mi prestamo)\b/.test(
         consulta_2) || /\bque libros tengo\b/.test(consulta_2)) return (
         {

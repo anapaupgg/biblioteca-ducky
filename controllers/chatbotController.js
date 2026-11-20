@@ -101,14 +101,14 @@ async function consultar(solicitud, respuesta)
                 ...chatbot_servicio.sugerencias_sistema().filter((sugerencia) =>
                     sugerencia.grupo === 'Uso de la biblioteca')]
         });
-        const consulta = chatbot_servicio.normalizar(texto).trim().replace(/\s+/g, ' ');
+        const consulta = chatbot_servicio.normalizar(texto);
         const temas = responder_temas(consulta);
-        const frecuentes = chatbot_servicio.buscar_faq(lista, texto);
+        const predefinida = [...lista, ...temas].find(({ pregunta }) =>
+            chatbot_servicio.normalizar(pregunta) === consulta);
+        if (predefinida) return respuesta.json({ resultados: [predefinida] });
         const respuesta_claude = await claude_servicio.responder(texto, lista);
-        if (respuesta_claude) return respuesta.json(
-        {
-            resultados: [{ respuesta: respuesta_claude, fuentes: ['Asistente Ducky · Claude'] }]
-        });
+        if (respuesta_claude) return respuesta.json({ resultados: [{ respuesta: respuesta_claude }] });
+        const frecuentes = chatbot_servicio.buscar_faq(lista, texto);
         const pregunta_regla = /\b(cuant[oa]s?|cuesta|limite|maximo|vigencia|duracion)\b|^renovaciones?$/.test(consulta);
         const resultados = temas.length && !(pregunta_regla && frecuentes.length) ? temas : frecuentes;
         return respuesta.json(

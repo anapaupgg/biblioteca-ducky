@@ -85,7 +85,9 @@ async function pedir(q, funciones = ['Chatbot', 'Buscar libros'], desde_formular
 test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desconocidas', async () =>
 {
     const original = modelo.listar;
+    const original_claude = claude.responder;
     modelo.listar = async () => filas;
+    claude.responder = async () => null;
     try
     {
         for (const [q, id] of [
@@ -117,6 +119,7 @@ test('FAQ normaliza acentos, admite sinónimos, devuelve fuentes y reconoce desc
     finally
     {
         modelo.listar = original;
+        claude.responder = original_claude;
     }
 });
 test('Catálogo: intención, permisos, límite y separación de préstamos personales', async () =>
@@ -231,14 +234,45 @@ test('Claude recibe contexto público y una consulta redactada; devuelve respues
         assert.match(cuerpo.system, /ISO 9001:2015/);
         assert.match(cuerpo.system, /5 días/);
         assert.doesNotMatch(opciones.body, /alumno@|654321|clave-ficticia/);
-        return { ok: true, json: async () => ({ content: [{ type: 'text', text: 'Respuesta abierta' }] }) };
+        return { ok: true, json: async () => (
+            { content: [{ type: 'text', text: '**Respuesta abierta**\n* Primer paso' }] }) };
     };
     assert.equal(await claude.responder('¿Sirve el correo alumno@example.test o la matrícula 654321?',
-        filas, enviar, entorno), 'Respuesta abierta');
+        filas, enviar, entorno), 'Respuesta abierta\n• Primer paso');
     assert.equal(await claude.responder('Mi contraseña es secreto-de-prueba', filas, enviar, entorno), null);
     assert.equal(await claude.responder('Una pregunta', filas, enviar, {}), null);
     assert.equal(llamadas, 1);
     assert.equal(await claude.responder('Una pregunta', filas, async () => ({ ok: false }), entorno), null);
+});
+
+test('Claude solo responde preguntas nuevas y se presenta sin etiqueta de proveedor', async () =>
+{
+    const original_lista = modelo.listar;
+    const original_claude = claude.responder;
+    const llamadas = [];
+    modelo.listar = async () => filas;
+    claude.responder = async (pregunta) =>
+    {
+        llamadas.push(pregunta);
+        return 'Una función pura devuelve el mismo resultado para las mismas entradas.';
+    };
+    try
+    {
+        assert.equal((await pedir('cuanto dura   el prestamo')).data.resultados[0].respuesta, '5 días');
+        assert.match((await pedir('en que plataformas funciona')).data.resultados[0].respuesta, /navegadores/);
+        assert.match((await pedir('Que certificacion busca el proyecto')).data.resultados[0].respuesta, /9001/);
+        assert.deepEqual(llamadas, []);
+        const abierta = 'Explícame qué es una función pura con un ejemplo';
+        const resultados = (await pedir(abierta)).data.resultados;
+        assert.deepEqual(llamadas, [abierta]);
+        assert.equal(resultados[0].fuentes, undefined);
+        assert.match(resultados[0].respuesta, /Una función pura/);
+    }
+    finally
+    {
+        modelo.listar = original_lista;
+        claude.responder = original_claude;
+    }
 });
 test('PostgreSQL: FAQ desaparece con fuente inactiva, sin fuentes o pregunta inactiva; rollback',
 {

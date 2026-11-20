@@ -1,3 +1,14 @@
+RESPUESTAS PREDEFINIDAS Y TEXTO DEL ASISTENTE — 20 DE NOVIEMBRE DE 2026
+- Sin commits remotos nuevos. a91c3a9, avance local previo, agregó Claude.
+- Las preguntas sugeridas y coincidencias predefinidas se responden en
+  local. Claude redacta preguntas abiertas. Se eliminó su etiqueta inferior
+  y se limpia la sintaxis de asteriscos en sus respuestas.
+- Pasaron 84 pruebas con PostgreSQL. En 3004 se comprobó una FAQ local
+  sin signos ni acentos y una respuesta abierta sin asteriscos ni etiqueta.
+  Se dejó la copia de presentación disponible en 3004.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 PREGUNTAS ABIERTAS Y CLAUDE EN ASISTENTE DUCKY — 20 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en 1337ac5, sin commits remotos nuevos.
   Ese commit documentó la presentación. Se excluye package-lock.json.

@@ -12,6 +12,8 @@ Referencia: [Figma, página 01 - Prototipo](https://www.figma.com/design/sZgmHvy
   respuestas abiertas desde contexto público. Las preguntas personales y de
   catálogo se resuelven con datos de la aplicación. El prototipo ilustra
   respuestas de ejemplo y no define integración con un proveedor.
+- Las sugerencias conservan sus respuestas locales. El texto generado se
+  muestra en la misma burbuja, sin asteriscos ni etiqueta de proveedor.
 
 ## Borrador de compras: verificación del 19 de noviembre de 2026
 

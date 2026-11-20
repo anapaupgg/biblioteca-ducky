@@ -119,7 +119,7 @@ con Claude, configura `ANTHROPIC_API_KEY` en el archivo local `.env` y reinicia
 el servidor. Puedes ajustar `ANTHROPIC_MODEL` para usar otro modelo disponible
 en tu cuenta de Anthropic. La clave se lee únicamente en el servidor.
 
-Cuando Claude está habilitado, las preguntas generales se envían a Anthropic
+Cuando Claude está habilitado, las preguntas sin respuesta predefinida se envían a Anthropic
 con el contexto público del proyecto y las FAQ publicadas. Los resultados de
 préstamos personales y las búsquedas de catálogo se procesan localmente. Si
 Claude no está configurado o la solicitud falla, la app responde con sus

@@ -10,6 +10,7 @@
 
 const APP = 'Funciones de Biblioteca Ducky';
 const PROYECTO = 'Propuesta de negocio · Flow Bit';
+const { normalizar } = require('./chatbotService');
 
 const temas = [
     {
@@ -124,7 +125,9 @@ const temas = [
 
 function responder_temas(consulta)
 {
-    return temas.filter(({ patron }) => patron.test(consulta)).slice(0, 3).map((tema) =>
+    const exacto = temas.find(({ pregunta }) => normalizar(pregunta) === consulta);
+    const coincidencias = exacto ? [exacto] : temas.filter(({ patron }) => patron.test(consulta));
+    return coincidencias.slice(0, 3).map((tema) =>
     ({
         pregunta: tema.pregunta,
         respuesta: tema.respuesta,
