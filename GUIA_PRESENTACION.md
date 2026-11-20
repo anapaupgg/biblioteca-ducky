@@ -1,6 +1,6 @@
 # Biblioteca Ducky · Presentación del 20 de noviembre
 
-Dos personas, ocho minutos. El guion conserva el reparto original y actualiza los pasos con la versión ensayada.
+Diego presenta los dos bloques en ocho minutos. El recorrido va de sistema a catálogo y luego a biblioteca.
 
 ## Antes de presentar
 
@@ -21,7 +21,7 @@ Deja la terminal abierta. Cuando aparezca «BD conectada», abre [la demo en el 
 
 Las cuatro usan `1234` en las copias de demostración. Ten abiertos el guion y el PDF descargado del ensayo como respaldo. Mantén el navegador al 90–100 % y prepara el ISBN y el título para pegarlos. En la demo se pueden confirmar altas y bajas de sus propios registros. El correo se desactivó en las dos copias. Evita `db:init`.
 
-## Persona 1 · 0:00–4:00
+## Bloque 1 · Sistema y usuarios · 0:00–4:00
 
 | Tiempo | Qué mostrar | Qué decir |
 | --- | --- | --- |
@@ -29,9 +29,9 @@ Las cuatro usan `1234` en las copias de demostración. Ten abiertos el guion y e
 | 0:40–1:15 | Entra con `100001`, perfil de sistema. Muestra su menú. | «El sistema autentica a cada usuario y habilita acciones según sus permisos». |
 | 1:15–2:10 | **Perfiles y permisos → Crear perfil**. Registra `Lector demostración` con **Buscar libros**. Selecciona el perfil y abre **Editar funciones** para mostrar dónde se agrega **Chatbot**. | «Un perfil agrupa las funciones que se pueden asignar a diferentes cuentas». |
 | 2:10–3:40 | **Gestión de usuarios → Registrar usuario**. Captura `645678`, selecciona **Lector** y registra. Regresa a la lista, busca la clave y muestra el estado **Activo**. Si alcanza el tiempo, abre **Consultar y modificar** y asigna el perfil de demostración. | «El directorio ficticio verifica la matrícula y PostgreSQL guarda la cuenta. Cada alta genera una contraseña temporal para el primer acceso». |
-| 3:40–4:00 | Cierra sesión y da el pase. Si piden baja, hazla sobre el usuario recién creado y muestra el estado inactivo. | «La baja revoca el acceso y conserva el historial. Ahora mostramos el catálogo». |
+| 3:40–4:00 | Si piden baja, hazla sobre el usuario recién creado y muestra el estado inactivo. Cierra sesión para entrar como catálogo. | «Ahora entro como administrador del catálogo para mostrar el alta de un libro». |
 
-## Persona 2 · Diego · 4:00–8:00
+## Bloque 2 · Catálogo, compras y consulta · 4:00–8:00
 
 ### 4:00–5:25 · Ficha y alta
 

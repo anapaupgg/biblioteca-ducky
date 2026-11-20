@@ -1,3 +1,13 @@
+GUION PARA UN SOLO EXPOSITOR — 20 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 7c2f9a7, sin commits remotos nuevos.
+- Se reordenó el PDF y la guía editable para que Diego haga ambos bloques.
+  El recorrido comienza con el arranque, MVC, perfiles y usuarios. Sigue
+  con catálogo y compras, y cierra con PDF y ubicación física.
+- Se revisaron las tres páginas renderizadas y se comprobaron los textos,
+  datos de captura, orden y transiciones entre perfiles.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 GUION PDF PARA LA PRESENTACIÓN — 20 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en 9218559, sin commits remotos nuevos.
 - Se generó output/pdf/Biblioteca-Ducky-Guion-de-presentacion.pdf a partir
