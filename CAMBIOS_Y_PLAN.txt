@@ -1,3 +1,16 @@
+VERIFICACIÓN DEL PRIMER BLOQUE EN NAVEGADOR — 20 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en b07da93, sin commits remotos nuevos.
+  Los dos commits desde la suite de 81 pruebas modificaron solo el guion.
+- En Safari y la copia ficticia 3003 se comprobó inicio como sistema,
+  creación de perfil, edición para añadir Chatbot, alta del lector 651122
+  y su estado Activo, cierre e inicio como catálogo hasta Gestionar libros.
+  Se usaron datos alternativos porque los del guion ya existían en 3003.
+- La consulta de la copia 3004 confirmó disponibles la matrícula 645678,
+  el perfil Lector demostración y el ISBN 9780000000995. El presupuesto de
+  noviembre se puede registrar durante la demo. Se detuvo el ensayo 3003.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 GUION PARA UN SOLO EXPOSITOR — 20 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en 7c2f9a7, sin commits remotos nuevos.
 - Se reordenó el PDF y la guía editable para que Diego haga ambos bloques.
