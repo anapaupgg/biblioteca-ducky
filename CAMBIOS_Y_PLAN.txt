@@ -1,3 +1,16 @@
+VIDEO DEL RECORRIDO Y GUION DE VOZ — 25 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en adaba54, sin commits remotos nuevos.
+  El commit previo completó el ajuste de respuestas del asistente.
+- Se capturó la interfaz real en una base ficticia independiente, puerto
+  3005. El montaje de 7:57 incluye acceso, perfiles, alta/cambio/baja de
+  usuarios, catálogo, compras y recepción, búsqueda/PDF, préstamo, renovación,
+  devolución, multas, asistente, solicitud del lector y vista móvil.
+- El MP4 sin audio queda como entrega local en .local-validation. El PDF
+  output/pdf/Biblioteca-Ducky-Guion-de-voz.pdf contiene 20 marcas de voz
+  sincronizadas con el video. Se detuvo el servidor temporal de grabación.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 RESPUESTAS PREDEFINIDAS Y TEXTO DEL ASISTENTE — 20 DE NOVIEMBRE DE 2026
 - Sin commits remotos nuevos. a91c3a9, avance local previo, agregó Claude.
 - Las preguntas sugeridas y coincidencias predefinidas se responden en
