@@ -1,3 +1,17 @@
+GUION PASO A PASO CON LA BASE HABITUAL — 26 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 7f0b152, sin commits remotos nuevos.
+- Se actualizó el guion para la aplicación habitual en 3001. Cada
+  bloque indica el perfil, los botones en orden y el texto hablado.
+  Conserva cinco minutos para el Sprint 2 y cierra con el asistente.
+- Con consultas de solo lectura se verificaron ficha, existencia y
+  ubicación de catálogo, compra recibida y préstamo activo. Se retiraron
+  del guion las instrucciones de carga y las credenciales de ensayo.
+- Se revisaron las cuatro páginas del PDF y el acceso respondió en 3001.
+  Las operaciones sobre registros existentes se muestran hasta su
+  revisión. No se confirmaron cambios de negocio durante la revisión.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 GUION CON ENFOQUE EN EL SPRINT 2 — 26 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en 8ca1c8c, sin commits remotos nuevos.
   Ese commit agregó el PDF para un solo expositor.
