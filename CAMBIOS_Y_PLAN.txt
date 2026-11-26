@@ -1,3 +1,15 @@
+GUION CON ENFOQUE EN EL SPRINT 2 — 26 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 8ca1c8c, sin commits remotos nuevos.
+  Ese commit agregó el PDF para un solo expositor.
+- Se cotejó el Sprint Backlog y se redistribuyeron los ocho minutos: 40 s
+  de acceso y roles, 5 min de Sprint 2 y el cierre con circulación y
+  asistente. El Sprint 2 muestra ficha, alta, modificación, baja,
+  compras, recepción, búsqueda física, disponibilidad y listado en PDF.
+- Se revisaron las cuatro páginas renderizadas y los diez bloques del
+  guion. La demo en el puerto 3004 respondió en la pantalla de acceso.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 GUION DEL RECORRIDO COMPLETO PARA UN EXPOSITOR — 26 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en 9bc77a1, sin commits remotos nuevos.
   Ese commit agregó un guion sincronizado con el montaje anterior.
