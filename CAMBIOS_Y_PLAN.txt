@@ -1,3 +1,18 @@
+GUION DEL RECORRIDO COMPLETO PARA UN EXPOSITOR — 26 DE NOVIEMBRE DE 2026
+- main y origin/main coincidían en 9bc77a1, sin commits remotos nuevos.
+  Ese commit agregó un guion sincronizado con el montaje anterior.
+- Se agregó un PDF independiente para la demostración de Diego, con ocho
+  minutos estimados, acciones en pantalla y texto para decir. Incluye
+  acceso, usuarios y perfiles, ficha y alta, compras y recepción, búsqueda
+  y PDF, préstamo, renovación, devolución y tres preguntas al asistente.
+- Se revisaron las cuatro páginas renderizadas y su texto extraíble. En una
+  consulta de solo lectura a la base ficticia de presentación se comprobó
+  que los datos de alta y el ejemplar siguen disponibles, que el lector
+  tiene un préstamo activo y que falta el presupuesto de noviembre. El
+  guion indica cómo prepararlo en esa copia antes de la demostración.
+
+---------------- REGISTRO ANTERIOR ----------------
+
 VIDEO DEL RECORRIDO Y GUION DE VOZ — 25 DE NOVIEMBRE DE 2026
 - main y origin/main coincidían en adaba54, sin commits remotos nuevos.
   El commit previo completó el ajuste de respuestas del asistente.
